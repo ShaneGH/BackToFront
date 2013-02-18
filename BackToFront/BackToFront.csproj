@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{811C6A9D-BD86-4947-8074-2EA0CBC26431}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BackToFront</RootNamespace>
+    <AssemblyName>BackToFront</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dictionary.cs" />
+    <Compile Include="Enum\LogicalOperator.cs" />
+    <Compile Include="Extensions\BusinessLogic.cs" />
+    <Compile Include="Extensions\Expressions.cs" />
+    <Compile Include="Extensions\IEnumerable.cs" />
+    <Compile Include="Extensions\Reflection.cs" />
+    <Compile Include="Framework\Base\IfBase.cs" />
+    <Compile Include="Framework\Base\PropertyElement.cs" />
+    <Compile Include="Framework\Base\RuleChildElement.cs" />
+    <Compile Include="Framework\Base\OperatorBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\Base\PathElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\Operator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\NegativeOperand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\OperandBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\If.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\PassthroughIf.cs" />
+    <Compile Include="Framework\Requirement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\Requires.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\Rule.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\SubRule.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\ThrowViolation.cs" />
+    <Compile Include="IRule.cs" />
+    <Compile Include="Logic\Base\IPathElement.cs" />
+    <Compile Include="Logic\ISubRule.cs" />
+    <Compile Include="Logic\IOperandBase.cs" />
+    <Compile Include="Logic\IIfConditionSatisfied.cs" />
+    <Compile Include="Logic\IRequireOperand.cs" />
+    <Compile Include="Logic\IRequirement.cs" />
+    <Compile Include="Logic\IOperators.cs" />
+    <Compile Include="Logic\IRequires.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Condition.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Public\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
