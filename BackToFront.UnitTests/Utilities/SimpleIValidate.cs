@@ -8,14 +8,14 @@ using BackToFront.Logic.Base;
 
 namespace BackToFront.UnitTests.Utilities
 {
-    public class SimpleIValidate : IValidate<object>, IPathElement
+    public class SimpleIValidate : IPathElement<object>
     {
         public EventHandler<object> ValidateCalled;
         public EventHandler<object> ValidateAllCalled;
 
         public IViolation Violation;
 
-        public IViolation Validate(object subject)
+        public IViolation ValidateEntity(object subject)
         {
             if (ValidateCalled != null)
                 ValidateCalled(this, subject);
@@ -23,7 +23,7 @@ namespace BackToFront.UnitTests.Utilities
             return Violation;
         }
 
-        public void ValidateAll(object subject, IList<IViolation> violationList)
+        public void FullyValidateEntity(object subject, IList<IViolation> violationList)
         {
             if (ValidateAllCalled != null)
                 ValidateAllCalled(this, subject);
@@ -31,7 +31,7 @@ namespace BackToFront.UnitTests.Utilities
             violationList.Add(Violation);
         }
 
-        public Logic.Base.IPathElement NextOption
+        public Logic.Base.IPathElement<object> NextOption
         {
             get { throw new NotImplementedException(); }
         }

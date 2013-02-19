@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic.Base
 {
-    public interface IPathElement
+    public interface IPathElement<TEntity> : IValidate<TEntity>
     {
-        IPathElement NextOption { get; }
+        IPathElement<TEntity> NextOption { get; }
     }
 }

@@ -26,7 +26,7 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
 
             public readonly IList<SimpleIValidate> Els = new List<SimpleIValidate>();
 
-            protected override IEnumerable<IPathElement> NextPathElement
+            protected override IEnumerable<IPathElement<object>> NextPathElements
             {
                 get
                 {
@@ -42,6 +42,16 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
             public void ValAllNext(object subject, IList<IViolation> list)
             {
                 ValidateAllNext(subject, list);
+            }
+
+            public override IViolation ValidateEntity(object subject)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void FullyValidateEntity(object subject, IList<IViolation> violationList)
+            {
+                throw new NotImplementedException();
             }
         }
 

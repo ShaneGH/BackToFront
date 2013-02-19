@@ -9,14 +9,20 @@ using BackToFront.Logic.Base;
 
 namespace BackToFront.Framework.Base
 {
-    internal abstract class PathElement<TEntity> : RuleChildElement<TEntity>, IPathElement
-    {
-        protected abstract IEnumerable<IPathElement> NextPathElement { get; }
-        public IPathElement NextOption
+    /// <summary>
+    /// A class attached to a Rule which points to the next step in the operation
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type to validate</typeparam>
+    internal abstract class PathElement<TEntity> : PropertyElement<TEntity>, IPathElement<TEntity>
+    {        
+        protected readonly Rule<TEntity> ParentRule;
+        protected abstract IEnumerable<IPathElement<TEntity>> NextPathElements { get; }
+
+        public IPathElement<TEntity> NextOption
         {
             get
             {
-                var options = NextPathElement.Where(a => a != null).ToArray();
+                var options = NextPathElements.Where(a => a != null).ToArray();
                 if (!options.Any())
                 {
                     return null;
@@ -30,34 +36,36 @@ namespace BackToFront.Framework.Base
             }
         }
 
-        protected PathElement(Func<TEntity, object> descriptor, Rule<TEntity> rule)
-            : base(descriptor, rule)
+        public PathElement(Func<TEntity, object> descriptor, Rule<TEntity> rule)
+            : base(descriptor)
         {
+            ParentRule = rule;
         }
 
+        public abstract IViolation ValidateEntity(TEntity subject);
+        public abstract void FullyValidateEntity(TEntity subject, IList<IViolation> violationList);
+
         /// <summary>
-        /// 
+        /// Validate the next element in the chain or return no violation if no more elements
         /// </summary>
         /// <param name="subject"></param>
-        /// <param name="skipInstancesOfType">Skip over NextOption if NextOption is Type</param>
         /// <returns></returns>
-        protected IViolation ValidateNext(TEntity subject)
+        public IViolation ValidateNext(TEntity subject)
         {
-            object option = NextOption;
-            return option is IValidate<TEntity> ? (option as IValidate<TEntity>).Validate(subject) : null;
+            var no = NextOption;
+            return no == null ? null : no.ValidateEntity(subject);
         }
 
         /// <summary>
-        /// 
+        /// Validate the next element in the chain or return no violation if no more elements
         /// </summary>
         /// <param name="subject"></param>
         /// <param name="violations"></param>
-        /// <param name="skipInstancesOfType">Skip over NextOption if NextOption is Type</param>
         protected void ValidateAllNext(TEntity subject, IList<IViolation> violations)
         {
-            object option = NextOption;
-            if (option is IValidate<TEntity>)
-                (option as IValidate<TEntity>).ValidateAll(subject, violations);
+            var no = NextOption;
+            if(no != null)
+                no.FullyValidateEntity(subject, violations);
         }
     }
 }

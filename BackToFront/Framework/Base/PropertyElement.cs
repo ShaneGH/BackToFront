@@ -8,6 +8,10 @@ using BackToFront.Extensions;
 
 namespace BackToFront.Framework.Base
 {
+    /// <summary>
+    /// A class which holds reference to a property. Also has a lockable action
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
     internal abstract class PropertyElement<TEntity>
     {
         /// <summary>

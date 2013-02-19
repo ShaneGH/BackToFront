@@ -8,7 +8,7 @@ namespace BackToFront.Logic
 {
     internal class Requires<TEntity>: IRequires<TEntity>
     {
-        public IRequirement<TEntity> RequireThat(Func<TEntity, object> property)
+        public IRequireOperators<TEntity> RequireThat(Func<TEntity, object> property)
         {
             throw new NotImplementedException();
         }

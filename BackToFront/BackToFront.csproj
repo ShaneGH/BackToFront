@@ -45,29 +45,28 @@
     <Compile Include="Extensions\Expressions.cs" />
     <Compile Include="Extensions\IEnumerable.cs" />
     <Compile Include="Extensions\Reflection.cs" />
-    <Compile Include="Framework\Base\IfBase.cs" />
+    <Compile Include="Framework\Base\OperatorsBase.cs" />
     <Compile Include="Framework\Base\PropertyElement.cs" />
-    <Compile Include="Framework\Base\RuleChildElement.cs" />
-    <Compile Include="Framework\Base\OperatorBase.cs">
+    <Compile Include="Framework\Base\ModelViolationBase.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Framework\Base\PathElement.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Framework\Operator.cs">
+    <Compile Include="Framework\ModelViolation1.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Framework\NegativeOperand.cs">
+    <Compile Include="Framework\ModelViolation2.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Framework\OperandBase.cs">
+    <Compile Include="Framework\Continue.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Framework\If.cs">
+    <Compile Include="Framework\Operators.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Framework\PassthroughIf.cs" />
-    <Compile Include="Framework\Requirement.cs">
+    <Compile Include="Framework\AdditionalOperators.cs" />
+    <Compile Include="Framework\RequireOperators.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Framework\Requires.cs">
@@ -83,10 +82,10 @@
     <Compile Include="_\IRule.cs" />
     <Compile Include="Logic\Base\IPathElement.cs" />
     <Compile Include="Logic\ISubRule.cs" />
-    <Compile Include="Logic\IOperandBase.cs" />
-    <Compile Include="Logic\IIfConditionSatisfied.cs" />
-    <Compile Include="Logic\IRequireOperand.cs" />
-    <Compile Include="Logic\IRequirement.cs" />
+    <Compile Include="Logic\IContinue.cs" />
+    <Compile Include="Logic\IModelViolation1.cs" />
+    <Compile Include="Logic\IModelViolation2.cs" />
+    <Compile Include="Logic\IRequireOperators.cs" />
     <Compile Include="Logic\IOperators.cs" />
     <Compile Include="Logic\IRequires.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

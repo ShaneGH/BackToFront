@@ -14,11 +14,11 @@ namespace BackToFront.Extensions
         /// <typeparam name="T">The object type</typeparam>
         /// <param name="test">The object</param>
         /// <returns>The first business rule violation encountered</returns>
-        public static IViolation ValidateX<T>(this T test)
+        public static IViolation Validate<T>(this T test)
         {
             var rule = Rules.Repository.Registered[typeof(T)];
 
-            return rule.Validate(test);
+            return rule.ValidateEntity(test);
         }
 
         /// <summary>
@@ -27,11 +27,11 @@ namespace BackToFront.Extensions
         /// <typeparam name="T">The object type</typeparam>
         /// <param name="test">The object</param>
         /// <returns>All violated rules</returns>
-        public static IEnumerable<IViolation> ValidateAllX<T>(this T test)
+        public static IEnumerable<IViolation> ValidateAllRules<T>(this T test)
         {
             var rule = Rules.Repository.Registered[typeof(T)];
 
-            return rule.ValidateAll(test);
+            return rule.FullyValidateEntity(test);
         }
     }
 }

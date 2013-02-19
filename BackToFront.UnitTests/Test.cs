@@ -45,7 +45,7 @@ namespace BackToFront.UnitTests
                 .If(b => b.Value4).IsEqualTo(0).RequireThat(b => b.Value5).IsEqualTo(8).OrModelViolationIs(new ViolationClass("Invalid")));
 
 
-            new Something().ValidateX();
+            new Something().Validate();
         }
 
         [Test]

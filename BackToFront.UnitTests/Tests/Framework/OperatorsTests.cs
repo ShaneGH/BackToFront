@@ -116,13 +116,13 @@ namespace BackToFront.UnitTests.Tests.Framework
             Func<bool, string> op = a => a ? " AND " : " OR ";
             var log = evaluation1 + op(operator1) + evaluation2 + op(operator2) + evaluation3 + op(operator3) + evaluation4;
 
-            var c1 = new If<object>(a => evaluation1, null);
+            var c1 = new Operators<object>(a => evaluation1, null);
             var c2 = operator1 ? c1.IsTrue().And(a => evaluation2) : c1.IsTrue().Or(a => evaluation2);
             var c3 = operator2 ? c2.IsTrue().And(a => evaluation3) : c2.IsTrue().Or(a => evaluation3);
             var c4 = operator3 ? c3.IsTrue().And(a => evaluation4) : c3.IsTrue().Or(a => evaluation4);
             c4.IsTrue().ModelViolationIs(violation);
 
-            var result = c1.Validate(new object());
+            var result = c1.ValidateEntity(new object());
             if (result != null)
                 Assert.AreEqual(violation, result);
 
@@ -138,7 +138,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsTrue(If<TestClass>.Eq(subject, a => a.Val1, a => a.Val2));
+            Assert.IsTrue(Operators<TestClass>.Eq(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsFalse(If<TestClass>.Eq(subject, a => a.Val1, a => a.Val2));
+            Assert.IsFalse(Operators<TestClass>.Eq(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -160,7 +160,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsTrue(If<TestClass>.NEq(subject, a => a.Val1, a => a.Val2));
+            Assert.IsTrue(Operators<TestClass>.NEq(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -171,7 +171,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsFalse(If<TestClass>.NEq(subject, a => a.Val1, a => a.Val2));
+            Assert.IsFalse(Operators<TestClass>.NEq(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -182,7 +182,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsTrue(If<TestClass>.Gr(subject, a => a.Val1, a => a.Val2));
+            Assert.IsTrue(Operators<TestClass>.Gr(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsFalse(If<TestClass>.Gr(subject, a => a.Val1, a => a.Val2));
+            Assert.IsFalse(Operators<TestClass>.Gr(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsFalse(If<TestClass>.Gr(subject, a => a.Val1, a => a.Val2));
+            Assert.IsFalse(Operators<TestClass>.Gr(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -224,7 +224,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsTrue(If<TestClass>.Le(subject, a => a.Val1, a => a.Val2));
+            Assert.IsTrue(Operators<TestClass>.Le(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -235,7 +235,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsFalse(If<TestClass>.Le(subject, a => a.Val1, a => a.Val2));
+            Assert.IsFalse(Operators<TestClass>.Le(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -246,7 +246,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsFalse(If<TestClass>.Le(subject, a => a.Val1, a => a.Val2));
+            Assert.IsFalse(Operators<TestClass>.Le(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -257,7 +257,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsTrue(If<TestClass>.GrEq(subject, a => a.Val1, a => a.Val2));
+            Assert.IsTrue(Operators<TestClass>.GrEq(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -268,7 +268,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsTrue(If<TestClass>.GrEq(subject, a => a.Val1, a => a.Val2));
+            Assert.IsTrue(Operators<TestClass>.GrEq(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -279,7 +279,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsFalse(If<TestClass>.GrEq(subject, a => a.Val1, a => a.Val2));
+            Assert.IsFalse(Operators<TestClass>.GrEq(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -290,7 +290,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsTrue(If<TestClass>.LeEq(subject, a => a.Val1, a => a.Val2));
+            Assert.IsTrue(Operators<TestClass>.LeEq(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -301,7 +301,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsTrue(If<TestClass>.LeEq(subject, a => a.Val1, a => a.Val2));
+            Assert.IsTrue(Operators<TestClass>.LeEq(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -312,7 +312,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsFalse(If<TestClass>.LeEq(subject, a => a.Val1, a => a.Val2));
+            Assert.IsFalse(Operators<TestClass>.LeEq(subject, a => a.Val1, a => a.Val2));
         }
 
         [Test]
@@ -323,7 +323,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsTrue(If<TestClass>.Null(subject, a => a.NullableVal, null));
+            Assert.IsTrue(Operators<TestClass>.Null(subject, a => a.NullableVal, null));
         }
 
         [Test]
@@ -334,7 +334,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             // act
             // assert
-            Assert.IsFalse(If<TestClass>.Null(subject, a => a.NullableVal, null));
+            Assert.IsFalse(Operators<TestClass>.Null(subject, a => a.NullableVal, null));
         }
     }
 }

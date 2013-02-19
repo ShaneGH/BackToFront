@@ -9,10 +9,10 @@ using BackToFront.Logic.Base;
 namespace BackToFront.Framework
 {
     /// <summary>
-    /// End of a pathway, Vio
+    /// End of a pathway, Throw violation
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class ThrowViolation<TEntity> : IValidate<TEntity>, IPathElement
+    public class ThrowViolation<TEntity> : IPathElement<TEntity>
     {
         private readonly IViolation _violation;
         public ThrowViolation(IViolation violation)
@@ -23,20 +23,20 @@ namespace BackToFront.Framework
             _violation = violation;
         }
 
-        public IViolation Validate(TEntity subject)
+        public IViolation ValidateEntity(TEntity subject)
         {
             return _violation;
         }
 
-        public void ValidateAll(TEntity subject, IList<IViolation> violationList)
+        public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
         {
             violationList.Add(_violation);
         }
 
         /// <summary>
-        /// ThrowViolation is the end of the line
+        /// ThrowViolation is the end of the line. Returning _violation will ensure this is never called
         /// </summary>
-        public Logic.Base.IPathElement NextOption
+        public Logic.Base.IPathElement<TEntity> NextOption
         {
             get { return null; }
         }

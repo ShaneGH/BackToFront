@@ -16,33 +16,33 @@ namespace BackToFront.Framework
             : base(PathElement<TEntity>.IgnorePointer)
         { }
 
-        private readonly List<If<TEntity>> _If = new List<If<TEntity>>();
+        private readonly List<Operators<TEntity>> _If = new List<Operators<TEntity>>();
         public IOperators<TEntity> If(Func<TEntity, object> property)
         {
-            var @if = new If<TEntity>(property, this);
+            var @if = new Operators<TEntity>(property, this);
             _If.Add(@if);
             return @if;
         }
 
-        public IViolation Validate(object subject)
+        public IViolation ValidateEntity(object subject)
         {
             // TODO: catch cast exception
-            return Validate((TEntity)subject);
+            return ValidateEntity((TEntity)subject);
         }
 
-        public IEnumerable<IViolation> ValidateAll(object subject)
+        public IEnumerable<IViolation> FullyValidateEntity(object subject)
         {
             // TODO: catch cast exception
             var list = new List<IViolation>();
-            ValidateAll((TEntity)subject, list);
+            FullyValidateEntity((TEntity)subject, list);
             return list.ToArray();
         }
 
-        public IViolation Validate(TEntity subject)
+        public IViolation ValidateEntity(TEntity subject)
         {
             foreach (var i in _If)
             {
-                var violation = i.Validate(subject);
+                var violation = i.ValidateEntity(subject);
                 if (violation != null)
                     return violation;
             }
@@ -50,15 +50,15 @@ namespace BackToFront.Framework
             return null;
         }
 
-        public void ValidateAll(TEntity subject, IList<IViolation> violationList)
+        public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
         {
-            _If.Each(i => i.ValidateAll(subject, violationList));
+            _If.Each(i => i.FullyValidateEntity(subject, violationList));
         }
 
         /// <summary>
         /// Rule path traversal is not linear, can only be the first element in the chain (and doesn't use NextOption)
         /// </summary>
-        public Logic.Base.IPathElement NextOption
+        public Logic.Base.IPathElement<TEntity> NextOption
         {
             get { return null; }
         }

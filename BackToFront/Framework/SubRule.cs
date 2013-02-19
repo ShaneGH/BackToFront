@@ -13,7 +13,7 @@ namespace BackToFront.Logic
             throw new NotImplementedException();
         }
 
-        public IRequirement<TEntity> RequireThat(Func<TEntity, object> property)
+        public IRequireOperators<TEntity> RequireThat(Func<TEntity, object> property)
         {
             throw new NotImplementedException();
         }
@@ -38,7 +38,7 @@ namespace BackToFront.Logic
             throw new NotImplementedException();
         }
 
-        public Base.IPathElement NextOption
+        public Base.IPathElement<TEntity> NextOption
         {
             get { throw new NotImplementedException(); }
         }

@@ -30,7 +30,7 @@ namespace BackToFront.UnitTests.Tests.Framework
             // global arrange
 
             // act
-            var v = Subject.Validate(null);
+            var v = Subject.ValidateEntity(null);
 
             // assert
             Assert.AreEqual(Violation, v);
@@ -43,7 +43,7 @@ namespace BackToFront.UnitTests.Tests.Framework
             List<IViolation> list = new List<IViolation>();
 
             // act
-            Subject.ValidateAll(null, list);
+            Subject.FullyValidateEntity(null, list);
 
             // assert
             Assert.AreEqual(1, list.Count);

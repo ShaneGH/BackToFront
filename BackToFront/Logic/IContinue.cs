@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace BackToFront.Logic
 {
     //Violation, Require, Then, And
-    public interface IOperandBase<TEntity>
+    public interface IContinue<TEntity>
     {
         IOperators<TEntity> And(Func<TEntity, object> value);
 

@@ -10,15 +10,15 @@ using BackToFront.Framework.Base;
 
 namespace BackToFront.Framework.Base
 {
-    internal abstract class IfBase<TEntity> : PathElement<TEntity>, IOperators<TEntity>
+    internal abstract class OperatorsBase<TEntity> : PathElement<TEntity>, IOperators<TEntity>
     {
-        protected IfBase(Func<TEntity, object> property, Rule<TEntity> rule)
+        protected OperatorsBase(Func<TEntity, object> property, Rule<TEntity> rule)
             : base(property, rule)
         {
         }
 
-        protected abstract IOperator<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator);
-        protected abstract IOperator<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator);
+        protected abstract IModelViolation1<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator);
+        protected abstract IModelViolation1<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator);
 
         #region static operator functions
 
@@ -116,82 +116,82 @@ namespace BackToFront.Framework.Base
 
         #region Public Operators
 
-        public IOperator<TEntity> IsEqualTo(Func<TEntity, object> value)
+        public IModelViolation1<TEntity> IsEqualTo(Func<TEntity, object> value)
         {
             return CompileCondition(value, Eq);
         }
 
-        public IOperator<TEntity> IsNotEqualTo(Func<TEntity, object> value)
+        public IModelViolation1<TEntity> IsNotEqualTo(Func<TEntity, object> value)
         {
             return CompileCondition(value, NEq);
         }
 
-        public IOperator<TEntity> IsEqualTo(object value)
+        public IModelViolation1<TEntity> IsEqualTo(object value)
         {
             return CompileCondition(a => value, Eq);
         }
 
-        public IOperator<TEntity> IsNotEqualTo(object value)
+        public IModelViolation1<TEntity> IsNotEqualTo(object value)
         {
             return CompileCondition(a => value, NEq);
         }
 
-        public IOperator<TEntity> IsTrue()
+        public IModelViolation1<TEntity> IsTrue()
         {
             return CompileCondition(a => true, Eq);
         }
 
-        public IOperator<TEntity> IsFalse()
+        public IModelViolation1<TEntity> IsFalse()
         {
             return CompileCondition(a => false, Eq);
         }
 
-        public IOperator<TEntity> IsNull()
+        public IModelViolation1<TEntity> IsNull()
         {
             return CompileCondition(a => null, Eq);
         }
 
-        public IOperator<TEntity> IsNotNull()
+        public IModelViolation1<TEntity> IsNotNull()
         {
             return CompileCondition(a => null, NEq);
         }
 
-        public IOperator<TEntity> GreaterThan(Func<TEntity, IComparable> value)
+        public IModelViolation1<TEntity> GreaterThan(Func<TEntity, IComparable> value)
         {
             return CompileIComparableCondition(value, Gr);
         }
 
-        public IOperator<TEntity> GreaterThan(IComparable value)
+        public IModelViolation1<TEntity> GreaterThan(IComparable value)
         {
             return CompileIComparableCondition(a => value, Gr);
         }
 
-        public IOperator<TEntity> LessThan(Func<TEntity, IComparable> value)
+        public IModelViolation1<TEntity> LessThan(Func<TEntity, IComparable> value)
         {
             return CompileIComparableCondition(value, Le);
         }
 
-        public IOperator<TEntity> LessThan(IComparable value)
+        public IModelViolation1<TEntity> LessThan(IComparable value)
         {
             return CompileIComparableCondition(a => value, Le);
         }
 
-        public IOperator<TEntity> GreaterThanOrEqualTo(Func<TEntity, IComparable> value)
+        public IModelViolation1<TEntity> GreaterThanOrEqualTo(Func<TEntity, IComparable> value)
         {
             return CompileIComparableCondition(value, GrEq);
         }
 
-        public IOperator<TEntity> GreaterThanOrEqualTo(IComparable value)
+        public IModelViolation1<TEntity> GreaterThanOrEqualTo(IComparable value)
         {
             return CompileIComparableCondition(a => value, GrEq);
         }
 
-        public IOperator<TEntity> LessThanOrEqualTo(Func<TEntity, IComparable> value)
+        public IModelViolation1<TEntity> LessThanOrEqualTo(Func<TEntity, IComparable> value)
         {
             return CompileIComparableCondition(value, LeEq);
         }
 
-        public IOperator<TEntity> LessThanOrEqualTo(IComparable value)
+        public IModelViolation1<TEntity> LessThanOrEqualTo(IComparable value)
         {
             return CompileIComparableCondition(a => value, LeEq);
         }

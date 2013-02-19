@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    internal class NegativeOperand<TEntity>:  IRequireOperand<TEntity>
+    internal class Continue<TEntity> : IContinue<TEntity>
     {
-        public IRule<TEntity> OrModelViolationIs(IViolation violation)
-        {
-            throw new NotImplementedException();
-        }
-
         public IOperators<TEntity> And(Func<TEntity, object> value)
         {
             throw new NotImplementedException();

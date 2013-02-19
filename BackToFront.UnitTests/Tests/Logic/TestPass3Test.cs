@@ -29,7 +29,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             };
 
             // act
-            var violation = subject.ValidateX();
+            var violation = subject.Validate();
 
             // assert
             Assert.AreEqual(v, violation);

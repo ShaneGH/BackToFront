@@ -24,7 +24,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             };
 
             // act
-            var violation = subject.ValidateAllX();
+            var violation = subject.ValidateAllRules();
 
             // assert
             Assert.AreEqual(0, violation.Count());
@@ -41,7 +41,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             };
 
             // act
-            var violation = subject.ValidateAllX();
+            var violation = subject.ValidateAllRules();
 
             // assert
             Assert.AreEqual(1, violation.Count());
@@ -59,7 +59,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             };
 
             // act
-            var violation = subject.ValidateAllX();
+            var violation = subject.ValidateAllRules();
 
             // assert
             Assert.AreEqual(2, violation.Count());

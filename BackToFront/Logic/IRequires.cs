@@ -8,6 +8,6 @@ namespace BackToFront.Logic
 {
     public interface IRequires<TEntity>
     {
-        IRequirement<TEntity> RequireThat(Func<TEntity, object> property);
+        IRequireOperators<TEntity> RequireThat(Func<TEntity, object> property);
     }
 }
