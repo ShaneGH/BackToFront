@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    internal class Requirement<TEntity, TViolation> : IRequirement<TEntity, TViolation>
+    internal class Requirement<TEntity> : IRequirement<TEntity>
     {
-        public IRequireOperand<TEntity, TViolation> IsEqualTo(object value)
+        public IRequireOperand<TEntity> IsEqualTo(object value)
         {
             throw new NotImplementedException();
         }
 
-        public IRequireOperand<TEntity, TViolation> IsEqualTo(Func<TEntity, object> value)
+        public IRequireOperand<TEntity> IsEqualTo(Func<TEntity, object> value)
         {
             throw new NotImplementedException();
         }

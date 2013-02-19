@@ -16,7 +16,7 @@ namespace BackToFront.UnitTests.Utilities.TestClasses
 
         static TestPass2()
         {
-            Rules.Add<TestPass2, SimpleViolation>(rule => rule
+            Rules.Add<TestPass2>(rule => rule
                 .If(a => a.ThrowViolationSwitch1).IsTrue().And(a => a.ThrowViolationSwitch2).IsTrue().ModelViolationIs(Violation));
         }
 

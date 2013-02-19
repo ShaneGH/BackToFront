@@ -8,6 +8,12 @@ namespace BackToFront.Extensions
 {
     public static class IEnumerable
     {
+        /// <summary>
+        /// Foreach statement
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="action"></param>
         public static void Each<T>(this IEnumerable<T> items, Action<T> action)
         {
             var enumerated = items.ToArray();

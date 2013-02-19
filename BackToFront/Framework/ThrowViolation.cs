@@ -4,9 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using BackToFront.Logic.Base;
+
 namespace BackToFront.Framework
 {
-    public class ThrowViolation<TEntity> : IValidatablePathElement<TEntity>
+    /// <summary>
+    /// End of a pathway, Vio
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    public class ThrowViolation<TEntity> : IValidate<TEntity>, IPathElement
     {
         private readonly IViolation _violation;
         public ThrowViolation(IViolation violation)

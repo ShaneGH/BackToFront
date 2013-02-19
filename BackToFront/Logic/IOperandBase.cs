@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace BackToFront.Logic
 {
     //Violation, Require, Then, And
-    public interface IOperandBase<TEntity, TViolation>
+    public interface IOperandBase<TEntity>
     {
-        IOperators<TEntity, TViolation> And(Func<TEntity, object> value);
+        IOperators<TEntity> And(Func<TEntity, object> value);
 
-        IOperators<TEntity, TViolation> Or(Func<TEntity, object> value);
+        IOperators<TEntity> Or(Func<TEntity, object> value);
 
-        IRule<TEntity, TViolation> Then(Action<ISubRule<TEntity, TViolation>> action);
+        IRule<TEntity> Then(Action<ISubRule<TEntity>> action);
     }
 }

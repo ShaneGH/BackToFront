@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    internal class OperandBase<TEntity, TViolation> : IOperandBase<TEntity, TViolation>
+    internal class OperandBase<TEntity> : IOperandBase<TEntity>
     {
-        public IOperators<TEntity, TViolation> And(Func<TEntity, object> value)
+        public IOperators<TEntity> And(Func<TEntity, object> value)
         {
             throw new NotImplementedException();
         }
 
-        public IOperators<TEntity, TViolation> Or(Func<TEntity, object> value)
+        public IOperators<TEntity> Or(Func<TEntity, object> value)
         {
             throw new NotImplementedException();
         }
 
-        public IRule<TEntity, TViolation> Then(Action<ISubRule<TEntity, TViolation>> action)
+        public IRule<TEntity> Then(Action<ISubRule<TEntity>> action)
         {
             throw new NotImplementedException();
         }

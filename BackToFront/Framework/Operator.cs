@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 using BackToFront.Framework.Base;
 using BackToFront.Logic;
+using BackToFront.Logic.Base;
 
 namespace BackToFront.Framework
 {
-    internal class Operator<TEntity, TViolation> : OperatorBase<TEntity, TViolation>, IOperator<TEntity, TViolation>
-        where TViolation : IViolation
+    internal class Operator<TEntity> : OperatorBase<TEntity>, IOperator<TEntity>
     {
-        private readonly If<TEntity, TViolation> ParentIf;
+        private readonly If<TEntity> ParentIf;
 
-        protected override IEnumerable<IValidatablePathElement<TEntity>> NextPathElement
+        protected override IEnumerable<IPathElement> NextPathElement
         {
             get
             {
@@ -24,37 +24,37 @@ namespace BackToFront.Framework
             }
         }
 
-        public Operator(Func<TEntity, object> property, Rule<TEntity, TViolation> rule, If<TEntity, TViolation> condition)
+        public Operator(Func<TEntity, object> property, Rule<TEntity> rule, If<TEntity> condition)
             : base(property, rule)
         {
             ParentIf = condition;
         }
 
-        public IOperators<TEntity, TViolation> And(Func<TEntity, object> value)
+        public IOperators<TEntity> And(Func<TEntity, object> value)
         {
             return ParentIf.AddIf(value);
         }
 
-        public IOperators<TEntity, TViolation> Or(Func<TEntity, object> value)
+        public IOperators<TEntity> Or(Func<TEntity, object> value)
         {
             return ParentIf.OrIf(value);
         }
 
         private ThrowViolation<TEntity> _ModelViolationIs;
-        public IRule<TEntity, TViolation> ModelViolationIs(TViolation violation)
+        public IRule<TEntity> ModelViolationIs(IViolation violation)
         {
             Do(() => { _ModelViolationIs = new ThrowViolation<TEntity>(violation); });
             return ParentRule;
         }
 
-        private IRule<TEntity, TViolation> _Then = null;
-        public IRule<TEntity, TViolation> Then(Action<ISubRule<TEntity, TViolation>> action)
+        private IRule<TEntity> _Then = null;
+        public IRule<TEntity> Then(Action<ISubRule<TEntity>> action)
         {
             throw new NotImplementedException();
         }
 
-        private IRequirement<TEntity, TViolation> _RequireThat = null;
-        public IRequirement<TEntity, TViolation> RequireThat(Func<TEntity, object> property)
+        private IRequirement<TEntity> _RequireThat = null;
+        public IRequirement<TEntity> RequireThat(Func<TEntity, object> property)
         {
             throw new NotImplementedException();
         }

@@ -9,10 +9,9 @@ using BackToFront.Logic.Base;
 
 namespace BackToFront.Framework.Base
 {
-    internal abstract class PathElement<TEntity, TViolation> : RuleChildElement<TEntity, TViolation>, IPathElement
-        where TViolation : IViolation
+    internal abstract class PathElement<TEntity> : RuleChildElement<TEntity>, IPathElement
     {
-        protected abstract IEnumerable<IValidatablePathElement<TEntity>> NextPathElement { get; }
+        protected abstract IEnumerable<IPathElement> NextPathElement { get; }
         public IPathElement NextOption
         {
             get
@@ -31,23 +30,9 @@ namespace BackToFront.Framework.Base
             }
         }
 
-        protected PathElement(Func<TEntity, object> descriptor, Rule<TEntity, TViolation> rule)
+        protected PathElement(Func<TEntity, object> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)
         {
-        }
-
-        private IPathElement GetNextOption(Type[] skipInstancesOfType = null)
-        {
-            IPathElement option = NextOption;
-            if (skipInstancesOfType != null)
-            {
-                while (option != null && skipInstancesOfType.Any(a => option.GetType().Is(a)))
-                {
-                    option = option.NextOption;
-                }
-            }
-
-            return option;
         }
 
         /// <summary>
@@ -56,10 +41,10 @@ namespace BackToFront.Framework.Base
         /// <param name="subject"></param>
         /// <param name="skipInstancesOfType">Skip over NextOption if NextOption is Type</param>
         /// <returns></returns>
-        protected IViolation ValidateNext(TEntity subject, Type[] skipInstancesOfType = null)
+        protected IViolation ValidateNext(TEntity subject)
         {
-            object option = GetNextOption(skipInstancesOfType);
-            return option is IValidatablePathElement<TEntity> ? (option as IValidatablePathElement<TEntity>).Validate(subject) : null;
+            object option = NextOption;
+            return option is IValidate<TEntity> ? (option as IValidate<TEntity>).Validate(subject) : null;
         }
 
         /// <summary>
@@ -68,11 +53,11 @@ namespace BackToFront.Framework.Base
         /// <param name="subject"></param>
         /// <param name="violations"></param>
         /// <param name="skipInstancesOfType">Skip over NextOption if NextOption is Type</param>
-        protected void ValidateAllNext(TEntity subject, IList<IViolation> violations, Type[] skipInstancesOfType = null)
+        protected void ValidateAllNext(TEntity subject, IList<IViolation> violations)
         {
-            object option = GetNextOption(skipInstancesOfType);
-            if (option is IValidatablePathElement<TEntity>)
-                (option as IValidatablePathElement<TEntity>).ValidateAll(subject, violations);
+            object option = NextOption;
+            if (option is IValidate<TEntity>)
+                (option as IValidate<TEntity>).ValidateAll(subject, violations);
         }
     }
 }

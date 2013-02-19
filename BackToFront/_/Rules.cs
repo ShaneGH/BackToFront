@@ -10,13 +10,21 @@ using BackToFront.Framework;
 
 namespace BackToFront
 {
+    /// <summary>
+    /// Application business rules
+    /// </summary>
     public class Rules
     {
         #region Static
 
         internal static readonly Rules Repository = new Rules();
-        public static void Add<TEntity, TViolation>(Action<IRule<TEntity, TViolation>> rule)
-            where TViolation : IViolation
+
+        /// <summary>
+        /// Add a business rule
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="rule"></param>
+        public static void Add<TEntity>(Action<IRule<TEntity>> rule)
         {
             Repository._Add(rule);
         }
@@ -34,15 +42,14 @@ namespace BackToFront
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TViolation"></typeparam>
         /// <param name="rule"></param>
-        private void _Add<TEntity, TViolation>(Action<IRule<TEntity, TViolation>> rule)
-            where TViolation : IViolation
+        private void _Add<TEntity>(Action<IRule<TEntity>> rule)
         {
             var type = typeof(TEntity);
             if (Repository.Registered.ContainsKey(type))
                 throw new InvalidOperationException();
 
-            Registered.Add(type, new Rule<TEntity, TViolation>());
-            rule((Rule<TEntity, TViolation>)Repository.Registered[type]);
+            Registered.Add(type, new Rule<TEntity>());
+            rule((Rule<TEntity>)Repository.Registered[type]);
         }
     }
 }

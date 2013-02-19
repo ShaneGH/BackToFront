@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    public interface IRequirement<TEntity, TViolation>
+    public interface IRequirement<TEntity>
     {
-        IRequireOperand<TEntity, TViolation> IsEqualTo(object value);
-        IRequireOperand<TEntity, TViolation> IsEqualTo(Func<TEntity, object> value);
+        IRequireOperand<TEntity> IsEqualTo(object value);
+        IRequireOperand<TEntity> IsEqualTo(Func<TEntity, object> value);
 
-        //IRequireOperand<TEntity, TViolation> NotEqualTo(object value);
-        //IRequireOperand<TEntity, TViolation> NotEqualTo(Func<TEntity, object> value);
+        //IRequireOperand<TEntity> NotEqualTo(object value);
+        //IRequireOperand<TEntity> NotEqualTo(Func<TEntity, object> value);
 
-        //IRequireOperand<TEntity, TViolation> GreaterThan(object value);
-        //IRequireOperand<TEntity, TViolation> GreaterThan(Func<TEntity, object> value);
+        //IRequireOperand<TEntity> GreaterThan(object value);
+        //IRequireOperand<TEntity> GreaterThan(Func<TEntity, object> value);
 
-        //IRequireOperand<TEntity, TViolation> LessThan(object value);
-        //IRequireOperand<TEntity, TViolation> LessThan(Func<TEntity, object> value);
+        //IRequireOperand<TEntity> LessThan(object value);
+        //IRequireOperand<TEntity> LessThan(Func<TEntity, object> value);
 
-        //IRequireOperand<TEntity, TViolation> GreaterThanOrEqualTo(object value);
-        //IRequireOperand<TEntity, TViolation> GreaterThanOrEqualTo(Func<TEntity, object> value);
+        //IRequireOperand<TEntity> GreaterThanOrEqualTo(object value);
+        //IRequireOperand<TEntity> GreaterThanOrEqualTo(Func<TEntity, object> value);
 
-        //IRequireOperand<TEntity, TViolation> LessThanOrEqualTo(object value);
-        //IRequireOperand<TEntity, TViolation> LessThanOrEqualTo(Func<TEntity, object> value);
+        //IRequireOperand<TEntity> LessThanOrEqualTo(object value);
+        //IRequireOperand<TEntity> LessThanOrEqualTo(Func<TEntity, object> value);
     }
 }

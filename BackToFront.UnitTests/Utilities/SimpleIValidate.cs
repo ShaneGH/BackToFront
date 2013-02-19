@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using BackToFront.Logic.Base;
+
 namespace BackToFront.UnitTests.Utilities
 {
-    public class SimpleIValidate : IValidatablePathElement<object>
+    public class SimpleIValidate : IValidate<object>, IPathElement
     {
         public EventHandler<object> ValidateCalled;
         public EventHandler<object> ValidateAllCalled;

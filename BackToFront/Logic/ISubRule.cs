@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    public interface ISubRule<TEntity, TViolation> : IRule<TEntity, TViolation>, IRequires<TEntity, TViolation>
+    public interface ISubRule<TEntity> : IRule<TEntity>, IRequires<TEntity>
     {
     }
 }

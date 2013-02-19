@@ -10,16 +10,15 @@ using BackToFront.Framework.Base;
 
 namespace BackToFront.Framework.Base
 {
-    internal abstract class IfBase<TEntity, TViolation> : PathElement<TEntity, TViolation>, IOperators<TEntity, TViolation>
-        where TViolation : IViolation
+    internal abstract class IfBase<TEntity> : PathElement<TEntity>, IOperators<TEntity>
     {
-        protected IfBase(Func<TEntity, object> property, Rule<TEntity, TViolation> rule)
+        protected IfBase(Func<TEntity, object> property, Rule<TEntity> rule)
             : base(property, rule)
         {
         }
 
-        protected abstract IOperator<TEntity, TViolation> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator);
-        protected abstract IOperator<TEntity, TViolation> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator);
+        protected abstract IOperator<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator);
+        protected abstract IOperator<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator);
 
         #region static operator functions
 
@@ -117,82 +116,82 @@ namespace BackToFront.Framework.Base
 
         #region Public Operators
 
-        public IOperator<TEntity, TViolation> IsEqualTo(Func<TEntity, object> value)
+        public IOperator<TEntity> IsEqualTo(Func<TEntity, object> value)
         {
             return CompileCondition(value, Eq);
         }
 
-        public IOperator<TEntity, TViolation> IsNotEqualTo(Func<TEntity, object> value)
+        public IOperator<TEntity> IsNotEqualTo(Func<TEntity, object> value)
         {
             return CompileCondition(value, NEq);
         }
 
-        public IOperator<TEntity, TViolation> IsEqualTo(object value)
+        public IOperator<TEntity> IsEqualTo(object value)
         {
             return CompileCondition(a => value, Eq);
         }
 
-        public IOperator<TEntity, TViolation> IsNotEqualTo(object value)
+        public IOperator<TEntity> IsNotEqualTo(object value)
         {
             return CompileCondition(a => value, NEq);
         }
 
-        public IOperator<TEntity, TViolation> IsTrue()
+        public IOperator<TEntity> IsTrue()
         {
             return CompileCondition(a => true, Eq);
         }
 
-        public IOperator<TEntity, TViolation> IsFalse()
+        public IOperator<TEntity> IsFalse()
         {
             return CompileCondition(a => false, Eq);
         }
 
-        public IOperator<TEntity, TViolation> IsNull()
+        public IOperator<TEntity> IsNull()
         {
             return CompileCondition(a => null, Eq);
         }
 
-        public IOperator<TEntity, TViolation> IsNotNull()
+        public IOperator<TEntity> IsNotNull()
         {
             return CompileCondition(a => null, NEq);
         }
 
-        public IOperator<TEntity, TViolation> GreaterThan(Func<TEntity, IComparable> value)
+        public IOperator<TEntity> GreaterThan(Func<TEntity, IComparable> value)
         {
             return CompileIComparableCondition(value, Gr);
         }
 
-        public IOperator<TEntity, TViolation> GreaterThan(IComparable value)
+        public IOperator<TEntity> GreaterThan(IComparable value)
         {
             return CompileIComparableCondition(a => value, Gr);
         }
 
-        public IOperator<TEntity, TViolation> LessThan(Func<TEntity, IComparable> value)
+        public IOperator<TEntity> LessThan(Func<TEntity, IComparable> value)
         {
             return CompileIComparableCondition(value, Le);
         }
 
-        public IOperator<TEntity, TViolation> LessThan(IComparable value)
+        public IOperator<TEntity> LessThan(IComparable value)
         {
             return CompileIComparableCondition(a => value, Le);
         }
 
-        public IOperator<TEntity, TViolation> GreaterThanOrEqualTo(Func<TEntity, IComparable> value)
+        public IOperator<TEntity> GreaterThanOrEqualTo(Func<TEntity, IComparable> value)
         {
             return CompileIComparableCondition(value, GrEq);
         }
 
-        public IOperator<TEntity, TViolation> GreaterThanOrEqualTo(IComparable value)
+        public IOperator<TEntity> GreaterThanOrEqualTo(IComparable value)
         {
             return CompileIComparableCondition(a => value, GrEq);
         }
 
-        public IOperator<TEntity, TViolation> LessThanOrEqualTo(Func<TEntity, IComparable> value)
+        public IOperator<TEntity> LessThanOrEqualTo(Func<TEntity, IComparable> value)
         {
             return CompileIComparableCondition(value, LeEq);
         }
 
-        public IOperator<TEntity, TViolation> LessThanOrEqualTo(IComparable value)
+        public IOperator<TEntity> LessThanOrEqualTo(IComparable value)
         {
             return CompileIComparableCondition(a => value, LeEq);
         }

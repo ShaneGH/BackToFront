@@ -10,17 +10,16 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework
 {
-    internal class Rule<TEntity, TViolation> : PropertyElement<TEntity, TViolation>, IRule<TEntity, TViolation>, IValidate, IValidatablePathElement<TEntity>
-        where TViolation : IViolation
+    internal class Rule<TEntity> : PropertyElement<TEntity>, IRule<TEntity>, IValidate, IValidate<TEntity>
     {
         public Rule()
-            : base(PathElement<TEntity, TViolation>.IgnorePointer)
+            : base(PathElement<TEntity>.IgnorePointer)
         { }
 
-        private readonly List<If<TEntity, TViolation>> _If = new List<If<TEntity,TViolation>>();
-        public IOperators<TEntity, TViolation> If(Func<TEntity, object> property)
+        private readonly List<If<TEntity>> _If = new List<If<TEntity>>();
+        public IOperators<TEntity> If(Func<TEntity, object> property)
         {
-            var @if = new If<TEntity, TViolation>(property, this);
+            var @if = new If<TEntity>(property, this);
             _If.Add(@if);
             return @if;
         }

@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    internal class NegativeOperand<TEntity, TViolation>:  IRequireOperand<TEntity, TViolation>
+    internal class NegativeOperand<TEntity>:  IRequireOperand<TEntity>
     {
-        public IRule<TEntity, TViolation> OrModelViolationIs(TViolation violation)
+        public IRule<TEntity> OrModelViolationIs(IViolation violation)
         {
             throw new NotImplementedException();
         }
 
-        public IOperators<TEntity, TViolation> And(Func<TEntity, object> value)
+        public IOperators<TEntity> And(Func<TEntity, object> value)
         {
             throw new NotImplementedException();
         }
 
-        public IOperators<TEntity, TViolation> Or(Func<TEntity, object> value)
+        public IOperators<TEntity> Or(Func<TEntity, object> value)
         {
             throw new NotImplementedException();
         }
 
-        public IRule<TEntity, TViolation> Then(Action<ISubRule<TEntity, TViolation>> action)
+        public IRule<TEntity> Then(Action<ISubRule<TEntity>> action)
         {
             throw new NotImplementedException();
         }

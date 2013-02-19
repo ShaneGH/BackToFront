@@ -8,6 +8,12 @@ namespace BackToFront.Extensions
 {
     public static class Reflection
     {
+        /// <summary>
+        /// Mimicks "this is parentClass"
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="parentClass"></param>
+        /// <returns></returns>
         public static bool Is(this Type target, Type parentClass)
         {
             return target == parentClass || target.IsSubclassOf(parentClass);

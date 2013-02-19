@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    internal class SubRule<TEntity, TViolation>: ISubRule<TEntity, TViolation>
+    internal class SubRule<TEntity>: ISubRule<TEntity>
     {
-        public IOperators<TEntity, TViolation> If(Func<TEntity, object> property)
+        public IOperators<TEntity> If(Func<TEntity, object> property)
         {
             throw new NotImplementedException();
         }
 
-        public IRequirement<TEntity, TViolation> RequireThat(Func<TEntity, object> property)
+        public IRequirement<TEntity> RequireThat(Func<TEntity, object> property)
         {
             throw new NotImplementedException();
         }

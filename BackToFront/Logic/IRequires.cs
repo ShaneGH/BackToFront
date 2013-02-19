@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    public interface IRequires<TEntity, TViolation>
+    public interface IRequires<TEntity>
     {
-        IRequirement<TEntity, TViolation> RequireThat(Func<TEntity, object> property);
+        IRequirement<TEntity> RequireThat(Func<TEntity, object> property);
     }
 }

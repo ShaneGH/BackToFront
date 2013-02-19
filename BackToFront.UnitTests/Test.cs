@@ -32,7 +32,7 @@ namespace BackToFront.UnitTests
 
         public static void Testtt()
         {
-            Rules.Add<Something, ViolationClass>(trunk => trunk
+            Rules.Add<Something>(trunk => trunk
                 .If(b => b.Value1).IsEqualTo(0).ModelViolationIs(new ViolationClass("Invalid"))
                 .If(b => b.Value1).IsEqualTo(2).And(b => b.Value2).IsEqualTo(6)
                     .Then(branch1 => 

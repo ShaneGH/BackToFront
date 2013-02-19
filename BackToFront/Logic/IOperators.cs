@@ -6,34 +6,34 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    public interface IOperators<TEntity, TViolation>
+    public interface IOperators<TEntity>
     {
-        IOperator<TEntity, TViolation> IsTrue();
-        IOperator<TEntity, TViolation> IsFalse();
+        IOperator<TEntity> IsTrue();
+        IOperator<TEntity> IsFalse();
 
-        IOperator<TEntity, TViolation> IsNull();
-        IOperator<TEntity, TViolation> IsNotNull();
+        IOperator<TEntity> IsNull();
+        IOperator<TEntity> IsNotNull();
 
-        IOperator<TEntity, TViolation> IsEqualTo(Func<TEntity, object> value);
-        IOperator<TEntity, TViolation> IsEqualTo(object value);
+        IOperator<TEntity> IsEqualTo(Func<TEntity, object> value);
+        IOperator<TEntity> IsEqualTo(object value);
 
-        IOperator<TEntity, TViolation> IsNotEqualTo(Func<TEntity, object> value);
-        IOperator<TEntity, TViolation> IsNotEqualTo(object value);
+        IOperator<TEntity> IsNotEqualTo(Func<TEntity, object> value);
+        IOperator<TEntity> IsNotEqualTo(object value);
 
-        IOperator<TEntity, TViolation> GreaterThan(Func<TEntity, IComparable> value);
-        IOperator<TEntity, TViolation> GreaterThan(IComparable value);
+        IOperator<TEntity> GreaterThan(Func<TEntity, IComparable> value);
+        IOperator<TEntity> GreaterThan(IComparable value);
 
-        IOperator<TEntity, TViolation> LessThan(Func<TEntity, IComparable> value);
-        IOperator<TEntity, TViolation> LessThan(IComparable value);
+        IOperator<TEntity> LessThan(Func<TEntity, IComparable> value);
+        IOperator<TEntity> LessThan(IComparable value);
 
-        IOperator<TEntity, TViolation> GreaterThanOrEqualTo(Func<TEntity, IComparable> value);
-        IOperator<TEntity, TViolation> GreaterThanOrEqualTo(IComparable value);
+        IOperator<TEntity> GreaterThanOrEqualTo(Func<TEntity, IComparable> value);
+        IOperator<TEntity> GreaterThanOrEqualTo(IComparable value);
 
-        IOperator<TEntity, TViolation> LessThanOrEqualTo(Func<TEntity, IComparable> value);
-        IOperator<TEntity, TViolation> LessThanOrEqualTo(IComparable value);
+        IOperator<TEntity> LessThanOrEqualTo(Func<TEntity, IComparable> value);
+        IOperator<TEntity> LessThanOrEqualTo(IComparable value);
 
-        //IIfConditionSatisfied<TEntity, TViolation> IsInstanceOf(Func<TEntity, IComparable> value);
-        //IIfConditionSatisfied<TEntity, TViolation> IsInstanceOf(Type value);
-        //IIfConditionSatisfied<TEntity, TViolation> IsInstanceOf<T>();
+        //IIfConditionSatisfied<TEntity> IsInstanceOf(Func<TEntity, IComparable> value);
+        //IIfConditionSatisfied<TEntity> IsInstanceOf(Type value);
+        //IIfConditionSatisfied<TEntity> IsInstanceOf<T>();
     }
 }

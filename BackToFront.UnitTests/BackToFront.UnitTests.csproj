@@ -50,7 +50,6 @@
   <ItemGroup>
     <Compile Include="Base\TestBase.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Tests\Framework\Base\OperandTests.cs" />
     <Compile Include="Tests\Framework\Base\PathElementTests.cs" />
     <Compile Include="Tests\Framework\OperatorsTests.cs" />
     <Compile Include="Tests\Framework\ThrowViolationTests.cs" />

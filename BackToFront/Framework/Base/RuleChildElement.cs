@@ -8,11 +8,10 @@ using BackToFront.Extensions;
 
 namespace BackToFront.Framework.Base
 {
-    internal abstract class RuleChildElement<TEntity, TViolation> : PropertyElement<TEntity, TViolation>
-        where TViolation : IViolation
+    internal abstract class RuleChildElement<TEntity> : PropertyElement<TEntity>
     {
-        protected readonly Rule<TEntity, TViolation> ParentRule;
-        protected RuleChildElement(Func<TEntity, object> descriptor, Rule<TEntity, TViolation> rule)
+        protected readonly Rule<TEntity> ParentRule;
+        protected RuleChildElement(Func<TEntity, object> descriptor, Rule<TEntity> rule)
             : base(descriptor)
         {
             ParentRule = rule;

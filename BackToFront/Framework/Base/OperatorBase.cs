@@ -8,10 +8,14 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework.Base
 {
-    internal abstract class OperatorBase<TEntity, TViolation> : PathElement<TEntity, TViolation>, IValidatablePathElement<TEntity>
-        where TViolation : IViolation
+    /// <summary>
+    /// Base class, to be refactored out or used to differenciate Positive and negative outcomes
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TViolation"></typeparam>
+    internal abstract class OperatorBase<TEntity> : PathElement<TEntity>, IValidate<TEntity>
     {
-        protected OperatorBase(Func<TEntity, object> descriptor, Rule<TEntity, TViolation> rule)
+        protected OperatorBase(Func<TEntity, object> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)
         {
         }

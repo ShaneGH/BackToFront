@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BackToFront.Extensions;
 
 using BackToFront.Logic;
+using BackToFront.Logic.Base;
 using BackToFront.Framework.Base;
 using NUnit.Framework;
 
@@ -17,15 +18,15 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
     [TestFixture]
     public class PathElementTests
     {
-        private class TestClass : PathElement<object, Utilities.SimpleViolation>
+        private class TestClass : PathElement<object>
         {
             public TestClass()
-                : base(PathElement<object, Utilities.SimpleViolation>.IgnorePointer, null)
+                : base(PathElement<object>.IgnorePointer, null)
             { }
 
             public readonly IList<SimpleIValidate> Els = new List<SimpleIValidate>();
 
-            protected override IEnumerable<IValidatablePathElement<object>> NextPathElement
+            protected override IEnumerable<IPathElement> NextPathElement
             {
                 get
                 {

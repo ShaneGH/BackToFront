@@ -8,8 +8,7 @@ using BackToFront.Extensions;
 
 namespace BackToFront.Framework.Base
 {
-    internal abstract class PropertyElement<TEntity, TViolation>
-        where TViolation : IViolation
+    internal abstract class PropertyElement<TEntity>
     {
         /// <summary>
         /// Use instead of null for un needed constructor argument
