@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using BackToFront.Utils;
 using BackToFront.Logic;
 using BackToFront.Logic.Base;
+using BackToFront.Logic.Compilations;
 using BackToFront.Framework.Base;
 
 namespace BackToFront.Framework.Base
@@ -17,183 +19,89 @@ namespace BackToFront.Framework.Base
         {
         }
 
-        protected abstract IModelViolation1<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator);
-        protected abstract IModelViolation1<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator);
+        protected abstract IConditionSatisfied<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator);
+        protected abstract IConditionSatisfied<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator);
+        
+        #region IOperators
 
-        #region static operator functions
-
-        /// <summary>
-        /// lhs.Equals(rhs)
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <param name="lhs"></param>
-        /// <param name="rhs"></param>
-        /// <returns></returns>
-        public static bool Eq(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, object> rhs)
+        public IConditionSatisfied<TEntity> IsEqualTo(Func<TEntity, object> value)
         {
-            var val1 = lhs(subject);
-            var val2 = rhs(subject);
-            return (val1 == null && val2 == null) ||
-                    (val1 != null && val1.Equals(val2));
+            return CompileCondition(value, Operators.Eq);
         }
 
-        /// <summary>
-        /// !lhs.Equals(rhs)
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <param name="lhs"></param>
-        /// <param name="rhs"></param>
-        /// <returns></returns>
-        public static bool NEq(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, object> rhs)
+        public IConditionSatisfied<TEntity> IsNotEqualTo(Func<TEntity, object> value)
         {
-            return !Eq(subject, lhs, rhs);
+            return CompileCondition(value, Operators.NEq);
         }
 
-        /// <summary>
-        /// lhs > rhs (actually rhs &lt; lhs)
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <param name="lhs"></param>
-        /// <param name="rhs"></param>
-        /// <returns></returns>
-        public static bool Gr(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, IComparable> rhs)
+        public IConditionSatisfied<TEntity> IsEqualTo(object value)
         {
-            var val = rhs(subject);
-            return val != null && val.CompareTo(lhs(subject)) < 0;
+            return CompileCondition(a => value, Operators.Eq);
         }
 
-        /// <summary>
-        /// lhs &lt; rhs (actually rhs > lhs)
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <param name="lhs"></param>
-        /// <param name="rhs"></param>
-        /// <returns></returns>
-        public static bool Le(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, IComparable> rhs)
+        public IConditionSatisfied<TEntity> IsNotEqualTo(object value)
         {
-            var val = rhs(subject);
-            return val != null && val.CompareTo(lhs(subject)) > 0;
+            return CompileCondition(a => value, Operators.NEq);
         }
 
-        /// <summary>
-        /// !(lhs &lt; rhs)
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <param name="lhs"></param>
-        /// <param name="rhs"></param>
-        /// <returns></returns>
-        public static bool GrEq(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, IComparable> rhs)
+        public IConditionSatisfied<TEntity> IsTrue()
         {
-            return !Le(subject, lhs, rhs);
+            return CompileCondition(a => true, Operators.Eq);
         }
 
-        /// <summary>
-        /// !(lhs > rhs)
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <param name="lhs"></param>
-        /// <param name="rhs"></param>
-        /// <returns></returns>
-        public static bool LeEq(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, IComparable> rhs)
+        public IConditionSatisfied<TEntity> IsFalse()
         {
-            return !Gr(subject, lhs, rhs);
+            return CompileCondition(a => false, Operators.Eq);
         }
 
-        /// <summary>
-        /// lhs == null
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <param name="lhs"></param>
-        /// <param name="unusedRhs"></param>
-        /// <returns></returns>
-        public static bool Null(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, object> unusedRhs)
+        public IConditionSatisfied<TEntity> IsNull()
         {
-            var v1 = lhs(subject);
-            return v1 == null;
+            return CompileCondition(a => null, Operators.Eq);
         }
 
-        #endregion
-
-        #region Public Operators
-
-        public IModelViolation1<TEntity> IsEqualTo(Func<TEntity, object> value)
+        public IConditionSatisfied<TEntity> IsNotNull()
         {
-            return CompileCondition(value, Eq);
+            return CompileCondition(a => null, Operators.NEq);
         }
 
-        public IModelViolation1<TEntity> IsNotEqualTo(Func<TEntity, object> value)
+        public IConditionSatisfied<TEntity> GreaterThan(Func<TEntity, IComparable> value)
         {
-            return CompileCondition(value, NEq);
+            return CompileIComparableCondition(value, Operators.Gr);
         }
 
-        public IModelViolation1<TEntity> IsEqualTo(object value)
+        public IConditionSatisfied<TEntity> GreaterThan(IComparable value)
         {
-            return CompileCondition(a => value, Eq);
+            return CompileIComparableCondition(a => value, Operators.Gr);
         }
 
-        public IModelViolation1<TEntity> IsNotEqualTo(object value)
+        public IConditionSatisfied<TEntity> LessThan(Func<TEntity, IComparable> value)
         {
-            return CompileCondition(a => value, NEq);
+            return CompileIComparableCondition(value, Operators.Le);
         }
 
-        public IModelViolation1<TEntity> IsTrue()
+        public IConditionSatisfied<TEntity> LessThan(IComparable value)
         {
-            return CompileCondition(a => true, Eq);
+            return CompileIComparableCondition(a => value, Operators.Le);
         }
 
-        public IModelViolation1<TEntity> IsFalse()
+        public IConditionSatisfied<TEntity> GreaterThanOrEqualTo(Func<TEntity, IComparable> value)
         {
-            return CompileCondition(a => false, Eq);
+            return CompileIComparableCondition(value, Operators.GrEq);
         }
 
-        public IModelViolation1<TEntity> IsNull()
+        public IConditionSatisfied<TEntity> GreaterThanOrEqualTo(IComparable value)
         {
-            return CompileCondition(a => null, Eq);
+            return CompileIComparableCondition(a => value, Operators.GrEq);
         }
 
-        public IModelViolation1<TEntity> IsNotNull()
+        public IConditionSatisfied<TEntity> LessThanOrEqualTo(Func<TEntity, IComparable> value)
         {
-            return CompileCondition(a => null, NEq);
+            return CompileIComparableCondition(value, Operators.LeEq);
         }
 
-        public IModelViolation1<TEntity> GreaterThan(Func<TEntity, IComparable> value)
+        public IConditionSatisfied<TEntity> LessThanOrEqualTo(IComparable value)
         {
-            return CompileIComparableCondition(value, Gr);
-        }
-
-        public IModelViolation1<TEntity> GreaterThan(IComparable value)
-        {
-            return CompileIComparableCondition(a => value, Gr);
-        }
-
-        public IModelViolation1<TEntity> LessThan(Func<TEntity, IComparable> value)
-        {
-            return CompileIComparableCondition(value, Le);
-        }
-
-        public IModelViolation1<TEntity> LessThan(IComparable value)
-        {
-            return CompileIComparableCondition(a => value, Le);
-        }
-
-        public IModelViolation1<TEntity> GreaterThanOrEqualTo(Func<TEntity, IComparable> value)
-        {
-            return CompileIComparableCondition(value, GrEq);
-        }
-
-        public IModelViolation1<TEntity> GreaterThanOrEqualTo(IComparable value)
-        {
-            return CompileIComparableCondition(a => value, GrEq);
-        }
-
-        public IModelViolation1<TEntity> LessThanOrEqualTo(Func<TEntity, IComparable> value)
-        {
-            return CompileIComparableCondition(value, LeEq);
-        }
-
-        public IModelViolation1<TEntity> LessThanOrEqualTo(IComparable value)
-        {
-            return CompileIComparableCondition(a => value, LeEq);
+            return CompileIComparableCondition(a => value, Operators.LeEq);
         }
 
         #endregion

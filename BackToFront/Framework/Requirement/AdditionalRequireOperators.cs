@@ -6,25 +6,26 @@ using System.Threading.Tasks;
 
 using BackToFront.Logic;
 using BackToFront.Logic.Base;
+using BackToFront.Logic.Compilations;
 using BackToFront.Framework.Base;
 using BackToFront.Enum;
 
-namespace BackToFront.Framework
+namespace BackToFront.Framework.Requirement
 {
     /// <summary>
     /// Represents the root of an If statement
     /// </summary>
     /// <typeparam name="TEntity">###@@@</typeparam>
-    internal partial class Operators<TEntity>
+    internal partial class RequireOperators<TEntity>
     {
         /// <summary>
         /// Add an "&& condition" to this If
         /// </summary>
         /// <param name="property">The property</param>
         /// <returns>Next step</returns>
-        public IOperators<TEntity> AddIf(Func<TEntity, object> property)
+        public IRequireOperators<TEntity> AddIf(Func<TEntity, object> property)
         {
-            return new AdditionalOperators(property, LogicalOperator.And, this);
+            return new AdditionalRequireOperators(property, LogicalOperator.And, this);
         }
 
         /// <summary>
@@ -32,20 +33,20 @@ namespace BackToFront.Framework
         /// </summary>
         /// <param name="property">The property</param>
         /// <returns>Next step</returns>
-        public IOperators<TEntity> OrIf(Func<TEntity, object> property)
+        public IRequireOperators<TEntity> OrIf(Func<TEntity, object> property)
         {
-            return new AdditionalOperators(property, LogicalOperator.Or, this);
+            return new AdditionalRequireOperators(property, LogicalOperator.Or, this);
         }
 
         /// <summary>
         /// Used for all subsequent If 
         /// </summary>
-        private class AdditionalOperators : OperatorsBase<TEntity>
+        private class AdditionalRequireOperators : RequireOperatorsBase<TEntity>
         {
             private readonly LogicalOperator Op;
-            private readonly Operators<TEntity> ParentIf;
+            private readonly RequireOperators<TEntity> ParentIf;
 
-            public AdditionalOperators(Func<TEntity, object> property, LogicalOperator op, Operators<TEntity> parentIf)
+            public AdditionalRequireOperators(Func<TEntity, object> property, LogicalOperator op, RequireOperators<TEntity> parentIf)
                 : base(property, parentIf.ParentRule)
             {
                 ParentIf = parentIf;
@@ -58,7 +59,7 @@ namespace BackToFront.Framework
             /// <param name="value"></param>
             /// <param name="operator"></param>
             /// <returns></returns>
-            protected override IModelViolation1<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator)
+            protected override IRequirementFailed<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator)
             {
                 return Do(() =>
                 {
@@ -73,7 +74,7 @@ namespace BackToFront.Framework
             /// <param name="value"></param>
             /// <param name="operator"></param>
             /// <returns></returns>
-            protected override IModelViolation1<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator)
+            protected override IRequirementFailed<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator)
             {
                 return CompileCondition(value, (a, b, c) => @operator(a, b, d => c(d) as IComparable));
             }

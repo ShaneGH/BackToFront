@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BackToFront;
+using BackToFront.Logic;
 using BackToFront.Extensions;
 using NUnit.Framework;
 
@@ -39,7 +40,7 @@ namespace BackToFront.UnitTests
                     {
                         branch1.RequireThat(c => c.Value3).IsEqualTo(c => c.Value4).OrModelViolationIs(new ViolationClass("Invalid"));
 
-                        branch1.If(c => c.Value4).IsEqualTo(1).RequireThat(c => c.Value5).IsEqualTo(8).OrModelViolationIs(new ViolationClass("Invalid"))
+                        branch1.If(c => c.Value4).IsEqualTo(1).RequireThat(c => c.Value5).IsEqualTo(8).Or(c => c.Value5).IsEqualTo(8).OrModelViolationIs(new ViolationClass("Invalid"))
                             .If(c => c.Value4).IsEqualTo(0).RequireThat(c => c.Value5).IsEqualTo(8).OrModelViolationIs(new ViolationClass("Invalid"));
                     })
                 .If(b => b.Value4).IsEqualTo(0).RequireThat(b => b.Value5).IsEqualTo(8).OrModelViolationIs(new ViolationClass("Invalid")));

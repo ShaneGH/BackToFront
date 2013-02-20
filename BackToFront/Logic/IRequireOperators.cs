@@ -4,36 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using BackToFront.Logic.Compilations;
+
 namespace BackToFront.Logic
 {
     public interface IRequireOperators<TEntity>
     {
-        IModelViolation2<TEntity> IsTrue();
-        IModelViolation2<TEntity> IsFalse();
+        IRequirementFailed<TEntity> IsTrue();
+        IRequirementFailed<TEntity> IsFalse();
 
-        IModelViolation2<TEntity> IsNull();
-        IModelViolation2<TEntity> IsNotNull();
+        IRequirementFailed<TEntity> IsNull();
+        IRequirementFailed<TEntity> IsNotNull();
 
-        IModelViolation2<TEntity> IsEqualTo(Func<TEntity, object> value);
-        IModelViolation2<TEntity> IsEqualTo(object value);
+        IRequirementFailed<TEntity> IsEqualTo(Func<TEntity, object> value);
+        IRequirementFailed<TEntity> IsEqualTo(object value);
 
-        IModelViolation2<TEntity> IsNotEqualTo(Func<TEntity, object> value);
-        IModelViolation2<TEntity> IsNotEqualTo(object value);
+        IRequirementFailed<TEntity> IsNotEqualTo(Func<TEntity, object> value);
+        IRequirementFailed<TEntity> IsNotEqualTo(object value);
 
-        IModelViolation2<TEntity> GreaterThan(Func<TEntity, IComparable> value);
-        IModelViolation2<TEntity> GreaterThan(IComparable value);
+        IRequirementFailed<TEntity> GreaterThan(Func<TEntity, IComparable> value);
+        IRequirementFailed<TEntity> GreaterThan(IComparable value);
 
-        IModelViolation2<TEntity> LessThan(Func<TEntity, IComparable> value);
-        IModelViolation2<TEntity> LessThan(IComparable value);
+        IRequirementFailed<TEntity> LessThan(Func<TEntity, IComparable> value);
+        IRequirementFailed<TEntity> LessThan(IComparable value);
 
-        IModelViolation2<TEntity> GreaterThanOrEqualTo(Func<TEntity, IComparable> value);
-        IModelViolation2<TEntity> GreaterThanOrEqualTo(IComparable value);
+        IRequirementFailed<TEntity> GreaterThanOrEqualTo(Func<TEntity, IComparable> value);
+        IRequirementFailed<TEntity> GreaterThanOrEqualTo(IComparable value);
 
-        IModelViolation2<TEntity> LessThanOrEqualTo(Func<TEntity, IComparable> value);
-        IModelViolation2<TEntity> LessThanOrEqualTo(IComparable value);
+        IRequirementFailed<TEntity> LessThanOrEqualTo(Func<TEntity, IComparable> value);
+        IRequirementFailed<TEntity> LessThanOrEqualTo(IComparable value);
 
-        //IIfConditionSatisfied<TEntity> IsInstanceOf(Func<TEntity, IComparable> value);
-        //IIfConditionSatisfied<TEntity> IsInstanceOf(Type value);
-        //IIfConditionSatisfied<TEntity> IsInstanceOf<T>();
+        //IRequirementFailed<TEntity> IsInstanceOf(Func<TEntity, IComparable> value);
+        //IRequirementFailed<TEntity> IsInstanceOf(Type value);
+        //IRequirementFailed<TEntity> IsInstanceOf<T>();
     }
 }

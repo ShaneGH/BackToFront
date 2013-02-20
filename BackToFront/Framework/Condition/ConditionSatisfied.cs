@@ -5,12 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BackToFront.Framework.Base;
+using BackToFront.Framework.Requirement;
 using BackToFront.Logic;
 using BackToFront.Logic.Base;
 
-namespace BackToFront.Framework
+using BackToFront.Logic.Compilations;
+
+namespace BackToFront.Framework.Condition
 {
-    internal class ModelViolation1<TEntity> : PathElement<TEntity>, IModelViolation1<TEntity>
+    internal class ConditionSatisfied<TEntity> : ModelViolation<TEntity>, IConditionSatisfied<TEntity>
     {
         private readonly Operators<TEntity> ParentIf;
 
@@ -18,16 +21,16 @@ namespace BackToFront.Framework
         {
             get
             {
-                yield return _ModelViolationIs;
+                yield return Violation;
                 //yield return _Then;
-                //yield return _RequireThat;
+                yield return _RequireThat;
             }
         }
 
-        public ModelViolation1(Func<TEntity, object> property, Rule<TEntity> rule, Operators<TEntity> condition)
+        public ConditionSatisfied(Func<TEntity, object> property, Rule<TEntity> rule, Operators<TEntity> operators)
             : base(property, rule)
         {
-            ParentIf = condition;
+            ParentIf = operators;
         }
 
         public IOperators<TEntity> And(Func<TEntity, object> value)
@@ -40,21 +43,14 @@ namespace BackToFront.Framework
             return ParentIf.OrIf(value);
         }
 
-        private ThrowViolation<TEntity> _ModelViolationIs;
-        public IRule<TEntity> ModelViolationIs(IViolation violation)
+        private RequireOperators<TEntity> _RequireThat = null;
+        public IRequireOperators<TEntity> RequireThat(Func<TEntity, object> property)
         {
-            Do(() => { _ModelViolationIs = new ThrowViolation<TEntity>(violation); });
-            return ParentRule;
+            return Do(() => _RequireThat = new RequireOperators<TEntity>(property, ParentRule));
         }
 
         private IRule<TEntity> _Then = null;
         public IRule<TEntity> Then(Action<ISubRule<TEntity>> action)
-        {
-            throw new NotImplementedException();
-        }
-
-        private IRequireOperators<TEntity> _RequireThat = null;
-        public IRequireOperators<TEntity> RequireThat(Func<TEntity, object> property)
         {
             throw new NotImplementedException();
         }

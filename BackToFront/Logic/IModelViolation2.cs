@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    public interface IModelViolation2<TEntity> : IContinue<TEntity>
+    public interface IModelViolation2<TEntity>
     {
         IRule<TEntity> OrModelViolationIs(IViolation violation);
-    }
+    }    
 }

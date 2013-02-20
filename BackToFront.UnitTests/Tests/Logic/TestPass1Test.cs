@@ -5,19 +5,39 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BackToFront.Extensions;
-
+using BackToFront.UnitTests.Utilities;
 using NUnit.Framework;
 
 namespace BackToFront.UnitTests.Tests.Logic
 {
+    public class TestPass1
+    {
+        public static SimpleViolation Violation1 = new SimpleViolation("Violation");
+        public static SimpleViolation Violation2 = new SimpleViolation("Violation");
+
+        static TestPass1()
+        {
+            Rules.Add<TestPass1>(rule => rule
+                .If(a => a.ThrowViolation1).IsTrue().ModelViolationIs(Violation1)
+                .If(a => a.ThrowViolation2).IsTrue().ModelViolationIs(Violation2));
+        }
+
+        public bool ThrowViolation1 { get; set; }
+        public bool ThrowViolation2 { get; set; }
+    }
+
+    /// <summary>
+    /// ToTest: multiple rules
+    ///         If, is true, model violation is
+    /// </summary>
     [TestFixture]
     public class TestPass1Test : Base.TestBase
     {
         [Test]
-        public void Test_NoViolations()
+        public void Test_If_NoViolations()
         {
             // arrange
-            var subject = new Utilities.TestClasses.TestPass1
+            var subject = new TestPass1
             {
                 ThrowViolation1 = false,
                 ThrowViolation2 = false
@@ -31,10 +51,10 @@ namespace BackToFront.UnitTests.Tests.Logic
         }
 
         [Test]
-        public void Test_1Violation()
+        public void Test_If_1Violation()
         {
             // arrange
-            var subject = new Utilities.TestClasses.TestPass1
+            var subject = new TestPass1
             {
                 ThrowViolation1 = false,
                 ThrowViolation2 = true
@@ -45,14 +65,14 @@ namespace BackToFront.UnitTests.Tests.Logic
 
             // assert
             Assert.AreEqual(1, violation.Count());
-            Assert.AreEqual(Utilities.TestClasses.TestPass1.Violation2, violation.ElementAt(0));
+            Assert.AreEqual(TestPass1.Violation2, violation.ElementAt(0));
         }
 
         [Test]
-        public void Test_2Violations()
+        public void Test_If_2Violations()
         {
             // arrange
-            var subject = new Utilities.TestClasses.TestPass1
+            var subject = new TestPass1
             {
                 ThrowViolation1 = true,
                 ThrowViolation2 = true
@@ -63,8 +83,8 @@ namespace BackToFront.UnitTests.Tests.Logic
 
             // assert
             Assert.AreEqual(2, violation.Count());
-            Assert.AreEqual(Utilities.TestClasses.TestPass1.Violation1, violation.ElementAt(0));
-            Assert.AreEqual(Utilities.TestClasses.TestPass1.Violation2, violation.ElementAt(1));
+            Assert.AreEqual(TestPass1.Violation1, violation.ElementAt(0));
+            Assert.AreEqual(TestPass1.Violation2, violation.ElementAt(1));
         }
     }
 }

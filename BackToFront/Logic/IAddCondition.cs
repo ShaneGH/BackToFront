@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    public interface IModelViolation1<TEntity>
+    public interface IAddCondition<TEntity>
     {
-        IRule<TEntity> ModelViolationIs(IViolation violation);
+        IOperators<TEntity> And(Func<TEntity, object> value);
+
+        IOperators<TEntity> Or(Func<TEntity, object> value);
     }
 }

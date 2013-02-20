@@ -50,8 +50,9 @@ namespace BackToFront.Framework.Base
         /// </summary>
         /// <param name="subject"></param>
         /// <returns></returns>
-        public IViolation ValidateNext(TEntity subject)
+        protected IViolation ValidateNext(TEntity subject)
         {
+            //TODO: make private and handle next logic here (rather than in child)
             var no = NextOption;
             return no == null ? null : no.ValidateEntity(subject);
         }
@@ -63,6 +64,7 @@ namespace BackToFront.Framework.Base
         /// <param name="violations"></param>
         protected void ValidateAllNext(TEntity subject, IList<IViolation> violations)
         {
+            //TODO: make private and handle next logic here (rather than in child)
             var no = NextOption;
             if(no != null)
                 no.FullyValidateEntity(subject, violations);

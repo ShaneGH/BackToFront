@@ -10,7 +10,7 @@ namespace BackToFront.Utils
 {    
     internal class Condition<TEntity>
     {
-        private readonly List<ConditionPart<TEntity>> _parts = new List<ConditionPart<TEntity>>();
+        private readonly List<ConditionPart> _parts = new List<ConditionPart>();
         
         private Func<TEntity, bool> _compiledCondition;
         public Func<TEntity, bool> CompiledCondition
@@ -62,7 +62,7 @@ namespace BackToFront.Utils
                 // force re-compile
                 _compiledCondition = null;
 
-                _parts.Add(new ConditionPart<TEntity>
+                _parts.Add(new ConditionPart
                 {
                     Operator = op,
                     Eval = e => @operator(e, lhs, rhs)
@@ -70,16 +70,16 @@ namespace BackToFront.Utils
             }
         }
 
-        private class ConditionPart<TEntity>
+        private class ConditionPart
         {
             public Func<TEntity, bool> Eval { get; set; }
             public LogicalOperator Operator { get; set; }
 
-            public ConditionPart<TEntity> Copy
+            public ConditionPart Copy
             {
                 get
                 {
-                    return new ConditionPart<TEntity>
+                    return new ConditionPart
                     {
                         Eval = Eval,
                         Operator = Operator
