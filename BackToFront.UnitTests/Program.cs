@@ -10,7 +10,7 @@ namespace BackToFront.UnitTests
     {
         public static void Main(string[] args)
         {
-           // RunTest<Tests.Logic.TestPass3Test>(a => a.Test_Allcases(true, false));
+            RunTest<Tests.Logic.TestPass3Test>(a => a.If_Or(true, false));
         }
 
         public static void RunTest<TTestClass>(Action<TTestClass> runSingleTest)
