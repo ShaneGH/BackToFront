@@ -58,6 +58,7 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
         [Test]
         public void ValidateTest_violation()
         {
+            Assert.Fail();
             // arrange
             var v = new SimpleViolation("violation");
 
