@@ -14,8 +14,7 @@ namespace BackToFront.UnitTests
     /*
      * Violation, Require, Then, And
      */
-    [TestFixture]
-    public class Test
+    public class Testpad
     {
         public class ViolationClass : IViolation
         {
@@ -31,7 +30,7 @@ namespace BackToFront.UnitTests
             }
         }
 
-        public static void Testtt()
+        public static void SetupTestpad()
         {
             Rules.Add<Something>(trunk => trunk
                 .If(b => b.Value1).IsEqualTo(0).ModelViolationIs(new ViolationClass("Invalid"))
@@ -48,49 +47,6 @@ namespace BackToFront.UnitTests
 
             new Something().Validate();
         }
-
-        [Test]
-        public void TestX()
-        {
-            Func<object, object> i1 = a => a;
-            Func<object, object> i2 = a => a;
-
-            Assert.IsFalse(i1 == i2);
-            Assert.IsFalse(i1.Equals(i2));
-        }
-
-        [Test]
-        public void TestY()
-        {
-            Func<object, object> i1 = a => a;
-            Func<object, object> i2 = a => a;
-
-            Assert.IsTrue(null == null);
-        }
-
-        [Test]
-        public void TestZ()
-        {
-            // 1 false
-            Assert.IsTrue(false && true || true);
-            Assert.IsTrue(false || true && true);
-
-            Assert.IsTrue(true && false || true);
-            Assert.IsTrue(true || false && true);
-
-            Assert.IsTrue(true && true || false);
-            Assert.IsTrue(true || true && false);
-
-            // 2 false
-            Assert.IsFalse(true && false || false);
-            Assert.IsTrue(true || false && false);
-
-            Assert.IsFalse(false && true || false);
-            Assert.IsFalse(false || true && false);
-
-            Assert.IsTrue(false && false || true);
-            Assert.IsFalse(false || false && true);
-        }
     }
 
     public class Something
@@ -100,10 +56,5 @@ namespace BackToFront.UnitTests
         public object Value3 { get; set; }
         public object Value4 { get; set; }
         public object Value5 { get; set; }
-    }
-
-    public class SomethingElse
-    {
-        public int Value { get; set; }
     }
 }
