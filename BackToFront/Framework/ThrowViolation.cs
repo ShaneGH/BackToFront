@@ -18,7 +18,7 @@ namespace BackToFront.Framework
         public ThrowViolation(IViolation violation)
         {
             if(violation == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("##");
 
             _violation = violation;
         }

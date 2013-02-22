@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackToFront.Extensions
+namespace BackToFront.Extensions.Reflection
 {
     public static class Reflection
     {

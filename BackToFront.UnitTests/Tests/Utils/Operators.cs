@@ -229,5 +229,27 @@ namespace BackToFront.UnitTests.Tests.Utils
             // assert
             Assert.IsFalse(Operators.Null(subject, a => a.NullableVal, null));
         }
+
+        [Test]
+        public void IsTypeTest_true()
+        {
+            // arrange
+            var subject = new TestClass("hello");
+
+            // act
+            // assert
+            Assert.IsTrue(Operators.IsType(subject, a => a.NullableVal, a => typeof(string)));
+        }
+
+        [Test]
+        public void IsTypeTest_false()
+        {
+            // arrange
+            var subject = new TestClass(null);
+
+            // act
+            // assert
+            Assert.IsFalse(Operators.IsType(subject, a => a.NullableVal, a => typeof(object)));
+        }
     }
 }

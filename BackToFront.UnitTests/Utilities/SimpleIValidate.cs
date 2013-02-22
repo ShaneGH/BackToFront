@@ -33,7 +33,7 @@ namespace BackToFront.UnitTests.Utilities
 
         public Logic.Base.IPathElement<object> NextOption
         {
-            get { throw new NotImplementedException(); }
+            get { throw new InvalidOperationException(); }
         }
     }
 }

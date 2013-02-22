@@ -46,12 +46,12 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
 
             public override IViolation ValidateEntity(object subject)
             {
-                throw new NotImplementedException();
+                throw new InvalidOperationException();
             }
 
             public override void FullyValidateEntity(object subject, IList<IViolation> violationList)
             {
-                throw new NotImplementedException();
+                throw new InvalidOperationException();
             }
         }
 

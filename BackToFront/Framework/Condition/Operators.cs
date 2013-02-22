@@ -53,5 +53,10 @@ namespace BackToFront.Framework.Condition
         {
             return CompileCondition(value, (a, b, c) => @operator(a, b, d => c(d) as IComparable));
         }
+
+        protected override IConditionSatisfied<TEntity> CompileTypeCondition(Func<TEntity, Type> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, Type>, bool> @operator)
+        {
+            return CompileCondition(value, (a, b, c) => @operator(a, b, d => c(d) as Type));
+        }
     }
 }

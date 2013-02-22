@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BackToFront.Logic;
+using BackToFront.Logic.Utilities;
 using BackToFront.Framework;
 
 namespace BackToFront
@@ -26,7 +27,7 @@ namespace BackToFront
         /// <param name="rule"></param>
         public static void Add<TEntity>(Action<IRule<TEntity>> rule)
         {
-            Repository._Add(rule);
+            Repository._Add<TEntity>(rule);
         }
 
         #endregion
@@ -46,7 +47,7 @@ namespace BackToFront
         {
             var type = typeof(TEntity);
             if (Repository.Registered.ContainsKey(type))
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("##");
 
             Registered.Add(type, new Rule<TEntity>());
             rule((Rule<TEntity>)Repository.Registered[type]);

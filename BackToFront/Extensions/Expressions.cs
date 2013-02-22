@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace BackToFront.Extensions
+namespace BackToFront.Extensions.Expressions
 {
     public static class Expressions
     {

@@ -21,6 +21,7 @@ namespace BackToFront.Framework.Base
 
         protected abstract IConditionSatisfied<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator);
         protected abstract IConditionSatisfied<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator);
+        protected abstract IConditionSatisfied<TEntity> CompileTypeCondition(Func<TEntity, Type> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, Type>, bool> @operator);
         
         #region IOperators
 
@@ -102,6 +103,21 @@ namespace BackToFront.Framework.Base
         public IConditionSatisfied<TEntity> LessThanOrEqualTo(IComparable value)
         {
             return CompileIComparableCondition(a => value, Operators.LeEq);
+        }
+
+        public IConditionSatisfied<TEntity> IsInstanceOf(Func<TEntity, Type> value)
+        {
+            return CompileTypeCondition(value, Operators.IsType);
+        }
+
+        public IConditionSatisfied<TEntity> IsInstanceOf(Type value)
+        {
+            return IsInstanceOf(a => value);
+        }
+
+        public IConditionSatisfied<TEntity> IsInstanceOf<T>()
+        {
+            return IsInstanceOf(a => typeof(T));
         }
 
         #endregion

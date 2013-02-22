@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using BackToFront.Extensions;
+using BackToFront.Validate;
 using BackToFront.UnitTests.Utilities;
 
 using NUnit.Framework;
@@ -26,7 +26,6 @@ namespace BackToFront.UnitTests.Tests.Logic
             static TestEntity()
             {
                 Rules.Add<TestEntity>(rule => rule
-                    // pass through if
                     .If(a => a.ThrowViolationSwitch1).IsTrue().Or(a => a.ThrowViolationSwitch2).IsTrue()
 
                     .RequireThat(a => a.RequiredSwitch1).IsTrue().And(a => a.RequiredSwitch2).IsTrue().OrModelViolationIs(Violation));

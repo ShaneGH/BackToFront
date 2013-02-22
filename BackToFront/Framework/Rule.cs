@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using BackToFront.Extensions;
+using BackToFront.Extensions.IEnumerable;
 using BackToFront.Framework.Base;
 using BackToFront.Framework.Condition;
 using BackToFront.Logic;

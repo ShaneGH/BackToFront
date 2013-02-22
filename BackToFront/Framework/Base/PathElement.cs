@@ -32,7 +32,7 @@ namespace BackToFront.Framework.Base
                     return options[0];
                 }
 
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("##");
             }
         }
 

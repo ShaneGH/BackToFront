@@ -100,6 +100,19 @@ namespace BackToFront.Utils
             return v1 == null;
         }
 
+        /// <summary>
+        /// lhs == null
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <param name="lhs"></param>
+        /// <param name="unusedRhs"></param>
+        /// <returns></returns>
+        public static bool IsType<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, Type> rhs)
+        {
+            var v1 = lhs(subject);
+            return v1 != null && v1.GetType() == rhs(subject);
+        }
+
         #endregion
     }
 }

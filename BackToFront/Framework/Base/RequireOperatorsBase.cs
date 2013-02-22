@@ -21,6 +21,7 @@ namespace BackToFront.Framework.Base
 
         protected abstract IRequirementFailed<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator);
         protected abstract IRequirementFailed<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator);
+        protected abstract IRequirementFailed<TEntity> CompileTypeCondition(Func<TEntity, Type> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, Type>, bool> @operator);
 
         #region IRequireOperators
 
@@ -104,6 +105,22 @@ namespace BackToFront.Framework.Base
             return CompileIComparableCondition(a => value, Operators.LeEq);
         }
 
+        public IRequirementFailed<TEntity> IsInstanceOf(Func<TEntity, Type> value)
+        {
+            return CompileTypeCondition(value, Operators.IsType);
+        }
+
+        public IRequirementFailed<TEntity> IsInstanceOf(Type value)
+        {
+            return IsInstanceOf(a => value);
+        }
+
+        public IRequirementFailed<TEntity> IsInstanceOf<T>()
+        {
+            return IsInstanceOf(a => typeof(T));
+        }
+
         #endregion
+
     }
 }
