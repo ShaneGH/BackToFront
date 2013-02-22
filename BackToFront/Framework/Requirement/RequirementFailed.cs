@@ -16,7 +16,7 @@ namespace BackToFront.Framework.Requirement
     {
         private readonly RequireOperators<TEntity> ParentIf;
 
-        protected override IEnumerable<IPathElement<TEntity>> NextPathElements
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements
         {
             get
             {

@@ -21,7 +21,7 @@ namespace BackToFront.UnitTests.Tests.Framework
         {
             base.Setup();
 
-            Subject = new ThrowViolation<object>(Violation);
+            Subject = new ThrowViolation<object>(Violation, null);
         }
 
         [Test]

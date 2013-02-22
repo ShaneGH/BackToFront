@@ -18,7 +18,7 @@ namespace BackToFront.Framework.Condition
     {
         private readonly Operators<TEntity> ParentIf;
 
-        protected override IEnumerable<IPathElement<TEntity>> NextPathElements
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements
         {
             get
             {

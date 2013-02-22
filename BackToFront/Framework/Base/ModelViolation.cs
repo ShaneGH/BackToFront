@@ -20,7 +20,7 @@ namespace BackToFront.Framework.Base
         protected ThrowViolation<TEntity> Violation;
         private IRule<TEntity> AddViolation(IViolation violation)
         {
-            Do(() => { Violation = new ThrowViolation<TEntity>(violation); });
+            Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule); });
             return ParentRule;
         }
 

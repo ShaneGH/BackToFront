@@ -86,7 +86,7 @@ namespace BackToFront.Framework.Condition
 
             #region IPathElement is not implemented as AdditionalOperators should never be part of a path
 
-            protected override IEnumerable<IPathElement<TEntity>> NextPathElements
+            protected override IEnumerable<PathElement<TEntity>> NextPathElements
             {
                 get { yield break; }
             }

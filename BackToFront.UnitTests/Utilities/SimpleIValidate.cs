@@ -4,18 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using BackToFront.Logic.Base;
+using BackToFront.Framework.Base;
 
 namespace BackToFront.UnitTests.Utilities
 {
-    public class SimpleIValidate : IPathElement<object>
+    internal class SimpleIValidate : PathElement<object>
     {
         public EventHandler<object> ValidateCalled;
         public EventHandler<object> ValidateAllCalled;
 
         public IViolation Violation;
 
-        public IViolation ValidateEntity(object subject)
+        public SimpleIValidate()
+            : base(PathElement<object>.IgnorePointer, null) { }
+
+        public override IViolation ValidateEntity(object subject)
         {
             if (ValidateCalled != null)
                 ValidateCalled(this, subject);
@@ -23,15 +26,15 @@ namespace BackToFront.UnitTests.Utilities
             return Violation;
         }
 
-        public void FullyValidateEntity(object subject, IList<IViolation> violationList)
+        public override void FullyValidateEntity(object subject, IList<IViolation> violationList)
         {
             if (ValidateAllCalled != null)
                 ValidateAllCalled(this, subject);
 
             violationList.Add(Violation);
         }
-
-        public Logic.Base.IPathElement<object> NextOption
+        
+        protected override IEnumerable<PathElement<object>> NextPathElements
         {
             get { throw new InvalidOperationException(); }
         }

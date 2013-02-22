@@ -55,13 +55,5 @@ namespace BackToFront.Framework
         {
             _If.Each(i => i.FullyValidateEntity(subject, violationList));
         }
-
-        /// <summary>
-        /// Rule path traversal is not linear, can only be the first element in the chain (and doesn't use NextOption)
-        /// </summary>
-        public Logic.Base.IPathElement<TEntity> NextOption
-        {
-            get { return null; }
-        }
     }
 }

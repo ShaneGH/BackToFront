@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using BackToFront.Logic.Base;
+using BackToFront.Framework.Base;
 
 namespace BackToFront.Framework
 {
@@ -12,10 +12,11 @@ namespace BackToFront.Framework
     /// End of a pathway, Throw violation
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class ThrowViolation<TEntity> : IPathElement<TEntity>
+    internal class ThrowViolation<TEntity> : PathElement<TEntity>
     {
         private readonly IViolation _violation;
-        public ThrowViolation(IViolation violation)
+        public ThrowViolation(IViolation violation, Rule<TEntity> parentRule)
+            : base(PathElement<TEntity>.IgnorePointer, parentRule)
         {
             if(violation == null)
                 throw new ArgumentNullException("##");
@@ -23,22 +24,19 @@ namespace BackToFront.Framework
             _violation = violation;
         }
 
-        public IViolation ValidateEntity(TEntity subject)
+        public override IViolation ValidateEntity(TEntity subject)
         {
             return _violation;
         }
 
-        public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
         {
             violationList.Add(_violation);
         }
 
-        /// <summary>
-        /// ThrowViolation is the end of the line. Returning _violation will ensure this is never called
-        /// </summary>
-        public Logic.Base.IPathElement<TEntity> NextOption
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements
         {
-            get { return null; }
+            get { yield break; }
         }
     }
 }

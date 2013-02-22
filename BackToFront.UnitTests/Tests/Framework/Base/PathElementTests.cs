@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using BackToFront.Extensions;
 
 using BackToFront.Logic;
-using BackToFront.Logic.Base;
 using BackToFront.Framework.Base;
 using NUnit.Framework;
 
@@ -26,7 +25,7 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
 
             public readonly IList<SimpleIValidate> Els = new List<SimpleIValidate>();
 
-            protected override IEnumerable<IPathElement<object>> NextPathElements
+            protected override IEnumerable<PathElement<object>> NextPathElements
             {
                 get
                 {

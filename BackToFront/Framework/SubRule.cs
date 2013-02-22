@@ -23,7 +23,7 @@ namespace BackToFront.Framework
         /// <summary>
         /// Sub rule is last element in chain
         /// </summary>
-        protected override IEnumerable<Logic.Base.IPathElement<TEntity>> NextPathElements
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements
         {
             get { yield break; }
         }
