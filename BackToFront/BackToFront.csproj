@@ -97,7 +97,6 @@
     <Compile Include="Utils\Operators.cs" />
     <Compile Include="_\Rules.cs" />
     <Compile Include="_\IRule.cs" />
-    <Compile Include="Logic\Base\IPathElement.cs" />
     <Compile Include="Logic\Compilations\ISubRule.cs" />
     <Compile Include="Logic\IBeginSubRule.cs" />
     <Compile Include="Logic\IModelViolation1.cs" />
