@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BackToFront.Logic;
+using BackToFront.Logic.Compilations;
 
 namespace BackToFront
 {
@@ -16,5 +17,11 @@ namespace BackToFront
     public interface IRule<TEntity>
     {
         IOperators<TEntity> If(Expression<Func<TEntity, object>> property);
+    }
+
+    public interface IElse<TEntity>
+    {
+        IOperators<TEntity> ElseIf(Expression<Func<TEntity, object>> property);
+        IConditionSatisfied<TEntity> Else { get; }
     }
 }

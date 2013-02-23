@@ -5,9 +5,10 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
+using BackToFront.Framework;
 using BackToFront.Logic;
 using BackToFront.Logic.Utilities;
-using BackToFront.Framework;
+using BackToFront.Utils;
 
 namespace BackToFront
 {
@@ -32,10 +33,13 @@ namespace BackToFront
 
         #endregion
 
-        internal Dictionary<Type, IValidate> Registered = new Dictionary<Type, IValidate>();
+        private readonly Dictionary<Type, IValidate> _Registered = new Dictionary<Type, IValidate>();
+        internal readonly ReadonlyDictionary<Type, IValidate> Registered;
 
         private Rules()
-        { }
+        {
+            Registered = new ReadonlyDictionary<Type, IValidate>(_Registered);
+        }
 
         /// <summary>
         /// Exposed through static method
@@ -46,11 +50,13 @@ namespace BackToFront
         private void _Add<TEntity>(Action<IRule<TEntity>> rule)
         {
             var type = typeof(TEntity);
-            if (Repository.Registered.ContainsKey(type))
-                throw new InvalidOperationException("##");
+            if (!Repository._Registered.ContainsKey(type))
+            {
+                _Registered.Add(type, new Rule<TEntity>());
+            }
 
-            Registered.Add(type, new Rule<TEntity>());
-            rule((Rule<TEntity>)Repository.Registered[type]);
+            // apply logic to rule
+            rule((Rule<TEntity>)Repository._Registered[type]);
         }
     }
 }

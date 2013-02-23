@@ -41,7 +41,7 @@ namespace BackToFront.UnitTests.Tests.Logic
         {
             for (var i = 0; i < 16; i++)
             {
-                var bits = new System.Collections.BitArray(new[]{(byte)i});
+                var bits = new System.Collections.BitArray(new[] { (byte)i });
                 yield return new Tuple<bool, bool, bool, bool>(bits[3], bits[2], bits[1], bits[0]);
             }
         }
@@ -50,8 +50,8 @@ namespace BackToFront.UnitTests.Tests.Logic
         [TestCaseSource("GetData")]
         public void If_Or_Require_And(Tuple<bool, bool, bool, bool> input)
         {
-            bool throw1 = input.Item1, 
-                throw2 = input.Item2, 
+            bool throw1 = input.Item1,
+                throw2 = input.Item2,
                 required1 = input.Item3,
                 required2 = input.Item4;
 
@@ -69,7 +69,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             var violation = subject.Validate();
 
             // assert
-            Assert.AreEqual(v, violation, "(" + throw1.ToString() +  " || " +  throw2.ToString() + ")" + " && " + "(" + required1.ToString() + " && " +  required2.ToString() + ")");
+            Assert.AreEqual(v, violation, "(" + throw1.ToString() + " || " + throw2.ToString() + ")" + " && " + "(" + required1.ToString() + " && " + required2.ToString() + ")");
         }
     }
 }

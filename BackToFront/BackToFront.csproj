@@ -95,6 +95,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\Operators.cs" />
+    <Compile Include="Utils\ReadonlyDictionary.cs" />
     <Compile Include="_\Rules.cs" />
     <Compile Include="_\IRule.cs" />
     <Compile Include="Logic\Compilations\ISubRule.cs" />

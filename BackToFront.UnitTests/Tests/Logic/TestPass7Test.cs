@@ -19,8 +19,8 @@ namespace BackToFront.UnitTests.Tests.Logic
     [TestFixture]
     public class TestPass7Test : Base.TestBase
     {
-            public static SimpleViolation Violation1 = new SimpleViolation("Violation");
-            public static SimpleViolation Violation2 = new SimpleViolation("Violation");
+        public static SimpleViolation Violation1 = new SimpleViolation("Violation");
+        public static SimpleViolation Violation2 = new SimpleViolation("Violation");
 
         public class TestEntity
         {
@@ -33,9 +33,11 @@ namespace BackToFront.UnitTests.Tests.Logic
                     {
                         subRule.RequireThat(a => a.RequiredSwitch1).IsTrue().OrModelViolationIs(Violation1);
                         subRule.RequireThat(a => a.RequiredSwitch2).IsTrue().OrModelViolationIs(Violation1);
-                    })
+                    }));
+
+                Rules.Add<TestEntity>(rule => rule
                     .If(a => a.ThrowViolationSwitch1).IsTrue().Or(a => a.ThrowViolationSwitch2).IsTrue().ModelViolationIs(Violation2));
-                    }
+            }
 
             public bool ThrowViolationSwitch1 { get; set; }
             public bool ThrowViolationSwitch2 { get; set; }
@@ -47,7 +49,7 @@ namespace BackToFront.UnitTests.Tests.Logic
         {
             for (var i = 0; i < 16; i++)
             {
-                var bits = new System.Collections.BitArray(new[]{(byte)i});
+                var bits = new System.Collections.BitArray(new[] { (byte)i });
                 yield return new Tuple<bool, bool, bool, bool>(bits[3], bits[2], bits[1], bits[0]);
             }
         }

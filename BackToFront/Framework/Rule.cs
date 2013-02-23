@@ -12,7 +12,7 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework
 {
-    internal class Rule<TEntity> : PropertyElement<TEntity>, IRule<TEntity>, IValidate, IValidate<TEntity>
+    internal class Rule<TEntity> : PropertyElement<TEntity>, IRule<TEntity>, IValidate<TEntity>, IValidate
     {
         public Rule()
             : base(PathElement<TEntity>.IgnorePointer)
@@ -55,6 +55,11 @@ namespace BackToFront.Framework
         public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
         {
             _If.Each(i => i.FullyValidateEntity(subject, violationList));
+        }
+
+        public void Merge(Rule<TEntity> rule)
+        {
+            _If.AddRange(rule._If);
         }
     }
 }
