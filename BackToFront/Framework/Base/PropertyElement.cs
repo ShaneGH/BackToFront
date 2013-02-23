@@ -28,10 +28,12 @@ namespace BackToFront.Framework.Base
             if (descriptor == null)
                 throw new ArgumentNullException("##");
 
-            // TODO: this
-            Members = descriptor != IgnorePointer ?
-                descriptor.AsProperty() :
-                null;
+            if (descriptor != IgnorePointer)
+            {
+                var affects = descriptor.AsProperty();
+                // TODO: this
+                Members = affects/*.SwapMethodsForTheirAffectedProperties()*/;
+            }
 
             Descriptor = descriptor.Compile();
         }

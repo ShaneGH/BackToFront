@@ -31,6 +31,8 @@ namespace BackToFront.Extensions.Expressions
                 else if (expression is ConditionalExpression)
                     output.AddRange(NextExpression(expression as ConditionalExpression, out expression));
                 else if (expression is ConstantExpression)
+                    // TODO: test a => StaticClass.Const.Equals(a.MyProperty) does not clear this whole thing
+                    // if expression traces back to a constant, we are not interested in it.
                     return Enumerable.Empty<MemberInfo>();
                 else
                     break;
