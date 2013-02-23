@@ -38,7 +38,6 @@ namespace BackToFront.UnitTests.Tests.Logic
         [Test]
         public void Test_If_NoViolations()
         {
-            Assert.Fail();
             // arrange
             var subject = new TestPass1
             {
