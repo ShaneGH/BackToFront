@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,11 +12,19 @@ using NUnit.Framework;
 
 namespace BackToFront.UnitTests
 {
-    /*
-     * Violation, Require, Then, And
-     */
+    [TestFixture]
     public class Testpad
     {
+        [Test]
+        public void TestExpressionEquality()
+        {
+            Expression<Func<object, object>> i1 = a => a;
+            Expression<Func<object, object>> i2= a => a;
+
+            Assert.IsFalse(i1 == i2);
+            Assert.IsFalse(i1.Equals(i2));
+        }
+
         public class ViolationClass : IViolation
         {
             private readonly string _UserMessage;

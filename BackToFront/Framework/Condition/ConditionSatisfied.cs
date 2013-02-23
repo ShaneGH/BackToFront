@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,24 +28,24 @@ namespace BackToFront.Framework.Condition
             }
         }
 
-        public ConditionSatisfied(Func<TEntity, object> property, Rule<TEntity> rule, Operators<TEntity> operators)
+        public ConditionSatisfied(Expression<Func<TEntity, object>> property, Rule<TEntity> rule, Operators<TEntity> operators)
             : base(property, rule)
         {
             ParentIf = operators;
         }
 
-        public IOperators<TEntity> And(Func<TEntity, object> value)
+        public IOperators<TEntity> And(Expression<Func<TEntity, object>> value)
         {
             return ParentIf.AddIf(value);
         }
 
-        public IOperators<TEntity> Or(Func<TEntity, object> value)
+        public IOperators<TEntity> Or(Expression<Func<TEntity, object>> value)
         {
             return ParentIf.OrIf(value);
         }
 
         private RequireOperators<TEntity> _RequireThat = null;
-        public IRequireOperators<TEntity> RequireThat(Func<TEntity, object> property)
+        public IRequireOperators<TEntity> RequireThat(Expression<Func<TEntity, object>> property)
         {
             return Do(() => _RequireThat = new RequireOperators<TEntity>(property, ParentRule));
         }

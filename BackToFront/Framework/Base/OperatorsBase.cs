@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,23 +14,21 @@ namespace BackToFront.Framework.Base
 {
     internal abstract class OperatorsBase<TEntity> : PathElement<TEntity>, IOperators<TEntity>
     {
-        protected OperatorsBase(Func<TEntity, object> property, Rule<TEntity> rule)
+        protected OperatorsBase(Expression<Func<TEntity, object>> property, Rule<TEntity> rule)
             : base(property, rule)
         {
         }
 
-        protected abstract IConditionSatisfied<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator);
-        protected abstract IConditionSatisfied<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator);
-        protected abstract IConditionSatisfied<TEntity> CompileTypeCondition(Func<TEntity, Type> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, Type>, bool> @operator);
+        protected abstract IConditionSatisfied<TEntity> CompileCondition(Expression<Func<TEntity, object>> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator);
         
         #region IOperators
 
-        public IConditionSatisfied<TEntity> IsEqualTo(Func<TEntity, object> value)
+        public IConditionSatisfied<TEntity> IsEqualTo(Expression<Func<TEntity, object>> value)
         {
             return CompileCondition(value, Operators.Eq);
         }
 
-        public IConditionSatisfied<TEntity> IsNotEqualTo(Func<TEntity, object> value)
+        public IConditionSatisfied<TEntity> IsNotEqualTo(Expression<Func<TEntity, object>> value)
         {
             return CompileCondition(value, Operators.NEq);
         }
@@ -64,49 +63,49 @@ namespace BackToFront.Framework.Base
             return CompileCondition(a => null, Operators.NEq);
         }
 
-        public IConditionSatisfied<TEntity> GreaterThan(Func<TEntity, IComparable> value)
+        public IConditionSatisfied<TEntity> GreaterThan(Expression<Func<TEntity, object>> value)
         {
-            return CompileIComparableCondition(value, Operators.Gr);
+            return CompileCondition(value, Operators.Gr);
         }
 
         public IConditionSatisfied<TEntity> GreaterThan(IComparable value)
         {
-            return CompileIComparableCondition(a => value, Operators.Gr);
+            return CompileCondition(a => value, Operators.Gr);
         }
 
-        public IConditionSatisfied<TEntity> LessThan(Func<TEntity, IComparable> value)
+        public IConditionSatisfied<TEntity> LessThan(Expression<Func<TEntity, object>> value)
         {
-            return CompileIComparableCondition(value, Operators.Le);
+            return CompileCondition(value, Operators.Le);
         }
 
         public IConditionSatisfied<TEntity> LessThan(IComparable value)
         {
-            return CompileIComparableCondition(a => value, Operators.Le);
+            return CompileCondition(a => value, Operators.Le);
         }
 
-        public IConditionSatisfied<TEntity> GreaterThanOrEqualTo(Func<TEntity, IComparable> value)
+        public IConditionSatisfied<TEntity> GreaterThanOrEqualTo(Expression<Func<TEntity, object>> value)
         {
-            return CompileIComparableCondition(value, Operators.GrEq);
+            return CompileCondition(value, Operators.GrEq);
         }
 
         public IConditionSatisfied<TEntity> GreaterThanOrEqualTo(IComparable value)
         {
-            return CompileIComparableCondition(a => value, Operators.GrEq);
+            return CompileCondition(a => value, Operators.GrEq);
         }
 
-        public IConditionSatisfied<TEntity> LessThanOrEqualTo(Func<TEntity, IComparable> value)
+        public IConditionSatisfied<TEntity> LessThanOrEqualTo(Expression<Func<TEntity, object>> value)
         {
-            return CompileIComparableCondition(value, Operators.LeEq);
+            return CompileCondition(value, Operators.LeEq);
         }
 
         public IConditionSatisfied<TEntity> LessThanOrEqualTo(IComparable value)
         {
-            return CompileIComparableCondition(a => value, Operators.LeEq);
+            return CompileCondition(a => value, Operators.LeEq);
         }
 
-        public IConditionSatisfied<TEntity> IsInstanceOf(Func<TEntity, Type> value)
+        public IConditionSatisfied<TEntity> IsInstanceOf(Expression<Func<TEntity, object>> value)
         {
-            return CompileTypeCondition(value, Operators.IsType);
+            return CompileCondition(value, Operators.IsType);
         }
 
         public IConditionSatisfied<TEntity> IsInstanceOf(Type value)

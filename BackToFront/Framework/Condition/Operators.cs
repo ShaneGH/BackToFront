@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace BackToFront.Framework.Condition
             get { yield return _rightHandSide; }
         }
 
-        public Operators(Func<TEntity, object> property, Rule<TEntity> rule)
+        public Operators(Expression<Func<TEntity, object>> property, Rule<TEntity> rule)
             : base(property, rule)
         {
         }
@@ -38,24 +39,14 @@ namespace BackToFront.Framework.Condition
                 ValidateAllNext(subject, violationList);
         }
 
-        protected override IConditionSatisfied<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator)
+        protected override IConditionSatisfied<TEntity> CompileCondition(Expression<Func<TEntity, object>> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator)
         {
             return Do(() =>
             {
                 // logical operator is ignored for first element in list
-                Condition.Add(LogicalOperator.Or, Descriptor, @operator, value);
+                Condition.Add(LogicalOperator.Or, Descriptor, @operator, value.Compile());
                 return _rightHandSide = new ConditionSatisfied<TEntity>(value, ParentRule, this);
             });
-        }
-
-        protected override IConditionSatisfied<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator)
-        {
-            return CompileCondition(value, (a, b, c) => @operator(a, b, d => c(d) as IComparable));
-        }
-
-        protected override IConditionSatisfied<TEntity> CompileTypeCondition(Func<TEntity, Type> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, Type>, bool> @operator)
-        {
-            return CompileCondition(value, (a, b, c) => @operator(a, b, d => c(d) as Type));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace BackToFront.Framework.Base
 {
     internal abstract class ModelViolation<TEntity> : PathElement<TEntity>, IModelViolation1<TEntity>, IModelViolation2<TEntity>
     {
-        public ModelViolation(Func<TEntity, object> descriptor, Rule<TEntity> rule)
+        public ModelViolation(Expression<Func<TEntity, object>> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)
         {
         }

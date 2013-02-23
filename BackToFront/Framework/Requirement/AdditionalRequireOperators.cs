@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace BackToFront.Framework.Requirement
         /// </summary>
         /// <param name="property">The property</param>
         /// <returns>Next step</returns>
-        public IRequireOperators<TEntity> AddIf(Func<TEntity, object> property)
+        public IRequireOperators<TEntity> AddIf(Expression<Func<TEntity, object>> property)
         {
             return new AdditionalRequireOperators(property, LogicalOperator.And, this);
         }
@@ -32,7 +33,7 @@ namespace BackToFront.Framework.Requirement
         /// </summary>
         /// <param name="property">The property</param>
         /// <returns>Next step</returns>
-        public IRequireOperators<TEntity> OrIf(Func<TEntity, object> property)
+        public IRequireOperators<TEntity> OrIf(Expression<Func<TEntity, object>> property)
         {
             return new AdditionalRequireOperators(property, LogicalOperator.Or, this);
         }
@@ -45,7 +46,7 @@ namespace BackToFront.Framework.Requirement
             private readonly LogicalOperator Op;
             private readonly RequireOperators<TEntity> ParentIf;
 
-            public AdditionalRequireOperators(Func<TEntity, object> property, LogicalOperator op, RequireOperators<TEntity> parentIf)
+            public AdditionalRequireOperators(Expression<Func<TEntity, object>> property, LogicalOperator op, RequireOperators<TEntity> parentIf)
                 : base(property, parentIf.ParentRule)
             {
                 ParentIf = parentIf;
@@ -58,29 +59,13 @@ namespace BackToFront.Framework.Requirement
             /// <param name="value"></param>
             /// <param name="operator"></param>
             /// <returns></returns>
-            protected override IRequirementFailed<TEntity> CompileCondition(Func<TEntity, object> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator)
+            protected override IRequirementFailed<TEntity> CompileCondition(Expression<Func<TEntity, object>> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator)
             {
                 return Do(() =>
                 {
-                    ParentIf.Condition.Add(Op, Descriptor, @operator, value);
+                    ParentIf.Condition.Add(Op, Descriptor, @operator, value.Compile());
                     return ParentIf._rightHandSide;
                 });
-            }
-
-            /// <summary>
-            /// Adds condition to Parent and locks this instance
-            /// </summary>
-            /// <param name="value"></param>
-            /// <param name="operator"></param>
-            /// <returns></returns>
-            protected override IRequirementFailed<TEntity> CompileIComparableCondition(Func<TEntity, IComparable> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, IComparable>, bool> @operator)
-            {
-                return CompileCondition(value, (a, b, c) => @operator(a, b, d => c(d) as IComparable));
-            }
-
-            protected override IRequirementFailed<TEntity> CompileTypeCondition(Func<TEntity, Type> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, Type>, bool> @operator)
-            {
-                return CompileCondition(value, (a, b, c) => @operator(a, b, d => c(d) as Type));
             }
 
             #region IPathElement is not implemented as AdditionalOperators should never be part of a path

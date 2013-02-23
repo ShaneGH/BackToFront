@@ -44,9 +44,9 @@ namespace BackToFront.Utils
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
         /// <returns></returns>
-        public static bool Gr<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, IComparable> rhs)
+        public static bool Gr<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, object> rhs)
         {
-            var val = rhs(subject);
+            var val = rhs(subject) as IComparable;
             return val != null && val.CompareTo(lhs(subject)) < 0;
         }
 
@@ -57,9 +57,9 @@ namespace BackToFront.Utils
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
         /// <returns></returns>
-        public static bool Le<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, IComparable> rhs)
+        public static bool Le<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, object> rhs)
         {
-            var val = rhs(subject);
+            var val = rhs(subject) as IComparable;
             return val != null && val.CompareTo(lhs(subject)) > 0;
         }
 
@@ -70,7 +70,7 @@ namespace BackToFront.Utils
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
         /// <returns></returns>
-        public static bool GrEq<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, IComparable> rhs)
+        public static bool GrEq<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, object> rhs)
         {
             return !Le(subject, lhs, rhs);
         }
@@ -82,7 +82,7 @@ namespace BackToFront.Utils
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
         /// <returns></returns>
-        public static bool LeEq<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, IComparable> rhs)
+        public static bool LeEq<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, object> rhs)
         {
             return !Gr(subject, lhs, rhs);
         }
@@ -107,10 +107,10 @@ namespace BackToFront.Utils
         /// <param name="lhs"></param>
         /// <param name="unusedRhs"></param>
         /// <returns></returns>
-        public static bool IsType<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, Type> rhs)
+        public static bool IsType<TEntity>(TEntity subject, Func<TEntity, object> lhs, Func<TEntity, object> rhs)
         {
             var v1 = lhs(subject);
-            return v1 != null && v1.GetType() == rhs(subject);
+            return v1 != null && v1.GetType() == rhs(subject) as Type;
         }
 
         #endregion

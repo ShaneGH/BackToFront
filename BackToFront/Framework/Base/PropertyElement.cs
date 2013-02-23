@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -17,22 +18,22 @@ namespace BackToFront.Framework.Base
         /// <summary>
         /// Use instead of null for un needed constructor argument
         /// </summary>
-        internal static readonly Func<TEntity, object> IgnorePointer = a => a;
+        internal static readonly Expression<Func<TEntity, object>> IgnorePointer = a => a;
         private bool _locked = false;
         protected readonly Func<TEntity, object> Descriptor;
-        protected readonly PropertyInfo Property;
+        protected readonly IEnumerable<MemberInfo> Members;
         
-        protected PropertyElement(Func<TEntity, object> descriptor)
+        protected PropertyElement(Expression<Func<TEntity, object>> descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException("##");
 
-            Descriptor = descriptor;
-
             // TODO: this
-            Property = Descriptor != IgnorePointer ?
-                Descriptor.AsProperty() :
+            Members = descriptor != IgnorePointer ?
+                descriptor.AsProperty() :
                 null;
+
+            Descriptor = descriptor.Compile();
         }
 
         protected TOutput Do<TOutput>(Func<TOutput> action)

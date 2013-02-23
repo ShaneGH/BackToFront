@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace BackToFront.Framework
         { }
 
         private readonly List<Operators<TEntity>> _If = new List<Operators<TEntity>>();
-        public IOperators<TEntity> If(Func<TEntity, object> property)
+        public IOperators<TEntity> If(Expression<Func<TEntity, object>> property)
         {
             var @if = new Operators<TEntity>(property, this);
             _If.Add(@if);

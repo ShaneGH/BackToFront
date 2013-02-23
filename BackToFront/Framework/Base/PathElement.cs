@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -35,7 +36,7 @@ namespace BackToFront.Framework.Base
             }
         }
 
-        public PathElement(Func<TEntity, object> descriptor, Rule<TEntity> rule)
+        public PathElement(Expression<Func<TEntity, object>> descriptor, Rule<TEntity> rule)
             : base(descriptor)
         {
             ParentRule = rule;

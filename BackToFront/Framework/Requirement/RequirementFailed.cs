@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,18 +24,18 @@ namespace BackToFront.Framework.Requirement
             }
         }
 
-        public RequirementFailed(Func<TEntity, object> property, Rule<TEntity> rule, RequireOperators<TEntity> operators)
+        public RequirementFailed(Expression<Func<TEntity, object>> property, Rule<TEntity> rule, RequireOperators<TEntity> operators)
             : base(property, rule)
         {
             ParentIf = operators;
         }
 
-        public IRequireOperators<TEntity> And(Func<TEntity, object> value)
+        public IRequireOperators<TEntity> And(Expression<Func<TEntity, object>> value)
         {
             return ParentIf.AddIf(value);
         }
 
-        public IRequireOperators<TEntity> Or(Func<TEntity, object> value)
+        public IRequireOperators<TEntity> Or(Expression<Func<TEntity, object>> value)
         {
             return ParentIf.OrIf(value);
         }

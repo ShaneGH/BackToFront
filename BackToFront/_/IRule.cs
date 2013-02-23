@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,6 @@ namespace BackToFront
     /// <typeparam name="TEntity">The entity type</typeparam>
     public interface IRule<TEntity>
     {
-        IOperators<TEntity> If(Func<TEntity, object> property);
+        IOperators<TEntity> If(Expression<Func<TEntity, object>> property);
     }
 }
