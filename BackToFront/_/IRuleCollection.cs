@@ -10,9 +10,12 @@ using BackToFront.Logic.Compilations;
 
 namespace BackToFront
 {
-    public interface IRule<TEntity>
+    /// <summary>
+    /// A business rule
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type</typeparam>
+    public interface IRuleCollection<TEntity>
     {
-        IOperators<TEntity> ElseIf(Expression<Func<TEntity, object>> property);
-        IConditionSatisfied<TEntity> Else { get; }
+        IOperators<TEntity> If(Expression<Func<TEntity, object>> property);
     }
 }

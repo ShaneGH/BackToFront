@@ -26,7 +26,7 @@ namespace BackToFront
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="rule"></param>
-        public static void Add<TEntity>(Action<IRule<TEntity>> rule)
+        public static void Add<TEntity>(Action<IRuleCollection<TEntity>> rule)
         {
             Repository._Add<TEntity>(rule);
         }
@@ -47,16 +47,16 @@ namespace BackToFront
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TViolation"></typeparam>
         /// <param name="rule"></param>
-        private void _Add<TEntity>(Action<IRule<TEntity>> rule)
+        private void _Add<TEntity>(Action<IRuleCollection<TEntity>> rule)
         {
             var type = typeof(TEntity);
             if (!Repository._Registered.ContainsKey(type))
             {
-                _Registered.Add(type, new Rule<TEntity>());
+                _Registered.Add(type, new RuleCollection<TEntity>());
             }
 
             // apply logic to rule
-            rule((Rule<TEntity>)Repository._Registered[type]);
+            rule((RuleCollection<TEntity>)Repository._Registered[type]);
         }
     }
 }

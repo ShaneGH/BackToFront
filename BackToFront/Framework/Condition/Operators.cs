@@ -28,15 +28,48 @@ namespace BackToFront.Framework.Condition
         {
         }
 
+        /// <summary>
+        /// Validates the next rest of the path and returns whether the If evaluated to positive
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <param name="violation"></param>
+        /// <returns>whether the If evaluated to positive</returns>
+        public bool ValidateIfCondition(TEntity subject, out IViolation violation)
+        {
+            var output = Condition.CompiledCondition(subject);
+            if (output)
+                violation = ValidateNext(subject);
+            else
+                violation = null;
+
+            return output;
+        }
+
+        /// <summary>
+        /// Validates the next rest of the path and returns whether the If evaluated to positive
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <param name="violation"></param>
+        /// <returns>whether the If evaluated to positive</returns>
+        public bool FullyValidateIfCondition(TEntity subject, IList<IViolation> violationList)
+        {
+            var output = Condition.CompiledCondition(subject);
+            if (output)
+                ValidateAllNext(subject, violationList);
+
+            return output;
+        }
+
         public override IViolation ValidateEntity(TEntity subject)
         {
-            return Condition.CompiledCondition(subject) ? ValidateNext(subject) : null;
+            IViolation violation;
+            ValidateIfCondition(subject, out violation);
+            return violation;
         }
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
         {
-            if (Condition.CompiledCondition(subject))
-                ValidateAllNext(subject, violationList);
+            FullyValidateIfCondition(subject, violationList);
         }
 
         protected override IConditionSatisfied<TEntity> CompileCondition(Expression<Func<TEntity, object>> value, Func<TEntity, Func<TEntity, object>, Func<TEntity, object>, bool> @operator)

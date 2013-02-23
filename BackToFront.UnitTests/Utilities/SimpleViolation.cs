@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 using BackToFront.Logic;
 
 namespace BackToFront.UnitTests.Utilities
 {
+    [DebuggerDisplay("{UserMessage}")]
     public class SimpleViolation : IViolation
     {
         private readonly string _UserMessage;

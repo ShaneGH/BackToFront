@@ -79,6 +79,7 @@
     <Compile Include="Framework\Rule.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Framework\RuleCollection.cs" />
     <Compile Include="Framework\SubRule.cs" />
     <Compile Include="Framework\ThrowViolation.cs">
       <SubType>Code</SubType>
@@ -96,8 +97,9 @@
     </Compile>
     <Compile Include="Utils\Operators.cs" />
     <Compile Include="Utils\ReadonlyDictionary.cs" />
-    <Compile Include="_\Rules.cs" />
     <Compile Include="_\IRule.cs" />
+    <Compile Include="_\Rules.cs" />
+    <Compile Include="_\IRuleCollection.cs" />
     <Compile Include="Logic\Compilations\ISubRule.cs" />
     <Compile Include="Logic\IBeginSubRule.cs" />
     <Compile Include="Logic\IModelViolation1.cs" />

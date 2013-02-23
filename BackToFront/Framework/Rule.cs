@@ -12,54 +12,35 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework
 {
-    internal class Rule<TEntity> : PropertyElement<TEntity>, IRule<TEntity>, IValidate<TEntity>, IValidate
+    internal class Rule<TEntity> : PropertyElement<TEntity>, IRule<TEntity>, IValidate<TEntity>
     {
         public Rule()
             : base(PathElement<TEntity>.IgnorePointer)
         { }
 
         private readonly List<Operators<TEntity>> _If = new List<Operators<TEntity>>();
-        public IOperators<TEntity> If(Expression<Func<TEntity, object>> property)
+        public IOperators<TEntity> ElseIf(Expression<Func<TEntity, object>> property)
         {
             var @if = new Operators<TEntity>(property, this);
             _If.Add(@if);
             return @if;
         }
 
-        public IViolation ValidateEntity(object subject)
-        {
-            // TODO: catch cast exception
-            return ValidateEntity((TEntity)subject);
-        }
-
-        public IEnumerable<IViolation> FullyValidateEntity(object subject)
-        {
-            // TODO: catch cast exception
-            var list = new List<IViolation>();
-            FullyValidateEntity((TEntity)subject, list);
-            return list.ToArray();
-        }
-
         public IViolation ValidateEntity(TEntity subject)
         {
-            foreach (var i in _If)
-            {
-                var violation = i.ValidateEntity(subject);
-                if (violation != null)
-                    return violation;
-            }
-
-            return null;
+            IViolation violation = null;
+            _If.Any(a => a.ValidateIfCondition(subject, out violation));
+            return violation;
         }
 
         public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
         {
-            _If.Each(i => i.FullyValidateEntity(subject, violationList));
+            _If.Any(i => i.FullyValidateIfCondition(subject, violationList));
         }
 
-        public void Merge(Rule<TEntity> rule)
+        public Logic.Compilations.IConditionSatisfied<TEntity> Else
         {
-            _If.AddRange(rule._If);
+            get { return ElseIf(a => true).IsTrue(); }
         }
     }
 }
