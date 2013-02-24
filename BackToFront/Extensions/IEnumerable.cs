@@ -21,6 +21,19 @@ namespace BackToFront.Extensions.IEnumerable
                 action(enumerated[i]);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="action"></param>
+        public static void Each<T>(this IEnumerable<T> items, Action<T, int> action)
+        {
+            var enumerated = items.ToArray();
+            for (int i = 0, ii = enumerated.Length; i < ii; i++)
+                action(enumerated[i], i);
+        }
+
         public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
         {
             var enumerated = items.ToArray();

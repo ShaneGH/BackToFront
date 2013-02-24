@@ -19,7 +19,7 @@ namespace BackToFront.UnitTests.Tests.Framework.Condition
     [TestFixture]
     public class OperatorsTest : TestBase
     {
-        private static readonly Dictionary<bool, Dictionary<bool, Dictionary<bool, Func<bool, bool, bool, bool, bool>>>> Functions = new Dictionary<bool, Dictionary<bool, Dictionary<bool, Func<bool, bool, bool, bool, bool>>>>();
+        public static readonly Dictionary<bool, Dictionary<bool, Dictionary<bool, Func<bool, bool, bool, bool, bool>>>> Functions = new Dictionary<bool, Dictionary<bool, Dictionary<bool, Func<bool, bool, bool, bool, bool>>>>();
         static OperatorsTest()
         {
             Functions[false] = new Dictionary<bool, Dictionary<bool, Func<bool, bool, bool, bool, bool>>>();

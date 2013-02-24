@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\AffectsMembersAttribute.cs" />
     <Compile Include="Enum\LogicalOperator.cs">
       <SubType>Code</SubType>
     </Compile>

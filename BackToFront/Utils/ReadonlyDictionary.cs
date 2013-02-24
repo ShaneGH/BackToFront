@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace BackToFront.Utils
 {
+    /// <summary>
+    /// Wraps a dictionary providing read only access
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
     public class ReadonlyDictionary<TKey, TValue>
     {
         private readonly IDictionary<TKey, TValue> _inner;

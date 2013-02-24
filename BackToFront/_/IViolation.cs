@@ -16,4 +16,12 @@ namespace BackToFront
         /// </summary>
         string UserMessage { get; }
     }
+
+    /// <summary>
+    /// Represents a business rule violation.
+    /// </summary>
+    public interface IViolation<TEntity> : IViolation
+    {
+        void OnViolation(TEntity subject);
+    }
 }

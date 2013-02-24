@@ -16,29 +16,34 @@ namespace BackToFront.Extensions.Expressions
 
         static IEnumerable<MemberInfo> ReadExpression(Expression expression)
         {
-            List<MemberInfo> output = new List<MemberInfo>();
+            List<MemberInfo> completedThreads = new List<MemberInfo>();
+            List<MemberInfo> currentThread = new List<MemberInfo>();
 
             while (expression != null)
             {
                 if (expression is UnaryExpression)
-                    output.AddRange(NextExpression(expression as UnaryExpression, out expression));
+                    currentThread.AddRange(NextExpression(expression as UnaryExpression, out expression));
                 else if (expression is MemberExpression)
-                    output.AddRange(NextExpression(expression as MemberExpression, out expression));
+                    currentThread.AddRange(NextExpression(expression as MemberExpression, out expression));
                 else if (expression is MethodCallExpression)
-                    output.AddRange(NextExpression(expression as MethodCallExpression, out expression));
+                    currentThread.AddRange(NextExpression(expression as MethodCallExpression, completedThreads, out expression));
                 else if (expression is BinaryExpression)
-                    output.AddRange(NextExpression(expression as BinaryExpression, out expression));
+                    NextExpression(expression as BinaryExpression, completedThreads, out expression);
                 else if (expression is ConditionalExpression)
-                    output.AddRange(NextExpression(expression as ConditionalExpression, out expression));
-                else if (expression is ConstantExpression)
-                    // TODO: test a => StaticClass.Const.Equals(a.MyProperty) does not clear this whole thing
-                    // if expression traces back to a constant, we are not interested in it.
-                    return Enumerable.Empty<MemberInfo>();
-                else
+                    NextExpression(expression as ConditionalExpression, completedThreads, out expression);
+                else if(expression is ParameterExpression)
                     break;
+                else
+                {
+                    // if expression is ConstantExpression || expression is NewExpression, 
+                    // clear because expression does not lead to input parater
+                    // else, clear because expression type is not supported
+                    currentThread.Clear();
+                    break;
+                }
             }
 
-            return output.Where(a => a != null).Distinct();
+            return currentThread.Where(a => a != null).Union(completedThreads).Distinct();
         }
 
         static IEnumerable<MemberInfo> NextExpression(UnaryExpression ex, out Expression next)
@@ -53,39 +58,31 @@ namespace BackToFront.Extensions.Expressions
             return new[] { ex.Member };
         }
 
-        static IEnumerable<MemberInfo> NextExpression(MethodCallExpression ex, out Expression next)
+        static IEnumerable<MemberInfo> NextExpression(MethodCallExpression ex, List<MemberInfo> completedThreads, out Expression next)
         {
-            List<MemberInfo> info = new List<MemberInfo>();
             next = ex.Object;
-            info.Add(ex.Method);
             if (ex.Arguments != null)
             {
                 foreach (var arg in ex.Arguments)
-                    info.AddRange(ReadExpression(arg));
+                    completedThreads.AddRange(ReadExpression(arg));
             }
 
-            return info.ToArray();
+            return new[] { ex.Method };
         }
 
-        static IEnumerable<MemberInfo> NextExpression(BinaryExpression ex, out Expression next)
+        static void NextExpression(BinaryExpression ex, List<MemberInfo> completedThreads, out Expression next)
         {
             next = null;
-            List<MemberInfo> output = new List<MemberInfo>();
-            output.AddRange(ReadExpression(ex.Left));
-            output.AddRange(ReadExpression(ex.Right));
-
-            return output.Where(a => a != null).Distinct();
+            completedThreads.AddRange(ReadExpression(ex.Left));
+            completedThreads.AddRange(ReadExpression(ex.Right));
         }
 
-        static IEnumerable<MemberInfo> NextExpression(ConditionalExpression ex, out Expression next)
+        static void NextExpression(ConditionalExpression ex, List<MemberInfo> completedThreads, out Expression next)
         {
             next = null;
-            List<MemberInfo> output = new List<MemberInfo>();
-            output.AddRange(ReadExpression(ex.Test));
-            output.AddRange(ReadExpression(ex.IfFalse));
-            output.AddRange(ReadExpression(ex.IfTrue));
-
-            return output.Where(a => a != null).Distinct();
+            completedThreads.AddRange(ReadExpression(ex.Test));
+            completedThreads.AddRange(ReadExpression(ex.IfFalse));
+            completedThreads.AddRange(ReadExpression(ex.IfTrue));
         }
     }
 }

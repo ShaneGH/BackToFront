@@ -33,8 +33,8 @@ namespace BackToFront
 
         #endregion
 
-        private readonly Dictionary<Type, IValidate> _Registered = new Dictionary<Type, IValidate>();
         internal readonly ReadonlyDictionary<Type, IValidate> Registered;
+        private readonly Dictionary<Type, IValidate> _Registered = new Dictionary<Type, IValidate>();
 
         private Rules()
         {

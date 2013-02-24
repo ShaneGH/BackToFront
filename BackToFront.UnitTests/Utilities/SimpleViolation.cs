@@ -22,5 +22,10 @@ namespace BackToFront.UnitTests.Utilities
         {
             get { return _UserMessage; }
         }
+
+        public override string ToString()
+        {
+            return UserMessage;
+        }
     }
 }

@@ -8,8 +8,6 @@ namespace BackToFront.Utils
 {
     internal static class Operators
     {
-        #region static operator functions
-
         /// <summary>
         /// lhs.Equals(rhs)
         /// </summary>
@@ -112,7 +110,5 @@ namespace BackToFront.Utils
             var v1 = lhs(subject);
             return v1 != null && v1.GetType() == rhs(subject) as Type;
         }
-
-        #endregion
     }
 }
