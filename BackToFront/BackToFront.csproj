@@ -97,6 +97,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\Operators.cs" />
+    <Compile Include="Utils\PropertyChain.cs" />
+    <Compile Include="Utils\PropertySetter.cs" />
     <Compile Include="Utils\ReadonlyDictionary.cs" />
     <Compile Include="_\IRule.cs" />
     <Compile Include="_\Rules.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="_\IValidate.cs" />
     <Compile Include="_\IViolation.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

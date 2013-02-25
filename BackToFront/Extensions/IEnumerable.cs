@@ -40,5 +40,15 @@ namespace BackToFront.Extensions.IEnumerable
             for (int i = 0, ii = enumerated.Length; i < ii; i++)
                 list.Add(enumerated[i]);
         }
+
+        public static IEnumerable<T> Aggregate<T>(this IEnumerable<IEnumerable<T>> elements)
+        {
+            if (elements.Count() > 0)
+            {
+                return elements.Aggregate((a, b) => a.Union(b));
+            }
+
+            return Enumerable.Empty<T>();
+        }
     }
 }

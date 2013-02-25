@@ -10,9 +10,6 @@ namespace BackToFront.UnitTests.Utilities
 {
     internal class SimpleIValidate : PathElement<object>
     {
-        public EventHandler<object> ValidateCalled;
-        public EventHandler<object> ValidateAllCalled;
-
         public IViolation Violation;
 
         public SimpleIValidate()
@@ -20,17 +17,11 @@ namespace BackToFront.UnitTests.Utilities
 
         public override IViolation ValidateEntity(object subject)
         {
-            if (ValidateCalled != null)
-                ValidateCalled(this, subject);
-
             return Violation;
         }
 
         public override void FullyValidateEntity(object subject, IList<IViolation> violationList)
         {
-            if (ValidateAllCalled != null)
-                ValidateAllCalled(this, subject);
-
             violationList.Add(Violation);
         }
         

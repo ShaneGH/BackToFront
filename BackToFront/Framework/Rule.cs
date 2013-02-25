@@ -14,6 +14,17 @@ namespace BackToFront.Framework
 {
     internal class Rule<TEntity> : PropertyElement<TEntity>, IRule<TEntity>, IValidate<TEntity>
     {
+        private readonly HashSet<PropertyElement<TEntity>> _registeredElements = new HashSet<PropertyElement<TEntity>>();
+
+        //TODO: cache?
+        bool HasValidChain
+        {
+            get
+            {
+                return _registeredElements.All(a => a.HasValidChain);
+            }
+        }
+
         public Rule()
             : base(PathElement<TEntity>.IgnorePointer)
         { }
@@ -41,6 +52,11 @@ namespace BackToFront.Framework
         public Logic.Compilations.IConditionSatisfied<TEntity> Else
         {
             get { return ElseIf(a => true).IsTrue(); }
+        }
+
+        public void Register(PropertyElement<TEntity> element)
+        {
+            _registeredElements.Add(element);
         }
     }
 }

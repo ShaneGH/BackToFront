@@ -32,7 +32,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => new TestClass().Something.Length;
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(0, result.Count());
@@ -46,7 +46,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => test.Something.Length;
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(0, result.Count());
@@ -66,7 +66,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => a.Something.Length;
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(2, result.Count());
@@ -81,7 +81,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => a.Method1();
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(1, result.Count());
@@ -95,7 +95,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => "Hello".Equals(a.Something3);
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(1, result.Count());
@@ -109,7 +109,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => a.Method2("hi");
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(1, result.Count());
@@ -123,7 +123,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => a.Method2(a.Something);
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(2, result.Count());
@@ -138,7 +138,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => a.Something == "Hi";
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(1, result.Count());
@@ -152,7 +152,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => a.Something == a.Something2;
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(2, result.Count());
@@ -167,7 +167,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => true ? "Hi" : "Hello";
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(0, result.Count());
@@ -180,7 +180,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => a.Something4 ? a.Something : a.Something2;
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(3, result.Count());
@@ -196,7 +196,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => a.Something4 ? "Hi" : a.Something2;
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(2, result.Count());
@@ -211,7 +211,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => a.Something4 ? a.Something : "hi";
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(2, result.Count());
@@ -226,7 +226,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Expression<Func<TestClass, object>> subject = a => true ? a.Something : a.Something2;
 
             // act
-            var result = subject.AsProperty();
+            var result = subject.ReferencedProperties();
 
             // assert
             Assert.AreEqual(2, result.Count());

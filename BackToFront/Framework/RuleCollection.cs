@@ -13,6 +13,15 @@ namespace BackToFront.Framework
     internal class RuleCollection<TEntity> : IRuleCollection<TEntity>, IValidate
     {
         private readonly List<Rule<TEntity>> _Rules = new List<Rule<TEntity>>();
+        private bool? _hasValidChain = null;
+        bool HasValidChain
+        {
+            get
+            {
+                return _Rules.All(a => a.HasValidChain);
+            }
+        }
+
         public IOperators<TEntity> If(Expression<Func<TEntity, object>> property)
         {
             var rule = new Rule<TEntity>();

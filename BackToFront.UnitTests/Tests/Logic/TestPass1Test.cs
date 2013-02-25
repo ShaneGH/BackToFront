@@ -55,12 +55,11 @@ namespace BackToFront.UnitTests.Tests.Logic
         [Test]
         public void Test_If_1Violation()
         {
-            // arrange
-            var subject = new TestPass1
-            {
-                ThrowViolation1 = false,
-                ThrowViolation2 = true
-            };
+            TestPass1 subject =  new TestPass1
+                {
+                    ThrowViolation1 = false,
+                    ThrowViolation2 = true
+                };
 
             // act
             var violation = subject.ValidateAllRules();

@@ -9,7 +9,12 @@ namespace BackToFront.Extensions.Expressions
 {
     public static class Expressions
     {
-        public static IEnumerable<MemberInfo> AsProperty<T>(this Expression<Func<T, object>> expression)
+        public static IEnumerable<MemberInfo> ReferencedProperties<T, TReturn>(this Expression<Func<T, TReturn>> expression)
+        {
+            return ReadExpression(expression.Body);
+        }
+
+        public static IEnumerable<MemberInfo> ReferencedProperties<T>(this Expression<Func<T, object>> expression)
         {
             return ReadExpression(expression.Body);
         }
@@ -22,11 +27,11 @@ namespace BackToFront.Extensions.Expressions
             while (expression != null)
             {
                 if (expression is UnaryExpression)
-                    currentThread.AddRange(NextExpression(expression as UnaryExpression, out expression));
+                    currentThread.Add(NextExpression(expression as UnaryExpression, out expression));
                 else if (expression is MemberExpression)
-                    currentThread.AddRange(NextExpression(expression as MemberExpression, out expression));
+                    currentThread.Add(NextExpression(expression as MemberExpression, out expression));
                 else if (expression is MethodCallExpression)
-                    currentThread.AddRange(NextExpression(expression as MethodCallExpression, completedThreads, out expression));
+                    currentThread.Add(NextExpression(expression as MethodCallExpression, completedThreads, out expression));
                 else if (expression is BinaryExpression)
                     NextExpression(expression as BinaryExpression, completedThreads, out expression);
                 else if (expression is ConditionalExpression)
@@ -36,29 +41,30 @@ namespace BackToFront.Extensions.Expressions
                 else
                 {
                     // if expression is ConstantExpression || expression is NewExpression, 
-                    // clear because expression does not lead to input parater
+                    // clear because expression does not lead to input paramater
                     // else, clear because expression type is not supported
                     currentThread.Clear();
                     break;
                 }
             }
 
-            return currentThread.Where(a => a != null).Union(completedThreads).Distinct();
+            currentThread.Reverse();
+            return currentThread.Union(completedThreads).Where(a => a != null).Distinct();
         }
 
-        static IEnumerable<MemberInfo> NextExpression(UnaryExpression ex, out Expression next)
+        static MemberInfo NextExpression(UnaryExpression ex, out Expression next)
         {
             next = ex.Operand;
-            return new[] { ex.Method };
+            return ex.Method;
         }
 
-        static IEnumerable<MemberInfo> NextExpression(MemberExpression ex, out Expression next)
+        static MemberInfo NextExpression(MemberExpression ex, out Expression next)
         {
             next = ex.Expression;
-            return new[] { ex.Member };
+            return ex.Member;
         }
 
-        static IEnumerable<MemberInfo> NextExpression(MethodCallExpression ex, List<MemberInfo> completedThreads, out Expression next)
+        static MemberInfo NextExpression(MethodCallExpression ex, List<MemberInfo> completedThreads, out Expression next)
         {
             next = ex.Object;
             if (ex.Arguments != null)
@@ -67,7 +73,7 @@ namespace BackToFront.Extensions.Expressions
                     completedThreads.AddRange(ReadExpression(arg));
             }
 
-            return new[] { ex.Method };
+            return ex.Method;
         }
 
         static void NextExpression(BinaryExpression ex, List<MemberInfo> completedThreads, out Expression next)

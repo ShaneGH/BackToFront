@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackToFront.UnitTests", "Ba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackToFront", "BackToFront\BackToFront.csproj", "{811C6A9D-BD86-4947-8074-2EA0CBC26431}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackToFront.Web", "BackToFront.Web\BackToFront.Web.csproj", "{94EEE243-91B5-4DEB-A192-1DA94C1E2442}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{811C6A9D-BD86-4947-8074-2EA0CBC26431}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{811C6A9D-BD86-4947-8074-2EA0CBC26431}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{811C6A9D-BD86-4947-8074-2EA0CBC26431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94EEE243-91B5-4DEB-A192-1DA94C1E2442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94EEE243-91B5-4DEB-A192-1DA94C1E2442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94EEE243-91B5-4DEB-A192-1DA94C1E2442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94EEE243-91B5-4DEB-A192-1DA94C1E2442}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
