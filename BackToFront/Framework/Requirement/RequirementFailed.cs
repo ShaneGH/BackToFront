@@ -40,9 +40,9 @@ namespace BackToFront.Framework.Requirement
             return ParentIf.OrIf(value);
         }
 
-        public override IViolation ValidateEntity(TEntity subject)
+        public override void ValidateEntity(TEntity subject, out IViolation violation)
         {
-            return ValidateNext(subject);
+            violation = ValidateNext(subject);
         }
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)

@@ -43,7 +43,7 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
                 ValidateAllNext(subject, list);
             }
 
-            public override IViolation ValidateEntity(object subject)
+            public override void ValidateEntity(object subject, out IViolation violation)
             {
                 throw new InvalidOperationException();
             }

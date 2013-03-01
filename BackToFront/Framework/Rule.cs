@@ -12,12 +12,12 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework
 {
-    internal class Rule<TEntity> : PropertyElement<TEntity>, IRule<TEntity>, IValidate<TEntity>
+    internal class Rule<TEntity> : IRule<TEntity>, IValidate<TEntity>
     {
         private readonly HashSet<PropertyElement<TEntity>> _registeredElements = new HashSet<PropertyElement<TEntity>>();
 
         //TODO: cache?
-        bool HasValidChain
+        public bool HasValidChain
         {
             get
             {
@@ -26,7 +26,6 @@ namespace BackToFront.Framework
         }
 
         public Rule()
-            : base(PathElement<TEntity>.IgnorePointer)
         { }
 
         private readonly List<Operators<TEntity>> _If = new List<Operators<TEntity>>();

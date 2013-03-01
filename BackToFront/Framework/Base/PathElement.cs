@@ -9,6 +9,13 @@ using BackToFront.Extensions;
 
 namespace BackToFront.Framework.Base
 {
+    internal enum ValidateResult
+    {
+        TerminateHere,
+        PassThrough,
+        ThowViolation
+    }
+
     /// <summary>
     /// A class attached to a Rule which points to the next step in the operation
     /// </summary>
@@ -42,7 +49,7 @@ namespace BackToFront.Framework.Base
             ParentRule = rule;
         }
 
-        public abstract IViolation ValidateEntity(TEntity subject);
+        public abstract void ValidateEntity(TEntity subject, out IViolation violation);
         public abstract void FullyValidateEntity(TEntity subject, IList<IViolation> violationList);
 
         /// <summary>
@@ -53,8 +60,11 @@ namespace BackToFront.Framework.Base
         protected IViolation ValidateNext(TEntity subject)
         {
             //TODO: make private and handle next logic here (rather than in child)
+            IViolation violation = null;
             var no = NextOption;
-            return no == null ? null : no.ValidateEntity(subject);
+            if(no != null)
+                no.ValidateEntity(subject, out violation);
+            return violation;
         }
 
         /// <summary>

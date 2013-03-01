@@ -15,9 +15,9 @@ namespace BackToFront.UnitTests.Utilities
         public SimpleIValidate()
             : base(PathElement<object>.IgnorePointer, null) { }
 
-        public override IViolation ValidateEntity(object subject)
+        public override void ValidateEntity(object subject, out IViolation violation)
         {
-            return Violation;
+            violation = Violation;
         }
 
         public override void FullyValidateEntity(object subject, IList<IViolation> violationList)

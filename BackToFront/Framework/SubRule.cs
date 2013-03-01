@@ -29,12 +29,18 @@ namespace BackToFront.Framework
             get { yield break; }
         }
 
-        public override IViolation ValidateEntity(TEntity subject)
+        public override void ValidateEntity(TEntity subject, out IViolation violation)
         {
             //TODO: Threadding??
-            IViolation violation = null;
-            _next.Any(a => (violation = a.ValidateEntity(subject)) != null);
-            return violation;
+            violation = null;
+            foreach (var next in _next)
+            {
+                next.ValidateEntity(subject, out violation);
+                if (violation != null)
+                {
+                    break;
+                }
+            }
         }
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)

@@ -75,9 +75,9 @@ namespace BackToFront.Framework.Requirement
                 get { yield break; }
             }
 
-            public override IViolation ValidateEntity(TEntity subject)
+            public override void ValidateEntity(TEntity subject, out IViolation violation)
             {
-                return null;
+                violation = null;
             }
 
             public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)

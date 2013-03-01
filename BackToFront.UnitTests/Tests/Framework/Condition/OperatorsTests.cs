@@ -72,7 +72,8 @@ namespace BackToFront.UnitTests.Tests.Framework.Condition
             var c4 = operator3 ? c3.IsTrue().And(a => evaluation4) : c3.IsTrue().Or(a => evaluation4);
             c4.IsTrue().ModelViolationIs(violation);
 
-            var result = c1.ValidateEntity(new object());
+            IViolation result;
+            c1.ValidateEntity(new object(), out result);
             if (result != null)
                 Assert.AreEqual(violation, result);
 
@@ -103,7 +104,8 @@ namespace BackToFront.UnitTests.Tests.Framework.Condition
             var c4 = operator3 ? c3.IsTrue().And(a => evaluation4) : c3.IsTrue().Or(a => evaluation4);
             c4.IsTrue().OrModelViolationIs(violation);
 
-            var result = c1.ValidateEntity(new object());
+            IViolation result;
+            c1.ValidateEntity(new object(), out result);
             if (result != null)
                 Assert.AreEqual(violation, result);
 

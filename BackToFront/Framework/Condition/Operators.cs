@@ -60,11 +60,9 @@ namespace BackToFront.Framework.Condition
             return output;
         }
 
-        public override IViolation ValidateEntity(TEntity subject)
+        public override void ValidateEntity(TEntity subject, out IViolation violation)
         {
-            IViolation violation;
             ValidateIfCondition(subject, out violation);
-            return violation;
         }
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)

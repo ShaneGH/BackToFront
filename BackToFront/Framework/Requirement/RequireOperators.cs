@@ -28,9 +28,9 @@ namespace BackToFront.Framework.Requirement
         {
         }
 
-        public override IViolation ValidateEntity(TEntity subject)
+        public override void ValidateEntity(TEntity subject, out IViolation violation)
         {
-            return !Condition.CompiledCondition(subject) ? ValidateNext(subject) : null;
+            violation = !Condition.CompiledCondition(subject) ? ValidateNext(subject) : null;
         }
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
