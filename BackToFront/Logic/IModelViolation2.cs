@@ -9,6 +9,6 @@ namespace BackToFront.Logic
 {
     public interface IModelViolation2<TEntity>
     {
-        IRule<TEntity> OrModelViolationIs(IViolation violation);
+        IAdditionalRuleCondition<TEntity> OrModelViolationIs(IViolation violation);
     }    
 }

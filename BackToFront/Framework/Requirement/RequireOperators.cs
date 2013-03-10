@@ -18,9 +18,9 @@ namespace BackToFront.Framework.Requirement
         private readonly Condition<TEntity> Condition = new Condition<TEntity>();
         private RequirementFailed<TEntity> _rightHandSide;
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
         {
-            get { yield return _rightHandSide; }
+            yield return _rightHandSide;
         }
 
         public RequireOperators(Expression<Func<TEntity, object>> property, Rule<TEntity> rule)

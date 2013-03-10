@@ -28,7 +28,7 @@ namespace BackToFront.Attributes
             _MemberNames.Each(a =>
             {
                 if (!MemberQualifier.IsMatch(a))
-                    throw new InvalidOperationException("##");
+                    throw new InvalidOperationException("##1");
             });
         }
 
@@ -68,7 +68,7 @@ namespace BackToFront.Attributes
                             }
 
                             //invallid member
-                            throw new InvalidOperationException("##");
+                            throw new InvalidOperationException("##2");
                         }
                     }
 

@@ -17,7 +17,7 @@ namespace BackToFront.UnitTests.Tests.Logic
     ///         Require, is false, AND, is false, model violation is
     /// </summary>
     [TestFixture]
-    public class TestPass4Test : Base.TestBase
+    public class TestPass4Test_1 : Base.TestBase
     {
         public class TestPass4
         {
@@ -26,9 +26,6 @@ namespace BackToFront.UnitTests.Tests.Logic
             static TestPass4()
             {
                 Rules.Add<TestPass4>(rule => rule
-                    // pass through if
-                    .If(a => a.ThrowViolationSwitch1).IsTrue().Or(a => a.ThrowViolationSwitch1).IsFalse()
-
                     .RequireThat(a => a.ThrowViolationSwitch1).IsFalse().And(a => a.ThrowViolationSwitch2).IsFalse().OrModelViolationIs(Violation));
             }
 
@@ -37,10 +34,10 @@ namespace BackToFront.UnitTests.Tests.Logic
         }
 
         [Test]
-        [TestCase(false, false)]
+        [TestCase(true, true)]
         [TestCase(false, true)]
         [TestCase(true, false)]
-        [TestCase(true, true)]
+        [TestCase(false, false)]
         public void Require_And(bool switch1, bool switch2)
         {
             // arrange

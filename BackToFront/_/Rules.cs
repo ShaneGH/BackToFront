@@ -26,7 +26,7 @@ namespace BackToFront
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="rule"></param>
-        public static void Add<TEntity>(Action<IRuleCollection<TEntity>> rule)
+        public static void Add<TEntity>(Action<IRule<TEntity>> rule)
         {
             Repository._Add<TEntity>(rule);
         }
@@ -47,7 +47,7 @@ namespace BackToFront
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TViolation"></typeparam>
         /// <param name="rule"></param>
-        private void _Add<TEntity>(Action<IRuleCollection<TEntity>> rule)
+        private void _Add<TEntity>(Action<IRule<TEntity>> rule)
         {
             var type = typeof(TEntity);
             if (!Repository._Registered.ContainsKey(type))
@@ -55,8 +55,13 @@ namespace BackToFront
                 _Registered.Add(type, new RuleCollection<TEntity>());
             }
 
+            var ruleObject = new Rule<TEntity>();
+
+            // TODO: cast exception??
+            ((RuleCollection<TEntity>)_Registered[type]).AddRule(ruleObject);
+
             // apply logic to rule
-            rule((RuleCollection<TEntity>)Repository._Registered[type]);
+            rule(ruleObject);
         }
     }
 }

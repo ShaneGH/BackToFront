@@ -19,6 +19,11 @@ namespace BackToFront.Extensions.Expressions
             return ReadExpression(expression.Body);
         }
 
+        public static IEnumerable<MemberInfo> ReferencedProperties(this MemberExpression expression)
+        {
+            return ReadExpression(expression);
+        }
+
         static IEnumerable<MemberInfo> ReadExpression(Expression expression)
         {
             List<MemberInfo> completedThreads = new List<MemberInfo>();

@@ -64,6 +64,8 @@
     <Compile Include="Tests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\Logic\TestPass7Test_1.cs" />
+    <Compile Include="Tests\Logic\TestPass4Test_1.cs" />
     <Compile Include="Tests\Logic\TestPass8Test.cs" />
     <Compile Include="Tests\Logic\TestPass7Test.cs" />
     <Compile Include="Tests\Logic\TestPass6Test.cs" />
@@ -79,6 +81,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\Utils\Condition_Test.cs" />
+    <Compile Include="Tests\Utils\Expressions\BinaryExpressionWrapper_Tests.cs" />
+    <Compile Include="Tests\Utils\Expressions\ConstantExpressionWrapper_Tests.cs" />
+    <Compile Include="Tests\Utils\Expressions\MemberExpressionWrapper_Tests.cs" />
+    <Compile Include="Tests\Utils\Expressions\MethodExpressionWrapper_Tests.cs" />
+    <Compile Include="Tests\Utils\Expressions\FuncExpressionWrapper_Tests.cs" />
+    <Compile Include="Tests\Utils\Expressions\ParameterExpressionWrapper_Tests.cs" />
     <Compile Include="Tests\Utils\Operators.cs" />
     <Compile Include="Tests\Utils\PropertyChain.cs" />
     <Compile Include="Tests\_\Rules.cs" />

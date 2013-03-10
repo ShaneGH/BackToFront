@@ -9,6 +9,6 @@ namespace BackToFront.Logic
 {
     public interface IBeginSubRule<TEntity>
     {
-        IRule<TEntity> Then(Action<ISubRule<TEntity>> action);
+        IAdditionalRuleCondition<TEntity> Then(Action<IRule<TEntity>> action);
     }
 }

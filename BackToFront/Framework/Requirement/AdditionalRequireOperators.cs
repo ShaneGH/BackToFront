@@ -70,9 +70,9 @@ namespace BackToFront.Framework.Requirement
 
             #region IPathElement is not implemented as AdditionalOperators should never be part of a path
 
-            protected override IEnumerable<PathElement<TEntity>> NextPathElements
+            protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
             {
-                get { yield break; }
+                yield break;
             }
 
             public override void ValidateEntity(TEntity subject, out IViolation violation)

@@ -8,54 +8,139 @@ using System.Threading.Tasks;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Framework.Base;
 using BackToFront.Framework.Condition;
+using BackToFront.Framework.Requirement;
 using BackToFront.Logic;
+using BackToFront.Logic.Compilations;
 
 namespace BackToFront.Framework
 {
-    internal class Rule<TEntity> : IRule<TEntity>, IValidate<TEntity>
+    /// <summary>
+    /// Temp, to bind together old and new conditions
+    /// </summary>
+    internal interface CONDITION_IS_TRUE<TEntity>
     {
-        private readonly HashSet<PropertyElement<TEntity>> _registeredElements = new HashSet<PropertyElement<TEntity>>();
+        bool ConditionIsTrue(TEntity subject);
+    }
 
-        //TODO: cache?
-        public bool HasValidChain
+    /// <summary>
+    /// Describes if, else if, else logic
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    internal class MultiCondition<TEntity, TIf> : PathElement<TEntity>
+        where TIf : PathElement<TEntity>, CONDITION_IS_TRUE<TEntity>
+    {
+        public readonly IList<TIf> If = new List<TIf>();
+
+        public MultiCondition(Rule<TEntity> rule)
+            : base(PathElement<TEntity>.IgnorePointer, rule) { }
+
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
         {
-            get
+            foreach (var i in If)
             {
-                return _registeredElements.All(a => a.HasValidChain);
+                if (i.ConditionIsTrue(subject))
+                {
+                    yield return i;
+                    yield break;
+                }
+                else
+                {
+                    yield return null;
+                }
             }
         }
 
+        public override void ValidateEntity(TEntity subject, out IViolation violation)
+        {
+            violation = ValidateNext(subject);
+        }
+
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
+        {
+            ValidateAllNext(subject, violationList);
+        }
+    }
+
+    internal class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate<TEntity>
+    {
         public Rule()
+            : this(null)
         { }
 
-        private readonly List<Operators<TEntity>> _If = new List<Operators<TEntity>>();
+        public Rule(Rule<TEntity> parentRule)
+            : base(PathElement<TEntity>.IgnorePointer, parentRule)
+        { }
+
+        private MultiCondition<TEntity, Operators<TEntity>> Condition;
+        public IOperators<TEntity> If(Expression<Func<TEntity, object>> property)
+        {
+            return Do(() =>
+            {
+                Condition = new MultiCondition<TEntity, Operators<TEntity>>(this);
+                return ElseIf(property);
+            });
+        }
+
+        RequireOperators<TEntity> _require;
+        public IRequireOperators<TEntity> RequireThat(Expression<Func<TEntity, object>> property)
+        {
+            return Do(() => _require = new RequireOperators<TEntity>(property, this));
+        }
+
         public IOperators<TEntity> ElseIf(Expression<Func<TEntity, object>> property)
         {
             var @if = new Operators<TEntity>(property, this);
-            _If.Add(@if);
+            Condition.If.Add(@if);
             return @if;
         }
 
         public IViolation ValidateEntity(TEntity subject)
         {
-            IViolation violation = null;
-            _If.Any(a => a.ValidateIfCondition(subject, out violation));
-            return violation;
+            return ValidateNext(subject);
         }
 
-        public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
         {
-            _If.Any(i => i.FullyValidateIfCondition(subject, violationList));
+            ValidateAllNext(subject, violationList);
         }
 
-        public Logic.Compilations.IConditionSatisfied<TEntity> Else
+        public IConditionSatisfied<TEntity> Else
         {
             get { return ElseIf(a => true).IsTrue(); }
         }
 
-        public void Register(PropertyElement<TEntity> element)
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
         {
-            _registeredElements.Add(element);
+            yield return _SmartCondition;
+            yield return Condition;
+            yield return _require;
+        }
+
+        public override void ValidateEntity(TEntity subject, out IViolation violation)
+        {
+            throw new NotImplementedException();
+        }
+
+        MultiCondition<TEntity, SmartOperator<TEntity>> _SmartCondition;
+        public ISmartConditionSatisfied<TEntity> SmartIf(Expression<Func<TEntity, bool>> property)
+        {
+            return Do(() =>
+            {
+                _SmartCondition = new MultiCondition<TEntity, SmartOperator<TEntity>>(this);
+                return SmartElseIf(property);
+            });
+        }
+
+        public ISmartConditionSatisfied<TEntity> SmartElseIf(Expression<Func<TEntity, bool>> property)
+        {
+            var @if = new SmartOperator<TEntity>(property, this);
+            _SmartCondition.If.Add(@if);
+            return @if;
+        }
+
+        public ISmartConditionSatisfied<TEntity> SmartElse
+        {
+            get { return SmartElseIf(a => true); }
         }
     }
 }

@@ -38,7 +38,7 @@ namespace BackToFront.Framework.Base
         protected PropertyElement(Expression<Func<TEntity, object>> descriptor)
         {
             if (descriptor == null)
-                throw new ArgumentNullException("##");
+                throw new ArgumentNullException("##4");
 
             if (descriptor != IgnorePointer)
             {
@@ -103,7 +103,7 @@ namespace BackToFront.Framework.Base
         private void _CheckLock()
         {
             if (_locked)
-                throw new InvalidOperationException("##");
+                throw new InvalidOperationException("##5");
             else
                 _locked = true;
         }

@@ -20,7 +20,7 @@ namespace BackToFront.Framework
             : base(PathElement<TEntity>.IgnorePointer, parentRule)
         {
             if(violation == null)
-                throw new ArgumentNullException("##");
+                throw new ArgumentNullException("##6");
 
             _violation = violation;
         }
@@ -40,9 +40,9 @@ namespace BackToFront.Framework
             violationList.Add(violation);
         }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
         {
-            get { yield break; }
+            yield break;
         }
     }
 }

@@ -10,24 +10,9 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework
 {
-    internal class RuleCollection<TEntity> : IRuleCollection<TEntity>, IValidate
+    internal class RuleCollection<TEntity> : IValidate
     {
         private readonly List<Rule<TEntity>> _Rules = new List<Rule<TEntity>>();
-        private bool? _hasValidChain = null;
-        bool HasValidChain
-        {
-            get
-            {
-                return _Rules.All(a => a.HasValidChain);
-            }
-        }
-
-        public IOperators<TEntity> If(Expression<Func<TEntity, object>> property)
-        {
-            var rule = new Rule<TEntity>();
-            _Rules.Add(rule);
-            return rule.ElseIf(property);
-        }
 
         public IViolation ValidateEntity(object subject)
         {
@@ -48,6 +33,11 @@ namespace BackToFront.Framework
             IList<IViolation> violationList = new List<IViolation>();
             _Rules.Each(i => i.FullyValidateEntity((TEntity)subject, violationList));
             return violationList.ToArray();
+        }
+
+        public void AddRule(Rule<TEntity> rule)
+        {
+            _Rules.Add(rule);
         }
     }
 }

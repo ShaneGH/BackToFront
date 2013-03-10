@@ -16,12 +16,9 @@ namespace BackToFront.Framework.Requirement
     {
         private readonly RequireOperators<TEntity> ParentIf;
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
         {
-            get
-            {
                 yield return Violation;
-            }
         }
 
         public RequirementFailed(Expression<Func<TEntity, object>> property, Rule<TEntity> rule, RequireOperators<TEntity> operators)

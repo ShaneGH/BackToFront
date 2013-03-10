@@ -18,18 +18,18 @@ namespace BackToFront.Framework.Base
         }
 
         protected ThrowViolation<TEntity> Violation;
-        private IRule<TEntity> AddViolation(IViolation violation)
+        private IAdditionalRuleCondition<TEntity> AddViolation(IViolation violation)
         {
             Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule); });
             return ParentRule;
         }
 
-        public IRule<TEntity> ModelViolationIs(IViolation violation)
+        public IAdditionalRuleCondition<TEntity> ModelViolationIs(IViolation violation)
         {
             return AddViolation(violation);
         }
 
-        public IRule<TEntity> OrModelViolationIs(IViolation violation)
+        public IAdditionalRuleCondition<TEntity> OrModelViolationIs(IViolation violation)
         {
             return AddViolation(violation);
         }

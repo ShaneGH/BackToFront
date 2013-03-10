@@ -25,12 +25,9 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
 
             public readonly IList<SimpleIValidate> Els = new List<SimpleIValidate>();
 
-            protected override IEnumerable<PathElement<object>> NextPathElements
+            protected override IEnumerable<PathElement<object>> NextPathElements(object subject)
             {
-                get
-                {
                     return Els;
-                }
             }
 
             public IViolation ValNext(object subject)

@@ -23,13 +23,11 @@ namespace BackToFront.Framework.Base
     internal abstract class PathElement<TEntity> : PropertyElement<TEntity>
     {        
         protected readonly Rule<TEntity> ParentRule;
-        protected abstract IEnumerable<PathElement<TEntity>> NextPathElements { get; }
+        protected abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject);
 
-        public PathElement<TEntity> NextOption
+        public PathElement<TEntity> NextOption(TEntity subject)
         {
-            get
-            {
-                var options = NextPathElements.Where(a => a != null).ToArray();
+                var options = NextPathElements(subject).Where(a => a != null).ToArray();
                 if (!options.Any())
                 {
                     return null;
@@ -39,8 +37,7 @@ namespace BackToFront.Framework.Base
                     return options[0];
                 }
 
-                throw new InvalidOperationException("##");
-            }
+                throw new InvalidOperationException("##3");
         }
 
         public PathElement(Expression<Func<TEntity, object>> descriptor, Rule<TEntity> rule)
@@ -61,7 +58,7 @@ namespace BackToFront.Framework.Base
         {
             //TODO: make private and handle next logic here (rather than in child)
             IViolation violation = null;
-            var no = NextOption;
+            var no = NextOption(subject);
             if(no != null)
                 no.ValidateEntity(subject, out violation);
             return violation;
@@ -75,7 +72,7 @@ namespace BackToFront.Framework.Base
         protected void ValidateAllNext(TEntity subject, IList<IViolation> violations)
         {
             //TODO: make private and handle next logic here (rather than in child)
-            var no = NextOption;
+            var no = NextOption(subject);
             if(no != null)
                 no.FullyValidateEntity(subject, violations);
         }

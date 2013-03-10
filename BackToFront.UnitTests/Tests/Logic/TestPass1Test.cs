@@ -17,11 +17,17 @@ namespace BackToFront.UnitTests.Tests.Logic
 
         static TestPass1()
         {
-            Rules.Add<TestPass1>(rule => rule
-                .If(a => a.ThrowViolation1).IsTrue().ModelViolationIs(Violation1));
+            //Rules.Add<TestPass1>(rule => rule
+            //    .If(a => a.ThrowViolation1).IsTrue().ModelViolationIs(Violation1));
+
+            //Rules.Add<TestPass1>(rule => rule
+            //    .If(a => a.ThrowViolation2).IsTrue().ModelViolationIs(Violation2));
 
             Rules.Add<TestPass1>(rule => rule
-                .If(a => a.ThrowViolation2).IsTrue().ModelViolationIs(Violation2));
+                .SmartIf(a => a.ThrowViolation1).ModelViolationIs(Violation1));
+
+            Rules.Add<TestPass1>(rule => rule
+                .SmartIf(a => a.ThrowViolation2).ModelViolationIs(Violation2));
         }
 
         public bool ThrowViolation1 { get; set; }

@@ -25,9 +25,9 @@ namespace BackToFront.UnitTests.Utilities
             violationList.Add(Violation);
         }
         
-        protected override IEnumerable<PathElement<object>> NextPathElements
+        protected override IEnumerable<PathElement<object>> NextPathElements(object subject)
         {
-            get { throw new InvalidOperationException(); }
+            throw new InvalidOperationException();
         }
     }
 }

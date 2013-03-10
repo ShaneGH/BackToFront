@@ -18,14 +18,11 @@ namespace BackToFront.Framework.Condition
     {
         private readonly Operators<TEntity> ParentIf;
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
         {
-            get
-            {
                 yield return Violation;
                 yield return _Then;
                 yield return _RequireThat;
-            }
         }
 
         public ConditionSatisfied(Expression<Func<TEntity, object>> property, Rule<TEntity> rule, Operators<TEntity> operators)
@@ -50,10 +47,10 @@ namespace BackToFront.Framework.Condition
             return Do(() => _RequireThat = new RequireOperators<TEntity>(property, ParentRule));
         }
 
-        private SubRule<TEntity> _Then = null;
-        public IRule<TEntity> Then(Action<ISubRule<TEntity>> action)
+        private SubRuleCollection<TEntity> _Then = null;
+        public IAdditionalRuleCondition<TEntity> Then(Action<IRule<TEntity>> action)
         {
-            Do(() => _Then = new SubRule<TEntity>(ParentRule));
+            Do(() => _Then = new SubRuleCollection<TEntity>(ParentRule));
 
             // run action on new sub rule
             action(_Then);

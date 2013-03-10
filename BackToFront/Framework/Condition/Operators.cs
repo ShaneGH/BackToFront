@@ -13,14 +13,14 @@ using BackToFront.Utils;
 
 namespace BackToFront.Framework.Condition
 {
-    internal partial class Operators<TEntity> : OperatorsBase<TEntity>
+    internal partial class Operators<TEntity> : OperatorsBase<TEntity>, CONDITION_IS_TRUE<TEntity>
     {
         private readonly Condition<TEntity> Condition = new Condition<TEntity>();
         private ConditionSatisfied<TEntity> _rightHandSide;
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
         {
-            get { yield return _rightHandSide; }
+            yield return _rightHandSide;
         }
 
         public Operators(Expression<Func<TEntity, object>> property, Rule<TEntity> rule)
@@ -43,6 +43,11 @@ namespace BackToFront.Framework.Condition
                 violation = null;
 
             return output;
+        }
+
+        public bool ConditionIsTrue(TEntity subject)
+        {
+            return Condition.CompiledCondition(subject);
         }
 
         /// <summary>

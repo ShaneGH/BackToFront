@@ -34,11 +34,27 @@ namespace BackToFront.Extensions.IEnumerable
                 action(enumerated[i], i);
         }
 
-        public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
+        public static bool All<T>(this IEnumerable<T> items, Func<T, int, bool> action)
         {
             var enumerated = items.ToArray();
             for (int i = 0, ii = enumerated.Length; i < ii; i++)
-                list.Add(enumerated[i]);
+                if (!action(enumerated[i], i))
+                    return false;
+            return true;
+        }
+
+        public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
+        {
+            if (list is List<T>)
+            {
+                (list as List<T>).AddRange(items);
+            }
+            else
+            {
+                var enumerated = items.ToArray();
+                for (int i = 0, ii = enumerated.Length; i < ii; i++)
+                    list.Add(enumerated[i]);
+            }
         }
 
         public static IEnumerable<T> Aggregate<T>(this IEnumerable<IEnumerable<T>> elements)

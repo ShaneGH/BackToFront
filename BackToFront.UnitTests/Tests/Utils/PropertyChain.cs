@@ -19,6 +19,13 @@ namespace BackToFront.UnitTests.Tests.Utils
             [AffectsMembersAttribute]
             public string Property { get; set; }
             public string Field;
+
+            public InnerTestClass Inner { get; set; }
+        }
+
+        class InnerTestClass
+        {
+            public string Field;
         }
 
         [Test]
@@ -82,5 +89,127 @@ namespace BackToFront.UnitTests.Tests.Utils
             Assert.IsTrue(new PropertyChain<TestClass>(a => a.Field.Length) == new PropertyChain<TestClass>(a => a.Field.Length));
             Assert.IsTrue(new PropertyChain<TestClass>(a => a.Field.Length).Equals(new PropertyChain<TestClass>(a => a.Field.Length)));
         }
+
+        #region Get/set
+
+        [Test]
+        public void Set_Test_OK()
+        {
+            // arrange
+            var value = "Hello";
+            var tc = new TestClass { Inner = new InnerTestClass() };
+            var subject = new PropertyChain<TestClass>(a => a.Inner.Field);
+
+            // act
+            subject.Set(tc, value);
+
+            // assert
+            Assert.AreEqual(value, tc.Inner.Field);
+        }
+
+        [Test]
+        [ExpectedException(typeof(EX))]
+        public void Set_Test_NullProperty()
+        {
+            // arrange
+            var value = "Hello";
+            var tc = new TestClass();
+            var subject = new PropertyChain<TestClass>(a => a.Inner.Field);
+
+            // act
+            // assert
+            subject.Set(tc, value);
+        }
+
+        [Test]
+        public void Get_Test_OK()
+        {
+            // arrange
+            var tc = new TestClass { Inner = new InnerTestClass { Field = "Hello" } };
+            var subject = new PropertyChain<TestClass>(a => a.Inner.Field);
+
+            // act
+            var value = (string)subject.Get(tc);
+
+            // assert
+            Assert.AreEqual(value, tc.Inner.Field);
+        }
+
+        [Test]
+        [ExpectedException(typeof(EX))]
+        public void Get_Test_NullProperty()
+        {
+            // arrange
+            var tc = new TestClass();
+            var subject = new PropertyChain<TestClass>(a => a.Inner.Field);
+
+            // act
+            // assert
+            var value = (string)subject.Get(tc);
+        }
+
+        [Test]
+        public void TrySet_Test_OK()
+        {
+            // arrange
+            var value = "Hello";
+            var tc = new TestClass { Inner = new InnerTestClass() };
+            var subject = new PropertyChain<TestClass>(a => a.Inner.Field);
+
+            // act
+            var result = subject.TrySet(tc, value);
+
+            // assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(value, tc.Inner.Field);
+        }
+
+        [Test]
+        public void TrySet_Test_NullProperty()
+        {
+            // arrange
+            var value = "Hello";
+            var tc = new TestClass();
+            var subject = new PropertyChain<TestClass>(a => a.Inner.Field);
+
+            // act
+            var result = subject.TrySet(tc, value);
+
+            // assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TryGet_Test_OK()
+        {
+            // arrange
+            var tc = new TestClass { Inner = new InnerTestClass { Field = "Hello" } };
+            var subject = new PropertyChain<TestClass>(a => a.Inner.Field);
+            object value;
+
+            // act
+            var result = subject.TryGet(tc, out value);
+
+            // assert
+            Assert.IsTrue(result);
+            Assert.AreEqual((string)value, tc.Inner.Field);
+        }
+
+        [Test]
+        public void TryGet_Test_NullProperty()
+        {
+            // arrange
+            var tc = new TestClass();
+            var subject = new PropertyChain<TestClass>(a => a.Inner.Field);
+            object value;
+
+            // act
+            var result = subject.TryGet(tc, out value);
+
+            // assert
+            Assert.IsFalse(result);
+        }
+
+        #endregion
     }
 }
