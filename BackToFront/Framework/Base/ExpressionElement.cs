@@ -19,10 +19,6 @@ namespace BackToFront.Framework.Base
     /// <typeparam name="TEntity"></typeparam>
     internal abstract class ExpressionElement<TEntity> : PathElement<TEntity>
     {
-        /// <summary>
-        /// Use instead of null for un needed constructor argument
-        /// </summary>
-        internal static readonly Expression<Func<TEntity, object>> IgnorePointer = a => a;
         protected readonly Func<TEntity, object> Descriptor;
 
         protected ExpressionElement(Expression<Func<TEntity, object>> descriptor, Rule<TEntity> rule)

@@ -24,9 +24,9 @@ namespace BackToFront.Framework.Base
     {
         private bool _locked = false;
         protected readonly Rule<TEntity> ParentRule;
-        protected abstract IEnumerable<ExpressionElement<TEntity>> NextPathElements(TEntity subject);
+        protected abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject);
 
-        public ExpressionElement<TEntity> NextOption(TEntity subject)
+        public PathElement<TEntity> NextOption(TEntity subject)
         {
                 var options = NextPathElements(subject).Where(a => a != null).ToArray();
                 if (!options.Any())

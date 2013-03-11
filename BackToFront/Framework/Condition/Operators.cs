@@ -18,7 +18,7 @@ namespace BackToFront.Framework.Condition
         private readonly Condition<TEntity> Condition = new Condition<TEntity>();
         private ConditionSatisfied<TEntity> _rightHandSide;
 
-        protected override IEnumerable<ExpressionElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
         {
             yield return _rightHandSide;
         }
