@@ -12,21 +12,21 @@ using BackToFront.Logic.Compilations;
 
 namespace BackToFront.Framework.Requirement
 {
-    internal class RequirementFailed<TEntity> : ModelViolation<TEntity>, IModelViolation2<TEntity>
+    internal class RequirementFailed<TEntity> : ModelViolation<TEntity, bool>, IModelViolation2<TEntity>
     {
         protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
         {
             yield return Violation;
         }
 
-        public RequirementFailed(Expression<Func<TEntity, object>> property, Rule<TEntity> rule)
+        public RequirementFailed(Expression<Func<TEntity, bool>> property, Rule<TEntity> rule)
             : base(property, rule)
         {
         }
 
         public override void ValidateEntity(TEntity subject, out IViolation violation)
         {
-            if (!(bool)Descriptor(subject))
+            if (!Descriptor(subject))
                 violation = ValidateNext(subject);
             else
                 violation = null;
@@ -34,7 +34,7 @@ namespace BackToFront.Framework.Requirement
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
         {
-            if (!(bool)Descriptor(subject))
+            if (!Descriptor(subject))
                 ValidateAllNext(subject, violationList);
         }
     }

@@ -12,12 +12,12 @@ using BackToFront.Logic.Compilations;
 
 namespace BackToFront.Framework.Requirement
 {
-    internal class SmartRequireOperator<TEntity> : ModelViolation<TEntity>, CONDITION_IS_TRUE<TEntity>, ISmartConditionSatisfied<TEntity>
+    internal class SmartRequireOperator<TEntity> : ModelViolation<TEntity, bool>, CONDITION_IS_TRUE<TEntity>, ISmartConditionSatisfied<TEntity>
     {
         readonly Expression<Func<TEntity, bool>> IfCodition;
 
         public SmartRequireOperator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
-            : base(a => (object)descriptor.Compile()(a), rule)
+            : base(descriptor, rule)
         {
             IfCodition = descriptor;
         }

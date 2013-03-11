@@ -16,11 +16,11 @@ namespace BackToFront.Framework.Base
     /// A class which holds reference to a property. Also has a lockable action
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    internal abstract class ExpressionElement<TEntity> : PathElement<TEntity>
+    internal abstract class ExpressionElement<TEntity, TMember> : PathElement<TEntity>
     {
-        protected readonly Func<TEntity, object> Descriptor;
+        protected readonly Func<TEntity, TMember> Descriptor;
 
-        protected ExpressionElement(Expression<Func<TEntity, object>> descriptor, Rule<TEntity> rule)
+        protected ExpressionElement(Expression<Func<TEntity, TMember>> descriptor, Rule<TEntity> rule)
             : base(rule)
         {
             if (descriptor == null)
