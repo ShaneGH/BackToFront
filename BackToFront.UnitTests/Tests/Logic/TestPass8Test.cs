@@ -27,8 +27,8 @@ namespace BackToFront.UnitTests.Tests.Logic
             static TestEntity()
             {
                 Rules.Add<TestEntity>(rule => rule
-                    .If(a => a.ThrowViolationSwitch1).IsTrue().ModelViolationIs(Violation1)
-                    .ElseIf(a => a.ThrowViolationSwitch2).IsTrue().ModelViolationIs(Violation2)
+                    .If(a => a.ThrowViolationSwitch1).ModelViolationIs(Violation1)
+                    .ElseIf(a => a.ThrowViolationSwitch2).ModelViolationIs(Violation2)
                     .Else.ModelViolationIs(Violation3));
             }
 

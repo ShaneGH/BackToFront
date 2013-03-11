@@ -39,7 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\AffectsMembersAttribute.cs" />
     <Compile Include="Enum\LogicalOperator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -55,29 +54,15 @@
     <Compile Include="Extensions\Reflection.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Framework\Condition\AdditionalOperators.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Framework\Base\RequireOperatorsBase.cs" />
-    <Compile Include="Framework\Base\OperatorsBase.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Framework\Base\PathElement.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Framework\Base\ExpressionElement.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Framework\Condition\ConditionSatisfied.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Framework\Condition\SmartOperator.cs" />
-    <Compile Include="Framework\Requirement\AdditionalRequireOperators.cs" />
     <Compile Include="Framework\Requirement\RequirementFailed.cs" />
-    <Compile Include="Framework\Requirement\RequireOperators.cs" />
-    <Compile Include="Framework\Condition\Operators.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Framework\Requirement\SmartOperator.cs" />
     <Compile Include="Framework\Rule.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -87,16 +72,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Framework\Base\ModelViolation.cs" />
-    <Compile Include="Logic\Compilations\IRequirementFailed.cs" />
     <Compile Include="Logic\Compilations\IConditionSatisfied.cs" />
-    <Compile Include="Logic\Operators\IAdditionalOperators.cs" />
-    <Compile Include="Logic\IAddCondition.cs" />
-    <Compile Include="Logic\IAddRequireCondition.cs" />
-    <Compile Include="Logic\Utilities\IAdditionalCondition.cs" />
-    <Compile Include="Logic\Utilities\IBracketedCondition.cs" />
-    <Compile Include="Utils\Condition.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Utils\EX.cs" />
     <Compile Include="Utils\Expressions\BinaryExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\ConstantExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\ExpressionWrapperBase.cs" />
@@ -106,7 +83,6 @@
     <Compile Include="Utils\Expressions\UnaryExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\ParameterExpressionWrapper.cs" />
     <Compile Include="Utils\Operators.cs" />
-    <Compile Include="Utils\PropertyChain.cs" />
     <Compile Include="Utils\PropertySetter.cs" />
     <Compile Include="Utils\ReadonlyDictionary.cs" />
     <Compile Include="_\IRule.cs" />
@@ -114,8 +90,6 @@
     <Compile Include="Logic\IBeginSubRule.cs" />
     <Compile Include="Logic\IModelViolation1.cs" />
     <Compile Include="Logic\IModelViolation2.cs" />
-    <Compile Include="Logic\Operators\IRequireOperators.cs" />
-    <Compile Include="Logic\Operators\IOperators.cs" />
     <Compile Include="Logic\IRequires.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="_\IValidate.cs" />

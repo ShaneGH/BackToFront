@@ -42,23 +42,16 @@ namespace BackToFront.Framework
             violationList.AddRange(_subRules.FullyValidateEntity(subject));
         }
 
-        public IOperators<TEntity> If(Expression<Func<TEntity, object>> property)
+        Logic.Compilations.ISmartConditionSatisfied<TEntity> IRule<TEntity>.If(Expression<Func<TEntity, bool>> property)
         {
-            var subRule = new Rule<TEntity>(ParentRule);
-            _subRules.AddRule(subRule);
-            return subRule.If(property);
+            throw new NotImplementedException();
         }
 
-        public IRequireOperators<TEntity> RequireThat(Expression<Func<TEntity, object>> property)
+        public IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)
         {
             var subRule = new Rule<TEntity>(ParentRule);
             _subRules.AddRule(subRule);
             return subRule.RequireThat(property);
-        }
-
-        Logic.Compilations.ISmartConditionSatisfied<TEntity> IRule<TEntity>.SmartIf(Expression<Func<TEntity, bool>> property)
-        {
-            throw new NotImplementedException();
         }
     }
 }

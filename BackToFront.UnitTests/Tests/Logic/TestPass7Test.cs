@@ -29,14 +29,14 @@ namespace BackToFront.UnitTests.Tests.Logic
             {
                 Rules.Add<TestEntity>(rule => rule
                     // pass through if
-                    .If(a => a.ThrowViolationSwitch1).IsTrue().Or(a => a.ThrowViolationSwitch1).IsFalse().Then(subRule =>
+                    .If(a => a.ThrowViolationSwitch1 || !a.ThrowViolationSwitch1).Then(subRule =>
                     {
-                        subRule.RequireThat(a => a.RequiredSwitch1).IsTrue().OrModelViolationIs(Violation1);
-                        subRule.RequireThat(a => a.RequiredSwitch2).IsTrue().OrModelViolationIs(Violation1);
+                        subRule.RequireThat(a => a.RequiredSwitch1).OrModelViolationIs(Violation1);
+                        subRule.RequireThat(a => a.RequiredSwitch2).OrModelViolationIs(Violation1);
                     }));
 
                 Rules.Add<TestEntity>(rule => rule
-                    .If(a => a.ThrowViolationSwitch1).IsTrue().Or(a => a.ThrowViolationSwitch2).IsTrue().ModelViolationIs(Violation2));
+                    .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).ModelViolationIs(Violation2));
             }
 
             public bool ThrowViolationSwitch1 { get; set; }

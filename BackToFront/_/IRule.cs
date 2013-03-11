@@ -12,20 +12,13 @@ namespace BackToFront
 {
     public interface IAdditionalRuleCondition<TEntity>
     {
-        IOperators<TEntity> ElseIf(Expression<Func<TEntity, object>> property);
-        IConditionSatisfied<TEntity> Else { get; }
-
-        ISmartConditionSatisfied<TEntity> SmartElseIf(Expression<Func<TEntity, bool>> property);
-        ISmartConditionSatisfied<TEntity> SmartElse { get; }
-
+        ISmartConditionSatisfied<TEntity> ElseIf(Expression<Func<TEntity, bool>> property);
+        ISmartConditionSatisfied<TEntity> Else { get; }
     }
 
     public interface IRule<TEntity>
     {
-        IOperators<TEntity> If(Expression<Func<TEntity, object>> property);
-
-        ISmartConditionSatisfied<TEntity> SmartIf(Expression<Func<TEntity, bool>> property);
-
-        IRequireOperators<TEntity> RequireThat(Expression<Func<TEntity, object>> property);
+        ISmartConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property);
+        IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> property);
     }
 }

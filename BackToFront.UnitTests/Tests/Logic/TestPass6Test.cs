@@ -26,9 +26,9 @@ namespace BackToFront.UnitTests.Tests.Logic
             static TestEntity()
             {
                 Rules.Add<TestEntity>(rule => rule
-                    .If(a => a.ThrowViolationSwitch1).IsTrue().Or(a => a.ThrowViolationSwitch2).IsTrue()
+                    .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2)
 
-                    .RequireThat(a => a.RequiredSwitch1).IsTrue().And(a => a.RequiredSwitch2).IsTrue().OrModelViolationIs(Violation));
+                    .SmartRequireThat(a => a.RequiredSwitch1 && a.RequiredSwitch2).OrModelViolationIs(Violation));
             }
 
             public bool ThrowViolationSwitch1 { get; set; }

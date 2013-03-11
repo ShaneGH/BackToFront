@@ -58,9 +58,6 @@
     <Compile Include="Tests\Framework\Base\PathElementTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Framework\Condition\OperatorsTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Tests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -80,7 +77,6 @@
     <Compile Include="Tests\Logic\TestPass3Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Utils\Condition_Test.cs" />
     <Compile Include="Tests\Utils\Expressions\BinaryExpressionWrapper_Tests.cs" />
     <Compile Include="Tests\Utils\Expressions\ConstantExpressionWrapper_Tests.cs" />
     <Compile Include="Tests\Utils\Expressions\ExpressionWrapperBase_Tests.cs" />
@@ -89,7 +85,6 @@
     <Compile Include="Tests\Utils\Expressions\FuncExpressionWrapper_Tests.cs" />
     <Compile Include="Tests\Utils\Expressions\ParameterExpressionWrapper_Tests.cs" />
     <Compile Include="Tests\Utils\Operators.cs" />
-    <Compile Include="Tests\Utils\PropertyChain.cs" />
     <Compile Include="Tests\_\Rules.cs" />
     <Compile Include="Utilities\SimpleIValidate.cs">
       <SubType>Code</SubType>

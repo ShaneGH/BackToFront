@@ -71,27 +71,10 @@ namespace BackToFront.Framework
             : base(parentRule)
         { }
 
-        private MultiCondition<TEntity, Operators<TEntity>> Condition;
-        public IOperators<TEntity> If(Expression<Func<TEntity, object>> property)
+        private RequirementFailed<TEntity> _SmartRequireThat;
+        public IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)
         {
-            return Do(() =>
-            {
-                Condition = new MultiCondition<TEntity, Operators<TEntity>>(this);
-                return ElseIf(property);
-            });
-        }
-
-        RequireOperators<TEntity> _require;
-        public IRequireOperators<TEntity> RequireThat(Expression<Func<TEntity, object>> property)
-        {
-            return Do(() => _require = new RequireOperators<TEntity>(property, this));
-        }
-
-        public IOperators<TEntity> ElseIf(Expression<Func<TEntity, object>> property)
-        {
-            var @if = new Operators<TEntity>(property, this);
-            Condition.If.Add(@if);
-            return @if;
+            return Do(() => _SmartRequireThat = new RequirementFailed<TEntity>(a => property.Compile()(a), this));
         }
 
         public IViolation ValidateEntity(TEntity subject)
@@ -104,16 +87,10 @@ namespace BackToFront.Framework
             ValidateAllNext(subject, violationList);
         }
 
-        public IConditionSatisfied<TEntity> Else
-        {
-            get { return ElseIf(a => true).IsTrue(); }
-        }
-
         protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
         {
             yield return _SmartCondition;
-            yield return Condition;
-            yield return _require;
+            yield return _SmartRequireThat;
         }
 
         public override void ValidateEntity(TEntity subject, out IViolation violation)
@@ -122,25 +99,25 @@ namespace BackToFront.Framework
         }
 
         MultiCondition<TEntity, SmartOperator<TEntity>> _SmartCondition;
-        public ISmartConditionSatisfied<TEntity> SmartIf(Expression<Func<TEntity, bool>> property)
+        public ISmartConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property)
         {
             return Do(() =>
             {
                 _SmartCondition = new MultiCondition<TEntity, SmartOperator<TEntity>>(this);
-                return SmartElseIf(property);
+                return ElseIf(property);
             });
         }
 
-        public ISmartConditionSatisfied<TEntity> SmartElseIf(Expression<Func<TEntity, bool>> property)
+        public ISmartConditionSatisfied<TEntity> ElseIf(Expression<Func<TEntity, bool>> property)
         {
             var @if = new SmartOperator<TEntity>(property, this);
             _SmartCondition.If.Add(@if);
             return @if;
         }
 
-        public ISmartConditionSatisfied<TEntity> SmartElse
+        public ISmartConditionSatisfied<TEntity> Else
         {
-            get { return SmartElseIf(a => true); }
+            get { return ElseIf(a => true); }
         }
     }
 }

@@ -10,13 +10,13 @@ using BackToFront.Framework.Requirement;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 
-namespace BackToFront.Framework.Condition
+namespace BackToFront.Framework.Requirement
 {
-    internal class SmartOperator<TEntity> : ModelViolation<TEntity>, CONDITION_IS_TRUE<TEntity>, ISmartConditionSatisfied<TEntity>
+    internal class SmartRequireOperator<TEntity> : ModelViolation<TEntity>, CONDITION_IS_TRUE<TEntity>, ISmartConditionSatisfied<TEntity>
     {
         readonly Expression<Func<TEntity, bool>> IfCodition;
 
-        public SmartOperator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
+        public SmartRequireOperator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
             : base(a => (object)descriptor.Compile()(a), rule)
         {
             IfCodition = descriptor;

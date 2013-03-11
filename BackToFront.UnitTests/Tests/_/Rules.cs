@@ -20,7 +20,7 @@ namespace BackToFront.UnitTests.Tests
 
             // act
             Assert.IsFalse(Rules.Repository.Registered.ContainsKey(typeof(TestClass)));
-            Rules.Add<TestClass>(a => a.If(b => b));
+            Rules.Add<TestClass>(a => a.If(b => b == null));
 
             // assert
             Assert.NotNull(Rules.Repository.Registered[typeof(TestClass)]);

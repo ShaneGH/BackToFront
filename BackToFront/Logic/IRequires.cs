@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BackToFront.Logic.Compilations;
+using System;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
     public interface IRequires<TEntity>
     {
-        IRequireOperators<TEntity> RequireThat(Expression<Func<TEntity, object>> property);
+        IModelViolation2<TEntity> SmartRequireThat(Expression<Func<TEntity, bool>> condition);
     }
 }

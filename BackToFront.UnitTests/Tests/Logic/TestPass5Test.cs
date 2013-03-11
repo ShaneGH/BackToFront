@@ -27,9 +27,9 @@ namespace BackToFront.UnitTests.Tests.Logic
             {
                 Rules.Add<TestPass5>(rule => rule
                     // pass through if
-                    .If(a => a.RequiredSwitch1).IsTrue().Or(a => a.RequiredSwitch1).IsFalse()
+                    .If(a => a.RequiredSwitch1 || !a.RequiredSwitch1)
 
-                    .RequireThat(a => a.RequiredSwitch1).IsTrue().Or(a => a.RequiredSwitch2).IsTrue().OrModelViolationIs(Violation));
+                    .SmartRequireThat(a => a.RequiredSwitch1 || a.RequiredSwitch2).OrModelViolationIs(Violation));
             }
 
             public bool RequiredSwitch1 { get; set; }
