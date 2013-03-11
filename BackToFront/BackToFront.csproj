@@ -65,7 +65,7 @@
     <Compile Include="Framework\Base\PathElement.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Framework\Base\PropertyElement.cs">
+    <Compile Include="Framework\Base\ExpressionElement.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Framework\Condition\ConditionSatisfied.cs">

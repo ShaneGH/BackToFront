@@ -17,15 +17,15 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
     [TestFixture]
     public class PathElementTests
     {
-        private class TestClass : PathElement<object>
+        private class TestClass : ExpressionElement<object>
         {
             public TestClass()
-                : base(PathElement<object>.IgnorePointer, null)
+                : base(ExpressionElement<object>.IgnorePointer, null)
             { }
 
             public readonly IList<SimpleIValidate> Els = new List<SimpleIValidate>();
 
-            protected override IEnumerable<PathElement<object>> NextPathElements(object subject)
+            protected override IEnumerable<ExpressionElement<object>> NextPathElements(object subject)
             {
                     return Els;
             }

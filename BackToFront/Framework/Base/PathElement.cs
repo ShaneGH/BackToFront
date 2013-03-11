@@ -20,12 +20,13 @@ namespace BackToFront.Framework.Base
     /// A class attached to a Rule which points to the next step in the operation
     /// </summary>
     /// <typeparam name="TEntity">The entity type to validate</typeparam>
-    internal abstract class PathElement<TEntity> : PropertyElement<TEntity>
-    {        
+    internal abstract class PathElement<TEntity>
+    {
+        private bool _locked = false;
         protected readonly Rule<TEntity> ParentRule;
-        protected abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject);
+        protected abstract IEnumerable<ExpressionElement<TEntity>> NextPathElements(TEntity subject);
 
-        public PathElement<TEntity> NextOption(TEntity subject)
+        public ExpressionElement<TEntity> NextOption(TEntity subject)
         {
                 var options = NextPathElements(subject).Where(a => a != null).ToArray();
                 if (!options.Any())
@@ -40,8 +41,7 @@ namespace BackToFront.Framework.Base
                 throw new InvalidOperationException("##3");
         }
 
-        public PathElement(Expression<Func<TEntity, object>> descriptor, Rule<TEntity> rule)
-            : base(descriptor)
+        public PathElement(Rule<TEntity> rule)
         {
             ParentRule = rule;
         }
@@ -75,6 +75,26 @@ namespace BackToFront.Framework.Base
             var no = NextOption(subject);
             if(no != null)
                 no.FullyValidateEntity(subject, violations);
+        }
+
+        protected TOutput Do<TOutput>(Func<TOutput> action)
+        {
+            _CheckLock();
+            return action();
+        }
+
+        protected void Do(Action action)
+        {
+            _CheckLock();
+            action();
+        }
+
+        private void _CheckLock()
+        {
+            if (_locked)
+                throw new InvalidOperationException("##5");
+            else
+                _locked = true;
         }
     }
 }

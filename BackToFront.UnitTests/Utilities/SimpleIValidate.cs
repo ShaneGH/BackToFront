@@ -8,12 +8,12 @@ using BackToFront.Framework.Base;
 
 namespace BackToFront.UnitTests.Utilities
 {
-    internal class SimpleIValidate : PathElement<object>
+    internal class SimpleIValidate : ExpressionElement<object>
     {
         public IViolation Violation;
 
         public SimpleIValidate()
-            : base(PathElement<object>.IgnorePointer, null) { }
+            : base(ExpressionElement<object>.IgnorePointer, null) { }
 
         public override void ValidateEntity(object subject, out IViolation violation)
         {
@@ -25,7 +25,7 @@ namespace BackToFront.UnitTests.Utilities
             violationList.Add(Violation);
         }
         
-        protected override IEnumerable<PathElement<object>> NextPathElements(object subject)
+        protected override IEnumerable<ExpressionElement<object>> NextPathElements(object subject)
         {
             throw new InvalidOperationException();
         }

@@ -13,11 +13,11 @@ namespace BackToFront.Framework
     /// End of a pathway, Throw violation
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    internal class ThrowViolation<TEntity> : PathElement<TEntity>
+    internal class ThrowViolation<TEntity> : ExpressionElement<TEntity>
     {
         private readonly IViolation _violation;
         public ThrowViolation(IViolation violation, Rule<TEntity> parentRule)
-            : base(PathElement<TEntity>.IgnorePointer, parentRule)
+            : base(ExpressionElement<TEntity>.IgnorePointer, parentRule)
         {
             if(violation == null)
                 throw new ArgumentNullException("##6");
@@ -40,7 +40,7 @@ namespace BackToFront.Framework
             violationList.Add(violation);
         }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<ExpressionElement<TEntity>> NextPathElements(TEntity subject)
         {
             yield break;
         }

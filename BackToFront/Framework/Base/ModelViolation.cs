@@ -10,7 +10,7 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework.Base
 {
-    internal abstract class ModelViolation<TEntity> : PathElement<TEntity>, IModelViolation1<TEntity>, IModelViolation2<TEntity>
+    internal abstract class ModelViolation<TEntity> : ExpressionElement<TEntity>, IModelViolation1<TEntity>, IModelViolation2<TEntity>
     {
         public ModelViolation(Expression<Func<TEntity, object>> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)

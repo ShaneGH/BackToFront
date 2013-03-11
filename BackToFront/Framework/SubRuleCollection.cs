@@ -13,11 +13,11 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework
 {
-    internal class SubRuleCollection<TEntity> : PathElement<TEntity>, IRule<TEntity>
+    internal class SubRuleCollection<TEntity> : ExpressionElement<TEntity>, IRule<TEntity>
     {
         private readonly RuleCollection<TEntity> _subRules = new RuleCollection<TEntity>();
         public SubRuleCollection(Rule<TEntity> rule)
-            : base(PathElement<TEntity>.IgnorePointer, rule)
+            : base(ExpressionElement<TEntity>.IgnorePointer, rule)
         {
 
         }
@@ -27,7 +27,7 @@ namespace BackToFront.Framework
             _subRules.AddRule(subRule);
         }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<ExpressionElement<TEntity>> NextPathElements(TEntity subject)
         {
             yield break;
         }

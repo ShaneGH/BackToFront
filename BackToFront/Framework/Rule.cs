@@ -26,15 +26,15 @@ namespace BackToFront.Framework
     /// Describes if, else if, else logic
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    internal class MultiCondition<TEntity, TIf> : PathElement<TEntity>
-        where TIf : PathElement<TEntity>, CONDITION_IS_TRUE<TEntity>
+    internal class MultiCondition<TEntity, TIf> : ExpressionElement<TEntity>
+        where TIf : ExpressionElement<TEntity>, CONDITION_IS_TRUE<TEntity>
     {
         public readonly IList<TIf> If = new List<TIf>();
 
         public MultiCondition(Rule<TEntity> rule)
-            : base(PathElement<TEntity>.IgnorePointer, rule) { }
+            : base(ExpressionElement<TEntity>.IgnorePointer, rule) { }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<ExpressionElement<TEntity>> NextPathElements(TEntity subject)
         {
             foreach (var i in If)
             {
@@ -61,14 +61,14 @@ namespace BackToFront.Framework
         }
     }
 
-    internal class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate<TEntity>
+    internal class Rule<TEntity> : ExpressionElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate<TEntity>
     {
         public Rule()
             : this(null)
         { }
 
         public Rule(Rule<TEntity> parentRule)
-            : base(PathElement<TEntity>.IgnorePointer, parentRule)
+            : base(ExpressionElement<TEntity>.IgnorePointer, parentRule)
         { }
 
         private MultiCondition<TEntity, Operators<TEntity>> Condition;
@@ -109,7 +109,7 @@ namespace BackToFront.Framework
             get { return ElseIf(a => true).IsTrue(); }
         }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<ExpressionElement<TEntity>> NextPathElements(TEntity subject)
         {
             yield return _SmartCondition;
             yield return Condition;

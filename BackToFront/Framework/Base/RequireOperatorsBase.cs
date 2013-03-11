@@ -12,7 +12,7 @@ using BackToFront.Framework.Base;
 
 namespace BackToFront.Framework.Base
 {
-    internal abstract class RequireOperatorsBase<TEntity> : PathElement<TEntity>, IRequireOperators<TEntity>
+    internal abstract class RequireOperatorsBase<TEntity> : ExpressionElement<TEntity>, IRequireOperators<TEntity>
     {
         protected RequireOperatorsBase(Expression<Func<TEntity, object>> property, Rule<TEntity> rule)
             : base(property, rule)

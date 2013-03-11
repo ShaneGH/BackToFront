@@ -17,13 +17,13 @@ namespace BackToFront.Framework.Condition
         readonly Expression<Func<TEntity, bool>> IfCodition;
 
         public SmartOperator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
-            : base(PathElement<TEntity>.IgnorePointer, rule)
+            : base(ExpressionElement<TEntity>.IgnorePointer, rule)
             //TODO: base(descriptor, rule)
         {
             IfCodition = descriptor;
         }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<ExpressionElement<TEntity>> NextPathElements(TEntity subject)
         {
             yield return Violation;
             yield return _Then;
