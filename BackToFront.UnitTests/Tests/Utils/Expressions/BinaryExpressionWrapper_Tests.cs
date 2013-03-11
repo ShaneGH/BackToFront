@@ -15,6 +15,105 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
     public class BinaryExpressionWrapper_Tests : Base.TestBase
     {
         [Test]
+        public void AllAreImplemented()
+        {
+            var ignore = new ExpressionType[] 
+            {
+                ExpressionType.AddAssign,
+                ExpressionType.AddAssignChecked,
+                ExpressionType.AddChecked,
+                ExpressionType.And,
+                ExpressionType.AndAssign,
+                ExpressionType.ArrayIndex,
+                ExpressionType.ArrayLength,
+                ExpressionType.Assign,
+                ExpressionType.Block,
+                ExpressionType.Call,
+                ExpressionType.Coalesce,
+                ExpressionType.Conditional,
+                ExpressionType.Constant,
+                ExpressionType.Convert,
+                ExpressionType.ConvertChecked,
+                ExpressionType.DebugInfo,
+                ExpressionType.Decrement,
+                ExpressionType.Default,
+                ExpressionType.Divide,
+                ExpressionType.DivideAssign,
+                ExpressionType.Dynamic,
+                ExpressionType.ExclusiveOr,
+                ExpressionType.ExclusiveOrAssign,
+                ExpressionType.Extension,
+                ExpressionType.Goto,
+                ExpressionType.GreaterThan,
+                ExpressionType.GreaterThanOrEqual,
+                ExpressionType.Increment,
+                ExpressionType.Index,
+                ExpressionType.Invoke,
+                ExpressionType.IsFalse,
+                ExpressionType.IsTrue,
+                ExpressionType.Label,
+                ExpressionType.Lambda,
+                ExpressionType.LeftShift,
+                ExpressionType.LeftShiftAssign,
+                ExpressionType.LessThan,
+                ExpressionType.LessThanOrEqual,
+                ExpressionType.ListInit,
+                ExpressionType.Loop,
+                ExpressionType.MemberAccess,
+                ExpressionType.MemberInit,
+                ExpressionType.Modulo,
+                ExpressionType.ModuloAssign,
+                ExpressionType.Multiply,
+                ExpressionType.MultiplyAssign,
+                ExpressionType.MultiplyAssignChecked,
+                ExpressionType.MultiplyChecked,
+                ExpressionType.Negate,
+                ExpressionType.NegateChecked,
+                ExpressionType.New,
+                ExpressionType.NewArrayBounds,
+                ExpressionType.NewArrayInit,
+                ExpressionType.Not,
+                ExpressionType.OnesComplement,
+                ExpressionType.Or,
+                ExpressionType.OrAssign,
+                ExpressionType.Parameter,
+                ExpressionType.PostDecrementAssign,
+                ExpressionType.PostIncrementAssign,
+                ExpressionType.Power,
+                ExpressionType.PowerAssign,
+                ExpressionType.PreDecrementAssign,
+                ExpressionType.PreIncrementAssign,
+                ExpressionType.Quote,
+                ExpressionType.RightShift,
+                ExpressionType.RightShiftAssign,
+                ExpressionType.RuntimeVariables,
+                ExpressionType.SubtractAssign,
+                ExpressionType.SubtractAssignChecked,
+                ExpressionType.SubtractChecked,
+                ExpressionType.Switch,
+                ExpressionType.Throw,
+                ExpressionType.Try,
+                ExpressionType.TypeAs,
+                ExpressionType.TypeEqual,
+                ExpressionType.TypeIs,
+                ExpressionType.UnaryPlus,
+                ExpressionType.Unbox,
+            };
+
+            foreach (var en in System.Enum.GetValues(typeof(ExpressionType)).Cast<ExpressionType>())
+            {
+                if (ignore.Contains(en))
+                {
+                    Assert.IsFalse(BinaryExpressionWrapper.Evaluations.ContainsKey(en));
+                }
+                else
+                {
+                    Assert.IsTrue(BinaryExpressionWrapper.Evaluations.ContainsKey(en));
+                }
+            }
+        }
+
+        [Test]
         public void IsSameExpression_Test()
         {
             // arrange

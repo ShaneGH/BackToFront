@@ -83,6 +83,7 @@
     <Compile Include="Tests\Utils\Condition_Test.cs" />
     <Compile Include="Tests\Utils\Expressions\BinaryExpressionWrapper_Tests.cs" />
     <Compile Include="Tests\Utils\Expressions\ConstantExpressionWrapper_Tests.cs" />
+    <Compile Include="Tests\Utils\Expressions\ExpressionWrapperBase_Tests.cs" />
     <Compile Include="Tests\Utils\Expressions\MemberExpressionWrapper_Tests.cs" />
     <Compile Include="Tests\Utils\Expressions\MethodExpressionWrapper_Tests.cs" />
     <Compile Include="Tests\Utils\Expressions\FuncExpressionWrapper_Tests.cs" />

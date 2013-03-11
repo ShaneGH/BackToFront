@@ -7,6 +7,21 @@ namespace BackToFront.Utils.Expressions
 {
     internal class BinaryExpressionWrapper : ExpressionWrapperBase<BinaryExpression>
     {
+        internal static readonly ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> Evaluations;
+        private static readonly Dictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> _Evaluations = new Dictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>();
+
+        static BinaryExpressionWrapper()
+        {
+            _Evaluations[ExpressionType.AndAlso] = (lhs, rhs) => lhs && rhs;
+            _Evaluations[ExpressionType.OrElse] = (lhs, rhs) => lhs || rhs;
+            _Evaluations[ExpressionType.Equal] = (lhs, rhs) => lhs == rhs;
+            _Evaluations[ExpressionType.NotEqual] = (lhs, rhs) => lhs != rhs;
+            _Evaluations[ExpressionType.Add] = (lhs, rhs) => lhs + rhs;
+            _Evaluations[ExpressionType.Subtract] = (lhs, rhs) => lhs - rhs;
+
+            Evaluations = new ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>(_Evaluations);
+        }
+
         private ExpressionWrapperBase _Left;
         private ExpressionWrapperBase Left
         {
@@ -50,22 +65,10 @@ namespace BackToFront.Utils.Expressions
             dynamic lhs = Left.Evaluate(paramaters, mocks);
             dynamic rhs = Right.Evaluate(paramaters, mocks);
 
-            switch (Expression.NodeType)
-            {
-                case ExpressionType.AndAlso:
-                    return lhs && rhs;
-                case ExpressionType.OrElse:
-                    return lhs || rhs;
-                case ExpressionType.Equal:
-                    return lhs == rhs;
-                case ExpressionType.NotEqual:
-                    return lhs != rhs;
-                case ExpressionType.Add:
-                    return lhs + rhs;
-                case ExpressionType.Subtract:
-                    return lhs - rhs;
-                default: throw new NotImplementedException("##");
-            }
+            if (!_Evaluations.ContainsKey(Expression.NodeType))
+                throw new NotImplementedException("##");
+
+            return Evaluations[Expression.NodeType](lhs, rhs);
         }
     }
 }
