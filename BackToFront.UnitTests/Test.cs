@@ -49,12 +49,12 @@ namespace BackToFront.UnitTests
                     .Then(branch1 =>
                     {
                         branch1.RequireThat(c => c.Value3 == c.Value4).OrModelViolationIs(new ViolationClass("Invalid"));
-                        branch1.If(c => c.Value4 == 1).SmartRequireThat(c => c.Value5 == 8 || c.Value5 == 8).OrModelViolationIs(new ViolationClass("Invalid"));
-                        branch1.If(c => c.Value4 == 0).SmartRequireThat(c => c.Value5 == 8).OrModelViolationIs(new ViolationClass("Invalid"));
+                        branch1.If(c => c.Value4 == 1).RequireThat(c => c.Value5 == 8 || c.Value5 == 8).OrModelViolationIs(new ViolationClass("Invalid"));
+                        branch1.If(c => c.Value4 == 0).RequireThat(c => c.Value5 == 8).OrModelViolationIs(new ViolationClass("Invalid"));
                     }));
 
             Rules.Add<Something>(trunk => trunk
-                .If(b => b.Value4 == 0).SmartRequireThat(b => b.Value5 == 8).OrModelViolationIs(new ViolationClass("Invalid")));
+                .If(b => b.Value4 == 0).RequireThat(b => b.Value5 == 8).OrModelViolationIs(new ViolationClass("Invalid")));
 
             Rules.Add<Something>(trunk => trunk
                 .If(b => b.Value4 == 1 && (b.Value5 == 3 && b.Value5 == 7) && b.Value1 == 7));

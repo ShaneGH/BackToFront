@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic.Compilations
 {
-    public interface ISmartConditionSatisfied<TEntity> : IModelViolation1<TEntity>, IRequires<TEntity>, IBeginSubRule<TEntity>
+    public interface IConditionSatisfied<TEntity> : IModelViolation1<TEntity>, IRequires<TEntity>, IBeginSubRule<TEntity>
     {
     }
 }

@@ -10,13 +10,13 @@ using BackToFront.Framework.Requirement;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 
-namespace BackToFront.Framework.Requirement
+namespace BackToFront.Framework.Condition
 {
-    internal class SmartRequireOperator<TEntity> : ModelViolation<TEntity, bool>, CONDITION_IS_TRUE<TEntity>, ISmartConditionSatisfied<TEntity>
+    internal class Operator<TEntity> : ModelViolation<TEntity, bool>, CONDITION_IS_TRUE<TEntity>, IConditionSatisfied<TEntity>
     {
         readonly Expression<Func<TEntity, bool>> IfCodition;
 
-        public SmartRequireOperator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
+        public Operator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)
         {
             IfCodition = descriptor;
@@ -26,7 +26,7 @@ namespace BackToFront.Framework.Requirement
         {
             yield return Violation;
             yield return _Then;
-            yield return _SmartRequireThat;
+            yield return _RequireThat;
         }
 
         public override void ValidateEntity(TEntity subject, out IViolation violation)
@@ -44,10 +44,10 @@ namespace BackToFront.Framework.Requirement
             return IfCodition.Compile()(subject);
         }
 
-        private RequirementFailed<TEntity> _SmartRequireThat = null;
-        public IModelViolation2<TEntity> SmartRequireThat(Expression<Func<TEntity, bool>> condition)
+        private RequirementFailed<TEntity> _RequireThat = null;
+        public IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> condition)
         {
-            return Do(() => _SmartRequireThat = new RequirementFailed<TEntity>(a => condition.Compile()(a), ParentRule));
+            return Do(() => _RequireThat = new RequirementFailed<TEntity>(a => condition.Compile()(a), ParentRule));
         }
 
         private SubRuleCollection<TEntity> _Then = null;

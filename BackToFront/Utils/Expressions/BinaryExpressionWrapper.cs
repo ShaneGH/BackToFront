@@ -12,11 +12,23 @@ namespace BackToFront.Utils.Expressions
 
         static BinaryExpressionWrapper()
         {
-            _Evaluations[ExpressionType.AndAlso] = (lhs, rhs) => lhs && rhs;
-            _Evaluations[ExpressionType.OrElse] = (lhs, rhs) => lhs || rhs;
-            _Evaluations[ExpressionType.Equal] = (lhs, rhs) => lhs == rhs;
-            _Evaluations[ExpressionType.NotEqual] = (lhs, rhs) => lhs != rhs;
             _Evaluations[ExpressionType.Add] = (lhs, rhs) => lhs + rhs;
+            _Evaluations[ExpressionType.AndAlso] = (lhs, rhs) => lhs && rhs;
+            _Evaluations[ExpressionType.ArrayIndex] = (lhs, rhs) => lhs[rhs];
+            _Evaluations[ExpressionType.Coalesce] = (lhs, rhs) => lhs ?? rhs;
+            _Evaluations[ExpressionType.Divide] = (lhs, rhs) => lhs / rhs;
+            _Evaluations[ExpressionType.Equal] = (lhs, rhs) => lhs == rhs;
+            _Evaluations[ExpressionType.ExclusiveOr] = (lhs, rhs) => lhs ^ rhs;
+            _Evaluations[ExpressionType.GreaterThan] = (lhs, rhs) => lhs > rhs;
+            _Evaluations[ExpressionType.GreaterThanOrEqual] = (lhs, rhs) => lhs >= rhs;
+            _Evaluations[ExpressionType.LessThan] = (lhs, rhs) => lhs < rhs;
+            _Evaluations[ExpressionType.LessThanOrEqual] = (lhs, rhs) => lhs <= rhs;
+            _Evaluations[ExpressionType.Modulo] = (lhs, rhs) => lhs % rhs;
+            _Evaluations[ExpressionType.Multiply] = (lhs, rhs) => lhs * rhs;
+            _Evaluations[ExpressionType.NotEqual] = (lhs, rhs) => lhs != rhs;
+            _Evaluations[ExpressionType.OrElse] = (lhs, rhs) => lhs || rhs;
+            // untested (visual basic operator)
+            _Evaluations[ExpressionType.Power] = (lhs, rhs) => Math.Pow(lhs, rhs);
             _Evaluations[ExpressionType.Subtract] = (lhs, rhs) => lhs - rhs;
 
             Evaluations = new ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>(_Evaluations);
@@ -66,7 +78,7 @@ namespace BackToFront.Utils.Expressions
             dynamic rhs = Right.Evaluate(paramaters, mocks);
 
             if (!_Evaluations.ContainsKey(Expression.NodeType))
-                throw new NotImplementedException("##");
+                throw new NotImplementedException("##" + Expression.NodeType);
 
             return Evaluations[Expression.NodeType](lhs, rhs);
         }

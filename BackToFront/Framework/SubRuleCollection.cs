@@ -42,7 +42,7 @@ namespace BackToFront.Framework
             violationList.AddRange(_subRules.FullyValidateEntity(subject));
         }
 
-        Logic.Compilations.ISmartConditionSatisfied<TEntity> IRule<TEntity>.If(Expression<Func<TEntity, bool>> property)
+        Logic.Compilations.IConditionSatisfied<TEntity> IRule<TEntity>.If(Expression<Func<TEntity, bool>> property)
         {
             throw new NotImplementedException();
         }
