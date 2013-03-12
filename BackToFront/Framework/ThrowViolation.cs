@@ -25,19 +25,19 @@ namespace BackToFront.Framework
             _violation = violation;
         }
 
-        public override void ValidateEntity(TEntity subject, out IViolation violation)
+        public override IViolation ValidateEntity(TEntity subject)
         {
             if (_violation is IViolation<TEntity>)
                 (_violation as IViolation<TEntity>).OnViolation(subject);
 
-            violation = _violation;
+            return _violation;
         }
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
         {
-            IViolation violation;
-            ValidateEntity(subject, out violation);
-            violationList.Add(violation);
+            var violation = ValidateEntity(subject);
+            if (violation != null)
+                violationList.Add(violation);
         }
 
         protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)

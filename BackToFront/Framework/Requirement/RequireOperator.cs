@@ -29,9 +29,9 @@ namespace BackToFront.Framework.Requirement
             yield return _RequireThat;
         }
 
-        public override void ValidateEntity(TEntity subject, out IViolation violation)
+        public override IViolation ValidateEntity(TEntity subject)
         {
-            violation = ValidateNext(subject);
+            return ValidateNext(subject);
         }
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)

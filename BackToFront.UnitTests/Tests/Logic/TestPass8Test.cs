@@ -69,7 +69,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             };
 
             // act
-            var violation = subject.ValidateAllRules();
+            var violation = subject.Validate().AllViolations;
 
             // assert
             Assert.AreEqual(1, violation.Count());

@@ -20,7 +20,7 @@ namespace BackToFront.Framework.Base
     /// A class attached to a Rule which points to the next step in the operation
     /// </summary>
     /// <typeparam name="TEntity">The entity type to validate</typeparam>
-    internal abstract class PathElement<TEntity>
+    internal abstract class PathElement<TEntity> : IValidate<TEntity>
     {
         private bool _locked = false;
         protected readonly Rule<TEntity> ParentRule;
@@ -46,7 +46,7 @@ namespace BackToFront.Framework.Base
             ParentRule = rule;
         }
 
-        public abstract void ValidateEntity(TEntity subject, out IViolation violation);
+        public abstract IViolation ValidateEntity(TEntity subject);
         public abstract void FullyValidateEntity(TEntity subject, IList<IViolation> violationList);
 
         /// <summary>
@@ -57,11 +57,11 @@ namespace BackToFront.Framework.Base
         protected IViolation ValidateNext(TEntity subject)
         {
             //TODO: make private and handle next logic here (rather than in child)
-            IViolation violation = null;
             var no = NextOption(subject);
-            if(no != null)
-                no.ValidateEntity(subject, out violation);
-            return violation;
+            if (no == null)
+                return null;
+
+            return no.ValidateEntity(subject);
         }
 
         /// <summary>

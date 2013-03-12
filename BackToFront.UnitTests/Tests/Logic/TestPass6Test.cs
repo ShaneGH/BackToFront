@@ -66,7 +66,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             };
 
             // act
-            var violation = subject.Validate();
+            var violation = subject.Validate().FirstViolation;
 
             // assert
             Assert.AreEqual(v, violation, "(" + throw1.ToString() + " || " + throw2.ToString() + ")" + " && " + "(" + required1.ToString() + " && " + required2.ToString() + ")");

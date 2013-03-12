@@ -15,9 +15,9 @@ namespace BackToFront.UnitTests.Utilities
         public SimpleIValidate()
             : base(null) { }
 
-        public override void ValidateEntity(object subject, out IViolation violation)
+        public override IViolation ValidateEntity(object subject)
         {
-            violation = Violation;
+            return Violation;
         }
 
         public override void FullyValidateEntity(object subject, IList<IViolation> violationList)
@@ -27,7 +27,7 @@ namespace BackToFront.UnitTests.Utilities
 
         protected override IEnumerable<PathElement<object>> NextPathElements(object subject)
         {
-            throw new InvalidOperationException();
+            yield break;
         }
     }
 }

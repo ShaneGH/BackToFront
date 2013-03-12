@@ -30,8 +30,7 @@ namespace BackToFront.UnitTests.Tests.Framework
             // global arrange
 
             // act
-            IViolation v;
-            Subject.ValidateEntity(null, out v);
+            IViolation v = Subject.ValidateEntity(null);
 
             // assert
             Assert.AreEqual(Violation, v);

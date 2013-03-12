@@ -32,9 +32,9 @@ namespace BackToFront.Framework
             yield break;
         }
 
-        public override void ValidateEntity(TEntity subject, out IViolation violation)
+        public override IViolation ValidateEntity(TEntity subject)
         {
-            violation = _subRules.ValidateEntity(subject);
+            return _subRules.ValidateEntity(subject);
         }
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)

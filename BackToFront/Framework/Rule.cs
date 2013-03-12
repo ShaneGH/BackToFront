@@ -50,9 +50,9 @@ namespace BackToFront.Framework
             }
         }
 
-        public override void ValidateEntity(TEntity subject, out IViolation violation)
+        public override IViolation ValidateEntity(TEntity subject)
         {
-            violation = ValidateNext(subject);
+            return ValidateNext(subject);
         }
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
@@ -61,7 +61,7 @@ namespace BackToFront.Framework
         }
     }
 
-    internal class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate<TEntity>
+    internal class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>
     {
         public Rule()
             : this(null)
@@ -77,7 +77,7 @@ namespace BackToFront.Framework
             return Do(() => _RequireThat = new RequirementFailed<TEntity>(property, this));
         }
 
-        public IViolation ValidateEntity(TEntity subject)
+        public override IViolation ValidateEntity(TEntity subject)
         {
             return ValidateNext(subject);
         }
@@ -91,11 +91,6 @@ namespace BackToFront.Framework
         {
             yield return _Condition;
             yield return _RequireThat;
-        }
-
-        public override void ValidateEntity(TEntity subject, out IViolation violation)
-        {
-            throw new NotImplementedException();
         }
 
         MultiCondition<TEntity, Operator<TEntity>> _Condition;

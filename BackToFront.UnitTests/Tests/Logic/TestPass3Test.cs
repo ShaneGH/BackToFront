@@ -48,7 +48,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             };
 
             // act
-            var violation = subject.Validate();
+            var violation = subject.Validate().FirstViolation;
 
             // assert
             Assert.AreEqual(v, violation);

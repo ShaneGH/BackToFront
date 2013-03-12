@@ -59,7 +59,9 @@ namespace BackToFront.UnitTests
             Rules.Add<Something>(trunk => trunk
                 .If(b => b.Value4 == 1 && (b.Value5 == 3 && b.Value5 == 7) && b.Value1 == 7));
 
-            new Something().Validate();
+            var violation = new Something().Validate()
+                .WithMockedParameter(a => a.Value3, 4)
+                .WithMockedParameter(a => a.Value5, 9).FirstViolation;
         }
     }
 
