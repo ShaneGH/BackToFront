@@ -74,7 +74,7 @@ namespace BackToFront.Framework
         private RequirementFailed<TEntity> _RequireThat;
         public IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)
         {
-            return Do(() => _RequireThat = new RequirementFailed<TEntity>(a => property.Compile()(a), this));
+            return Do(() => _RequireThat = new RequirementFailed<TEntity>(property, this));
         }
 
         public IViolation ValidateEntity(TEntity subject)

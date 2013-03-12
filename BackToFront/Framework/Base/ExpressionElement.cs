@@ -9,6 +9,7 @@ using BackToFront.Extensions.Expressions;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Extensions.Reflection;
 using BackToFront.Utils;
+using BackToFront.Utils.Expressions;
 
 namespace BackToFront.Framework.Base
 {
@@ -18,7 +19,7 @@ namespace BackToFront.Framework.Base
     /// <typeparam name="TEntity"></typeparam>
     internal abstract class ExpressionElement<TEntity, TMember> : PathElement<TEntity>
     {
-        protected readonly Func<TEntity, TMember> Descriptor;
+        protected readonly FuncExpressionWrapperBase Descriptor; // Func<TEntity, TMember> Descriptor;
 
         protected ExpressionElement(Expression<Func<TEntity, TMember>> descriptor, Rule<TEntity> rule)
             : base(rule)
@@ -26,7 +27,7 @@ namespace BackToFront.Framework.Base
             if (descriptor == null)
                 throw new ArgumentNullException("##4");
 
-            Descriptor = descriptor.Compile();
+            Descriptor = new FuncExpressionWrapper<TEntity, TMember>(descriptor);
         }
     }
 }

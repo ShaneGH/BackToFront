@@ -47,7 +47,7 @@ namespace BackToFront.Framework.Requirement
         private RequirementFailed<TEntity> _RequireThat = null;
         public IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> condition)
         {
-            return Do(() => _RequireThat = new RequirementFailed<TEntity>(a => condition.Compile()(a), ParentRule));
+            return Do(() => _RequireThat = new RequirementFailed<TEntity>(condition, ParentRule));
         }
 
         private SubRuleCollection<TEntity> _Then = null;

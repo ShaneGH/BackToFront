@@ -38,6 +38,40 @@ namespace BackToFront.Utils.Expressions
 
     internal abstract class ExpressionWrapperBase
     {
+        internal static readonly ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> Evaluations;
+        private static readonly Dictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> _Evaluations = new Dictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>();
+
+        static ExpressionWrapperBase()
+        {
+            Func<dynamic, bool> isIntegralType = (a) =>
+                a is sbyte || a is byte || a is char || a is short ||
+                a is ushort || a is int || a is uint || a is long ||
+                a is ulong;
+
+            _Evaluations[ExpressionType.Add] = (lhs, rhs) => lhs + rhs;
+            _Evaluations[ExpressionType.AndAlso] = (lhs, rhs) => lhs && rhs;
+            _Evaluations[ExpressionType.ArrayIndex] = (lhs, rhs) => lhs[rhs];
+            _Evaluations[ExpressionType.Coalesce] = (lhs, rhs) => lhs ?? rhs;
+            _Evaluations[ExpressionType.Convert] = (lhs, rhs) => Convert.ChangeType(lhs, rhs);
+            _Evaluations[ExpressionType.Divide] = (lhs, rhs) => lhs / rhs;
+            _Evaluations[ExpressionType.Equal] = (lhs, rhs) => lhs == rhs;
+            _Evaluations[ExpressionType.ExclusiveOr] = (lhs, rhs) => lhs ^ rhs;
+            _Evaluations[ExpressionType.GreaterThan] = (lhs, rhs) => lhs > rhs;
+            _Evaluations[ExpressionType.GreaterThanOrEqual] = (lhs, rhs) => lhs >= rhs;
+            _Evaluations[ExpressionType.LessThan] = (lhs, rhs) => lhs < rhs;
+            _Evaluations[ExpressionType.LessThanOrEqual] = (lhs, rhs) => lhs <= rhs;
+            _Evaluations[ExpressionType.Modulo] = (lhs, rhs) => lhs % rhs;
+            _Evaluations[ExpressionType.Multiply] = (lhs, rhs) => lhs * rhs;
+            _Evaluations[ExpressionType.Not] = (lhs, rhs) => isIntegralType(lhs) ? ~lhs : !lhs;
+            _Evaluations[ExpressionType.NotEqual] = (lhs, rhs) => lhs != rhs;
+            _Evaluations[ExpressionType.OrElse] = (lhs, rhs) => lhs || rhs;
+            // untested (visual basic operator)
+            _Evaluations[ExpressionType.Power] = (lhs, rhs) => Math.Pow(lhs, rhs);
+            _Evaluations[ExpressionType.Subtract] = (lhs, rhs) => lhs - rhs;
+
+            Evaluations = new ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>(_Evaluations);
+        }
+
         public abstract bool IsSameExpression(ExpressionWrapperBase expression);
         public abstract ReadOnlyCollection<ParameterExpression> WrappedExpressionParameters { get; }
 
@@ -136,6 +170,7 @@ namespace BackToFront.Utils.Expressions
             else if (expression is IndexExpression)
                 throw new NotImplementedException();
             else if (expression is InvocationExpression)
+                //TODO: important, ivocation of a lambda
                 throw new NotImplementedException();
             else if (expression is LabelExpression)
                 throw new NotImplementedException();

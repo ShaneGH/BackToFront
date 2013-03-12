@@ -33,7 +33,12 @@ namespace BackToFront.Utils.Expressions
 
         protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Tuple<ExpressionWrapperBase, object>> mocks)
         {
-            return Operand.Evaluate(paramaters, mocks);
+            var result = Operand.Evaluate(paramaters, mocks);
+
+            if (Expression.NodeType == ExpressionType.Convert)
+                return Evaluations[Expression.NodeType](result, Expression.Type);
+            else
+                return Evaluations[Expression.NodeType](result, null);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace BackToFront.Framework.Requirement
 
         public override void ValidateEntity(TEntity subject, out IViolation violation)
         {
-            if (!Descriptor(subject))
+            if (!(bool)Descriptor.Evaluate(new object[]{subject}))
                 violation = ValidateNext(subject);
             else
                 violation = null;
@@ -34,7 +34,7 @@ namespace BackToFront.Framework.Requirement
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
         {
-            if (!Descriptor(subject))
+            if (!(bool)Descriptor.Evaluate(new object[] { subject }))
                 ValidateAllNext(subject, violationList);
         }
     }
