@@ -45,9 +45,6 @@
     <Compile Include="Extensions\BusinessLogic.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Extensions\Expressions.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Extensions\IEnumerable.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -85,7 +82,6 @@
     <Compile Include="Utils\Expressions\ParameterExpressionWrapper.cs" />
     <Compile Include="Utils\Mock.cs" />
     <Compile Include="Utils\Operators.cs" />
-    <Compile Include="Utils\PropertySetter.cs" />
     <Compile Include="Utils\ReadonlyDictionary.cs" />
     <Compile Include="_\IRule.cs" />
     <Compile Include="_\Rules.cs" />

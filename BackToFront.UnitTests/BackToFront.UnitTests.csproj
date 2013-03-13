@@ -52,7 +52,6 @@
     <Compile Include="Test.cs" />
     <Compile Include="Tests\Attributes\AffectsMembersAttribute_Tests.cs" />
     <Compile Include="Tests\Extensions\BusinessLogic.cs" />
-    <Compile Include="Tests\Extensions\Expressions.cs" />
     <Compile Include="Tests\Extensions\Reflection.cs" />
     <Compile Include="Tests\Extensions\IEnumerable.cs" />
     <Compile Include="Tests\Framework\Base\PathElementTests.cs">
