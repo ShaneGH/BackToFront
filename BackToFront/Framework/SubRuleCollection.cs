@@ -27,19 +27,9 @@ namespace BackToFront.Framework
             _subRules.AddRule(subRule);
         }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             yield break;
-        }
-
-        public override IViolation ValidateEntity(TEntity subject)
-        {
-            return _subRules.ValidateEntity(subject);
-        }
-
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
-        {
-            violationList.AddRange(_subRules.FullyValidateEntity(subject));
         }
 
         Logic.Compilations.IConditionSatisfied<TEntity> IRule<TEntity>.If(Expression<Func<TEntity, bool>> property)
@@ -52,6 +42,16 @@ namespace BackToFront.Framework
             var subRule = new Rule<TEntity>(ParentRule);
             _subRules.AddRule(subRule);
             return subRule.RequireThat(property);
+        }
+
+        public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        {
+            return _subRules.ValidateEntity(subject, mocks);
+        }
+
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
+        {
+            violationList.AddRange(_subRules.FullyValidateEntity(subject, mocks));
         }
     }
 }

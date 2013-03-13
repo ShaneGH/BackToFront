@@ -16,7 +16,7 @@ namespace BackToFront.Validate
     {
         private readonly TEntity Entity;
 
-        private readonly List<Tuple<ExpressionWrapperBase, dynamic>> Mocks = new List<Tuple<ExpressionWrapperBase, dynamic>>();
+        private readonly List<Mock> Mocks = new List<Mock>();
 
         public ValidateResult(TEntity entity)
         {
@@ -31,7 +31,7 @@ namespace BackToFront.Validate
                 if (_FirstViolation == null)
                 {
                     var rule = Rules.Repository.Registered[typeof(TEntity)];
-                    _FirstViolation = rule.ValidateEntity(Entity);
+                    _FirstViolation = rule.ValidateEntity(Entity, Mocks.ToArray());
                 }
 
                 return _FirstViolation;
@@ -46,7 +46,7 @@ namespace BackToFront.Validate
                 if (_AllViolations == null)
                 {
                     var rule = Rules.Repository.Registered[typeof(TEntity)];
-                    _AllViolations = rule.FullyValidateEntity(Entity);
+                    _AllViolations = rule.FullyValidateEntity(Entity, Mocks.ToArray());
                 }
 
                 return _AllViolations;
@@ -57,7 +57,7 @@ namespace BackToFront.Validate
         {
             // invalidate previous result
             ResetResult();
-            Mocks.Add(new Tuple<ExpressionWrapperBase,dynamic>(new FuncExpressionWrapper<TEntity, TParameter>(property), value));
+            Mocks.Add(new Mock(new FuncExpressionWrapper<TEntity, TParameter>(property), value));
             return this;
         }
 

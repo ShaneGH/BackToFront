@@ -15,30 +15,21 @@ using BackToFront.Logic.Compilations;
 namespace BackToFront.Framework
 {
     /// <summary>
-    /// Temp, to bind together old and new conditions
-    /// </summary>
-    internal interface CONDITION_IS_TRUE<TEntity>
-    {
-        bool ConditionIsTrue(TEntity subject);
-    }
-
-    /// <summary>
     /// Describes if, else if, else logic
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    internal class MultiCondition<TEntity, TIf> : PathElement<TEntity>
-        where TIf : PathElement<TEntity>, CONDITION_IS_TRUE<TEntity>
+    internal class MultiCondition<TEntity> : PathElement<TEntity>
     {
-        public readonly IList<TIf> If = new List<TIf>();
+        public readonly IList<Operator<TEntity>> If = new List<Operator<TEntity>>();
 
         public MultiCondition(Rule<TEntity> rule)
             : base(rule) { }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             foreach (var i in If)
             {
-                if (i.ConditionIsTrue(subject))
+                if (i.ConditionIsTrue(subject, mocks))
                 {
                     yield return i;
                     yield break;
@@ -50,14 +41,14 @@ namespace BackToFront.Framework
             }
         }
 
-        public override IViolation ValidateEntity(TEntity subject)
+        public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
-            return ValidateNext(subject);
+            return ValidateNext(subject, mocks);
         }
 
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
         {
-            ValidateAllNext(subject, violationList);
+            ValidateAllNext(subject, violationList, mocks);
         }
     }
 
@@ -77,28 +68,18 @@ namespace BackToFront.Framework
             return Do(() => _RequireThat = new RequirementFailed<TEntity>(property, this));
         }
 
-        public override IViolation ValidateEntity(TEntity subject)
-        {
-            return ValidateNext(subject);
-        }
-
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
-        {
-            ValidateAllNext(subject, violationList);
-        }
-
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             yield return _Condition;
             yield return _RequireThat;
         }
 
-        MultiCondition<TEntity, Operator<TEntity>> _Condition;
+        MultiCondition<TEntity> _Condition;
         public IConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property)
         {
             return Do(() =>
             {
-                _Condition = new MultiCondition<TEntity, Operator<TEntity>>(this);
+                _Condition = new MultiCondition<TEntity>(this);
                 return ElseIf(property);
             });
         }
@@ -113,6 +94,16 @@ namespace BackToFront.Framework
         public IConditionSatisfied<TEntity> Else
         {
             get { return ElseIf(a => true); }
+        }
+
+        public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        {
+            return ValidateNext(subject, mocks);
+        }
+
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
+        {
+            ValidateAllNext(subject, violationList, mocks);
         }
     }
 }

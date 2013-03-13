@@ -12,36 +12,33 @@ using BackToFront.Logic.Compilations;
 
 namespace BackToFront.Framework.Condition
 {
-    internal class Operator<TEntity> : ModelViolation<TEntity, bool>, CONDITION_IS_TRUE<TEntity>, IConditionSatisfied<TEntity>
+    internal class Operator<TEntity> : ModelViolation<TEntity, bool>, IConditionSatisfied<TEntity>
     {
-        readonly Expression<Func<TEntity, bool>> IfCodition;
-
         public Operator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)
         {
-            IfCodition = descriptor;
         }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             yield return Violation;
             yield return _Then;
             yield return _RequireThat;
         }
 
-        public override IViolation ValidateEntity(TEntity subject)
+        public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
-            return ValidateNext(subject);
+            return ValidateNext(subject, mocks);
         }
 
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
         {
-            ValidateAllNext(subject, violationList);
+            ValidateAllNext(subject, violationList, mocks);
         }
 
-        public bool ConditionIsTrue(TEntity subject)
+        public bool ConditionIsTrue(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
-            return IfCodition.Compile()(subject);
+            return (bool)Descriptor.Evaluate(new object[] { subject }, mocks);
         }
 
         private RequirementFailed<TEntity> _RequireThat = null;

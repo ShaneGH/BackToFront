@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
+using BackToFront.Utils;
 using BackToFront.UnitTests.Utilities;
 using BackToFront.Utils.Expressions;
 using NUnit.Framework;
@@ -45,7 +46,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             Expression<Func<TestClass, object>> func1 = a => a.Member;
             var subject = new FuncExpressionWrapper<TestClass, object>(func1);
             var input1 = new TestClass { Member = "Hello" };
-            var ex = new Tuple<Expression<Func<TestClass, object>>, object>(a => a.Member, mock);
+            var ex = Mock.Create<TestClass, object>(a => a.Member, mock);
 
             // act
             // assert            
@@ -62,7 +63,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             Expression<Func<TestClass, object>> func1 = a => a.Member.GetHashCode();
             var subject = new FuncExpressionWrapper<TestClass, object>(func1);
             var input1 = new TestClass { Member = "Hello" };
-            var ex = new Tuple<Expression<Func<TestClass, object>>, object>(a => a.Member, mock);
+            var ex = Mock.Create<TestClass, object>(a => a.Member, mock);
 
             // act
             // assert            
@@ -79,7 +80,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             Expression<Func<TestClass, object>> func1 = a => a.ToString().Length;
             var subject = new FuncExpressionWrapper<TestClass, object>(func1);
             var input1 = new TestClass { Member = "Hello" };
-            var ex = new Tuple<Expression<Func<TestClass, object>>, object>(a => a.ToString().Length, mock);
+            var ex = Mock.Create<TestClass, object>(a => a.ToString().Length, mock);
 
             // act
             // assert            

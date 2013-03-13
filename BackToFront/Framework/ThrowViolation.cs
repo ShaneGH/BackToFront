@@ -25,7 +25,12 @@ namespace BackToFront.Framework
             _violation = violation;
         }
 
-        public override IViolation ValidateEntity(TEntity subject)
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        {
+            yield break;
+        }
+
+        public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             if (_violation is IViolation<TEntity>)
                 (_violation as IViolation<TEntity>).OnViolation(subject);
@@ -33,16 +38,11 @@ namespace BackToFront.Framework
             return _violation;
         }
 
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
         {
-            var violation = ValidateEntity(subject);
+            var violation = ValidateEntity(subject, mocks);
             if (violation != null)
                 violationList.Add(violation);
-        }
-
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
-        {
-            yield break;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace BackToFront.Framework.Requirement
 {
     internal class RequirementFailed<TEntity> : ModelViolation<TEntity, bool>, IModelViolation2<TEntity>
     {
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             yield return Violation;
         }
@@ -24,18 +24,18 @@ namespace BackToFront.Framework.Requirement
         {
         }
 
-        public override IViolation ValidateEntity(TEntity subject)
+        public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
-            if (!(bool)Descriptor.Evaluate(new object[] { subject }))
-                return ValidateNext(subject);
+            if (!(bool)Descriptor.Evaluate(new object[] { subject }, mocks))
+                return ValidateNext(subject, mocks);
             else
                 return null;
         }
 
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
         {
-            if (!(bool)Descriptor.Evaluate(new object[] { subject }))
-                ValidateAllNext(subject, violationList);
+            if (!(bool)Descriptor.Evaluate(new object[] { subject }, mocks))
+                ValidateAllNext(subject, violationList, mocks);
         }
     }
 }

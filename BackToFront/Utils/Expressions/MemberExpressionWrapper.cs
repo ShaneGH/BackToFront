@@ -32,7 +32,7 @@ namespace BackToFront.Utils.Expressions
         }
 
         // TODO, what if member is event or other memberinfo
-        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Tuple<ExpressionWrapperBase, object>> mocks)
+        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
             var eval = InnerExpression.Evaluate(paramaters, mocks);
             return Expression.Member.Get(eval);

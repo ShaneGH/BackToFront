@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
+using BackToFront.Utils;
+using BackToFront.Utils.Expressions;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Logic;
 
@@ -14,24 +16,24 @@ namespace BackToFront.Framework
     {
         private readonly List<Rule<TEntity>> _Rules = new List<Rule<TEntity>>();
 
-        public IViolation ValidateEntity(object subject)
+        public IViolation ValidateEntity(object subject, IEnumerable<Mock> mocks)
         {
             IViolation violation;
             // TODO: catch cast exception
             foreach (var rule in _Rules)
             {
-                if ((violation = rule.ValidateEntity((TEntity)subject)) != null)
+                if ((violation = rule.ValidateEntity((TEntity)subject, mocks)) != null)
                     return violation;
             }
 
             return null;
         }
 
-        public IEnumerable<IViolation> FullyValidateEntity(object subject)
+        public IEnumerable<IViolation> FullyValidateEntity(object subject, IEnumerable<Mock> mocks)
         {
             // TODO: catch cast exception
             IList<IViolation> violationList = new List<IViolation>();
-            _Rules.Each(i => i.FullyValidateEntity((TEntity)subject, violationList));
+            _Rules.Each(i => i.FullyValidateEntity((TEntity)subject, violationList, mocks));
             return violationList.ToArray();
         }
 

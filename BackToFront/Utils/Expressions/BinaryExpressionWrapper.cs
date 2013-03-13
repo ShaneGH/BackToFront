@@ -45,7 +45,7 @@ namespace BackToFront.Utils.Expressions
 
         // TODO, if Expression.Method is not null
         // TODO all node types
-        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Tuple<ExpressionWrapperBase, object>> mocks)
+        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
             dynamic lhs = Left.Evaluate(paramaters, mocks);
             dynamic rhs = Right.Evaluate(paramaters, mocks);

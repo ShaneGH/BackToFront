@@ -24,11 +24,11 @@ namespace BackToFront.Framework.Base
     {
         private bool _locked = false;
         protected readonly Rule<TEntity> ParentRule;
-        protected abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject);
+        protected abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks);
 
-        public PathElement<TEntity> NextOption(TEntity subject)
+        public PathElement<TEntity> NextOption(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
-                var options = NextPathElements(subject).Where(a => a != null).ToArray();
+                var options = NextPathElements(subject, mocks).Where(a => a != null).ToArray();
                 if (!options.Any())
                 {
                     return null;
@@ -46,22 +46,22 @@ namespace BackToFront.Framework.Base
             ParentRule = rule;
         }
 
-        public abstract IViolation ValidateEntity(TEntity subject);
-        public abstract void FullyValidateEntity(TEntity subject, IList<IViolation> violationList);
+        public abstract IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks);
+        public abstract void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks);
 
         /// <summary>
         /// Validate the next element in the chain or return no violation if no more elements
         /// </summary>
         /// <param name="subject"></param>
         /// <returns></returns>
-        protected IViolation ValidateNext(TEntity subject)
+        protected IViolation ValidateNext(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             //TODO: make private and handle next logic here (rather than in child)
-            var no = NextOption(subject);
+            var no = NextOption(subject, mocks);
             if (no == null)
                 return null;
 
-            return no.ValidateEntity(subject);
+            return no.ValidateEntity(subject, mocks);
         }
 
         /// <summary>
@@ -69,12 +69,12 @@ namespace BackToFront.Framework.Base
         /// </summary>
         /// <param name="subject"></param>
         /// <param name="violations"></param>
-        protected void ValidateAllNext(TEntity subject, IList<IViolation> violations)
+        protected void ValidateAllNext(TEntity subject, IList<IViolation> violations, IEnumerable<Utils.Mock> mocks)
         {
             //TODO: make private and handle next logic here (rather than in child)
-            var no = NextOption(subject);
+            var no = NextOption(subject, mocks);
             if(no != null)
-                no.FullyValidateEntity(subject, violations);
+                no.FullyValidateEntity(subject, violations, mocks);
         }
 
         protected TOutput Do<TOutput>(Func<TOutput> action)

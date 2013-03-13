@@ -31,7 +31,7 @@ namespace BackToFront.Utils.Expressions
             return ex.Expression.Method == Expression.Method && Operand.IsSameExpression(ex.Operand);
         }
 
-        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Tuple<ExpressionWrapperBase, object>> mocks)
+        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
             var result = Operand.Evaluate(paramaters, mocks);
 

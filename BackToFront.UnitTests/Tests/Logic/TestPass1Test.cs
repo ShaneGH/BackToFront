@@ -17,12 +17,6 @@ namespace BackToFront.UnitTests.Tests.Logic
 
         static TestPass1()
         {
-            //Rules.Add<TestPass1>(rule => rule
-            //    .If(a => a.ThrowViolation1).IsTrue().ModelViolationIs(Violation1));
-
-            //Rules.Add<TestPass1>(rule => rule
-            //    .If(a => a.ThrowViolation2).IsTrue().ModelViolationIs(Violation2));
-
             Rules.Add<TestPass1>(rule => rule
                 .If(a => a.ThrowViolation1).ModelViolationIs(Violation1));
 
@@ -92,6 +86,25 @@ namespace BackToFront.UnitTests.Tests.Logic
             Assert.AreEqual(2, violation.Count());
             Assert.AreEqual(TestPass1.Violation1, violation.ElementAt(0));
             Assert.AreEqual(TestPass1.Violation2, violation.ElementAt(1));
+        }
+
+        [Test]
+        public void Test_Mocking()
+        {
+            // arrange
+            var subject = new TestPass1
+            {
+                ThrowViolation1 = false,
+                ThrowViolation2 = false
+            };
+
+            // act
+            // assert
+            Assert.AreEqual(0, subject.Validate().AllViolations.Count());
+            Assert.AreEqual(2, subject.Validate()
+                .WithMockedParameter(a => a.ThrowViolation1, true)
+                .WithMockedParameter(a => a.ThrowViolation2, true)
+                .AllViolations.Count());
         }
     }
 }

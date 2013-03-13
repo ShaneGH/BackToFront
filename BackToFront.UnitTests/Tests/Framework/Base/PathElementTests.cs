@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using BackToFront.Extensions;
 
+using BackToFront.Utils;
 using BackToFront.Logic;
 using BackToFront.Framework.Base;
 using NUnit.Framework;
@@ -25,27 +26,27 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
 
             public readonly IList<SimpleIValidate> Els = new List<SimpleIValidate>();
 
-            protected override IEnumerable<PathElement<object>> NextPathElements(object subject)
+            protected override IEnumerable<PathElement<object>> NextPathElements(object subject, IEnumerable<BackToFront.Utils.Mock> mocks)
             {
                 return Els;
             }
 
             public IViolation ValNext(object subject)
             {
-                return ValidateNext(subject);
+                return ValidateNext(subject, null);
             }
 
             public void ValAllNext(object subject, IList<IViolation> list)
             {
-                ValidateAllNext(subject, list);
+                ValidateAllNext(subject, list, null);
             }
 
-            public override IViolation ValidateEntity(object subject)
+            public override IViolation ValidateEntity(object subject, IEnumerable<Mock> mocks)
             {
                 throw new InvalidOperationException();
             }
 
-            public override void FullyValidateEntity(object subject, IList<IViolation> violationList)
+            public override void FullyValidateEntity(object subject, IList<IViolation> violationList, IEnumerable<Mock> mocks)
             {
                 throw new InvalidOperationException();
             }

@@ -12,36 +12,28 @@ using BackToFront.Logic.Compilations;
 
 namespace BackToFront.Framework.Requirement
 {
-    internal class RequireOperator<TEntity> : ModelViolation<TEntity, bool>, CONDITION_IS_TRUE<TEntity>, IConditionSatisfied<TEntity>
+    internal class RequireOperator<TEntity> : ModelViolation<TEntity, bool>, IConditionSatisfied<TEntity>
     {
-        readonly Expression<Func<TEntity, bool>> IfCodition;
-
         public RequireOperator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)
         {
-            IfCodition = descriptor;
         }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject)
+        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             yield return Violation;
             yield return _Then;
             yield return _RequireThat;
         }
 
-        public override IViolation ValidateEntity(TEntity subject)
+        public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
-            return ValidateNext(subject);
+            return ValidateNext(subject, mocks);
         }
 
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
         {
-            ValidateAllNext(subject, violationList);
-        }
-
-        public bool ConditionIsTrue(TEntity subject)
-        {
-            return IfCodition.Compile()(subject);
+            ValidateAllNext(subject, violationList, mocks);
         }
 
         private RequirementFailed<TEntity> _RequireThat = null;

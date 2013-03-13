@@ -29,7 +29,7 @@ namespace BackToFront.Utils.Expressions
             }
         }
 
-        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Tuple<ExpressionWrapperBase, object>> mocks)
+        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
             return paramaters.ElementAt(Index);
         }

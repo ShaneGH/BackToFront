@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
+using BackToFront.Utils;
 using BackToFront.UnitTests.Utilities;
 using BackToFront.Utils.Expressions;
 using NUnit.Framework;
@@ -32,10 +33,10 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
         [Test]
         public void EvaluateTest()
-        {
+        {            
             // arange
             var subject = new FuncExpressionWrapper<object, int>(a => 4);
-            var ex = new Tuple<Expression<Func<object, int>>, int>(a => 4, 5);
+            var ex = Mock.Create<object, int>(a => 4, 5);
 
             // act
             // assert            
@@ -48,7 +49,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         {
             // arange
             var subject = new FuncExpressionWrapper<object, string>(a => 4.ToString());
-            var ex = new Tuple<Expression<Func<object, int>>, int>(a => 4, 5);
+            var ex = Mock.Create<object, int>(a => 4, 5);
 
             // act
             // assert            

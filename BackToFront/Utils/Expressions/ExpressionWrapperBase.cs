@@ -80,19 +80,14 @@ namespace BackToFront.Utils.Expressions
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
-        protected abstract object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Tuple<ExpressionWrapperBase, object>> mocks);
+        protected abstract object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks);
 
         public object Evaluate(IEnumerable<object> paramaters)
         {
-            return Evaluate(paramaters, Enumerable.Empty<Tuple<ExpressionWrapperBase, object>>());
+            return Evaluate(paramaters, Enumerable.Empty<Mock>());
         }
 
-        public object Evaluate<TEntity, TOutput>(IEnumerable<object> paramaters, IEnumerable<Tuple<Expression<Func<TEntity, TOutput>>, TOutput>> mocks)
-        {
-            return Evaluate(paramaters, mocks.Select(m => new Tuple<ExpressionWrapperBase, object>(new FuncExpressionWrapper<TEntity, TOutput>(m.Item1).Body, m.Item2)).ToArray());
-        }
-
-        public object Evaluate(IEnumerable<object> paramaters, IEnumerable<Tuple<ExpressionWrapperBase, object>> mocks)
+        public object Evaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
             var param = paramaters.ToArray();
             if (param.Length > WrappedExpressionParameters.Count)
@@ -106,8 +101,8 @@ namespace BackToFront.Utils.Expressions
             }
 
             foreach (var mock in mocks)
-                if (IsSameExpression(mock.Item1))
-                    return mock.Item2;
+                if (IsSameExpression(mock.Expression))
+                    return mock.Value;
 
             return OnEvaluate(param, mocks);
         }
