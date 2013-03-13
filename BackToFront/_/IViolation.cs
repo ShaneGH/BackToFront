@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
+using BackToFront.Utils;
+
 namespace BackToFront
 {
     public interface IValidateResult<TEntity>
@@ -13,9 +15,8 @@ namespace BackToFront
 
         IEnumerable<IViolation> AllViolations { get; }
 
+        IValidateResult<TEntity> WithMockedParameter<TParameter>(Expression<Func<TEntity, TParameter>> property, TParameter value, MockBehavior behavior);
         IValidateResult<TEntity> WithMockedParameter<TParameter>(Expression<Func<TEntity, TParameter>> property, TParameter value);
-
-        void SetAllMocks();
     }
 
     /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -82,6 +83,20 @@ namespace BackToFront.Utils.Expressions
         /// <returns></returns>
         protected abstract object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks);
 
+        public abstract void OnSet(object root, object value);
+        public abstract bool CanSet { get; }
+
+        // TODO: generics here
+        public void Set(object root, object value)
+        {
+            if (!CanSet)
+            {
+                throw new InvalidOperationException("##");
+            }
+
+            OnSet(root, value);
+        }
+                
         public object Evaluate(IEnumerable<object> paramaters)
         {
             return Evaluate(paramaters, Enumerable.Empty<Mock>());
@@ -106,54 +121,62 @@ namespace BackToFront.Utils.Expressions
 
             return OnEvaluate(param, mocks);
         }
-    }
 
-    internal abstract class ExpressionWrapperBase<TExpression> : ExpressionWrapperBase
-        where TExpression : Expression
-    {
-        protected readonly TExpression Expression;
-
-        private ReadOnlyCollection<ParameterExpression> _Parameters;
-        protected ReadOnlyCollection<ParameterExpression> Parameters
+        public static ExpressionWrapperBase ToWrapper<TEntity, TReturn>(Expression<Func<TEntity, TReturn>> expression)
         {
-            get
-            {
-                return _Parameters;
-            }
-            private set
-            {
-                if (Expression is LambdaExpression)
-                    throw new InvalidOperationException("Cannot set the parameter type if the expression has parameters already");
-
-                _Parameters = new ReadOnlyCollection<ParameterExpression>(value);
-            }
+            return CreateChildWrapper(expression.Body, expression.Parameters);
         }
 
-        public override ReadOnlyCollection<ParameterExpression> WrappedExpressionParameters
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TReturn>(Expression<Func<TEntity, TArg2, TReturn>> expression)
         {
-            get { return Parameters; }
+            return CreateChildWrapper(expression.Body, expression.Parameters);
         }
 
-        public ExpressionWrapperBase(TExpression expression)
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TReturn>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException("expression");
-
-            Expression = expression;
-            if (Expression is LambdaExpression)
-                _Parameters = (Expression as LambdaExpression).Parameters;
+            return CreateChildWrapper(expression.Body, expression.Parameters);
         }
 
-        protected ExpressionWrapperBase CreateChildWrapper(Expression expression)
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase CreateChildWrapper(Expression expression, ReadOnlyCollection<ParameterExpression> paramaters)
         {
             if (expression is BinaryExpression)
-                return new BinaryExpressionWrapper(expression as BinaryExpression) { Parameters = this.Parameters };
+                return new BinaryExpressionWrapper(expression as BinaryExpression, paramaters);
             else if (expression is BlockExpression)
                 throw new NotImplementedException();
             else if (expression is ConditionalExpression)
                 throw new NotImplementedException();
             else if (expression is ConstantExpression)
-                return new ConstantExpressionWrapper(expression as ConstantExpression) { Parameters = this.Parameters };
+                return new ConstantExpressionWrapper(expression as ConstantExpression, paramaters);
             else if (expression is DebugInfoExpression)
                 throw new NotImplementedException();
             else if (expression is DefaultExpression)
@@ -174,15 +197,15 @@ namespace BackToFront.Utils.Expressions
             else if (expression is LoopExpression)
                 throw new NotImplementedException();
             else if (expression is MemberExpression)
-                return new MemberExpressionWrapper(expression as MemberExpression) { Parameters = this.Parameters };
+                return new MemberExpressionWrapper(expression as MemberExpression, paramaters);
             else if (expression is MethodCallExpression)
-                return new MethodCallExpressionWrapper(expression as MethodCallExpression) { Parameters = this.Parameters };
+                return new MethodCallExpressionWrapper(expression as MethodCallExpression, paramaters);
             else if (expression is NewArrayExpression)
                 throw new NotImplementedException();
             else if (expression is NewExpression)
                 throw new NotImplementedException();
             else if (expression is ParameterExpression)
-                return new ParameterExpressionWrapper(expression as ParameterExpression) { Parameters = this.Parameters };
+                return new ParameterExpressionWrapper(expression as ParameterExpression, paramaters);
             else if (expression is RuntimeVariablesExpression)
                 throw new NotImplementedException();
             else if (expression is SwitchExpression)
@@ -192,9 +215,9 @@ namespace BackToFront.Utils.Expressions
             else if (expression is TypeBinaryExpression)
                 throw new NotImplementedException();
             else if (expression is UnaryExpression)
-                return new UnaryExpressionWrapper(expression as UnaryExpression) { Parameters = this.Parameters };
+                return new UnaryExpressionWrapper(expression as UnaryExpression, paramaters);
 
-            // LambdaExpression is not implemented
+            // LambdaExpression and Expression<> is not implemented
             throw new NotImplementedException();
         }
     }

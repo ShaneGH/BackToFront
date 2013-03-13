@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
 
@@ -25,8 +26,8 @@ namespace BackToFront.Utils.Expressions
             }
         }
 
-        public BinaryExpressionWrapper(BinaryExpression expression)
-            : base(expression)
+        public BinaryExpressionWrapper(BinaryExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
+            : base(expression, paramaters)
         {
         }
 

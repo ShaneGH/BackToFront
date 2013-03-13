@@ -28,13 +28,13 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             Expression<Func<TestClass, object>> func1 = a => a.Member;
             Expression<Func<TestClass, object>> func2 = a => a.Member;
             Expression<Func<TestClass, object>> func3 = a => a.Member2;
-            var subject = new FuncExpressionWrapper<TestClass, object>(func1).Body as MemberExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper(func1) as MemberExpressionWrapper;
 
             // act
             // assert
-            Assert.IsTrue(subject.IsSameExpression(new FuncExpressionWrapper<TestClass, object>(func1).Body as MemberExpressionWrapper));
-            Assert.IsTrue(subject.IsSameExpression(new FuncExpressionWrapper<TestClass, object>(func2).Body as MemberExpressionWrapper));
-            Assert.IsFalse(subject.IsSameExpression(new FuncExpressionWrapper<TestClass, object>(func3).Body as MemberExpressionWrapper));
+            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as MemberExpressionWrapper));
+            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as MemberExpressionWrapper));
+            Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func3) as MemberExpressionWrapper));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // arange
             Expression<Func<TestClass, object>> func1 = a => a.Member;
-            var subject = new FuncExpressionWrapper<TestClass, object>(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1);
             var input1 = new TestClass { Member = "Hello" };
             var ex = Mock.Create<TestClass, object>(a => a.Member, mock);
 
@@ -61,7 +61,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // arange
             Expression<Func<TestClass, object>> func1 = a => a.Member.GetHashCode();
-            var subject = new FuncExpressionWrapper<TestClass, object>(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1);
             var input1 = new TestClass { Member = "Hello" };
             var ex = Mock.Create<TestClass, object>(a => a.Member, mock);
 
@@ -78,7 +78,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // arange
             Expression<Func<TestClass, object>> func1 = a => a.ToString().Length;
-            var subject = new FuncExpressionWrapper<TestClass, object>(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1);
             var input1 = new TestClass { Member = "Hello" };
             var ex = Mock.Create<TestClass, object>(a => a.ToString().Length, mock);
 

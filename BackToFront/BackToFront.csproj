@@ -76,9 +76,9 @@
     <Compile Include="Utils\EX.cs" />
     <Compile Include="Utils\Expressions\BinaryExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\ConstantExpressionWrapper.cs" />
+    <Compile Include="Utils\Expressions\ExpressionWrapperBase`T.cs" />
     <Compile Include="Utils\Expressions\InvocationExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\ExpressionWrapperBase.cs" />
-    <Compile Include="Utils\Expressions\FuncExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\MemberExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\MethodCallExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\UnaryExpressionWrapper.cs" />

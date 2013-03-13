@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -27,10 +28,10 @@ namespace BackToFront.Utils.Expressions
             {
                 return _Arguments ?? (_Arguments = Expression.Arguments.Select(a => CreateChildWrapper(a)).ToArray());
             }
-        }    
+        }
 
-        public MethodCallExpressionWrapper(MethodCallExpression expression)
-            : base(expression)
+        public MethodCallExpressionWrapper(MethodCallExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
+            : base(expression, paramaters)
         {
         }
 

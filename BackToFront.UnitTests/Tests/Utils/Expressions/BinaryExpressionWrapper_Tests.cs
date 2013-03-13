@@ -23,21 +23,21 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             Expression<Func<int, bool>> func2 = a => a == 4;
             Expression<Func<int, bool>> func3 = a => a == 5;
             Expression<Func<int, bool>> func4 = a => a != 4;
-            var subject = new FuncExpressionWrapper<int, bool>(func1).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper(func1) as BinaryExpressionWrapper;
 
             // act
             // assert
-            Assert.IsTrue(subject.IsSameExpression(new FuncExpressionWrapper<int, bool>(func1).Body as BinaryExpressionWrapper));
-            Assert.IsTrue(subject.IsSameExpression(new FuncExpressionWrapper<int, bool>(func2).Body as BinaryExpressionWrapper));
-            Assert.IsFalse(subject.IsSameExpression(new FuncExpressionWrapper<int, bool>(func3).Body as BinaryExpressionWrapper));
-            Assert.IsFalse(subject.IsSameExpression(new FuncExpressionWrapper<int, bool>(func4).Body as BinaryExpressionWrapper));
+            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as BinaryExpressionWrapper));
+            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as BinaryExpressionWrapper));
+            Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func3) as BinaryExpressionWrapper));
+            Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func4) as BinaryExpressionWrapper));
         }
 
         [Test]
         public void EvaluateTest()
         {
             // arange
-            var subject = new FuncExpressionWrapper<int, bool>(a => a == 0);
+            var subject = ExpressionWrapperBase.ToWrapper<int, bool>(a => a == 0);
             var ex = Mock.Create<int, bool>(a => a == 0, true);
 
             // act
@@ -53,7 +53,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         public void Deep_EvaluateTest()
         {
             // arange
-            var subject = new FuncExpressionWrapper<int, string>(a => (a == 0).ToString());
+            var subject = ExpressionWrapperBase.ToWrapper<int, string>(a => (a == 0).ToString());
             var ex = Mock.Create<int, bool>(a => a == 0, true);
 
             // act

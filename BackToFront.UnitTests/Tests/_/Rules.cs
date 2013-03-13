@@ -11,15 +11,24 @@ namespace BackToFront.UnitTests.Tests
     [TestFixture]
     public class Rules_Tests
     {
+        public static bool notFirst = false;
         public class TestClass { }
 
         [Test]
         public void Add_Test()
         {
+
             // arrange
 
             // act
-            Assert.IsFalse(Rules.Repository.Registered.ContainsKey(typeof(TestClass)));
+            if (notFirst)
+                Assert.IsTrue(Rules.Repository.Registered.ContainsKey(typeof(TestClass)));
+            else
+                Assert.IsFalse(Rules.Repository.Registered.ContainsKey(typeof(TestClass)));
+
+            // added to static dictionary
+            notFirst = true;
+
             Rules.Add<TestClass>(a => a.If(b => b == null));
 
             // assert

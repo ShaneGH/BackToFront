@@ -21,13 +21,13 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             Expression<Func<object, object>> func1 = a => a.ToString();
             Expression<Func<object, object>> func2 = a => a.ToString();
             Expression<Func<object, object>> func3 = a => a.GetType();
-            var subject = new FuncExpressionWrapper<object, object>(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1);
 
             // act
             // assert
-            Assert.IsTrue(subject.IsSameExpression(new FuncExpressionWrapper<object, object>(func1)));
-            Assert.IsTrue(subject.IsSameExpression(new FuncExpressionWrapper<object, object>(func2)));
-            Assert.IsFalse(subject.IsSameExpression(new FuncExpressionWrapper<object, object>(func3)));
+            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1)));
+            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2)));
+            Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func3)));
         }
     }
 }

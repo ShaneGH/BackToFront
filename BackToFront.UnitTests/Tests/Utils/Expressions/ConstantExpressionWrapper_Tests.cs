@@ -22,20 +22,20 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             Expression<Func<object, int>> func1 = a => 4;
             Expression<Func<object, int>> func2 = a => 4;
             Expression<Func<object, int>> func3 = a => 5;
-            var subject = new FuncExpressionWrapper<object, int>(func1).Body as ConstantExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper(func1) as ConstantExpressionWrapper;
 
             // act
             // assert
-            Assert.IsTrue(subject.IsSameExpression(new FuncExpressionWrapper<object, int>(func1).Body as ConstantExpressionWrapper));
-            Assert.IsTrue(subject.IsSameExpression(new FuncExpressionWrapper<object, int>(func2).Body as ConstantExpressionWrapper));
-            Assert.IsFalse(subject.IsSameExpression(new FuncExpressionWrapper<object, int>(func3).Body as ConstantExpressionWrapper));
+            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as ConstantExpressionWrapper));
+            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as ConstantExpressionWrapper));
+            Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func3) as ConstantExpressionWrapper));
         }
 
         [Test]
         public void EvaluateTest()
         {            
             // arange
-            var subject = new FuncExpressionWrapper<object, int>(a => 4);
+            var subject = ExpressionWrapperBase.ToWrapper<object, int>(a => 4);
             var ex = Mock.Create<object, int>(a => 4, 5);
 
             // act
@@ -48,7 +48,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         public void DeepEvaluateTest()
         {
             // arange
-            var subject = new FuncExpressionWrapper<object, string>(a => 4.ToString());
+            var subject = ExpressionWrapperBase.ToWrapper<object, string>(a => 4.ToString());
             var ex = Mock.Create<object, int>(a => 4, 5);
 
             // act

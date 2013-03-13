@@ -45,13 +45,13 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             Expression<Func<TestClass, object>> func1 = a => a.ToString();
             Expression<Func<TestClass, object>> func2 = a => a.ToString();
             Expression<Func<TestClass, object>> func3 = a => a.GetType();
-            var subject = new FuncExpressionWrapper<TestClass, object>(func1).Body as MethodCallExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper(func1) as MethodCallExpressionWrapper;
 
             // act
             // assert
-            Assert.IsTrue(subject.IsSameExpression(new FuncExpressionWrapper<TestClass, object>(func1).Body as MethodCallExpressionWrapper));
-            Assert.IsTrue(subject.IsSameExpression(new FuncExpressionWrapper<TestClass, object>(func2).Body as MethodCallExpressionWrapper));
-            Assert.IsFalse(subject.IsSameExpression(new FuncExpressionWrapper<TestClass, object>(func3).Body as MethodCallExpressionWrapper));
+            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as MethodCallExpressionWrapper));
+            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as MethodCallExpressionWrapper));
+            Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func3) as MethodCallExpressionWrapper));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         {
             // arange
             Expression<Func<TestClass, object>> func1 = a => a.GetHashCode();
-            var subject = new FuncExpressionWrapper<TestClass, object>(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1);
             var input1 = new TestClass();
             var hash = input1.GetHashCode();
             var ex = Mock.Create<TestClass, object>(a => a.GetHashCode(), hash + 1);
@@ -75,7 +75,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         {
             // arange
             Expression<Func<TestClass, int>> func1 = a => a.GetHashCode().GetHashCode();
-            var subject = new FuncExpressionWrapper<TestClass, int>(func1);
+            var subject = ExpressionWrapperBase.ToWrapper<TestClass, int>(func1);
             var input1 = new TestClass();
             var ex = Mock.Create<TestClass, int>(a => a.GetHashCode(), input1.GetHashCode() + 1);
 
@@ -92,7 +92,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // arange
             Expression<Func<TestClass, int>> func1 = a => a.aRandomString().Length;
-            var subject = new FuncExpressionWrapper<TestClass, int>(func1);
+            var subject = ExpressionWrapperBase.ToWrapper<TestClass, int>(func1);
             var input1 = new TestClass();
             var ex = Mock.Create<TestClass, object>(a => a.aRandomString(), test);
 

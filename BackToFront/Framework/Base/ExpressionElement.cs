@@ -19,7 +19,7 @@ namespace BackToFront.Framework.Base
     /// <typeparam name="TEntity"></typeparam>
     internal abstract class ExpressionElement<TEntity, TMember> : PathElement<TEntity>
     {
-        protected readonly FuncExpressionWrapperBase Descriptor; // Func<TEntity, TMember> Descriptor;
+        protected readonly ExpressionWrapperBase Descriptor; // Func<TEntity, TMember> Descriptor;
 
         protected ExpressionElement(Expression<Func<TEntity, TMember>> descriptor, Rule<TEntity> rule)
             : base(rule)
@@ -27,7 +27,7 @@ namespace BackToFront.Framework.Base
             if (descriptor == null)
                 throw new ArgumentNullException("##4");
 
-            Descriptor = new FuncExpressionWrapper<TEntity, TMember>(descriptor);
+            Descriptor = ExpressionWrapperBase.ToWrapper(descriptor);
         }
     }
 }

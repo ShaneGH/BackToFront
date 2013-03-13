@@ -106,5 +106,100 @@ namespace BackToFront.UnitTests.Tests.Logic
                 .WithMockedParameter(a => a.ThrowViolation2, true)
                 .AllViolations.Count());
         }
+
+        [Test]
+        public void Test_Mocking_MockOnly()
+        {
+            // arrange
+            var subject = new TestPass1
+            {
+                ThrowViolation1 = true,
+                ThrowViolation2 = false
+            };
+
+            // act
+            // assert
+            Assert.AreEqual(0, subject.Validate()
+                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Utils.MockBehavior.MockOnly)
+                .AllViolations.Count());
+
+            Assert.IsTrue(subject.ThrowViolation1);
+        }
+
+        [Test]
+        public void Test_Mocking_MockAndSet_Pass()
+        {
+            // arrange
+            var subject = new TestPass1
+            {
+                ThrowViolation1 = true,
+                ThrowViolation2 = false
+            };
+
+            // act
+            // assert
+            Assert.AreEqual(0, subject.Validate()
+                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Utils.MockBehavior.MockAndSet)
+                .AllViolations.Count());
+
+            Assert.IsFalse(subject.ThrowViolation1);
+        }
+
+        [Test]
+        public void Test_Mocking_MockAndSet_Fail()
+        {
+            // arrange
+            var subject = new TestPass1
+            {
+                ThrowViolation1 = true,
+                ThrowViolation2 = true
+            };
+
+            // act
+            // assert
+            Assert.AreEqual(1, subject.Validate()
+                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Utils.MockBehavior.MockAndSet)
+                .AllViolations.Count());
+
+            Assert.IsTrue(subject.ThrowViolation1);
+        }
+
+        [Test]
+        public void Test_Mocking_SetOnly_Pass()
+        {
+            // arrange
+            var subject = new TestPass1
+            {
+                ThrowViolation1 = false,
+                ThrowViolation2 = false
+            };
+
+            // act
+            // assert
+            Assert.AreEqual(0, subject.Validate()
+                .WithMockedParameter(a => a.ThrowViolation1, true, BackToFront.Utils.MockBehavior.SetOnly)
+                .AllViolations.Count());
+
+            Assert.IsTrue(subject.ThrowViolation1);
+        }
+
+        [Test]
+        public void Test_Mocking_SetOnly_Fail()
+        {
+            // arrange
+            var subject = new TestPass1
+            {
+                ThrowViolation1 = false,
+                ThrowViolation2 = true
+            };
+
+            // act
+            // assert
+            Assert.AreEqual(1, subject.Validate()
+                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Utils.MockBehavior.SetOnly)
+                .AllViolations.Count());
+
+            Assert.IsFalse(subject.ThrowViolation1);
+        }
     }
 }

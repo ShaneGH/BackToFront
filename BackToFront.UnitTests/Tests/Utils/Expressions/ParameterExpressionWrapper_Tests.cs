@@ -21,11 +21,11 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             // arrange
             Expression<Func<object, object>> func1 = a => a;
             Expression<Func<object, object>> func2 = a => a;
-            var subject = new FuncExpressionWrapper<object, object>(func1).Body as ParameterExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper(func1) as ParameterExpressionWrapper;
 
             // act
-            var test1 = subject.IsSameExpression(new FuncExpressionWrapper<object, object>(func1).Body as ParameterExpressionWrapper);
-            var test2 = subject.IsSameExpression(new FuncExpressionWrapper<object, object>(func2).Body as ParameterExpressionWrapper);
+            var test1 = subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as ParameterExpressionWrapper);
+            var test2 = subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as ParameterExpressionWrapper);
 
             // assert
             Assert.IsTrue(test1);
@@ -37,7 +37,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         {
             // arange
             Expression<Func<object, object>> func1 = a => a;
-            var subject = new FuncExpressionWrapper<object, object>(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1);
             var input1 = new object();
             var input2 = new object();
             var ex = Mock.Create<object, object>(a => a, input2);
@@ -55,7 +55,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         {
             // arange
             Expression<Func<object, int>> func1 = a => a.GetHashCode();
-            var subject = new FuncExpressionWrapper<object, int>(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1);
             var input1 = new object();
             var input2 = new object();
             var ex = Mock.Create<object, object>(a => a, input2);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -7,8 +8,8 @@ namespace BackToFront.Utils.Expressions
 {
     internal class ParameterExpressionWrapper : ExpressionWrapperBase<ParameterExpression>
     {
-        public ParameterExpressionWrapper(ParameterExpression expression)
-            : base(expression)
+        public ParameterExpressionWrapper(ParameterExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
+            : base(expression, paramaters)
         {
         }
 

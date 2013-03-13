@@ -1,14 +1,10 @@
-﻿using System;
+﻿using BackToFront.Utils;
+using BackToFront.Utils.Expressions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-using BackToFront.Utils;
-using BackToFront.Utils.Expressions;
-using BackToFront.Extensions.Expressions;
+using BackToFront.Extensions.IEnumerable;
 
 namespace BackToFront.Validate
 {
@@ -26,12 +22,11 @@ namespace BackToFront.Validate
         public IViolation _FirstViolation;
         public IViolation FirstViolation
         {
-            get 
+            get
             {
                 if (_FirstViolation == null)
                 {
-                    var rule = Rules.Repository.Registered[typeof(TEntity)];
-                    _FirstViolation = rule.ValidateEntity(Entity, Mocks.ToArray());
+                    RunValidation((a, b) => (_FirstViolation = a.ValidateEntity(Entity, b)) == null);
                 }
 
                 return _FirstViolation;
@@ -45,25 +40,36 @@ namespace BackToFront.Validate
             {
                 if (_AllViolations == null)
                 {
-                    var rule = Rules.Repository.Registered[typeof(TEntity)];
-                    _AllViolations = rule.FullyValidateEntity(Entity, Mocks.ToArray());
+                    RunValidation((a, b) => (_AllViolations = a.FullyValidateEntity(Entity, b)) == null || !_AllViolations.Any());
                 }
 
                 return _AllViolations;
             }
         }
 
-        public IValidateResult<TEntity> WithMockedParameter<TParameter>(Expression<Func<TEntity, TParameter>> property, TParameter value)
+        public IValidateResult<TEntity> WithMockedParameter<TParameter>(Expression<Func<TEntity, TParameter>> property, TParameter value, MockBehavior behavior)
         {
             // invalidate previous result
             ResetResult();
-            Mocks.Add(new Mock(new FuncExpressionWrapper<TEntity, TParameter>(property), value));
+            Mocks.Add(new Mock(ExpressionWrapperBase.ToWrapper(property), value, behavior));
             return this;
         }
 
-        public void SetAllMocks()
+        public IValidateResult<TEntity> WithMockedParameter<TParameter>(Expression<Func<TEntity, TParameter>> property, TParameter value)
         {
-            throw new NotImplementedException();
+            return WithMockedParameter(property, value, MockBehavior.MockOnly);
+        }
+
+        private void RunValidation(Func<IValidate, IEnumerable<Mock>, bool> action)
+        {
+            var mocks = Mocks.ToArray();
+            var setters = mocks.Where(a => a.Behavior == MockBehavior.MockAndSet || a.Behavior == MockBehavior.SetOnly);
+            var invalidSetters = setters.Where(a => !a.Expression.CanSet);
+            if (invalidSetters.Any())
+                throw new InvalidOperationException("##");
+
+            if (action(Rules.Repository.Registered[typeof(TEntity)], mocks.Where(a => (a.Behavior == MockBehavior.MockAndSet || a.Behavior == MockBehavior.MockOnly))))
+                setters.Each(a => a.SetValue(Entity));
         }
 
         public void ResetResult()

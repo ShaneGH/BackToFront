@@ -140,7 +140,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, false)]
         public void OperatorTest_AndAlso(bool param1, bool param2, bool result)
         {
-            var subject = new FuncExpressionWrapper<bool, bool, bool>((a, b) => a && b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a && b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param1, param2 }));
         }
@@ -150,7 +150,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, true)]
         public void OperatorTest_Not(bool param, bool result)
         {
-            var subject = new FuncExpressionWrapper<bool, bool>((a) => !a).Body as UnaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool>((a) => !a) as UnaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param }));
         }
@@ -158,7 +158,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [Test]
         public void OperatorTest_Not_IsIntegralType()
         {
-            var subject = new FuncExpressionWrapper<int, int>((a) => ~a).Body as UnaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int>((a) => ~a) as UnaryExpressionWrapper;
 
             Assert.AreEqual(-9, subject.Evaluate(new object[] { 8 }));
         }
@@ -166,7 +166,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [Test]
         public void OperatorTest_Convert()
         {
-            var subject = new FuncExpressionWrapper<int, double>((a) => (double)a).Body as UnaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, double>((a) => (double)a) as UnaryExpressionWrapper;
 
             Assert.AreEqual(8D, subject.Evaluate(new object[] { 8 }));
             Assert.IsInstanceOf<double>(subject.Evaluate(new object[] { 8 }));
@@ -179,7 +179,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, false)]
         public void OperatorTest_OrElse(bool param1, bool param2, bool result)
         {
-            var subject = new FuncExpressionWrapper<bool, bool, bool>((a, b) => a || b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a || b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param1, param2 }));
         }
@@ -191,7 +191,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, false)]
         public void OperatorTest_Or(bool param1, bool param2, bool result)
         {
-            var subject = new FuncExpressionWrapper<bool, bool, bool>((a, b) => a || b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a || b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param1, param2 }));
         }
@@ -203,7 +203,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, true)]
         public void OperatorTest_Equal(bool param1, bool param2, bool result)
         {
-            var subject = new FuncExpressionWrapper<bool, bool, bool>((a, b) => a == b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a == b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param1, param2 }));
         }
@@ -215,7 +215,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, false)]
         public void OperatorTest_NotEqual(bool param1, bool param2, bool result)
         {
-            var subject = new FuncExpressionWrapper<bool, bool, bool>((a, b) => a != b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a != b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param1, param2 }));
         }
@@ -223,7 +223,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [Test]
         public void OperatorTest_Add()
         {
-            var subject = new FuncExpressionWrapper<int, int, int>((a, b) => a + b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a + b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(5, subject.Evaluate(new object[] { 3, 2 }));
         }
@@ -231,7 +231,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [Test]
         public void OperatorTest_Subtract()
         {
-            var subject = new FuncExpressionWrapper<int, int, int>((a, b) => a - b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a - b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(1, subject.Evaluate(new object[] { 3, 2 }));
         }
@@ -239,7 +239,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [Test]
         public void OperatorTest_Multiply()
         {
-            var subject = new FuncExpressionWrapper<int, int, int>((a, b) => a * b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a * b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(6, subject.Evaluate(new object[] { 3, 2 }));
         }
@@ -247,7 +247,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [Test]
         public void OperatorTest_Divide()
         {
-            var subject = new FuncExpressionWrapper<int, int, int>((a, b) => a / b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a / b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(3, subject.Evaluate(new object[] { 6, 2 }));
         }
@@ -255,7 +255,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [Test]
         public void OperatorTest_ArrayIndex()
         {
-            var subject = new FuncExpressionWrapper<int[], int, int>((a, b) => a[b]).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int[], int, int>((a, b) => a[b]) as BinaryExpressionWrapper;
 
             Assert.AreEqual(6, subject.Evaluate(new object[] { new[] { 3, 6 }, 1 }));
         }
@@ -266,7 +266,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(3, 2, true)]
         public void OperatorTest_GreaterThan(int param1, int param2, bool result)
         {
-            var subject = new FuncExpressionWrapper<int, int, bool>((a, b) => a > b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a > b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param1, param2 }));
         }
@@ -277,7 +277,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(3, 2, false)]
         public void OperatorTest_LessThan(int param1, int param2, bool result)
         {
-            var subject = new FuncExpressionWrapper<int, int, bool>((a, b) => a < b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a < b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param1, param2 }));
         }
@@ -288,7 +288,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(3, 2, true)]
         public void OperatorTest_GreaterThanEqualTo(int param1, int param2, bool result)
         {
-            var subject = new FuncExpressionWrapper<int, int, bool>((a, b) => a >= b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a >= b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param1, param2 }));
         }
@@ -299,7 +299,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(3, 2, false)]
         public void OperatorTest_LessThanEqualTo(int param1, int param2, bool result)
         {
-            var subject = new FuncExpressionWrapper<int, int, bool>((a, b) => a <= b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a <= b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param1, param2 }));
         }
@@ -307,7 +307,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [Test]
         public void OperatorTest_Modulo()
         {
-            var subject = new FuncExpressionWrapper<int, int>(a => a % 3).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int>(a => a % 3) as BinaryExpressionWrapper;
 
             Assert.AreEqual(2, subject.Evaluate(new object[] { 5 }));
         }
@@ -318,7 +318,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             string string1 = "DLFNLKDNF";
             string string2 = "fw45FS";
 
-            var subject = new FuncExpressionWrapper<string, string>(a => a ?? string2).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<string, string>(a => a ?? string2) as BinaryExpressionWrapper;
 
             Assert.AreEqual(string1, subject.Evaluate(new object[] { string1 }));
             Assert.AreEqual(string2, subject.Evaluate(new object[] { null }));
@@ -331,7 +331,7 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, false)]
         public void OperatorTest_ExclusiveOr(bool param1, bool param2, bool result)
         {
-            var subject = new FuncExpressionWrapper<bool, bool, bool>((a, b) => a ^ b).Body as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a ^ b) as BinaryExpressionWrapper;
 
             Assert.AreEqual(result, subject.Evaluate(new object[] { param1, param2 }));
         }

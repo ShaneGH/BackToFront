@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-
 
 namespace BackToFront.Utils.Expressions
 {
@@ -17,8 +16,8 @@ namespace BackToFront.Utils.Expressions
             }
         }
 
-        public UnaryExpressionWrapper(UnaryExpression expression)
-            : base(expression)
+        public UnaryExpressionWrapper(UnaryExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
+            : base(expression, paramaters)
         {
         }
 
