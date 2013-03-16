@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using BackToFront.Validate;
+﻿using BackToFront.Enum;
 using BackToFront.UnitTests.Utilities;
+using BackToFront.Validate;
 using NUnit.Framework;
+using System.Linq;
 
 namespace BackToFront.UnitTests.Tests.Logic
 {
@@ -120,7 +116,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             // act
             // assert
             Assert.AreEqual(0, subject.Validate()
-                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Utils.MockBehavior.MockOnly)
+                .WithMockedParameter(a => a.ThrowViolation1, false, MockBehavior.MockOnly)
                 .AllViolations.Count());
 
             Assert.IsTrue(subject.ThrowViolation1);
@@ -139,7 +135,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             // act
             // assert
             Assert.AreEqual(0, subject.Validate()
-                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Utils.MockBehavior.MockAndSet)
+                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Enum.MockBehavior.MockAndSet)
                 .AllViolations.Count());
 
             Assert.IsFalse(subject.ThrowViolation1);
@@ -158,7 +154,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             // act
             // assert
             Assert.AreEqual(1, subject.Validate()
-                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Utils.MockBehavior.MockAndSet)
+                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Enum.MockBehavior.MockAndSet)
                 .AllViolations.Count());
 
             Assert.IsTrue(subject.ThrowViolation1);
@@ -177,7 +173,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             // act
             // assert
             Assert.AreEqual(0, subject.Validate()
-                .WithMockedParameter(a => a.ThrowViolation1, true, BackToFront.Utils.MockBehavior.SetOnly)
+                .WithMockedParameter(a => a.ThrowViolation1, true, BackToFront.Enum.MockBehavior.SetOnly)
                 .AllViolations.Count());
 
             Assert.IsTrue(subject.ThrowViolation1);
@@ -196,7 +192,7 @@ namespace BackToFront.UnitTests.Tests.Logic
             // act
             // assert
             Assert.AreEqual(1, subject.Validate()
-                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Utils.MockBehavior.SetOnly)
+                .WithMockedParameter(a => a.ThrowViolation1, false, BackToFront.Enum.MockBehavior.SetOnly)
                 .AllViolations.Count());
 
             Assert.IsFalse(subject.ThrowViolation1);

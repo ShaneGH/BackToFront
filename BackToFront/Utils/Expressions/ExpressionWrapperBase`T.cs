@@ -14,7 +14,7 @@ namespace BackToFront.Utils.Expressions
     internal abstract class ExpressionWrapperBase<TExpression> : ExpressionWrapperBase
         where TExpression : Expression
     {
-        protected readonly TExpression Expression;
+        public readonly TExpression Expression;
 
         protected readonly ReadOnlyCollection<ParameterExpression> Parameters;
 
@@ -40,7 +40,7 @@ namespace BackToFront.Utils.Expressions
         {
             return CreateChildWrapper(expression, Parameters);
         }
-
+/*
         public override void OnSet(object root, object value)
         {
             foreach (var member in _PropertyChain.Take(_PropertyChain.Count() - 1))
@@ -110,6 +110,6 @@ namespace BackToFront.Utils.Expressions
 
                 return _PropertyChain.Any();
             }
-        }
+        }*/
     }
 }

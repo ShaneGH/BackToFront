@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Utils.Expressions
 {
-    internal class ParameterExpressionWrapper : ExpressionWrapperBase<ParameterExpression>
+    internal class ParameterExpressionWrapper : ExpressionWrapperBase<ParameterExpression>, IPropertyChainGetter
     {
         public ParameterExpressionWrapper(ParameterExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
             : base(expression, paramaters)
@@ -33,6 +33,16 @@ namespace BackToFront.Utils.Expressions
         protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
             return paramaters.ElementAt(Index);
+        }
+
+        public object Get(object root)
+        {
+            if (Expression.Type != root.GetType())
+            {
+                throw new InvalidOperationException("##");
+            }
+
+            return root;
         }
     }
 }

@@ -15,21 +15,26 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
     class ExpressionWrapperBase_Tests : Base.TestBase
     {
         [Test]
-        public void AllAreImplemented()
+        public void AllExpressionWrappersAreImplemented()
         {
             var ignore = new Type[] 
             { 
+                typeof(Expression),
+                typeof(Expression<>),
                 typeof(BlockExpression),
                 typeof(ConditionalExpression),                
                 typeof(DebugInfoExpression),                
                 typeof(DefaultExpression),                
                 typeof(DynamicExpression),                
                 typeof(GotoExpression),                
-                typeof(IndexExpression),                
-                typeof(InvocationExpression),                
+                typeof(IndexExpression),     
+                // important: invocation of lambda
+                typeof(InvocationExpression),  
+                typeof(LambdaExpression),              
                 typeof(LabelExpression),                
                 typeof(ListInitExpression),                
                 typeof(LoopExpression),                
+                typeof(MemberInitExpression),                              
                 typeof(NewArrayExpression),                
                 typeof(NewExpression),                
                 typeof(RuntimeVariablesExpression),                
@@ -38,10 +43,13 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
                 typeof(TypeBinaryExpression)              
             };
 
-            //foreach (var expType in typeof(Expression).Assembly.GetTypes().Where(t => t.Is<Expression>() && t.IsPublic))
-            //{
-            //    if(ExpressionWrapperBase.
-            //}
+            foreach (var expType in typeof(Expression).Assembly.GetTypes().Where(t => t.Is<Expression>() && t.IsPublic))
+            {
+                if (ignore.Contains(expType))
+                    Assert.IsFalse(ExpressionWrapperBase.Constructors.ContainsKey(expType), string.Format("{0} is implemented, remove from ignore list", expType));
+                else
+                    Assert.IsTrue(ExpressionWrapperBase.Constructors.ContainsKey(expType), string.Format("{0} is not implemented", expType));
+            }
         }
 
 

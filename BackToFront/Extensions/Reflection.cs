@@ -32,10 +32,7 @@ namespace BackToFront.Extensions.Reflection
         {
             return Is(target, typeof(T));
         }
-    }
 
-    static class MemberExtensions
-    {
         public static object Get(this MemberInfo member, object subject)
         {
             if (member is PropertyInfo)

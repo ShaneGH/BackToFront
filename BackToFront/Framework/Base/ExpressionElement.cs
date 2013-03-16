@@ -18,7 +18,7 @@ namespace BackToFront.Framework.Base
     /// <typeparam name="TEntity"></typeparam>
     internal abstract class ExpressionElement<TEntity, TMember> : PathElement<TEntity>
     {
-        protected readonly ExpressionWrapperBase Descriptor; // Func<TEntity, TMember> Descriptor;
+        protected readonly ExpressionWrapperBase Descriptor;
 
         protected ExpressionElement(Expression<Func<TEntity, TMember>> descriptor, Rule<TEntity> rule)
             : base(rule)

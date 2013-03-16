@@ -26,5 +26,17 @@ namespace BackToFront.UnitTests.Tests.Extensions
             Assert.IsTrue(typeof(TestClass2).Is(typeof(TestClass1)));
             Assert.IsFalse(typeof(string).Is(typeof(TestClass1)));
         }
+
+        [Test]
+        [Ignore]
+        public static void Get()
+        {
+        }
+
+        [Test]
+        [Ignore]
+        public static void Set()
+        { 
+        }
     }
 }

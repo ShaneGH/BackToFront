@@ -9,13 +9,6 @@ using BackToFront.Extensions;
 
 namespace BackToFront.Framework.Base
 {
-    internal enum ValidateResult
-    {
-        TerminateHere,
-        PassThrough,
-        ThowViolation
-    }
-
     /// <summary>
     /// A class attached to a Rule which points to the next step in the operation
     /// </summary>

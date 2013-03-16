@@ -7,7 +7,7 @@ using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Utils.Expressions
 {
-    internal class MemberExpressionWrapper : ExpressionWrapperBase<MemberExpression>
+    internal class MemberExpressionWrapper : ExpressionWrapperBase<MemberExpression>, IPropertyChain
     {
         private ExpressionWrapperBase _InnerExpression;
         private ExpressionWrapperBase InnerExpression
@@ -37,6 +37,41 @@ namespace BackToFront.Utils.Expressions
         {
             var eval = InnerExpression.Evaluate(paramaters, mocks);
             return Expression.Member.Get(eval);
+        }
+
+        public bool CanSet
+        {
+            get 
+            {
+                return InnerExpression is ParameterExpressionWrapper ||
+                    (InnerExpression is IPropertyChain && (InnerExpression as IPropertyChain).CanSet); 
+            }
+        }
+
+        public void Set(object root, object value)
+        {
+            if (InnerExpression is IPropertyChainGetter)
+            {
+                root = (InnerExpression as IPropertyChainGetter).Get(root);
+            }
+            else
+            {
+                throw new InvalidOperationException("##");
+            }
+
+            Expression.Member.Set(root, value);
+        }
+
+        public object Get(object root)
+        {
+            if (InnerExpression is IPropertyChainGetter)
+            {
+                return (InnerExpression as IPropertyChainGetter).Get(root);
+            }
+            else
+            {
+                throw new InvalidOperationException("##");
+            }
         }
     }
 }

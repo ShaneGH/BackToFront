@@ -1,17 +1,11 @@
 ﻿
+using BackToFront.Enum;
+using BackToFront.Utils.Expressions;
 using System;
 using System.Linq.Expressions;
-using BackToFront.Utils.Expressions;
 
 namespace BackToFront.Utils
 {
-    public enum MockBehavior
-    {
-        MockOnly,
-        SetOnly,
-        MockAndSet
-    }
-
     internal class Mock
     {
         public readonly MockBehavior Behavior;
@@ -39,9 +33,20 @@ namespace BackToFront.Utils
             return new Mock(ExpressionWrapperBase.ToWrapper(expression), value);
         }
 
+        public bool CanSet
+        {
+            get
+            {
+                return Expression is IPropertyChain && (Expression as IPropertyChain).CanSet;
+            }
+        }
+
         internal void SetValue(object root)
         {
-            Expression.Set(root, Value);
+            if (!CanSet)
+                throw new InvalidOperationException("##");
+
+            (Expression as IPropertyChain).Set(root, Value);
         }
     }
 }

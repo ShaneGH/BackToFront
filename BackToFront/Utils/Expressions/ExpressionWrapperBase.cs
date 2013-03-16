@@ -10,45 +10,21 @@ using System.Threading.Tasks;
 using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Utils.Expressions
-{
-    /* Unit test TODO:
-    System.Linq.Expressions.BinaryExpression a; -
-    System.Linq.Expressions.BlockExpression a;
-    System.Linq.Expressions.ConditionalExpression a; -
-    System.Linq.Expressions.ConstantExpression a; -
-    System.Linq.Expressions.DebugInfoExpression a;
-    System.Linq.Expressions.DefaultExpression a;
-    System.Linq.Expressions.DynamicExpression a;
-    System.Linq.Expressions.GotoExpression a;
-    System.Linq.Expressions.IndexExpression a;
-    System.Linq.Expressions.InvocationExpression a;
-    System.Linq.Expressions.LabelExpression a;
-    System.Linq.Expressions.LambdaExpression a;
-    System.Linq.Expressions.ListInitExpression a;
-    System.Linq.Expressions.LoopExpression a;
-    System.Linq.Expressions.MemberExpression a;
-    System.Linq.Expressions.NewArrayExpression a;
-    System.Linq.Expressions.NewExpression a; -
-    System.Linq.Expressions.ParameterExpression a;
-    System.Linq.Expressions.RuntimeVariablesExpression a;
-    System.Linq.Expressions.SwitchExpression a;
-    System.Linq.Expressions.TryExpression a;
-    System.Linq.Expressions.TypeBinaryExpression a;
-    System.Linq.Expressions.UnaryExpression a;
-     */
-
+{    
     internal abstract class ExpressionWrapperBase
     {
+        public static readonly ReadOnlyDictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>> Constructors;
+        private static readonly Dictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>> _Constructors = new Dictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>>();
+        
         internal static readonly ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> Evaluations;
         private static readonly Dictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> _Evaluations = new Dictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>();
 
         static ExpressionWrapperBase()
         {
-            Func<dynamic, bool> isIntegralType = (a) =>
-                a is sbyte || a is byte || a is char || a is short ||
-                a is ushort || a is int || a is uint || a is long ||
-                a is ulong;
-
+            Evaluations = new ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>(_Evaluations);
+            Constructors = new ReadOnlyDictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>>(_Constructors);
+            
+            // add operators
             _Evaluations[ExpressionType.Add] = (lhs, rhs) => lhs + rhs;
             _Evaluations[ExpressionType.AndAlso] = (lhs, rhs) => lhs && rhs;
             _Evaluations[ExpressionType.ArrayIndex] = (lhs, rhs) => lhs[rhs];
@@ -63,14 +39,26 @@ namespace BackToFront.Utils.Expressions
             _Evaluations[ExpressionType.LessThanOrEqual] = (lhs, rhs) => lhs <= rhs;
             _Evaluations[ExpressionType.Modulo] = (lhs, rhs) => lhs % rhs;
             _Evaluations[ExpressionType.Multiply] = (lhs, rhs) => lhs * rhs;
-            _Evaluations[ExpressionType.Not] = (lhs, rhs) => isIntegralType(lhs) ? ~lhs : !lhs;
+            _Evaluations[ExpressionType.Not] = (lhs, rhs) => _isIntegralType(lhs) ? ~lhs : !lhs;
             _Evaluations[ExpressionType.NotEqual] = (lhs, rhs) => lhs != rhs;
             _Evaluations[ExpressionType.OrElse] = (lhs, rhs) => lhs || rhs;
             // untested (visual basic operator)
             _Evaluations[ExpressionType.Power] = (lhs, rhs) => Math.Pow(lhs, rhs);
             _Evaluations[ExpressionType.Subtract] = (lhs, rhs) => lhs - rhs;
 
-            Evaluations = new ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>(_Evaluations);
+            _Constructors[typeof(BinaryExpression)] = (expression, prameters) => new BinaryExpressionWrapper(expression as BinaryExpression, prameters);
+            _Constructors[typeof(ConstantExpression)] = (expression, parameters) => new ConstantExpressionWrapper(expression as ConstantExpression, parameters);
+            _Constructors[typeof(MemberExpression)] = (expression, parameters) => new MemberExpressionWrapper(expression as MemberExpression, parameters);
+            _Constructors[typeof(MethodCallExpression)] = (expression, parameters) => new MethodCallExpressionWrapper(expression as MethodCallExpression, parameters);
+            _Constructors[typeof(UnaryExpression)] = (expression, parameters) => new UnaryExpressionWrapper(expression as UnaryExpression, parameters);
+            _Constructors[typeof(ParameterExpression)] = (expression, parameters) => new ParameterExpressionWrapper(expression as ParameterExpression, parameters);
+        }
+
+        private static bool _isIntegralType(dynamic item)
+        {
+            return item is sbyte || item is byte || item is char || item is short ||
+                item is ushort || item is int || item is uint || item is long ||
+                item is ulong;
         }
 
         public abstract bool IsSameExpression(ExpressionWrapperBase expression);
@@ -83,19 +71,19 @@ namespace BackToFront.Utils.Expressions
         /// <returns></returns>
         protected abstract object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks);
 
-        public abstract void OnSet(object root, object value);
-        public abstract bool CanSet { get; }
+        //public abstract void OnSet(object root, object value);
+        //public abstract bool CanSet { get; }
 
         // TODO: generics here
-        public void Set(object root, object value)
-        {
-            if (!CanSet)
-            {
-                throw new InvalidOperationException("##");
-            }
+        //public void Set(object root, object value)
+        //{
+        //    if (!CanSet)
+        //    {
+        //        throw new InvalidOperationException("##");
+        //    }
 
-            OnSet(root, value);
-        }
+        //    OnSet(root, value);
+        //}
                 
         public object Evaluate(IEnumerable<object> paramaters)
         {
@@ -121,6 +109,8 @@ namespace BackToFront.Utils.Expressions
 
             return OnEvaluate(param, mocks);
         }
+
+        #region linq constructors
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TReturn>(Expression<Func<TEntity, TReturn>> expression)
         {
@@ -167,58 +157,22 @@ namespace BackToFront.Utils.Expressions
             return CreateChildWrapper(expression.Body, expression.Parameters);
         }
 
+        #endregion
+
         public static ExpressionWrapperBase CreateChildWrapper(Expression expression, ReadOnlyCollection<ParameterExpression> paramaters)
         {
-            if (expression is BinaryExpression)
-                return new BinaryExpressionWrapper(expression as BinaryExpression, paramaters);
-            else if (expression is BlockExpression)
-                throw new NotImplementedException();
-            else if (expression is ConditionalExpression)
-                throw new NotImplementedException();
-            else if (expression is ConstantExpression)
-                return new ConstantExpressionWrapper(expression as ConstantExpression, paramaters);
-            else if (expression is DebugInfoExpression)
-                throw new NotImplementedException();
-            else if (expression is DefaultExpression)
-                throw new NotImplementedException();
-            else if (expression is DynamicExpression)
-                throw new NotImplementedException();
-            else if (expression is GotoExpression)
-                throw new NotImplementedException();
-            else if (expression is IndexExpression)
-                throw new NotImplementedException();
-            else if (expression is InvocationExpression)
-                //TODO: important, ivocation of a lambda
-                throw new NotImplementedException();
-            else if (expression is LabelExpression)
-                throw new NotImplementedException();
-            else if (expression is ListInitExpression)
-                throw new NotImplementedException();
-            else if (expression is LoopExpression)
-                throw new NotImplementedException();
-            else if (expression is MemberExpression)
-                return new MemberExpressionWrapper(expression as MemberExpression, paramaters);
-            else if (expression is MethodCallExpression)
-                return new MethodCallExpressionWrapper(expression as MethodCallExpression, paramaters);
-            else if (expression is NewArrayExpression)
-                throw new NotImplementedException();
-            else if (expression is NewExpression)
-                throw new NotImplementedException();
-            else if (expression is ParameterExpression)
-                return new ParameterExpressionWrapper(expression as ParameterExpression, paramaters);
-            else if (expression is RuntimeVariablesExpression)
-                throw new NotImplementedException();
-            else if (expression is SwitchExpression)
-                throw new NotImplementedException();
-            else if (expression is TryExpression)
-                throw new NotImplementedException();
-            else if (expression is TypeBinaryExpression)
-                throw new NotImplementedException();
-            else if (expression is UnaryExpression)
-                return new UnaryExpressionWrapper(expression as UnaryExpression, paramaters);
+            var type = expression.GetType();
 
-            // LambdaExpression and Expression<> is not implemented
-            throw new NotImplementedException();
+            while (type != typeof(Expression))
+            {
+                if (Constructors.ContainsKey(type))
+                    break;
+                else
+                    type = type.BaseType;
+            }
+
+            // TODO: Key not found exception
+            return Constructors[type](expression, paramaters);
         }
     }
 }
