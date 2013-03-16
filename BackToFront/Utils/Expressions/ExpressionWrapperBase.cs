@@ -61,29 +61,14 @@ namespace BackToFront.Utils.Expressions
                 item is ulong;
         }
 
-        public abstract bool IsSameExpression(ExpressionWrapperBase expression);
-        public abstract ReadOnlyCollection<ParameterExpression> WrappedExpressionParameters { get; }
-
         /// <summary>
         /// Evaluate expression assuming correct parameters have been passed in
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
         protected abstract object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks);
-
-        //public abstract void OnSet(object root, object value);
-        //public abstract bool CanSet { get; }
-
-        // TODO: generics here
-        //public void Set(object root, object value)
-        //{
-        //    if (!CanSet)
-        //    {
-        //        throw new InvalidOperationException("##");
-        //    }
-
-        //    OnSet(root, value);
-        //}
+        public abstract bool IsSameExpression(ExpressionWrapperBase expression);
+        public abstract ReadOnlyCollection<ParameterExpression> WrappedExpressionParameters { get; }
                 
         public object Evaluate(IEnumerable<object> paramaters)
         {
@@ -108,6 +93,22 @@ namespace BackToFront.Utils.Expressions
                     return mock.Value;
 
             return OnEvaluate(param, mocks);
+        }
+
+        public static ExpressionWrapperBase CreateChildWrapper(Expression expression, ReadOnlyCollection<ParameterExpression> paramaters)
+        {
+            var type = expression.GetType();
+
+            while (type != typeof(Expression))
+            {
+                if (Constructors.ContainsKey(type))
+                    break;
+                else
+                    type = type.BaseType;
+            }
+
+            // TODO: Key not found exception
+            return Constructors[type](expression, paramaters);
         }
 
         #region linq constructors
@@ -157,22 +158,41 @@ namespace BackToFront.Utils.Expressions
             return CreateChildWrapper(expression.Body, expression.Parameters);
         }
 
-        #endregion
-
-        public static ExpressionWrapperBase CreateChildWrapper(Expression expression, ReadOnlyCollection<ParameterExpression> paramaters)
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TReturn>> expression)
         {
-            var type = expression.GetType();
-
-            while (type != typeof(Expression))
-            {
-                if (Constructors.ContainsKey(type))
-                    break;
-                else
-                    type = type.BaseType;
-            }
-
-            // TODO: Key not found exception
-            return Constructors[type](expression, paramaters);
+            return CreateChildWrapper(expression.Body, expression.Parameters);
         }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TArg16, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TArg16, TReturn>> expression)
+        {
+            return CreateChildWrapper(expression.Body, expression.Parameters);
+        }
+
+        #endregion
     }
 }
