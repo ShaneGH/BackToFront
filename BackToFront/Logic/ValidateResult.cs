@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Logic
 {
-    internal class ValidateResult<TEntity> : IValidateResult<TEntity>
+    public class ValidateResult<TEntity> : IValidateResult<TEntity>
     {
         private readonly TEntity Entity;
 

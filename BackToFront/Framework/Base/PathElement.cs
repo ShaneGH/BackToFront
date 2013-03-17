@@ -13,7 +13,7 @@ namespace BackToFront.Framework.Base
     /// A class attached to a Rule which points to the next step in the operation
     /// </summary>
     /// <typeparam name="TEntity">The entity type to validate</typeparam>
-    internal abstract class PathElement<TEntity> : IValidate<TEntity>
+    public abstract class PathElement<TEntity> : IValidate<TEntity>
     {
         private bool _locked = false;
         protected readonly Rule<TEntity> ParentRule;

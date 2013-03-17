@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 namespace BackToFront.Utils.Expressions
 {
     // TODO: test
-    internal class UnaryExpressionWrapper : ExpressionWrapperBase<UnaryExpression>
+    public class UnaryExpressionWrapper : ExpressionWrapperBase<UnaryExpression>
     {
         private ExpressionWrapperBase _Operand;
         public ExpressionWrapperBase Operand

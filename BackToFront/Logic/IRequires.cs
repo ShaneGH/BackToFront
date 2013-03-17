@@ -6,6 +6,6 @@ namespace BackToFront.Logic
 {
     public interface IRequires<TEntity>
     {
-        IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> condition);
+        IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> condition);
     }
 }

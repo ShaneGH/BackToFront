@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Utils.Expressions
 {
-    internal class BinaryExpressionWrapper : ExpressionWrapperBase<BinaryExpression>
+    public class BinaryExpressionWrapper : ExpressionWrapperBase<BinaryExpression>
     {
         private ExpressionWrapperBase _Left;
         private ExpressionWrapperBase Left

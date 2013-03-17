@@ -13,6 +13,11 @@ namespace BackToFront.UnitTests.Utilities
     public class SimpleViolation : IViolation
     {
         private readonly string _UserMessage;
+        public SimpleViolation()
+            : this("error")
+        {
+        }
+
         public SimpleViolation(string userMessage)
         {
             _UserMessage = userMessage;

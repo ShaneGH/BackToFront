@@ -11,7 +11,7 @@ using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Utils.Expressions
 {
-    internal abstract class ExpressionWrapperBase<TExpression> : ExpressionWrapperBase
+    public abstract class ExpressionWrapperBase<TExpression> : ExpressionWrapperBase
         where TExpression : Expression
     {
         public readonly TExpression Expression;

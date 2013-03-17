@@ -13,7 +13,7 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework
 {
-    internal class SubRuleCollection<TEntity> : PathElement<TEntity>, IRule<TEntity>
+    public class SubRuleCollection<TEntity> : PathElement<TEntity>, IRule<TEntity>
     {
         private readonly RuleCollection<TEntity> _subRules = new RuleCollection<TEntity>();
         public SubRuleCollection(Rule<TEntity> rule)
@@ -37,7 +37,7 @@ namespace BackToFront.Framework
             throw new NotImplementedException();
         }
 
-        public IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)
+        public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)
         {
             var subRule = new Rule<TEntity>(ParentRule);
             _subRules.AddRule(subRule);

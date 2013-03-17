@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Utils.Expressions
 {
-    internal class ParameterExpressionWrapper : ExpressionWrapperBase<ParameterExpression>, IPropertyChainGetter
+    public class ParameterExpressionWrapper : ExpressionWrapperBase<ParameterExpression>, IPropertyChainGetter
     {
         public ParameterExpressionWrapper(ParameterExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
             : base(expression, paramaters)

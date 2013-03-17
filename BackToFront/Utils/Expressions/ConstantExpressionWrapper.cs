@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Utils.Expressions
 {
-    internal class ConstantExpressionWrapper : ExpressionWrapperBase<ConstantExpression>
+    public class ConstantExpressionWrapper : ExpressionWrapperBase<ConstantExpression>
     {
         public ConstantExpressionWrapper(ConstantExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
             : base(expression, paramaters)

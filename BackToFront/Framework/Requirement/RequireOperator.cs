@@ -12,7 +12,7 @@ using BackToFront.Logic.Compilations;
 
 namespace BackToFront.Framework.Requirement
 {
-    internal class RequireOperator<TEntity> : ModelViolation<TEntity, bool>, IConditionSatisfied<TEntity>
+    public class RequireOperator<TEntity> : ExpressionElement<TEntity, bool>, IRequirementFailed<TEntity>
     {
         public RequireOperator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)
@@ -21,7 +21,6 @@ namespace BackToFront.Framework.Requirement
 
         protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
-            yield return Violation;
             yield return _Then;
             yield return _RequireThat;
         }
@@ -37,7 +36,7 @@ namespace BackToFront.Framework.Requirement
         }
 
         private RequirementFailed<TEntity> _RequireThat = null;
-        public IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> condition)
+        public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> condition)
         {
             return Do(() => _RequireThat = new RequirementFailed<TEntity>(condition, ParentRule));
         }

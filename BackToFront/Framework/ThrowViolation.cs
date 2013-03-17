@@ -13,7 +13,7 @@ namespace BackToFront.Framework
     /// End of a pathway, Throw violation
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    internal class ThrowViolation<TEntity> : PathElement<TEntity>
+    public class ThrowViolation<TEntity> : PathElement<TEntity>
     {
         private readonly IViolation _violation;
         public ThrowViolation(IViolation violation, Rule<TEntity> parentRule)

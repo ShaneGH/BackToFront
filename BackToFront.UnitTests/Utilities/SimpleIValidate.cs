@@ -8,7 +8,7 @@ using BackToFront.Framework.Base;
 
 namespace BackToFront.UnitTests.Utilities
 {
-    internal class SimpleIValidate : PathElement<object>
+    public class SimpleIValidate : PathElement<object>
     {
         public IViolation Violation;
 

@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Utils.Expressions
-{    
-    internal abstract class ExpressionWrapperBase
+{
+    public abstract class ExpressionWrapperBase
     {
         public static readonly ReadOnlyDictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>> Constructors;
         private static readonly Dictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>> _Constructors = new Dictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>>();
-        
-        internal static readonly ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> Evaluations;
+
+        public static readonly ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> Evaluations;
         private static readonly Dictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> _Evaluations = new Dictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>();
 
         static ExpressionWrapperBase()

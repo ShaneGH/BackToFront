@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Utils
 {
-    internal class Mock
+    public class Mock
     {
         public readonly MockBehavior Behavior;
         public readonly ExpressionWrapperBase Expression;

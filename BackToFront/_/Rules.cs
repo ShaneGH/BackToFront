@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
-using BackToFront.Framework;
-using BackToFront.Logic;
+﻿using BackToFront.Framework;
 using BackToFront.Utils;
+using System;
+using System.Collections.Generic;
 
 namespace BackToFront
 {
@@ -18,7 +12,7 @@ namespace BackToFront
     {
         #region Static
 
-        internal static readonly Rules Repository = new Rules();
+        public static readonly Rules Repository = new Rules();
 
         /// <summary>
         /// Add a business rule
@@ -32,7 +26,7 @@ namespace BackToFront
 
         #endregion
 
-        internal readonly ReadonlyDictionary<Type, IValidate> Registered;
+        public readonly ReadonlyDictionary<Type, IValidate> Registered;
         private readonly Dictionary<Type, IValidate> _Registered = new Dictionary<Type, IValidate>();
 
         private Rules()

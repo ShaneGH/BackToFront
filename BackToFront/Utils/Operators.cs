@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Utils
 {
-    internal static class Operators
+    public static class Operators
     {
         /// <summary>
         /// lhs.Equals(rhs)

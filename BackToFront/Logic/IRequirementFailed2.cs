@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic
 {
-    public interface IModelViolation2<TEntity>
+    public interface IRequirementFailed2<TEntity>
     {
-        IAdditionalRuleCondition<TEntity> OrModelViolationIs(IViolation violation);
-    }    
+        IModelViolation<TEntity> RequirementFailed { get; }
+    }
 }

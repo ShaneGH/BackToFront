@@ -5,10 +5,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackToFront.Logic
+namespace BackToFront.Logic.Compilations
 {
-    public interface IModelViolation1<TEntity>
+    public interface IRequirementFailed<TEntity> : IRequires<TEntity>, IBeginSubRule<TEntity>
     {
-        IAdditionalRuleCondition<TEntity> ModelViolationIs(IViolation violation);
     }
 }

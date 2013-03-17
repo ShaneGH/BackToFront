@@ -10,7 +10,7 @@ using BackToFront.Extensions.IEnumerable;
 
 namespace BackToFront.Utils.Expressions
 {
-    internal class MethodCallExpressionWrapper : ExpressionWrapperBase<MethodCallExpression>
+    public class MethodCallExpressionWrapper : ExpressionWrapperBase<MethodCallExpression>
     {
         private ExpressionWrapperBase _Object;
         public ExpressionWrapperBase Object

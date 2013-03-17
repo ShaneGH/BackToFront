@@ -19,6 +19,6 @@ namespace BackToFront
     public interface IRule<TEntity>
     {
         IConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property);
-        IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> property);
+        IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> property);
     }
 }

@@ -12,7 +12,7 @@ using BackToFront.Logic.Compilations;
 
 namespace BackToFront.Framework.Requirement
 {
-    internal class RequirementFailed<TEntity> : ModelViolation<TEntity, bool>, IModelViolation2<TEntity>
+    public class RequirementFailed<TEntity> : ModelViolation<TEntity, bool>, IModelViolation<TEntity>
     {
         protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {

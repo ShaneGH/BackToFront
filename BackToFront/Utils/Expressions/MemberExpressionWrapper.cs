@@ -7,12 +7,12 @@ using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Utils.Expressions
 {
-    internal class MemberExpressionWrapper : ExpressionWrapperBase<MemberExpression>, IPropertyChain
+    public class MemberExpressionWrapper : ExpressionWrapperBase<MemberExpression>, IPropertyChain
     {
         private ExpressionWrapperBase _InnerExpression;
         private ExpressionWrapperBase InnerExpression
         {
-            get
+            get            
             {
                 return _InnerExpression ?? (_InnerExpression = CreateChildWrapper(Expression.Expression));
             }

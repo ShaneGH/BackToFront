@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
-using BackToFront.Framework.Base;
+﻿using BackToFront.Framework.Base;
 using BackToFront.Framework.Requirement;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace BackToFront.Framework.Condition
 {
-    internal class Operator<TEntity> : ModelViolation<TEntity, bool>, IConditionSatisfied<TEntity>
+    public class Operator<TEntity> : ExpressionElement<TEntity, bool>, IConditionSatisfied<TEntity>
     {
         public Operator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)
@@ -21,7 +17,7 @@ namespace BackToFront.Framework.Condition
 
         protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
-            yield return Violation;
+            yield return _RequirementFailed;
             yield return _Then;
             yield return _RequireThat;
         }
@@ -42,7 +38,7 @@ namespace BackToFront.Framework.Condition
         }
 
         private RequirementFailed<TEntity> _RequireThat = null;
-        public IModelViolation2<TEntity> RequireThat(Expression<Func<TEntity, bool>> condition)
+        public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> condition)
         {
             return Do(() => _RequireThat = new RequirementFailed<TEntity>(condition, ParentRule));
         }
@@ -57,6 +53,15 @@ namespace BackToFront.Framework.Condition
 
             // present rule to begin process again
             return ParentRule;
+        }
+
+        RequirementFailed<TEntity> _RequirementFailed;
+        public IModelViolation<TEntity> RequirementFailed
+        {
+            get
+            {
+                return Do(() => _RequirementFailed = new RequirementFailed<TEntity>(a => false, ParentRule));
+            }
         }
     }
 }

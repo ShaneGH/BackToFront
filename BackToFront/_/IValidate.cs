@@ -6,7 +6,7 @@ namespace BackToFront
     /// <summary>
     /// Specifies a rule element that can be validated
     /// </summary>
-    internal interface IValidate
+    public interface IValidate
     {
         /// <summary>
         /// Validate the suject and return first business rule violation
@@ -27,7 +27,7 @@ namespace BackToFront
     /// Specifies a rule element that can be validated
     /// </summary>
     /// <typeparam name="TEntity">Type of the entity to validate</typeparam>
-    internal interface IValidate<TEntity>
+    public interface IValidate<TEntity>
     {
         /// <summary>
         /// Validate the suject and return first business rule violation

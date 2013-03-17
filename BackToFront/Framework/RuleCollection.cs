@@ -12,9 +12,9 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework
 {
-    internal class RuleCollection<TEntity> : IValidate
+    public class RuleCollection<TEntity> : IValidate
     {
-        private readonly List<Rule<TEntity>> _Rules = new List<Rule<TEntity>>();
+        private readonly List<IValidate<TEntity>> _Rules = new List<IValidate<TEntity>>();
 
         public IViolation ValidateEntity(object subject, IEnumerable<Mock> mocks)
         {
@@ -37,7 +37,7 @@ namespace BackToFront.Framework
             return violationList.ToArray();
         }
 
-        public void AddRule(Rule<TEntity> rule)
+        public void AddRule(IValidate<TEntity> rule)
         {
             _Rules.Add(rule);
         }

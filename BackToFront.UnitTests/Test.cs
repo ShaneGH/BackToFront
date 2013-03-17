@@ -42,7 +42,10 @@ namespace BackToFront.UnitTests
         public static void SetupTestpad()
         {
             Rules.Add<Something>(trunk => trunk
-                .If(b => b.Value1 == 0).ModelViolationIs(new ViolationClass("Invalid")));
+                .If(b => b.Value1 != 0).RequirementFailed.OrModelViolationIs(new ViolationClass("Invalid")));
+
+            Rules.Add<Something>(trunk => trunk
+                .RequireThat(b => b.Value1 == 0).OrModelViolationIs(new ViolationClass("Invalid")));
 
             Rules.Add<Something>(trunk => trunk
                 .If(b => b.Value1 == 2 && b.Value2 == 6)

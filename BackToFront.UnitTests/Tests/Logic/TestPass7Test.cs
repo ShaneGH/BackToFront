@@ -36,7 +36,7 @@ namespace BackToFront.UnitTests.Tests.Logic
                     }));
 
                 Rules.Add<TestEntity>(rule => rule
-                    .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).ModelViolationIs(Violation2));
+                    .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).RequirementFailed.OrModelViolationIs(Violation2));
             }
 
             public bool ThrowViolationSwitch1 { get; set; }
