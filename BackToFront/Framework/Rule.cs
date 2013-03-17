@@ -11,6 +11,8 @@ namespace BackToFront.Framework
 {
     public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate
     {
+        public readonly List<Tuple<Type, object>> HelperPointers = new List<Tuple<Type, object>>();
+
         public Rule()
             : this(null)
         { }

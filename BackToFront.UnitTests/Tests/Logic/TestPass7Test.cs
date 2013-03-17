@@ -27,7 +27,7 @@ namespace BackToFront.UnitTests.Tests.Logic
 
             static TestEntity()
             {
-                Rules.Add<TestEntity>(rule => rule
+                Rules<TestEntity>.Add(rule => rule
                     // pass through if
                     .If(a => a.ThrowViolationSwitch1 || !a.ThrowViolationSwitch1).Then(subRule =>
                     {
@@ -35,7 +35,7 @@ namespace BackToFront.UnitTests.Tests.Logic
                         subRule.RequireThat(a => a.RequiredSwitch2).OrModelViolationIs(Violation1);
                     }));
 
-                Rules.Add<TestEntity>(rule => rule
+                Rules<TestEntity>.Add(rule => rule
                     .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).RequirementFailed.OrModelViolationIs(Violation2));
             }
 

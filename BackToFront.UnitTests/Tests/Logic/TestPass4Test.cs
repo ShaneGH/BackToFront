@@ -25,7 +25,7 @@ namespace BackToFront.UnitTests.Tests.Logic
 
             static TestPass4()
             {
-                Rules.Add<TestPass4>(rule => rule
+                Rules<TestPass4>.Add(rule => rule
                     // pass through if
                     .If(a => a.ThrowViolationSwitch1 || !a.ThrowViolationSwitch1)
 

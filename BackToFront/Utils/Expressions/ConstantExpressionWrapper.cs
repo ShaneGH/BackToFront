@@ -19,8 +19,7 @@ namespace BackToFront.Utils.Expressions
             if (ex == null)
                 return false;
 
-            return Expression.Value.Equals(ex.Expression.Value);
-                
+            return Expression.Value.Equals(ex.Expression.Value);                
         }
 
         protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)

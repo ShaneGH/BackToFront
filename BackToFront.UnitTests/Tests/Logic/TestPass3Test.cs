@@ -18,13 +18,13 @@ namespace BackToFront.UnitTests.Tests.Logic
     [TestFixture]
     public class TestPass3Test : Base.TestBase
     {
-        public class TestPass3
+        public class TestClass
         {
             public static SimpleViolation Violation = new SimpleViolation("Violation");
 
-            static TestPass3()
+            static TestClass()
             {
-                Rules.Add<TestPass3>(rule => rule
+                Rules<TestClass>.Add(rule => rule
                     .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).RequirementFailed.OrModelViolationIs(Violation));
             }
 
@@ -40,8 +40,8 @@ namespace BackToFront.UnitTests.Tests.Logic
         public void If_Or(bool switch1, bool switch2)
         {
             // arrange
-            var v = switch1 || switch2 ? TestPass3.Violation : null;
-            var subject = new TestPass3
+            var v = switch1 || switch2 ? TestClass.Violation : null;
+            var subject = new TestClass
             {
                 ThrowViolationSwitch1 = switch1,
                 ThrowViolationSwitch2 = switch2

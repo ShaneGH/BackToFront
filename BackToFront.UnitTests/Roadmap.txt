@@ -1,6 +1,9 @@
 ﻿
+Inject helpers/repositories
 Deep validation
-
+Vallidation attribute
+Client side
+Domain Model
 
 More Expression types
 More Expression operators

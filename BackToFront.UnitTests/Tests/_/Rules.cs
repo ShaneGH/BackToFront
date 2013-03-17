@@ -22,17 +22,17 @@ namespace BackToFront.UnitTests.Tests
 
             // act
             if (notFirst)
-                Assert.IsTrue(Rules.Repository.Registered.ContainsKey(typeof(TestClass)));
+                Assert.IsTrue(Rules<TestClass>.Repository.Registered.Any());
             else
-                Assert.IsFalse(Rules.Repository.Registered.ContainsKey(typeof(TestClass)));
+                Assert.IsFalse(Rules<TestClass>.Repository.Registered.Any());
 
             // added to static dictionary
             notFirst = true;
 
-            Rules.Add<TestClass>(a => a.If(b => b == null));
+            Rules<TestClass>.Add(a => a.If(b => b == null));
 
             // assert
-            Assert.NotNull(Rules.Repository.Registered[typeof(TestClass)]);
+            Assert.NotNull(Rules<TestClass>.Repository.Registered.Any());
         }
     }
 }

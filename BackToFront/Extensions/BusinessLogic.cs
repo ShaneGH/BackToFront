@@ -12,7 +12,12 @@ namespace BackToFront.Validate
         /// <returns>The first business rule violation encountered</returns>
         public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test)
         {
-            return new ValidateResult<TEntity>(test);
+            return Validate(test, null);
+        }
+
+        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, params object[] helperClasses)
+        {
+            return new ValidateResult<TEntity>(test, helperClasses);
         }
     }
 }
