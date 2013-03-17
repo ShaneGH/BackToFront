@@ -52,7 +52,7 @@ namespace BackToFront.Framework
         }
     }
 
-    internal class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>
+    internal class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate
     {
         public Rule()
             : this(null)
@@ -104,6 +104,28 @@ namespace BackToFront.Framework
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
         {
             ValidateAllNext(subject, violationList, mocks);
+        }
+
+        IViolation IValidate.ValidateEntity(object subject, IEnumerable<Utils.Mock> mocks)
+        {
+            if (subject is TEntity)
+            {
+                return ValidateEntity((TEntity)subject, mocks);
+            }
+
+            throw new InvalidOperationException("##");
+        }
+
+        IEnumerable<IViolation> IValidate.FullyValidateEntity(object subject, IEnumerable<Utils.Mock> mocks)
+        {
+            if (subject is TEntity)
+            {
+                List<IViolation> violations = new List<IViolation>();
+                FullyValidateEntity((TEntity)subject, violations, mocks);
+                return violations.ToArray();
+            }
+
+            throw new InvalidOperationException("##");
         }
     }
 }
