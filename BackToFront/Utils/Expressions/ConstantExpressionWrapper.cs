@@ -8,8 +8,8 @@ namespace BackToFront.Utils.Expressions
 {
     public class ConstantExpressionWrapper : ExpressionWrapperBase<ConstantExpression>
     {
-        public ConstantExpressionWrapper(ConstantExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
-            : base(expression, paramaters)
+        public ConstantExpressionWrapper(ConstantExpression expression)
+            : base(expression)
         {
         }
 

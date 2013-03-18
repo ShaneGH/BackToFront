@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 using BackToFront.Utils;
 using BackToFront.UnitTests.Utilities;
@@ -33,28 +34,30 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
         [Test]
         public void EvaluateTest()
-        {            
+        {
             // arange
-            var subject = ExpressionWrapperBase.ToWrapper<object, int>(a => 4);
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<object, int>(a => 4, out parameters);
             var ex = Mock.Create<object, int>(a => 4, 5);
 
             // act
             // assert            
-            Assert.AreEqual(4, subject.CompileAndCall<object, int>(null));
-            Assert.AreEqual(5, subject.CompileAndCall<object, int>(null, new[] { ex }));
+            Assert.AreEqual(4, subject.CompileAndCall<object, int>(parameters, null));
+            Assert.AreEqual(5, subject.CompileAndCall<object, int>(parameters, null, new[] { ex }));
         }
 
         [Test]
         public void DeepEvaluateTest()
         {
             // arange
-            var subject = ExpressionWrapperBase.ToWrapper<object, string>(a => 4.ToString());
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<object, string>(a => 4.ToString(), out parameters);
             var ex = Mock.Create<object, int>(a => 4, 5);
 
             // act
             // assert            
-            Assert.AreEqual(4.ToString(), subject.CompileAndCall<object, string>(null));
-            Assert.AreEqual(5.ToString(), subject.CompileAndCall<object, string>(null, new[] { ex }));
+            Assert.AreEqual(4.ToString(), subject.CompileAndCall<object, string>(parameters, null));
+            Assert.AreEqual(5.ToString(), subject.CompileAndCall<object, string>(parameters, null, new[] { ex }));
         }
     }
 }

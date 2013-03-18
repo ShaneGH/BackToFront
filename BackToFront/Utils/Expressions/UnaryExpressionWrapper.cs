@@ -16,8 +16,8 @@ namespace BackToFront.Utils.Expressions
             }
         }
 
-        public UnaryExpressionWrapper(UnaryExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
-            : base(expression, paramaters)
+        public UnaryExpressionWrapper(UnaryExpression expression)
+            : base(expression)
         {
         }
 

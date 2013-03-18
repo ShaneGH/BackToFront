@@ -9,6 +9,7 @@ using BackToFront.Extensions.Reflection;
 using BackToFront.UnitTests.Utilities;
 using BackToFront.Utils.Expressions;
 using NUnit.Framework;
+using System.Collections.ObjectModel;
 
 namespace BackToFront.UnitTests.Tests.Utils.Expressions
 {
@@ -148,9 +149,10 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, false)]
         public void OperatorTest_AndAlso(bool param1, bool param2, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a && b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a && b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<bool,bool,bool>(param1, param2));
+            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(parameters, param1, param2));
         }
 
         [Test]
@@ -158,26 +160,29 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, true)]
         public void OperatorTest_Not(bool param, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<bool, bool>((a) => !a) as UnaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool>((a) => !a, out parameters) as UnaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<bool, bool>(param));
+            Assert.AreEqual(result, subject.CompileAndCall<bool, bool>(parameters, param));
         }
 
         [Test]
         public void OperatorTest_Not_IsIntegralType()
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, int>((a) => ~a) as UnaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int>((a) => ~a, out parameters) as UnaryExpressionWrapper;
 
-            Assert.AreEqual(-9, subject.CompileAndCall<int, int>(8));
+            Assert.AreEqual(-9, subject.CompileAndCall<int, int>(parameters, 8));
         }
 
         [Test]
         public void OperatorTest_Convert()
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, double>((a) => (double)a) as UnaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, double>((a) => (double)a, out parameters) as UnaryExpressionWrapper;
 
-            Assert.AreEqual(8D, subject.CompileAndCall<int, double>(8));
-            Assert.IsInstanceOf<double>(subject.CompileAndCall<int, double>(8));
+            Assert.AreEqual(8D, subject.CompileAndCall<int, double>(parameters, 8));
+            Assert.IsInstanceOf<double>(subject.CompileAndCall<int, double>(parameters, 8));
         }
 
         [Test]
@@ -187,9 +192,10 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, false)]
         public void OperatorTest_OrElse(bool param1, bool param2, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a || b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a || b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(param1, param2));
+            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(parameters, param1, param2));
         }
 
         [Test]
@@ -199,9 +205,10 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, false)]
         public void OperatorTest_Or(bool param1, bool param2, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a || b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a || b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(param1, param2));
+            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(parameters, param1, param2));
         }
 
         [Test]
@@ -211,9 +218,10 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, true)]
         public void OperatorTest_Equal(bool param1, bool param2, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a == b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a == b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(param1, param2));
+            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(parameters, param1, param2));
         }
 
         [Test]
@@ -223,49 +231,55 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, false)]
         public void OperatorTest_NotEqual(bool param1, bool param2, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a != b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a != b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(param1, param2));
+            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(parameters, param1, param2));
         }
 
         [Test]
         public void OperatorTest_Add()
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a + b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a + b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(5, subject.CompileAndCall<int, int, int>(3, 2));
+            Assert.AreEqual(5, subject.CompileAndCall<int, int, int>(parameters, 3, 2));
         }
 
         [Test]
         public void OperatorTest_Subtract()
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a - b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a - b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(1, subject.CompileAndCall<int, int, int>(3, 2));
+            Assert.AreEqual(1, subject.CompileAndCall<int, int, int>(parameters, 3, 2));
         }
 
         [Test]
         public void OperatorTest_Multiply()
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a * b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a * b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(6, subject.CompileAndCall<int, int, int>(3, 2));
+            Assert.AreEqual(6, subject.CompileAndCall<int, int, int>(parameters, 3, 2));
         }
 
         [Test]
         public void OperatorTest_Divide()
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a / b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, int>((a, b) => a / b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(3, subject.CompileAndCall<int, int, int>(6, 2));
+            Assert.AreEqual(3, subject.CompileAndCall<int, int, int>(parameters, 6, 2));
         }
 
         [Test]
         public void OperatorTest_ArrayIndex()
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int[], int, int>((a, b) => a[b]) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int[], int, int>((a, b) => a[b], out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(6, subject.CompileAndCall<int[], int, int>(new[] { 3, 6 }, 1));
+            Assert.AreEqual(6, subject.CompileAndCall<int[], int, int>(parameters, new[] { 3, 6 }, 1));
         }
 
         [Test]
@@ -274,9 +288,10 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(3, 2, true)]
         public void OperatorTest_GreaterThan(int param1, int param2, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a > b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a > b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<int, int, bool>(param1, param2));
+            Assert.AreEqual(result, subject.CompileAndCall<int, int, bool>(parameters, param1, param2));
         }
 
         [Test]
@@ -285,9 +300,10 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(3, 2, false)]
         public void OperatorTest_LessThan(int param1, int param2, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a < b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a < b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<int, int, bool>(param1, param2));
+            Assert.AreEqual(result, subject.CompileAndCall<int, int, bool>(parameters, param1, param2));
         }
 
         [Test]
@@ -296,9 +312,10 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(3, 2, true)]
         public void OperatorTest_GreaterThanEqualTo(int param1, int param2, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a >= b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a >= b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<int, int, bool>(param1, param2));
+            Assert.AreEqual(result, subject.CompileAndCall<int, int, bool>(parameters, param1, param2));
         }
 
         [Test]
@@ -307,29 +324,32 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(3, 2, false)]
         public void OperatorTest_LessThanEqualTo(int param1, int param2, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a <= b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int, bool>((a, b) => a <= b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<int, int, bool>(param1, param2));
+            Assert.AreEqual(result, subject.CompileAndCall<int, int, bool>(parameters, param1, param2));
         }
 
         [Test]
         public void OperatorTest_Modulo()
         {
-            var subject = ExpressionWrapperBase.ToWrapper<int, int>(a => a % 3) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, int>(a => a % 3, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(2, subject.CompileAndCall<int, int>(5));
+            Assert.AreEqual(2, subject.CompileAndCall<int, int>(parameters, 5));
         }
 
         [Test]
         public void OperatorTest_Coalesce()
         {
+            ReadOnlyCollection<ParameterExpression> parameters;
             string string1 = "DLFNLKDNF";
             string string2 = "fw45FS";
 
-            var subject = ExpressionWrapperBase.ToWrapper<string, string>(a => a ?? string2) as BinaryExpressionWrapper;
+            var subject = ExpressionWrapperBase.ToWrapper<string, string>(a => a ?? string2, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(string1, subject.CompileAndCall<string, string>(string1));
-            Assert.AreEqual(string2, subject.CompileAndCall<string, string>(null));
+            Assert.AreEqual(string1, subject.CompileAndCall<string, string>(parameters, string1));
+            Assert.AreEqual(string2, subject.CompileAndCall<string, string>(parameters, null));
         }
 
         [Test]
@@ -339,9 +359,10 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         [TestCase(false, false, false)]
         public void OperatorTest_ExclusiveOr(bool param1, bool param2, bool result)
         {
-            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a ^ b) as BinaryExpressionWrapper;
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<bool, bool, bool>((a, b) => a ^ b, out parameters) as BinaryExpressionWrapper;
 
-            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(param1, param2));
+            Assert.AreEqual(result, subject.CompileAndCall<bool, bool, bool>(parameters, param1, param2));
         }
 
         #endregion

@@ -9,8 +9,8 @@ namespace BackToFront.Utils.Expressions
 {
     public class ParameterExpressionWrapper : ExpressionWrapperBase<ParameterExpression>, IPropertyChainGetter
     {
-        public ParameterExpressionWrapper(ParameterExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
-            : base(expression, paramaters)
+        public ParameterExpressionWrapper(ParameterExpression expression)
+            : base(expression)
         {
         }
 

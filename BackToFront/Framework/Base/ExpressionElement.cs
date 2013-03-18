@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using System.Collections.ObjectModel;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Extensions.Reflection;
 using BackToFront.Utils;
@@ -19,6 +20,7 @@ namespace BackToFront.Framework.Base
     public abstract class ExpressionElement<TEntity, TMember> : PathElement<TEntity>
     {
         protected readonly ExpressionWrapperBase Descriptor;
+        protected readonly ReadOnlyCollection<ParameterExpression> Parameters;
 
         protected ExpressionElement(Expression<Func<TEntity, TMember>> descriptor, Rule<TEntity> rule)
             : base(rule)
@@ -27,11 +29,12 @@ namespace BackToFront.Framework.Base
                 throw new ArgumentNullException("##4");
 
             Descriptor = ExpressionWrapperBase.ToWrapper(descriptor);
+            Parameters = descriptor.Parameters;
         }
 
         public Func<TEntity, TMember> Compile(IEnumerable<Utils.Mock> mocks)
         {
-            return Expression.Lambda<Func<TEntity, TMember>>(Descriptor.Evaluate(mocks), Descriptor.WrappedExpressionParameters).Compile();
+            return Expression.Lambda<Func<TEntity, TMember>>(Descriptor.Evaluate(mocks), Parameters).Compile();
         }
     }
 }

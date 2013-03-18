@@ -11,15 +11,30 @@ using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Logic
 {
+    internal class Dependency
+    {
+        public string Name { get; set; }
+        public object Value { get; set; }
+    }
+
     public class ValidateResult<TEntity> : IValidateResult<TEntity>
     {
         private readonly TEntity Entity;
-        private readonly IEnumerable<object> Helpers;
+        private readonly IEnumerable<Dependency> Dependencies;
         private readonly List<Mock> Mocks = new List<Mock>();
 
-        public ValidateResult(TEntity entity, params object[] helperClasses)
+        public ValidateResult(TEntity entity, object dependencyClasses)
         {
-            Helpers = helperClasses == null ? Enumerable.Empty<object>() : helperClasses.ToArray();
+            if(dependencyClasses == null)
+            {
+                Dependencies = Enumerable.Empty<Dependency>();
+            }
+            else
+            {
+                var dependencies = dependencyClasses.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                Dependencies = dependencies.Select(h => new Dependency { Name = h.Name, Value = h.GetValue(dependencyClasses) });
+            }
+
             Entity = entity;
         }
 
@@ -88,7 +103,7 @@ namespace BackToFront.Logic
         }
 
         /// <summary>
-        /// Orders rules, mocks and helpers and delivers them to a function (for vaslidation)
+        /// Orders rules, mocks and dependencies and delivers them to a function (for vaslidation)
         /// </summary>
         /// <param name="action">Validation function. Returns </param>
         private void RunValidation(Func<Rule<TEntity>, IEnumerable<Mock>, bool> action)
@@ -106,19 +121,15 @@ namespace BackToFront.Logic
             bool success = true;
             foreach (var rule in Rules<TEntity>.Repository.Registered)
             {
-                // invalid helpers delivered to validate function
-                if (rule.HelperPointers.Count != Helpers.Count())
-                    throw new InvalidOperationException("##");
+                var dependencies = (IEnumerable<Dependency>)Dependencies.ToArray();
+                ValidateDependencies(rule.Dependencies, ref dependencies);
 
                 var newMocks = mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet).ToList();
 
-                // add each helper class as a MockOnly mock. When defined 
-                Helpers.Each((a, i) => 
+                // add each dependency class as a MockOnly mock.
+                dependencies.Each(a => 
                 {
-                    if (!a.GetType().Is(rule.HelperPointers[i].Item1))
-                        throw new InvalidOperationException("##");
-                    else
-                        newMocks.Add(new Mock(new ConstantExpressionWrapper(Expression.Constant(rule.HelperPointers[i]), null), a, MockBehavior.MockOnly));
+                    newMocks.Add(new Mock(new ConstantExpressionWrapper(Expression.Constant(a)), a.Value, MockBehavior.MockOnly));
                 });
 
                 success &= action(rule, newMocks);
@@ -127,6 +138,24 @@ namespace BackToFront.Logic
             // success, persist mock values
             if(success)
                 setters.Each(a => a.SetValue(Entity));
+        }
+
+        private static void ValidateDependencies(IEnumerable<XXX> required, ref IEnumerable<Dependency> delivered)
+        {
+            List<Dependency> requiredByRule = new List<Dependency>();
+            foreach (var r in required)
+            {
+                var match = delivered.FirstOrDefault(a => a.Name == r.Name);
+                if (match == null)
+                    throw new InvalidOperationException("##");
+
+                if (match.Value == null || !match.Value.GetType().Is(r.Type))
+                    throw new InvalidOperationException("##");
+
+                requiredByRule.Add(match);
+            }
+
+            delivered = requiredByRule.ToArray();
         }
 
         public void ResetResult()

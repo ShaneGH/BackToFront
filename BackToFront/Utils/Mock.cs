@@ -12,23 +12,19 @@ namespace BackToFront.Utils
         public readonly ExpressionWrapperBase Expression;
         public readonly E.ConstantExpression Value;
 
-        public Mock(ExpressionWrapperBase expression, dynamic value, MockBehavior behavior)
+        public Mock(ExpressionWrapperBase expression, object value, MockBehavior behavior)
         {
             Expression = expression;
             Behavior = behavior;
-            Value = E.Expression.Constant(value);
+            Value = E.Expression.Constant(value is BackToFront.Logic.Dependency ? (value as BackToFront.Logic.Dependency).Value : value);
         }
 
-        public Mock(ExpressionWrapperBase expression, dynamic value)
+        public Mock(ExpressionWrapperBase expression, object value)
+            : this(expression, value, MockBehavior.MockOnly)
         {
-            // dynamic forces duplication of constructor logic
-
-            Expression = expression;
-            Behavior = MockBehavior.MockOnly;
-            Value = E.Expression.Constant(value);
         }
 
-        public static Mock Create<TEntity, TReturnVal>(E.Expression<Func<TEntity, TReturnVal>> expression, dynamic value)
+        public static Mock Create<TEntity, TReturnVal>(E.Expression<Func<TEntity, TReturnVal>> expression, object value)
         {
             return new Mock(ExpressionWrapperBase.ToWrapper(expression), value);
         }

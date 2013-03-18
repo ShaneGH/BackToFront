@@ -15,9 +15,9 @@ namespace BackToFront.Validate
             return Validate(test, null);
         }
 
-        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, params object[] helperClasses)
+        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, object dependencyClasses)
         {
-            return new ValidateResult<TEntity>(test, helperClasses);
+            return new ValidateResult<TEntity>(test, dependencyClasses);
         }
     }
 }

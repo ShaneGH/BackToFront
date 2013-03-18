@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -37,32 +38,34 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         public void EvaluateTest()
         {
             // arange
-            var subject = ExpressionWrapperBase.ToWrapper<int, bool>(a => a == 0);
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, bool>(a => a == 0, out parameters);
             var ex = Mock.Create<int, bool>(a => a == 0, true);
 
             // act
             // assert            
-            Assert.IsTrue(subject.CompileAndCall<int, bool>(0));
-            Assert.IsFalse(subject.CompileAndCall<int, bool>(1));
+            Assert.IsTrue(subject.CompileAndCall<int, bool>(parameters, 0));
+            Assert.IsFalse(subject.CompileAndCall<int, bool>(parameters, 1));
 
-            Assert.IsTrue(subject.CompileAndCall<int, bool>(0, new[] { ex }));
-            Assert.IsTrue(subject.CompileAndCall<int, bool>(1, new[] { ex }));
+            Assert.IsTrue(subject.CompileAndCall<int, bool>(parameters, 0, new[] { ex }));
+            Assert.IsTrue(subject.CompileAndCall<int, bool>(parameters, 1, new[] { ex }));
         }
 
         [Test]
         public void Deep_EvaluateTest()
         {
             // arange
-            var subject = ExpressionWrapperBase.ToWrapper<int, string>(a => (a == 0).ToString());
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper<int, string>(a => (a == 0).ToString(), out parameters);
             var ex = Mock.Create<int, bool>(a => a == 0, true);
 
             // act
             // assert          
-            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(0));
-            Assert.AreEqual(false.ToString(), subject.CompileAndCall<int, string>(1));
+            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(parameters, 0));
+            Assert.AreEqual(false.ToString(), subject.CompileAndCall<int, string>(parameters, 1));
 
-            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(0, new[] { ex }));
-            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(1, new[] { ex }));
+            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(parameters, 0, new[] { ex }));
+            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(parameters, 1, new[] { ex }));
         }
     }
 }

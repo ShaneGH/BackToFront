@@ -9,9 +9,15 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Framework
 {
+    public class XXX
+    {
+        public string Name { get; set; }
+        public Type Type { get; set; }
+    }
+
     public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate
     {
-        public readonly List<Tuple<Type, object>> HelperPointers = new List<Tuple<Type, object>>();
+        public readonly List<XXX> Dependencies = new List<XXX>();
 
         public Rule()
             : this(null)

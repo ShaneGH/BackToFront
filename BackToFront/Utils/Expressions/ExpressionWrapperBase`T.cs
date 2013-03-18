@@ -16,29 +16,9 @@ namespace BackToFront.Utils.Expressions
     {
         public readonly TExpression Expression;
 
-        protected readonly ReadOnlyCollection<ParameterExpression> Parameters;
-
-        public override ReadOnlyCollection<ParameterExpression> WrappedExpressionParameters
+        public ExpressionWrapperBase(TExpression expression)
         {
-            get { return Parameters; }
-        }
-
-        public ExpressionWrapperBase(TExpression expression, ReadOnlyCollection<ParameterExpression> parameters)
-        {
-            if (expression == null)
-                throw new ArgumentNullException("expression");
-            if (parameters == null)
-                throw new ArgumentNullException("parameters");
-            if (parameters.Count == 0)
-                throw new ArgumentException("The expression must contain paramaters");
-
             Expression = expression;
-            Parameters = parameters;
-        }
-
-        protected ExpressionWrapperBase CreateChildWrapper(Expression expression)
-        {
-            return CreateChildWrapper(expression, Parameters);
         }
 
         public override Expression WrappedExpression

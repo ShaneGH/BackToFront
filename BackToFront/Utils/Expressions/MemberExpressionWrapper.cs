@@ -19,8 +19,8 @@ namespace BackToFront.Utils.Expressions
             }
         }
 
-        public MemberExpressionWrapper(MemberExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
-            : base(expression, paramaters)
+        public MemberExpressionWrapper(MemberExpression expression)
+            : base(expression)
         {
         }
 
@@ -37,7 +37,13 @@ namespace BackToFront.Utils.Expressions
         protected override Expression OnEvaluate(IEnumerable<Mock> mocks)
         {
             var eval = InnerExpression.Evaluate(mocks);
-            return eval == InnerExpression.WrappedExpression ? Expression : E.Expression.MakeMemberAccess(eval, Expression.Member);
+            Expression returnVal;
+            if (eval == InnerExpression.WrappedExpression)
+                returnVal = Expression;
+            else
+                returnVal= E.Expression.MakeMemberAccess(eval, Expression.Member);
+
+            return returnVal;
         }
 
         public bool CanSet

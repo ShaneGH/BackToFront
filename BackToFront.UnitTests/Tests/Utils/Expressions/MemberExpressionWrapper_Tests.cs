@@ -9,6 +9,7 @@ using BackToFront.Utils;
 using BackToFront.UnitTests.Utilities;
 using BackToFront.Utils.Expressions;
 using NUnit.Framework;
+using System.Collections.ObjectModel;
 
 namespace BackToFront.UnitTests.Tests.Utils.Expressions
 {
@@ -43,15 +44,16 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             const string mock = "Not hello";
 
             // arange
+            ReadOnlyCollection<ParameterExpression> parameters;
             Expression<Func<TestClass, object>> func1 = a => a.Member;
-            var subject = ExpressionWrapperBase.ToWrapper(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1, out parameters);
             var input1 = new TestClass { Member = "Hello" };
             var ex = Mock.Create<TestClass, object>(a => a.Member, mock);
 
             // act
             // assert            
-            Assert.AreEqual(input1.Member, subject.CompileAndCall<TestClass, object>(input1));
-            Assert.AreEqual(mock, subject.CompileAndCall<TestClass, object>(input1, new[] { ex }));
+            Assert.AreEqual(input1.Member, subject.CompileAndCall<TestClass, object>(parameters, input1));
+            Assert.AreEqual(mock, subject.CompileAndCall<TestClass, object>(parameters, input1, new[] { ex }));
         }
 
         [Test]
@@ -60,15 +62,16 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             const string mock = "Not hello";
 
             // arange
+            ReadOnlyCollection<ParameterExpression> parameters;
             Expression<Func<TestClass, object>> func1 = a => a.Member.GetHashCode();
-            var subject = ExpressionWrapperBase.ToWrapper(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1, out parameters);
             var input1 = new TestClass { Member = "Hello" };
             var ex = Mock.Create<TestClass, object>(a => a.Member, mock);
 
             // act
             // assert            
-            Assert.AreEqual(input1.Member.GetHashCode(), subject.CompileAndCall<TestClass, object>(input1));
-            Assert.AreEqual(mock.GetHashCode(), subject.CompileAndCall<TestClass, object>(input1, new[] { ex }));
+            Assert.AreEqual(input1.Member.GetHashCode(), subject.CompileAndCall<TestClass, object>(parameters, input1));
+            Assert.AreEqual(mock.GetHashCode(), subject.CompileAndCall<TestClass, object>(parameters, input1, new[] { ex }));
         }
 
         [Test]
@@ -77,15 +80,16 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             const int mock = 334455;
 
             // arange
+            ReadOnlyCollection<ParameterExpression> parameters;
             Expression<Func<TestClass, int>> func1 = a => a.ToString().Length;
-            var subject = ExpressionWrapperBase.ToWrapper(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1, out parameters);
             var input1 = new TestClass { Member = "Hello" };
             var ex = Mock.Create<TestClass, int>(a => a.ToString().Length, mock);
 
             // act
             // assert            
-            Assert.AreEqual(input1.ToString().Length, subject.CompileAndCall<TestClass, int>(input1));
-            Assert.AreEqual(mock, subject.CompileAndCall<TestClass, int>(input1, new[] { ex }));
+            Assert.AreEqual(input1.ToString().Length, subject.CompileAndCall<TestClass, int>(parameters, input1));
+            Assert.AreEqual(mock, subject.CompileAndCall<TestClass, int>(parameters, input1, new[] { ex }));
         }
     }
 }

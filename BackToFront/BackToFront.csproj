@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\packages\Castle.Core.3.2.0\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -86,6 +83,7 @@
     <Compile Include="Utils\Expressions\InvocationExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\ExpressionWrapperBase.cs" />
     <Compile Include="Utils\Expressions\ISettableExpression.cs" />
+    <Compile Include="Utils\Expressions\LinqParameterExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\MemberExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\MethodCallExpressionWrapper.cs" />
     <Compile Include="Utils\Expressions\UnaryExpressionWrapper.cs" />
@@ -102,9 +100,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="_\IValidate.cs" />
     <Compile Include="_\IViolation.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

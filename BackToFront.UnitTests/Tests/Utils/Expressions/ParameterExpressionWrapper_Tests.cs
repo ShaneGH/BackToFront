@@ -9,6 +9,7 @@ using BackToFront.Utils;
 using BackToFront.UnitTests.Utilities;
 using BackToFront.Utils.Expressions;
 using NUnit.Framework;
+using System.Collections.ObjectModel;
 
 namespace BackToFront.UnitTests.Tests.Utils.Expressions
 {
@@ -37,33 +38,35 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         {
             // arange
             Expression<Func<object, object>> func1 = a => a;
-            var subject = ExpressionWrapperBase.ToWrapper(func1);
+            ReadOnlyCollection<ParameterExpression> parameters;
+            var subject = ExpressionWrapperBase.ToWrapper(func1, out parameters);
             var input1 = new object();
             var input2 = new object();
             var ex = Mock.Create<object, object>(a => a, input2);
 
             // act
             // assert            
-            Assert.AreSame(input1, subject.CompileAndCall<object, object>(input1));
-            Assert.AreNotSame(input2, subject.CompileAndCall<object, object>(input1));
-            Assert.AreSame(input2, subject.CompileAndCall<object, object>(input1, new[] { ex }));
-            Assert.AreNotSame(input1, subject.CompileAndCall<object, object>(input1, new[] { ex }));
+            Assert.AreSame(input1, subject.CompileAndCall<object, object>(parameters, input1));
+            Assert.AreNotSame(input2, subject.CompileAndCall<object, object>(parameters, input1));
+            Assert.AreSame(input2, subject.CompileAndCall<object, object>(parameters, input1, new[] { ex }));
+            Assert.AreNotSame(input1, subject.CompileAndCall<object, object>(parameters, input1, new[] { ex }));
         }
 
         [Test]
         public void Deep_EvaluateTest()
         {
             // arange
+            ReadOnlyCollection<ParameterExpression> parameters;
             Expression<Func<object, int>> func1 = a => a.GetHashCode();
-            var subject = ExpressionWrapperBase.ToWrapper(func1);
+            var subject = ExpressionWrapperBase.ToWrapper(func1, out parameters);
             var input1 = new object();
             var input2 = new object();
             var ex = Mock.Create<object, object>(a => a, input2);
 
             // act
             // assert            
-            Assert.AreEqual(input1.GetHashCode(), subject.CompileAndCall<object, int>(input1));
-            Assert.AreEqual(input2.GetHashCode(), subject.CompileAndCall<object, int>(input1, new[] { ex }));
+            Assert.AreEqual(input1.GetHashCode(), subject.CompileAndCall<object, int>(parameters, input1));
+            Assert.AreEqual(input2.GetHashCode(), subject.CompileAndCall<object, int>(parameters, input1, new[] { ex }));
         }
     }
 }

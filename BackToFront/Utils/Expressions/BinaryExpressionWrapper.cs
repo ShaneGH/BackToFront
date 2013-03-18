@@ -27,8 +27,8 @@ namespace BackToFront.Utils.Expressions
             }
         }
 
-        public BinaryExpressionWrapper(BinaryExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
-            : base(expression, paramaters)
+        public BinaryExpressionWrapper(BinaryExpression expression)
+            : base(expression)
         {
         }
 

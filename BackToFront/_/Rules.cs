@@ -3,7 +3,6 @@ using BackToFront.Utils;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Castle.DynamicProxy;
 
 namespace BackToFront
 {
@@ -15,7 +14,6 @@ namespace BackToFront
         #region Static
 
         public static readonly Rules<TEntity> Repository = new Rules<TEntity>();
-        private static readonly ProxyGenerator Gen = new ProxyGenerator();
 
         /// <summary>
         /// Add a business rule
@@ -32,10 +30,10 @@ namespace BackToFront
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="rule"></param>
-        public static void Add<THelper>(Action<IRule<TEntity>, THelper> rule)
-            where THelper : class
+        public static void Add<TDependency>(Action<IRule<TEntity>, TDependency> rule)
+            where TDependency : class
         {
-            Repository._Add<THelper>(rule);
+            Repository._Add<TDependency>(rule);
         }
 
         #endregion
@@ -49,15 +47,16 @@ namespace BackToFront
             }
         }
 
-        private void _Add<THelper>(Action<IRule<TEntity>, THelper> rule)
-            where THelper : class
+        private void _Add<TDependency>(Action<IRule<TEntity>, TDependency> rule)
+            where TDependency : class
         {
             var ruleObject = new Rule<TEntity>();
-            var helper = typeof(THelper).IsInterface ? Gen.CreateInterfaceProxyWithoutTarget<THelper>() : Gen.CreateClassProxy<THelper>();
-            ruleObject.HelperPointers.Add(new Tuple<Type,object>(typeof(THelper), helper));
-            
+
+            var param = rule.Method.GetParameters()[1];
+            ruleObject.Dependencies.Add(new XXX { Name = param.Name, Type = param.ParameterType });
+
             // apply logic to rule
-            rule(ruleObject, helper);
+            rule(ruleObject, null);
             _Registered.Add(ruleObject);
         }
 

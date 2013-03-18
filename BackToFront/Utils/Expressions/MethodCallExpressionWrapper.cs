@@ -31,8 +31,8 @@ namespace BackToFront.Utils.Expressions
             }
         }
 
-        public MethodCallExpressionWrapper(MethodCallExpression expression, ReadOnlyCollection<ParameterExpression> paramaters)
-            : base(expression, paramaters)
+        public MethodCallExpressionWrapper(MethodCallExpression expression)
+            : base(expression)
         {
         }
 

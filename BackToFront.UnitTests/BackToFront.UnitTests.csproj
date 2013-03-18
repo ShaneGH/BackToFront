@@ -65,6 +65,7 @@
     <Compile Include="Tests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\Logic\TestPass1_1_Test.cs" />
     <Compile Include="Tests\Logic\TestPass7Test_1.cs" />
     <Compile Include="Tests\Logic\TestPass4Test_1.cs" />
     <Compile Include="Tests\Logic\TestPass8Test.cs" />
