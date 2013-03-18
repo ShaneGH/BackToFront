@@ -26,7 +26,7 @@ namespace BackToFront.Framework.Requirement
 
         public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
-            if (!(bool)Descriptor.Evaluate(new object[] { subject }, mocks))
+            if (!Compile(subject, mocks)(subject))
                 return ValidateNext(subject, mocks);
             else
                 return null;
@@ -34,7 +34,7 @@ namespace BackToFront.Framework.Requirement
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
         {
-            if (!(bool)Descriptor.Evaluate(new object[] { subject }, mocks))
+            if (!!Compile(subject, mocks)(subject))
                 ValidateAllNext(subject, violationList, mocks);
         }
     }

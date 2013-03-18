@@ -16,35 +16,39 @@ namespace BackToFront.Utils.Expressions
         public static readonly ReadOnlyDictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>> Constructors;
         private static readonly Dictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>> _Constructors = new Dictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>>();
 
-        public static readonly ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> Evaluations;
-        private static readonly Dictionary<ExpressionType, Func<dynamic, dynamic, dynamic>> _Evaluations = new Dictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>();
+        public static readonly ReadonlyDictionary<ExpressionType, Func<Expression, Expression, Expression>> Evaluations;
+        private static readonly Dictionary<ExpressionType, Func<Expression, Expression, Expression>> _Evaluations = new Dictionary<ExpressionType, Func<Expression, Expression, Expression>>();
 
         static ExpressionWrapperBase()
         {
-            Evaluations = new ReadonlyDictionary<ExpressionType, Func<dynamic, dynamic, dynamic>>(_Evaluations);
+            Evaluations = new ReadonlyDictionary<ExpressionType, Func<Expression, Expression, Expression>>(_Evaluations);
             Constructors = new ReadOnlyDictionary<Type, Func<Expression, ReadOnlyCollection<ParameterExpression>, ExpressionWrapperBase>>(_Constructors);
             
+            //TODO: All of this needs to be changed. Static constructor methods cannot be bundled together like this
+
             // add operators
-            _Evaluations[ExpressionType.Add] = (lhs, rhs) => lhs + rhs;
-            _Evaluations[ExpressionType.AndAlso] = (lhs, rhs) => lhs && rhs;
-            _Evaluations[ExpressionType.ArrayIndex] = (lhs, rhs) => lhs[rhs];
-            _Evaluations[ExpressionType.Coalesce] = (lhs, rhs) => lhs ?? rhs;
-            _Evaluations[ExpressionType.Convert] = (lhs, rhs) => Convert.ChangeType(lhs, rhs);
-            _Evaluations[ExpressionType.Divide] = (lhs, rhs) => lhs / rhs;
-            _Evaluations[ExpressionType.Equal] = (lhs, rhs) => lhs == rhs;
-            _Evaluations[ExpressionType.ExclusiveOr] = (lhs, rhs) => lhs ^ rhs;
-            _Evaluations[ExpressionType.GreaterThan] = (lhs, rhs) => lhs > rhs;
-            _Evaluations[ExpressionType.GreaterThanOrEqual] = (lhs, rhs) => lhs >= rhs;
-            _Evaluations[ExpressionType.LessThan] = (lhs, rhs) => lhs < rhs;
-            _Evaluations[ExpressionType.LessThanOrEqual] = (lhs, rhs) => lhs <= rhs;
-            _Evaluations[ExpressionType.Modulo] = (lhs, rhs) => lhs % rhs;
-            _Evaluations[ExpressionType.Multiply] = (lhs, rhs) => lhs * rhs;
-            _Evaluations[ExpressionType.Not] = (lhs, rhs) => _isIntegralType(lhs) ? ~lhs : !lhs;
-            _Evaluations[ExpressionType.NotEqual] = (lhs, rhs) => lhs != rhs;
-            _Evaluations[ExpressionType.OrElse] = (lhs, rhs) => lhs || rhs;
+            _Evaluations[ExpressionType.Add] = (lhs, rhs) => Expression.Add(lhs, rhs);
+            _Evaluations[ExpressionType.AndAlso] = (lhs, rhs) => Expression.AndAlso(lhs, rhs);
+            _Evaluations[ExpressionType.ArrayIndex] = (lhs, rhs) => Expression.ArrayIndex(lhs, rhs);
+            _Evaluations[ExpressionType.Coalesce] = (lhs, rhs) => Expression.Coalesce(lhs, rhs);
+            //TODO: this is wrong
+            _Evaluations[ExpressionType.Convert] = (lhs, rhs) => Expression.Convert(lhs, rhs.Type);
+            _Evaluations[ExpressionType.Divide] = (lhs, rhs) => Expression.Divide(lhs, rhs);
+            _Evaluations[ExpressionType.Equal] = (lhs, rhs) => Expression.Equal(lhs, rhs);
+            _Evaluations[ExpressionType.ExclusiveOr] = (lhs, rhs) => Expression.ExclusiveOr(lhs, rhs);
+            _Evaluations[ExpressionType.GreaterThan] = (lhs, rhs) => Expression.GreaterThan(lhs, rhs);
+            _Evaluations[ExpressionType.GreaterThanOrEqual] = (lhs, rhs) => Expression.GreaterThanOrEqual(lhs, rhs);
+            _Evaluations[ExpressionType.LessThan] = (lhs, rhs) => Expression.LessThan(lhs, rhs);
+            _Evaluations[ExpressionType.LessThanOrEqual] = (lhs, rhs) => Expression.LessThanOrEqual(lhs, rhs);
+            _Evaluations[ExpressionType.Modulo] = (lhs, rhs) => Expression.Modulo(lhs, rhs);
+            _Evaluations[ExpressionType.Multiply] = (lhs, rhs) => Expression.Multiply(lhs, rhs);
+            // todo unaryExpression method
+            _Evaluations[ExpressionType.Not] = (lhs, rhs) => Expression.Not(lhs);
+            _Evaluations[ExpressionType.NotEqual] = (lhs, rhs) => Expression.NotEqual(lhs, rhs);
+            _Evaluations[ExpressionType.OrElse] = (lhs, rhs) => Expression.OrElse(lhs, rhs);
             // untested (visual basic operator)
-            _Evaluations[ExpressionType.Power] = (lhs, rhs) => Math.Pow(lhs, rhs);
-            _Evaluations[ExpressionType.Subtract] = (lhs, rhs) => lhs - rhs;
+            _Evaluations[ExpressionType.Power] = (lhs, rhs) => Expression.Power(lhs, rhs);
+            _Evaluations[ExpressionType.Subtract] = (lhs, rhs) => Expression.Subtract(lhs, rhs);
 
             _Constructors[typeof(BinaryExpression)] = (expression, prameters) => new BinaryExpressionWrapper(expression as BinaryExpression, prameters);
             _Constructors[typeof(ConstantExpression)] = (expression, parameters) => new ConstantExpressionWrapper(expression as ConstantExpression, parameters);
@@ -66,16 +70,18 @@ namespace BackToFront.Utils.Expressions
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
-        protected abstract object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks);
+        protected abstract Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks);
         public abstract bool IsSameExpression(ExpressionWrapperBase expression);
         public abstract ReadOnlyCollection<ParameterExpression> WrappedExpressionParameters { get; }
+        public abstract Expression WrappedExpression { get; }
                 
-        public object Evaluate(IEnumerable<object> paramaters)
+        public Expression Evaluate(IEnumerable<object> paramaters)
         {
+            // TODO: just return expression
             return Evaluate(paramaters, Enumerable.Empty<Mock>());
         }
 
-        public object Evaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        public Expression Evaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
             var param = paramaters.ToArray();
             if (param.Length > WrappedExpressionParameters.Count)
@@ -90,7 +96,7 @@ namespace BackToFront.Utils.Expressions
 
             foreach (var mock in mocks)
                 if (IsSameExpression(mock.Expression))
-                    return mock.Value;
+                    return mock._NewExp;
 
             return OnEvaluate(param, mocks);
         }

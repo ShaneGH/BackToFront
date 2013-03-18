@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using E = System.Linq.Expressions;
 
 using BackToFront.Extensions.Reflection;
 
@@ -33,10 +34,10 @@ namespace BackToFront.Utils.Expressions
         }
 
         // TODO, what if member is event or other memberinfo
-        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        protected override Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
             var eval = InnerExpression.Evaluate(paramaters, mocks);
-            return Expression.Member.Get(eval);
+            return eval == InnerExpression.WrappedExpression ? Expression : E.Expression.MakeMemberAccess(eval, Expression.Member);
         }
 
         public bool CanSet

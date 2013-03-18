@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using E = System.Linq.Expressions;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,11 +48,15 @@ namespace BackToFront.Utils.Expressions
                 Arguments.All((a, b) => a.IsSameExpression(ex.Arguments.ElementAt(b)));
         }
 
-        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        protected override Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
             var arguments = Arguments.Select(a => a.Evaluate(paramaters, mocks)).ToArray();
             var eval = Object.Evaluate(paramaters, mocks);
-            return Expression.Method.Invoke(eval, arguments);
+
+            if (eval == Object.WrappedExpression && arguments.All((a, i) => a == Arguments.ElementAt(i).WrappedExpression))
+                return Expression;
+
+            return E.Expression.Call(eval, Expression.Method, arguments);
         }
     }
 }

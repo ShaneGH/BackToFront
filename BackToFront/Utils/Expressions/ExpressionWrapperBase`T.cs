@@ -40,5 +40,13 @@ namespace BackToFront.Utils.Expressions
         {
             return CreateChildWrapper(expression, Parameters);
         }
+
+        public override Expression WrappedExpression
+        {
+            get 
+            {
+                return Expression;
+            }
+        }
     }
 }

@@ -22,9 +22,9 @@ namespace BackToFront.Utils.Expressions
             return Expression.Value.Equals(ex.Expression.Value);                
         }
 
-        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        protected override Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
-            return Expression.Value;
+            return Expression;
         }
     }
 }

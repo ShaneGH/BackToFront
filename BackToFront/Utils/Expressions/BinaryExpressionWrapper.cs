@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 
 
@@ -46,10 +47,13 @@ namespace BackToFront.Utils.Expressions
 
         // TODO, if Expression.Method is not null
         // TODO all node types
-        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        protected override Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
-            dynamic lhs = Left.Evaluate(paramaters, mocks);
-            dynamic rhs = Right.Evaluate(paramaters, mocks);
+            Expression lhs = Left.Evaluate(paramaters, mocks);
+            Expression rhs = Right.Evaluate(paramaters, mocks);
+
+            if (lhs == Left.WrappedExpression && rhs == Right.WrappedExpression)
+                return Expression;
 
             if (!Evaluations.ContainsKey(Expression.NodeType))
                 throw new NotImplementedException("##" + Expression.NodeType);

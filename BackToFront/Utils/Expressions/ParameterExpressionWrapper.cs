@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using E = System.Linq.Expressions;
 
 namespace BackToFront.Utils.Expressions
 {
@@ -30,9 +31,9 @@ namespace BackToFront.Utils.Expressions
             }
         }
 
-        protected override object OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        protected override Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
         {
-            return paramaters.ElementAt(Index);
+            return Expression;
         }
 
         public object Get(object root)

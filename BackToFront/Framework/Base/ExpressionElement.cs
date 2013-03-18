@@ -28,5 +28,10 @@ namespace BackToFront.Framework.Base
 
             Descriptor = ExpressionWrapperBase.ToWrapper(descriptor);
         }
+
+        public Func<TEntity, TMember> Compile(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        {
+            return Expression.Lambda<Func<TEntity, TMember>>(Descriptor.Evaluate(new object[] { subject }, mocks), Expression.Parameter(typeof(TEntity))).Compile();
+        }
     }
 }

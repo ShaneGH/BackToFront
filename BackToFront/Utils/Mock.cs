@@ -2,7 +2,7 @@
 using BackToFront.Enum;
 using BackToFront.Utils.Expressions;
 using System;
-using System.Linq.Expressions;
+using E = System.Linq.Expressions;
 
 namespace BackToFront.Utils
 {
@@ -11,12 +11,14 @@ namespace BackToFront.Utils
         public readonly MockBehavior Behavior;
         public readonly ExpressionWrapperBase Expression;
         public readonly dynamic Value;
+        public readonly E.ConstantExpression _NewExp;
 
         public Mock(ExpressionWrapperBase expression, dynamic value, MockBehavior behavior)
         {
             Expression = expression;
             Value = value;
             Behavior = behavior;
+            _NewExp = E.Expression.Constant(value);
         }
 
         public Mock(ExpressionWrapperBase expression, dynamic value)
@@ -26,9 +28,10 @@ namespace BackToFront.Utils
             Expression = expression;
             Value = value;
             Behavior = MockBehavior.MockOnly;
+            _NewExp = E.Expression.Constant(value);
         }
 
-        public static Mock Create<TEntity, TReturnVal>(Expression<Func<TEntity, TReturnVal>> expression, dynamic value)
+        public static Mock Create<TEntity, TReturnVal>(E.Expression<Func<TEntity, TReturnVal>> expression, dynamic value)
         {
             return new Mock(ExpressionWrapperBase.ToWrapper(expression), value);
         }
