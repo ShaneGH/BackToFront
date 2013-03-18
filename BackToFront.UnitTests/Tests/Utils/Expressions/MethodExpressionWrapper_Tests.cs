@@ -58,16 +58,16 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         public void EvaluateTest()
         {
             // arange
-            Expression<Func<TestClass, object>> func1 = a => a.GetHashCode();
+            Expression<Func<TestClass, int>> func1 = a => a.GetHashCode();
             var subject = ExpressionWrapperBase.ToWrapper(func1);
             var input1 = new TestClass();
             var hash = input1.GetHashCode();
-            var ex = Mock.Create<TestClass, object>(a => a.GetHashCode(), hash + 1);
+            var ex = Mock.Create<TestClass, int>(a => a.GetHashCode(), hash + 1);
 
             // act
             // assert            
-            Assert.AreEqual(hash, subject.Evaluate(new[] { input1 }));
-            Assert.AreEqual(hash + 1, subject.Evaluate(new[] { input1 }, new[] { ex }));
+            Assert.AreEqual(hash, subject.CompileAndCall<TestClass, int>(input1));
+            Assert.AreEqual(hash + 1, subject.CompileAndCall<TestClass, int>(input1, new[] { ex }));
         }
 
         [Test]
@@ -81,8 +81,8 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // act
             // assert            
-            Assert.AreEqual(input1.GetHashCode().GetHashCode(), subject.Evaluate(new[] { input1 }));
-            Assert.AreEqual((input1.GetHashCode() + 1).GetHashCode(), subject.Evaluate(new[] { input1 }, new[] { ex }));
+            Assert.AreEqual(input1.GetHashCode().GetHashCode(), subject.CompileAndCall<TestClass, int>(input1));
+            Assert.AreEqual((input1.GetHashCode() + 1).GetHashCode(), subject.CompileAndCall<TestClass, int>(input1, new[] { ex }));
         }
 
         [Test]
@@ -98,8 +98,8 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // act
             // assert            
-            Assert.AreEqual(input1.aRandomString().Length, subject.Evaluate(new[] { input1 }));
-            Assert.AreEqual(test.Length, subject.Evaluate(new[] { input1 }, new[] { ex }));
+            Assert.AreEqual(input1.aRandomString().Length, subject.CompileAndCall<TestClass, int>(input1));
+            Assert.AreEqual(test.Length, subject.CompileAndCall<TestClass, int>(input1, new[] { ex }));
         }
     }
 }

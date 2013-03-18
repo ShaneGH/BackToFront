@@ -10,15 +10,13 @@ namespace BackToFront.Utils
     {
         public readonly MockBehavior Behavior;
         public readonly ExpressionWrapperBase Expression;
-        public readonly dynamic Value;
-        public readonly E.ConstantExpression _NewExp;
+        public readonly E.ConstantExpression Value;
 
         public Mock(ExpressionWrapperBase expression, dynamic value, MockBehavior behavior)
         {
             Expression = expression;
-            Value = value;
             Behavior = behavior;
-            _NewExp = E.Expression.Constant(value);
+            Value = E.Expression.Constant(value);
         }
 
         public Mock(ExpressionWrapperBase expression, dynamic value)
@@ -26,9 +24,8 @@ namespace BackToFront.Utils
             // dynamic forces duplication of constructor logic
 
             Expression = expression;
-            Value = value;
             Behavior = MockBehavior.MockOnly;
-            _NewExp = E.Expression.Constant(value);
+            Value = E.Expression.Constant(value);
         }
 
         public static Mock Create<TEntity, TReturnVal>(E.Expression<Func<TEntity, TReturnVal>> expression, dynamic value)
@@ -49,7 +46,7 @@ namespace BackToFront.Utils
             if (!CanSet)
                 throw new InvalidOperationException("##");
 
-            (Expression as IPropertyChain).Set(root, Value);
+            (Expression as IPropertyChain).Set(root, Value.Value);
         }
     }
 }

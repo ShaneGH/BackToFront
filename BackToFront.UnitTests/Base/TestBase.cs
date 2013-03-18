@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 using NUnit.Framework;
 
@@ -68,6 +69,11 @@ namespace BackToFront.UnitTests.Base
                 return (members.ElementAt(0) as MethodInfo).Invoke(item, args.ToArray());
             else
                 throw new InvalidOperationException("Invalid Property of field name: " + name);
+        }
+
+        public static Func<TEntity, TMember> CompileExpression<TEntity, TMember>(Expression expression, IEnumerable<ParameterExpression> parameters)
+        {
+            return Expression.Lambda<Func<TEntity, TMember>>(expression, parameters).Compile();
         }
     }
 }

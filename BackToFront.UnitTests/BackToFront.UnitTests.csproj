@@ -81,15 +81,30 @@
     <Compile Include="Tests\Logic\TestPass3Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Utils\Expressions\BinaryExpressionWrapper_Tests.cs" />
-    <Compile Include="Tests\Utils\Expressions\ConstantExpressionWrapper_Tests.cs" />
-    <Compile Include="Tests\Utils\Expressions\ExpressionWrapperBase_Tests.cs" />
-    <Compile Include="Tests\Utils\Expressions\MemberExpressionWrapper_Tests.cs" />
-    <Compile Include="Tests\Utils\Expressions\MethodExpressionWrapper_Tests.cs" />
-    <Compile Include="Tests\Utils\Expressions\FuncExpressionWrapper_Tests.cs" />
-    <Compile Include="Tests\Utils\Expressions\ParameterExpressionWrapper_Tests.cs" />
+    <Compile Include="Tests\Utils\Expressions\BinaryExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Utils\Expressions\ConstantExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Utils\Expressions\ExpressionWrapperBase_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Utils\Expressions\FuncExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Utils\Expressions\MemberExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Utils\Expressions\MethodExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Utils\Expressions\ParameterExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tests\Utils\Operators.cs" />
     <Compile Include="Tests\_\Rules.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\SimpleIValidate.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -109,6 +124,7 @@
   <ItemGroup>
     <Content Include="Roadmap.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

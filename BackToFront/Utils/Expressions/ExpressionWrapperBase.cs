@@ -70,35 +70,24 @@ namespace BackToFront.Utils.Expressions
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
-        protected abstract Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks);
+        protected abstract Expression OnEvaluate(IEnumerable<Mock> mocks);
         public abstract bool IsSameExpression(ExpressionWrapperBase expression);
         public abstract ReadOnlyCollection<ParameterExpression> WrappedExpressionParameters { get; }
         public abstract Expression WrappedExpression { get; }
                 
-        public Expression Evaluate(IEnumerable<object> paramaters)
+        public Expression Evaluate()
         {
             // TODO: just return expression
-            return Evaluate(paramaters, Enumerable.Empty<Mock>());
+            return Evaluate(Enumerable.Empty<Mock>());
         }
 
-        public Expression Evaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        public Expression Evaluate(IEnumerable<Mock> mocks)
         {
-            var param = paramaters.ToArray();
-            if (param.Length > WrappedExpressionParameters.Count)
-                throw new InvalidOperationException("##");
-
-            for (int i = 0, ii = param.Length; i < ii; i++)
-            {
-                if ((WrappedExpressionParameters[i].Type.IsValueType && param[i] == null) ||
-                    (param[i] != null && !param[i].GetType().Is(WrappedExpressionParameters[i].Type)))
-                    throw new InvalidOperationException("##"); // invalid parameter type
-            }
-
             foreach (var mock in mocks)
                 if (IsSameExpression(mock.Expression))
-                    return mock._NewExp;
+                    return mock.Value;
 
-            return OnEvaluate(param, mocks);
+            return OnEvaluate(mocks);
         }
 
         public static ExpressionWrapperBase CreateChildWrapper(Expression expression, ReadOnlyCollection<ParameterExpression> paramaters)

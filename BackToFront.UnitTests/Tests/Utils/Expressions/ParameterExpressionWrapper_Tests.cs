@@ -44,10 +44,10 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // act
             // assert            
-            Assert.AreSame(input1, subject.Evaluate(new[] { input1 }));
-            Assert.AreNotSame(input2, subject.Evaluate(new[] { input1 }));
-            Assert.AreSame(input2, subject.Evaluate(new[] { input1 }, new[] { ex }));
-            Assert.AreNotSame(input1, subject.Evaluate(new[] { input1 }, new[] { ex }));
+            Assert.AreSame(input1, subject.CompileAndCall<object, object>(input1));
+            Assert.AreNotSame(input2, subject.CompileAndCall<object, object>(input1));
+            Assert.AreSame(input2, subject.CompileAndCall<object, object>(input1, new[] { ex }));
+            Assert.AreNotSame(input1, subject.CompileAndCall<object, object>(input1, new[] { ex }));
         }
 
         [Test]
@@ -62,8 +62,8 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // act
             // assert            
-            Assert.AreEqual(input1.GetHashCode(), subject.Evaluate(new[] { input1 }));
-            Assert.AreEqual(input2.GetHashCode(), subject.Evaluate(new[] { input1 }, new[] { ex }));
+            Assert.AreEqual(input1.GetHashCode(), subject.CompileAndCall<object, int>(input1));
+            Assert.AreEqual(input2.GetHashCode(), subject.CompileAndCall<object, int>(input1, new[] { ex }));
         }
     }
 }

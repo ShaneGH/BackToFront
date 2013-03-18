@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
-using E = System.Linq.Expressions;
+using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Utils.Expressions
 {
@@ -16,22 +16,16 @@ namespace BackToFront.Utils.Expressions
 
         public override bool IsSameExpression(ExpressionWrapperBase expression)
         {
+            // TODO: is this correct?
+
             var ex = expression as ParameterExpressionWrapper;
             if (ex == null)
                 return false;
 
-            return Index >= 0 && Index == ex.Index;
+            return ex.Expression.Type.Is(Expression.Type);
         }
 
-        private int Index
-        {
-            get
-            {
-                return Parameters.IndexOf(Expression);
-            }
-        }
-
-        protected override Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        protected override Expression OnEvaluate(IEnumerable<Mock> mocks)
         {
             return Expression;
         }

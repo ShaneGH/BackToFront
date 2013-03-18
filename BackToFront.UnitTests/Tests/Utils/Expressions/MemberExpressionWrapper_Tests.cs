@@ -50,8 +50,8 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // act
             // assert            
-            Assert.AreEqual(input1.Member, subject.Evaluate(new[] { input1 }));
-            Assert.AreEqual(mock, subject.Evaluate(new[] { input1 }, new[] { ex }));
+            Assert.AreEqual(input1.Member, subject.CompileAndCall<TestClass, object>(input1));
+            Assert.AreEqual(mock, subject.CompileAndCall<TestClass, object>(input1, new[] { ex }));
         }
 
         [Test]
@@ -67,8 +67,8 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // act
             // assert            
-            Assert.AreEqual(input1.Member.GetHashCode(), subject.Evaluate(new[] { input1 }));
-            Assert.AreEqual(mock.GetHashCode(), subject.Evaluate(new[] { input1 }, new[] { ex }));
+            Assert.AreEqual(input1.Member.GetHashCode(), subject.CompileAndCall<TestClass, object>(input1));
+            Assert.AreEqual(mock.GetHashCode(), subject.CompileAndCall<TestClass, object>(input1, new[] { ex }));
         }
 
         [Test]
@@ -77,15 +77,15 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             const int mock = 334455;
 
             // arange
-            Expression<Func<TestClass, object>> func1 = a => a.ToString().Length;
+            Expression<Func<TestClass, int>> func1 = a => a.ToString().Length;
             var subject = ExpressionWrapperBase.ToWrapper(func1);
             var input1 = new TestClass { Member = "Hello" };
-            var ex = Mock.Create<TestClass, object>(a => a.ToString().Length, mock);
+            var ex = Mock.Create<TestClass, int>(a => a.ToString().Length, mock);
 
             // act
             // assert            
-            Assert.AreEqual(input1.ToString().Length, subject.Evaluate(new[] { input1 }));
-            Assert.AreEqual(mock, subject.Evaluate(new[] { input1 }, new[] { ex }));
+            Assert.AreEqual(input1.ToString().Length, subject.CompileAndCall<TestClass, int>(input1));
+            Assert.AreEqual(mock, subject.CompileAndCall<TestClass, int>(input1, new[] { ex }));
         }
     }
 }

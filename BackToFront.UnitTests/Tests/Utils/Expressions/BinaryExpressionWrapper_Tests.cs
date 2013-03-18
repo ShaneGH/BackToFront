@@ -34,20 +34,19 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
         }
 
         [Test]
-        [Ignore]
         public void EvaluateTest()
         {
-        //    // arange
-        //    var subject = ExpressionWrapperBase.ToWrapper<int, bool>(a => a == 0);
-        //    var ex = Mock.Create<int, bool>(a => a == 0, true);
+            // arange
+            var subject = ExpressionWrapperBase.ToWrapper<int, bool>(a => a == 0);
+            var ex = Mock.Create<int, bool>(a => a == 0, true);
 
-        //    // act
-        //    // assert            
-        //    Assert.IsTrue((bool)subject.Evaluate(new object[] { 0 }));
-        //    Assert.IsFalse((bool)subject.Evaluate(new object[] { 1 }));
+            // act
+            // assert            
+            Assert.IsTrue(subject.CompileAndCall<int, bool>(0));
+            Assert.IsFalse(subject.CompileAndCall<int, bool>(1));
 
-        //    Assert.IsTrue((bool)subject.Evaluate(new object[] { 0 }, new []{ ex }));
-        //    Assert.IsTrue((bool)subject.Evaluate(new object[] { 1 }, new[] { ex }));
+            Assert.IsTrue(subject.CompileAndCall<int, bool>(0, new[] { ex }));
+            Assert.IsTrue(subject.CompileAndCall<int, bool>(1, new[] { ex }));
         }
 
         [Test]
@@ -58,12 +57,12 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
             var ex = Mock.Create<int, bool>(a => a == 0, true);
 
             // act
-            // assert            
-            Assert.AreEqual(true.ToString(), subject.Evaluate(new object[] { 0 }));
-            Assert.AreEqual(false.ToString(), subject.Evaluate(new object[] { 1 }));
+            // assert          
+            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(0));
+            Assert.AreEqual(false.ToString(), subject.CompileAndCall<int, string>(1));
 
-            Assert.AreEqual(true.ToString(), subject.Evaluate(new object[] { 0 }, new[] { ex }));
-            Assert.AreEqual(true.ToString(), subject.Evaluate(new object[] { 1 }, new[] { ex }));
+            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(0, new[] { ex }));
+            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(1, new[] { ex }));
         }
     }
 }

@@ -40,8 +40,8 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // act
             // assert            
-            Assert.AreEqual(4, subject.Evaluate(new object[0]));
-            Assert.AreEqual(5, subject.Evaluate(new object[0], new[] { ex }));
+            Assert.AreEqual(4, subject.CompileAndCall<object, int>(null));
+            Assert.AreEqual(5, subject.CompileAndCall<object, int>(null, new[] { ex }));
         }
 
         [Test]
@@ -53,8 +53,8 @@ namespace BackToFront.UnitTests.Tests.Utils.Expressions
 
             // act
             // assert            
-            Assert.AreEqual(4.ToString(), subject.Evaluate(new object[0]));
-            Assert.AreEqual(5.ToString(), subject.Evaluate(new object[0], new[] { ex }));
+            Assert.AreEqual(4.ToString(), subject.CompileAndCall<object, string>(null));
+            Assert.AreEqual(5.ToString(), subject.CompileAndCall<object, string>(null, new[] { ex }));
         }
     }
 }

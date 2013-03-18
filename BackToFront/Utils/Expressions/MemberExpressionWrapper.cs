@@ -34,9 +34,9 @@ namespace BackToFront.Utils.Expressions
         }
 
         // TODO, what if member is event or other memberinfo
-        protected override Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        protected override Expression OnEvaluate(IEnumerable<Mock> mocks)
         {
-            var eval = InnerExpression.Evaluate(paramaters, mocks);
+            var eval = InnerExpression.Evaluate(mocks);
             return eval == InnerExpression.WrappedExpression ? Expression : E.Expression.MakeMemberAccess(eval, Expression.Member);
         }
 

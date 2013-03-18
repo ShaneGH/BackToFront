@@ -47,10 +47,10 @@ namespace BackToFront.Utils.Expressions
 
         // TODO, if Expression.Method is not null
         // TODO all node types
-        protected override Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        protected override Expression OnEvaluate(IEnumerable<Mock> mocks)
         {
-            Expression lhs = Left.Evaluate(paramaters, mocks);
-            Expression rhs = Right.Evaluate(paramaters, mocks);
+            Expression lhs = Left.Evaluate(mocks);
+            Expression rhs = Right.Evaluate(mocks);
 
             if (lhs == Left.WrappedExpression && rhs == Right.WrappedExpression)
                 return Expression;

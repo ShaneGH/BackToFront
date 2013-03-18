@@ -48,10 +48,10 @@ namespace BackToFront.Utils.Expressions
                 Arguments.All((a, b) => a.IsSameExpression(ex.Arguments.ElementAt(b)));
         }
 
-        protected override Expression OnEvaluate(IEnumerable<object> paramaters, IEnumerable<Mock> mocks)
+        protected override Expression OnEvaluate(IEnumerable<Mock> mocks)
         {
-            var arguments = Arguments.Select(a => a.Evaluate(paramaters, mocks)).ToArray();
-            var eval = Object.Evaluate(paramaters, mocks);
+            var arguments = Arguments.Select(a => a.Evaluate(mocks)).ToArray();
+            var eval = Object.Evaluate(mocks);
 
             if (eval == Object.WrappedExpression && arguments.All((a, i) => a == Arguments.ElementAt(i).WrappedExpression))
                 return Expression;
