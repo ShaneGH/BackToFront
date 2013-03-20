@@ -6,10 +6,11 @@ using E = System.Linq.Expressions;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using BackToFront.Utils;
 
 using BackToFront.Extensions.IEnumerable;
 
-namespace BackToFront.Utils.Expressions
+namespace BackToFront.Expressions
 {
     public class MethodCallExpressionWrapper : ExpressionWrapperBase<MethodCallExpression>
     {

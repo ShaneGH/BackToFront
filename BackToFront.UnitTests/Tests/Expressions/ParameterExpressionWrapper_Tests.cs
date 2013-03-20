@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 using BackToFront.Utils;
 using BackToFront.UnitTests.Utilities;
-using BackToFront.Utils.Expressions;
+using BackToFront.Expressions;
 using NUnit.Framework;
 using System.Collections.ObjectModel;
 
-namespace BackToFront.UnitTests.Tests.Utils.Expressions
+namespace BackToFront.UnitTests.Tests.Expressions
 {
     [TestFixture]
     public class ParameterExpressionWrapper_Tests : Base.TestBase

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using BackToFront.Utils;
 
-namespace BackToFront.Utils.Expressions
+namespace BackToFront.Expressions
 {
     // TODO: test
     public class UnaryExpressionWrapper : ExpressionWrapperBase<UnaryExpression>

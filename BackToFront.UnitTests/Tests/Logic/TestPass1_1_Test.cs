@@ -19,10 +19,10 @@ namespace BackToFront.UnitTests.Tests.Logic
             static TestClass()
             {
                 Rules<TestClass>.Add<Dependency>((rule, hhh) => rule
-                    .RequireThat(a => a.Match == hhh.Match).OrModelViolationIs(Violation1));
+                    .RequireThat(a => a.Match == hhh.Val.Match).OrModelViolationIs(Violation1));
 
                 Rules<TestClass>.Add<Dependency>((rule, hhh) => rule
-                    .RequireThat(a => a.Match == hhh.MatchMethod()).OrModelViolationIs(Violation1));
+                    .RequireThat(a => a.Match == hhh.Val.MatchMethod()).OrModelViolationIs(Violation1));
             }
 
             public bool Match { get; set; }

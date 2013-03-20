@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 using BackToFront.Utils;
 using BackToFront.UnitTests.Utilities;
-using BackToFront.Utils.Expressions;
+using BackToFront.Expressions;
 using NUnit.Framework;
 
-namespace BackToFront.UnitTests.Tests.Utils.Expressions
+namespace BackToFront.UnitTests.Tests.Expressions
 {
     [TestFixture]
     public class BinaryExpressionWrapper_Tests : Base.TestBase

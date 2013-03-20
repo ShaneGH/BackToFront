@@ -6,10 +6,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using BackToFront.Utils;
 
 using BackToFront.Extensions.Reflection;
 
-namespace BackToFront.Utils.Expressions
+namespace BackToFront.Expressions
 {
     public abstract class ExpressionWrapperBase
     {
@@ -46,15 +47,17 @@ namespace BackToFront.Utils.Expressions
             _Evaluations[ExpressionType.Not] = (lhs, rhs) => Expression.Not(lhs);
             _Evaluations[ExpressionType.NotEqual] = (lhs, rhs) => Expression.NotEqual(lhs, rhs);
             _Evaluations[ExpressionType.OrElse] = (lhs, rhs) => Expression.OrElse(lhs, rhs);
-            // untested (visual basic operator)
             _Evaluations[ExpressionType.Power] = (lhs, rhs) => Expression.Power(lhs, rhs);
             _Evaluations[ExpressionType.Subtract] = (lhs, rhs) => Expression.Subtract(lhs, rhs);
 
             _Constructors[typeof(BinaryExpression)] = expression => new BinaryExpressionWrapper(expression as BinaryExpression);
             _Constructors[typeof(ConstantExpression)] = expression => new ConstantExpressionWrapper(expression as ConstantExpression);
-            _Constructors[typeof(MemberExpression)] = expression => LinqParameterExpressionWrapper.IsLinqParameter(expression as MemberExpression) ?
-                (ExpressionWrapperBase)new LinqParameterExpressionWrapper(expression as MemberExpression) :
-                (ExpressionWrapperBase)new MemberExpressionWrapper(expression as MemberExpression);
+            _Constructors[typeof(MemberExpression)] = expression =>
+            {
+                DependencyInjectionExpressionWrapper result;
+                return DependencyInjectionExpressionWrapper.TryCreate(expression as MemberExpression, out result) ? result :
+                    (ExpressionWrapperBase)new MemberExpressionWrapper(expression as MemberExpression);
+            };
             _Constructors[typeof(MethodCallExpression)] = expression => new MethodCallExpressionWrapper(expression as MethodCallExpression);
             _Constructors[typeof(UnaryExpression)] = expression => new UnaryExpressionWrapper(expression as UnaryExpression);
             _Constructors[typeof(ParameterExpression)] = expression => new ParameterExpressionWrapper(expression as ParameterExpression);

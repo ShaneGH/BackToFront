@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using BackToFront.Utils;
 
 
-namespace BackToFront.Utils.Expressions
+namespace BackToFront.Expressions
 {
     public class ConstantExpressionWrapper : ExpressionWrapperBase<ConstantExpression>
     {

@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BackToFront.UnitTests.Utilities;
-using BackToFront.Utils.Expressions;
+using BackToFront.Expressions;
 using NUnit.Framework;
 
-namespace BackToFront.UnitTests.Tests.Utils.Expressions
+namespace BackToFront.UnitTests.Tests.Expressions
 {
     [TestFixture]
     public class FuncExpressionWrapper_Tests : Base.TestBase

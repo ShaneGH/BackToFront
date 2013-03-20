@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 using BackToFront.Extensions.Reflection;
 
-namespace BackToFront.Utils.Expressions
+namespace BackToFront.Expressions
 {
     public abstract class ExpressionWrapperBase<TExpression> : ExpressionWrapperBase
         where TExpression : Expression

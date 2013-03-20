@@ -2,7 +2,7 @@
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Framework;
 using BackToFront.Utils;
-using BackToFront.Utils.Expressions;
+using BackToFront.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,16 +140,16 @@ namespace BackToFront.Logic
                 setters.Each(a => a.SetValue(Entity));
         }
 
-        private static void ValidateDependencies(IEnumerable<XXX> required, ref IEnumerable<Dependency> delivered)
+        private static void ValidateDependencies(IEnumerable<DependencyWrapper> required, ref IEnumerable<Dependency> delivered)
         {
             List<Dependency> requiredByRule = new List<Dependency>();
             foreach (var r in required)
             {
-                var match = delivered.FirstOrDefault(a => a.Name == r.Name);
+                var match = delivered.FirstOrDefault(a => a.Name == r.DependencyName);
                 if (match == null)
                     throw new InvalidOperationException("##");
 
-                if (match.Value == null || !match.Value.GetType().Is(r.Type))
+                if (match.Value == null || !match.Value.GetType().Is(r.DependencyType))
                     throw new InvalidOperationException("##");
 
                 requiredByRule.Add(match);

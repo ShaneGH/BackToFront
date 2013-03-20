@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using E = System.Linq.Expressions;
+using BackToFront.Utils;
 
 using BackToFront.Extensions.Reflection;
 
-namespace BackToFront.Utils.Expressions
+namespace BackToFront.Expressions
 {
     public class MemberExpressionWrapper : ExpressionWrapperBase<MemberExpression>, IPropertyChain
     {
@@ -73,7 +74,8 @@ namespace BackToFront.Utils.Expressions
         {
             if (InnerExpression is IPropertyChainGetter)
             {
-                return (InnerExpression as IPropertyChainGetter).Get(root);
+                root = (InnerExpression as IPropertyChainGetter).Get(root);
+                return Expression.Member.Get(root);
             }
             else
             {

@@ -82,25 +82,25 @@
     <Compile Include="Tests\Logic\TestPass3Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Utils\Expressions\BinaryExpressionWrapper_Tests.cs">
+    <Compile Include="Tests\Expressions\BinaryExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Utils\Expressions\ConstantExpressionWrapper_Tests.cs">
+    <Compile Include="Tests\Expressions\ConstantExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Utils\Expressions\ExpressionWrapperBase_Tests.cs">
+    <Compile Include="Tests\Expressions\ExpressionWrapperBase_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Utils\Expressions\FuncExpressionWrapper_Tests.cs">
+    <Compile Include="Tests\Expressions\FuncExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Utils\Expressions\MemberExpressionWrapper_Tests.cs">
+    <Compile Include="Tests\Expressions\MemberExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Utils\Expressions\MethodExpressionWrapper_Tests.cs">
+    <Compile Include="Tests\Expressions\MethodExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Utils\Expressions\ParameterExpressionWrapper_Tests.cs">
+    <Compile Include="Tests\Expressions\ParameterExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\Utils\Operators.cs" />

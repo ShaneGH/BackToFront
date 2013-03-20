@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 using BackToFront.Extensions.Reflection;
 using BackToFront.UnitTests.Utilities;
-using BackToFront.Utils.Expressions;
+using BackToFront.Expressions;
 using NUnit.Framework;
 using System.Collections.ObjectModel;
 
-namespace BackToFront.UnitTests.Tests.Utils.Expressions
+namespace BackToFront.UnitTests.Tests.Expressions
 {
     class ExpressionWrapperBase_Tests : Base.TestBase
     {

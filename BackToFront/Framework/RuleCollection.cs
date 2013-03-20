@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BackToFront.Utils;
-using BackToFront.Utils.Expressions;
+using BackToFront.Expressions;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Logic;
 

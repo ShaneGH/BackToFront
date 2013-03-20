@@ -1,8 +1,8 @@
 ﻿using BackToFront.Framework;
 using BackToFront.Utils;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BackToFront
 {
@@ -30,7 +30,7 @@ namespace BackToFront
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="rule"></param>
-        public static void Add<TDependency>(Action<IRule<TEntity>, TDependency> rule)
+        public static void Add<TDependency>(Action<IRule<TEntity>, DependencyWrapper<TDependency>> rule)
             where TDependency : class
         {
             Repository._Add<TDependency>(rule);
@@ -47,16 +47,17 @@ namespace BackToFront
             }
         }
 
-        private void _Add<TDependency>(Action<IRule<TEntity>, TDependency> rule)
+        private void _Add<TDependency>(Action<IRule<TEntity>, DependencyWrapper<TDependency>> rule)
             where TDependency : class
         {
             var ruleObject = new Rule<TEntity>();
 
-            var param = rule.Method.GetParameters()[1];
-            ruleObject.Dependencies.Add(new XXX { Name = param.Name, Type = param.ParameterType });
+            var param = rule.Method.GetParameters();
+            var mock1 = new DependencyWrapper<TDependency>(param[1].Name);
+            ruleObject.Dependencies.Add(mock1);
 
             // apply logic to rule
-            rule(ruleObject, null);
+            rule(ruleObject, mock1);
             _Registered.Add(ruleObject);
         }
 

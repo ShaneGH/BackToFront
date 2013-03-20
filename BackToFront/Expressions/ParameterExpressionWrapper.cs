@@ -4,8 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using BackToFront.Extensions.Reflection;
+using BackToFront.Utils;
 
-namespace BackToFront.Utils.Expressions
+namespace BackToFront.Expressions
 {
     public class ParameterExpressionWrapper : ExpressionWrapperBase<ParameterExpression>, IPropertyChainGetter
     {

@@ -4,6 +4,7 @@ Deep validation
 Vallidation attribute
 Client side
 Domain Model
+Profiler
 
 More Expression types
 More Expression operators

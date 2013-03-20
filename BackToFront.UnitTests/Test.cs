@@ -70,7 +70,7 @@ namespace BackToFront.UnitTests
         public static void SetupTestpadWithRepository()
         {
             Rules<Something>.Add<IRepository>((trunk, repo) => trunk
-                .RequireThat(b => repo.GetValues().Contains(b.Value1)).OrModelViolationIs(new ViolationClass("Invalid")));
+                .RequireThat(b => repo.Val.GetValues().Contains(b.Value1)).OrModelViolationIs(new ViolationClass("Invalid")));
 
             Rules<Something>.Add(trunk => trunk
                 .If(b => b.Value1 != 0).RequirementFailed.OrModelViolationIs(new ViolationClass("Invalid")));

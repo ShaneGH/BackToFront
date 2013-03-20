@@ -1,0 +1,71 @@
+﻿using BackToFront.Logic;
+using BackToFront.Utils;
+using System;
+using System.Linq.Expressions;
+using E = System.Linq.Expressions;
+
+namespace BackToFront.Expressions
+{
+    /// <summary>
+    /// Attempts to wrap a call to The Val Property of Dependency<> and mock it our for its actual dependency
+    /// If the perscribed property is not Val, defaults to regular MemberExpressionWrapper behavior
+    /// </summary>
+    public sealed class DependencyInjectionExpressionWrapper : MemberExpressionWrapper
+    {
+        // the field name of the property in the compiler generated class
+        public readonly string LinqParamName;
+
+        private DependencyInjectionExpressionWrapper(MemberExpression expression, string compilerGenerated)
+            : base(expression)
+        {
+            if (string.IsNullOrEmpty(compilerGenerated))
+                throw new ArgumentNullException("compilerGenerated");
+
+            LinqParamName = compilerGenerated;
+        }
+
+        public DependencyInjectionExpressionWrapper(MemberExpression expression)
+            : this(expression, GetLinqParamName(expression))
+        {
+        }
+
+        public static bool TryCreate(MemberExpression expression, out DependencyInjectionExpressionWrapper result)
+        {
+            var compilerGenerated = GetLinqParamName(expression);
+            if (string.IsNullOrEmpty(compilerGenerated))
+            {
+                result = null;
+                return false;
+            }
+            else
+            {
+                result = new DependencyInjectionExpressionWrapper(expression, compilerGenerated);
+                return true;
+            }
+        }
+
+        private static string GetLinqParamName(MemberExpression expression)
+        {
+            if (expression.Member == DependencyWrapper.ValProperty(expression.Type))
+            {
+                // Dependency<T> is only constructed in one piece of code, so we are assuming that this expression is safe
+                return E.Expression.Lambda<Func<DependencyWrapper>>(expression.Expression).Compile()().DependencyName;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override bool IsSameExpression(ExpressionWrapperBase expression)
+        {
+            if (expression.WrappedExpression is ConstantExpression && 
+                (expression.WrappedExpression as ConstantExpression).Value is Dependency)
+            {
+                return ((expression.WrappedExpression as ConstantExpression).Value as Dependency).Name == LinqParamName;
+            }
+
+            return base.IsSameExpression(expression);
+        }
+    }
+}
