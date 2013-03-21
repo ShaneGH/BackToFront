@@ -50,6 +50,10 @@ namespace BackToFront.Expressions
             {
                 // Dependency<T> is only constructed in one piece of code, so we are assuming that this expression is safe
                 return E.Expression.Lambda<Func<DependencyWrapper>>(expression.Expression).Compile()().DependencyName;
+
+                //TODO: 2 possible exceptions
+                //return E.Expression.Lambda<Func<BackToFront.Framework.XXX>>(E.Expression.Parameter(typeof(string))).Compile()().Name;
+                //return E.Expression.Lambda<Func<BackToFront.Framework.XXX>>(E.Expression.Parameter(typeof(BackToFront.Framework.XXX))).Compile()().Name;
             }
             else
             {
