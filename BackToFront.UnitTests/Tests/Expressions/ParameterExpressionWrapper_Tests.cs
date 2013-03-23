@@ -13,6 +13,19 @@ using System.Collections.ObjectModel;
 
 namespace BackToFront.UnitTests.Tests.Expressions
 {
+    public class TestSubjectWrapper : ParameterExpressionWrapper
+    {
+        public TestSubjectWrapper(ParameterExpression expression)
+            : base(expression)
+        {
+        }
+
+        public Expression _CompileInnerExpression(IEnumerable<Mock> mocks)
+        {
+            return CompileInnerExpression(mocks);
+        }
+    }
+
     [TestFixture]
     public class ParameterExpressionWrapper_Tests : Base.TestBase
     {
@@ -34,39 +47,87 @@ namespace BackToFront.UnitTests.Tests.Expressions
         }
 
         [Test]
-        public void EvaluateTest()
+        public void CompileInnerExpression_Test_nothing_mocked()
         {
             // arange
-            Expression<Func<object, object>> func1 = a => a;
-            ReadOnlyCollection<ParameterExpression> parameters;
-            var subject = ExpressionWrapperBase.ToWrapper(func1, out parameters);
-            var input1 = new object();
-            var input2 = new object();
-            var ex = Mock.Create<object, object>(a => a, input2);
+            var member = Expression.Parameter(typeof(string));
+            var subject = new TestSubjectWrapper(member);
 
             // act
-            // assert            
-            Assert.AreSame(input1, subject.CompileAndCall<object, object>(parameters, input1));
-            Assert.AreNotSame(input2, subject.CompileAndCall<object, object>(parameters, input1));
-            Assert.AreSame(input2, subject.CompileAndCall<object, object>(parameters, input1, new[] { ex }));
-            Assert.AreNotSame(input1, subject.CompileAndCall<object, object>(parameters, input1, new[] { ex }));
+            var result = subject._CompileInnerExpression(Enumerable.Empty<Mock>());
+
+            // assert
+            Assert.AreEqual(subject.Expression, result);
         }
 
         [Test]
-        public void Deep_EvaluateTest()
+        public void CompileInnerExpression_Test_withMocks()
         {
             // arange
-            ReadOnlyCollection<ParameterExpression> parameters;
-            Expression<Func<object, int>> func1 = a => a.GetHashCode();
-            var subject = ExpressionWrapperBase.ToWrapper(func1, out parameters);
-            var input1 = new object();
-            var input2 = new object();
-            var ex = Mock.Create<object, object>(a => a, input2);
+            var member = Expression.Parameter(typeof(string));
+            var subject = new TestSubjectWrapper(member);
 
             // act
-            // assert            
-            Assert.AreEqual(input1.GetHashCode(), subject.CompileAndCall<object, int>(parameters, input1));
-            Assert.AreEqual(input2.GetHashCode(), subject.CompileAndCall<object, int>(parameters, input1, new[] { ex }));
+            var result = subject._CompileInnerExpression(Enumerable.Empty<Mock>());
+
+            // assert
+            Assert.AreEqual(subject.Expression, result);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void GetTest_InvalidRoot()
+        {
+            // arange
+            var member = Expression.Parameter(typeof(string));
+            var subject = new TestSubjectWrapper(member);
+
+            // act
+            // assert
+            var result = subject.Get(3);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void GetTest_InvalidRoot_ProvideParentInstance()
+        {
+            // arange
+            var member = Expression.Parameter(typeof(string));
+            var subject = new TestSubjectWrapper(member);
+
+            // act
+            // assert
+            var result = subject.Get(new object());
+        }
+
+        [Test]
+        public void GetTest_ProvideCorrectInstance()
+        {
+            // arange
+            var expected = "KJBJB";
+            var member = Expression.Parameter(typeof(string));
+            var subject = new TestSubjectWrapper(member);
+
+            // act
+            var result = subject.Get(expected);
+
+            // assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void GetTest_ProvideChildInstance()
+        {
+            // arange
+            var expected = "KJBJB";
+            var member = Expression.Parameter(typeof(object));
+            var subject = new TestSubjectWrapper(member);
+
+            // act
+            var result = subject.Get(expected);
+
+            // assert
+            Assert.AreEqual(expected, result);
         }
     }
 }

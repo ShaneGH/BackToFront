@@ -16,6 +16,19 @@ namespace BackToFront.UnitTests.Tests.Expressions
     [TestFixture]
     public class MemberExpressionWrapper_Tests : Base.TestBase
     {
+        public class TestSubjectWrapper : MemberExpressionWrapper
+        {
+            public TestSubjectWrapper(MemberExpression expression)
+                : base(expression)
+            {
+            }
+
+            public Expression _CompileInnerExpression(IEnumerable<Mock> mocks)
+            {
+                return CompileInnerExpression(mocks);
+            }
+        }
+
         public class TestClass
         {
             public string Member { get; set; }
@@ -39,57 +52,38 @@ namespace BackToFront.UnitTests.Tests.Expressions
         }
 
         [Test]
-        public void EvaluateTest()
+        public void CompileInnerExpression_Test_nothing_mocked()
         {
-            const string mock = "Not hello";
-
             // arange
-            ReadOnlyCollection<ParameterExpression> parameters;
-            Expression<Func<TestClass, object>> func1 = a => a.Member;
-            var subject = ExpressionWrapperBase.ToWrapper(func1, out parameters);
-            var input1 = new TestClass { Member = "Hello" };
-            var ex = Mock.Create<TestClass, object>(a => a.Member, mock);
+            var member = Expression.Property(Expression.Parameter(typeof(TestClass)), "Member");
+            var subject = new TestSubjectWrapper(member);
 
             // act
-            // assert            
-            Assert.AreEqual(input1.Member, subject.CompileAndCall<TestClass, object>(parameters, input1));
-            Assert.AreEqual(mock, subject.CompileAndCall<TestClass, object>(parameters, input1, new[] { ex }));
+            var result = subject._CompileInnerExpression(Enumerable.Empty<Mock>());
+
+            // assert
+            Assert.AreEqual(subject.Expression, result);
         }
 
         [Test]
-        public void Deep_EvaluateTest()
+        public void CompileInnerExpression_Test_withMocks()
         {
-            const string mock = "Not hello";
-
             // arange
-            ReadOnlyCollection<ParameterExpression> parameters;
-            Expression<Func<TestClass, object>> func1 = a => a.Member.GetHashCode();
-            var subject = ExpressionWrapperBase.ToWrapper(func1, out parameters);
-            var input1 = new TestClass { Member = "Hello" };
-            var ex = Mock.Create<TestClass, object>(a => a.Member, mock);
+            TestClass mockedVal = new TestClass();
+            var mockedExp = Expression.Parameter(typeof(TestClass));
+            var testExp = Expression.Property(mockedExp, "Member");
+            var subject = new TestSubjectWrapper(testExp);
 
             // act
-            // assert            
-            Assert.AreEqual(input1.Member.GetHashCode(), subject.CompileAndCall<TestClass, object>(parameters, input1));
-            Assert.AreEqual(mock.GetHashCode(), subject.CompileAndCall<TestClass, object>(parameters, input1, new[] { ex }));
-        }
+            var result = subject._CompileInnerExpression(new[] { new Mock(mockedExp, mockedVal) }) as MemberExpression;
 
-        [Test]
-        public void Shallow_EvaluateTest()
-        {
-            const int mock = 334455;
-
-            // arange
-            ReadOnlyCollection<ParameterExpression> parameters;
-            Expression<Func<TestClass, int>> func1 = a => a.ToString().Length;
-            var subject = ExpressionWrapperBase.ToWrapper(func1, out parameters);
-            var input1 = new TestClass { Member = "Hello" };
-            var ex = Mock.Create<TestClass, int>(a => a.ToString().Length, mock);
-
-            // act
-            // assert            
-            Assert.AreEqual(input1.ToString().Length, subject.CompileAndCall<TestClass, int>(parameters, input1));
-            Assert.AreEqual(mock, subject.CompileAndCall<TestClass, int>(parameters, input1, new[] { ex }));
+            // assert
+            Assert.IsNotNull(result);
+            Assert.AreNotEqual(subject.Expression, result);
+            Assert.IsInstanceOf<ConstantExpression>(result.Expression);
+            Assert.AreEqual(mockedVal, (result.Expression as ConstantExpression).Value);
+            Assert.AreEqual(testExp.Member, result.Member);
+            Assert.AreEqual(testExp.NodeType, result.NodeType);
         }
     }
 }

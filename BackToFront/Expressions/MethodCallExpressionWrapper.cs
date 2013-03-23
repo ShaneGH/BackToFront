@@ -39,6 +39,9 @@ namespace BackToFront.Expressions
 
         public override bool IsSameExpression(ExpressionWrapperBase expression)
         {
+            if (!base.IsSameExpression(expression))
+                return false;
+
             var ex = expression as MethodCallExpressionWrapper;
             if (ex == null)
                 return false;
@@ -49,7 +52,7 @@ namespace BackToFront.Expressions
                 Arguments.All((a, b) => a.IsSameExpression(ex.Arguments.ElementAt(b)));
         }
 
-        protected override Expression OnCompile(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
         {
             var arguments = Arguments.Select(a => a.Compile(mocks)).ToArray();
             var eval = Object.Compile(mocks);

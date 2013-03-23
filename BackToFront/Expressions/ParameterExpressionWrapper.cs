@@ -17,6 +17,9 @@ namespace BackToFront.Expressions
 
         public override bool IsSameExpression(ExpressionWrapperBase expression)
         {
+            if (!base.IsSameExpression(expression))
+                return false;
+
             // TODO: is this correct?
 
             var ex = expression as ParameterExpressionWrapper;
@@ -26,14 +29,14 @@ namespace BackToFront.Expressions
             return ex.Expression.Type.Is(Expression.Type);
         }
 
-        protected override Expression OnCompile(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
         {
             return Expression;
         }
 
         public object Get(object root)
         {
-            if (Expression.Type != root.GetType())
+            if (!root.GetType().Is(Expression.Type))
             {
                 throw new InvalidOperationException("##");
             }

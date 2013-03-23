@@ -68,9 +68,13 @@ namespace BackToFront.Expressions
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
-        protected abstract Expression OnCompile(IEnumerable<Mock> mocks);
-        public abstract bool IsSameExpression(ExpressionWrapperBase expression);
+        protected abstract Expression CompileInnerExpression(IEnumerable<Mock> mocks);
         public abstract Expression WrappedExpression { get; }
+
+        public virtual bool IsSameExpression(ExpressionWrapperBase expression)
+        {
+            return expression != null && expression.WrappedExpression.NodeType == WrappedExpression.NodeType;
+        }
                 
         public Expression Compile()
         {
@@ -86,7 +90,7 @@ namespace BackToFront.Expressions
                 if (IsSameExpression(mock.Expression))
                         return mock.Value;
 
-            return OnCompile(mocks);
+            return CompileInnerExpression(mocks);
         }
 
         public static ExpressionWrapperBase CreateChildWrapper(Expression expression)
@@ -103,7 +107,7 @@ namespace BackToFront.Expressions
 
             if (type == typeof(Expression))
                 throw new InvalidOperationException("##" + expression.GetType().ToString());
-            // TODO: Key not found exception
+
             return Constructors[type](expression);
         }
 

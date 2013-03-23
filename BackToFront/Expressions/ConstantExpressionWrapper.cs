@@ -16,6 +16,9 @@ namespace BackToFront.Expressions
 
         public override bool IsSameExpression(ExpressionWrapperBase expression)
         {
+            if (!base.IsSameExpression(expression))
+                return false;
+
             var ex = expression as ConstantExpressionWrapper;
             if (ex == null)
                 return false;
@@ -23,7 +26,7 @@ namespace BackToFront.Expressions
             return Expression.Value.Equals(ex.Expression.Value);                
         }
 
-        protected override Expression OnCompile(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
         {
             return Expression;
         }

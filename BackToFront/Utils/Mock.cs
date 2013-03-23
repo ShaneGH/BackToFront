@@ -22,15 +22,15 @@ namespace BackToFront.Utils
         {
         }
 
-        public Mock(ExpressionWrapperBase expression, object value, MockBehavior behavior)
+        public Mock(ExpressionWrapperBase wrapperExpression, object value, MockBehavior behavior)
         {
-            Expression = expression;
+            Expression = wrapperExpression;
             Behavior = behavior;
             Value = E.Expression.Constant(value is BackToFront.Logic.Dependency ? (value as BackToFront.Logic.Dependency).Value : value);
         }
 
-        public Mock(ExpressionWrapperBase expression, object value)
-            : this(expression, value, MockBehavior.MockAndSet)
+        public Mock(ExpressionWrapperBase wrapperExpression, object value)
+            : this(wrapperExpression, value, MockBehavior.MockAndSet)
         {
         }
 

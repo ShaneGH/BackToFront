@@ -10,11 +10,37 @@ using BackToFront.UnitTests.Utilities;
 using BackToFront.Expressions;
 using NUnit.Framework;
 using System.Collections.ObjectModel;
+using BackToFront.Utils;
 
 namespace BackToFront.UnitTests.Tests.Expressions
 {
     class ExpressionWrapperBase_Tests : Base.TestBase
     {
+        public class TestClass : ExpressionWrapperBase
+        {
+            public static readonly Expression CompileInnerExpressionExpression = Expression.Constant(9);
+            public static readonly Expression WExpression = Expression.Constant(9);
+
+            public bool IsSame { get; set; }
+
+            protected override Expression CompileInnerExpression(IEnumerable<BackToFront.Utils.Mock> mocks)
+            {
+                return CompileInnerExpressionExpression;
+            }
+
+            public override bool IsSameExpression(ExpressionWrapperBase expression)
+            {
+                return IsSame;
+            }
+
+            public override Expression WrappedExpression
+            {
+                get { return WExpression; }
+            }
+        }
+
+        #region constructors
+
         [Test]
         public void AllExpressionWrappersAreImplemented()
         {
@@ -53,6 +79,7 @@ namespace BackToFront.UnitTests.Tests.Expressions
             }
         }
 
+        #endregion
 
         #region operators
 
@@ -366,5 +393,98 @@ namespace BackToFront.UnitTests.Tests.Expressions
         }
 
         #endregion
+
+        [Test]
+        public void Compile_Test_NoArgs()
+        {
+            // arrange
+            var subject = new TestClass();
+
+            // act
+            var result = subject.Compile();
+
+            // assert
+            Assert.AreEqual(TestClass.WExpression, result);
+        }
+
+        [Test]
+        public void Compile_Test_BlankArgs()
+        {
+            // arrange
+            var subject = new TestClass();
+
+            // act
+            var result1 = subject.Compile(null);
+            var result2 = subject.Compile(Enumerable.Empty<Mock>());
+
+            // assert
+            Assert.AreEqual(TestClass.WExpression, result1);
+            Assert.AreEqual(TestClass.WExpression, result2);
+        }
+
+        [Test]
+        public void Compile_Test_Mocked()
+        {
+            // arrange
+            var subject = new TestClass() { IsSame = true };
+            var mock = new Mock(expression: Expression.Constant(4), value: null);
+            Assert.NotNull(mock.Value);
+
+            // act
+            var result = subject.Compile(new[] { mock });
+
+            // assert
+            Assert.AreEqual(mock.Value, result);
+        }
+
+        [Test]
+        public void Compile_Test_With_Mocks_Not_Mocked()
+        {
+            // arrange
+            var subject = new TestClass() { IsSame = false };
+            var mock = new Mock(expression: Expression.Constant(4), value: null);
+
+            // act
+            var result = subject.Compile(new[] { mock });
+
+            // assert
+            Assert.AreEqual(TestClass.CompileInnerExpressionExpression, result);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CreateChildWrapper_Test_InvalidExpressionType()
+        {
+            // arrange
+            var exp = Expression.Break(Expression.Label());
+
+            // act
+            // assert
+            ExpressionWrapperBase.CreateChildWrapper(exp);
+        }
+
+        [Test]
+        public void CreateChildWrapper_Test_TypeTraversal_CANNOT_TEST_THIS()
+        {
+            Assert.Pass();
+        }
+
+        [Test]
+        public void CreateChildWrapper_Test_Fopund_Constructor()
+        {
+            // arrange
+            var exp = Expression.Constant(4);
+
+            // act
+            var result = ExpressionWrapperBase.CreateChildWrapper(exp);
+
+            // assert
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        [Ignore]
+        public void TestLinqConstructors()
+        { }
     }
 }

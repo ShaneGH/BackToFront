@@ -23,9 +23,9 @@ namespace BackToFront.UnitTests.Tests.Expressions
             {
             }
 
-            public Expression _Compile(IEnumerable<Mock> mocks)
+            public Expression _CompileInnerExpression(IEnumerable<Mock> mocks)
             {
-                return OnCompile(mocks);
+                return CompileInnerExpression(mocks);
             }
         }
 
@@ -48,21 +48,21 @@ namespace BackToFront.UnitTests.Tests.Expressions
         }
 
         [Test]
-        public void OnEvaluate_Test_nothing_mocked()
+        public void CompileInnerExpression_Test_nothing_mocked()
         {
             // arange
             var subject = new TestClass(
                 Expression.Add(Expression.Constant(2), Expression.Constant(3)));
 
             // act
-            var result = subject._Compile(Enumerable.Empty<Mock>());
+            var result = subject._CompileInnerExpression(Enumerable.Empty<Mock>());
 
             // assert
             Assert.AreEqual(subject.Expression, result);
         }
 
         [Test]
-        public void OnEvaluate_Test_withMocks()
+        public void CompileInnerExpression_Test_withMocks()
         {
             const int mockedVal = 99;
 
@@ -72,7 +72,7 @@ namespace BackToFront.UnitTests.Tests.Expressions
             var subject = new TestClass(testExp);
 
             // act
-            var result = subject._Compile(new[] { new Mock(mockedExp, mockedVal) }) as BinaryExpression;
+            var result = subject._CompileInnerExpression(new[] { new Mock(mockedExp, mockedVal) }) as BinaryExpression;
 
             // assert
             Assert.IsNotNull(result);

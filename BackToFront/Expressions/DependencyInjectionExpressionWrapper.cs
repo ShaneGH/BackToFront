@@ -63,6 +63,8 @@ namespace BackToFront.Expressions
 
         public override bool IsSameExpression(ExpressionWrapperBase expression)
         {
+            // do not use base methods, they are not valid in this special case
+
             if (expression.WrappedExpression is ConstantExpression && 
                 (expression.WrappedExpression as ConstantExpression).Value is Dependency)
             {

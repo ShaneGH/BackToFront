@@ -16,6 +16,19 @@ namespace BackToFront.UnitTests.Tests.Expressions
     [TestFixture]
     public class ConstantExpressionWrapper_Tests : Base.TestBase
     {
+        public class TestClass : ConstantExpressionWrapper
+        {
+            public TestClass(ConstantExpression expression)
+                : base(expression)
+            {
+            }
+
+            public Expression _CompileInnerExpression(IEnumerable<Mock> mocks)
+            {
+                return CompileInnerExpression(mocks);
+            }
+        }
+
         [Test]
         public void IsSameExpression_Test()
         {
@@ -33,31 +46,16 @@ namespace BackToFront.UnitTests.Tests.Expressions
         }
 
         [Test]
-        public void EvaluateTest()
+        public void CompileInnerExpression_Test()
         {
             // arange
-            ReadOnlyCollection<ParameterExpression> parameters;
-            var subject = ExpressionWrapperBase.ToWrapper<object, int>(a => 4, out parameters);
-            var ex = Mock.Create<object, int>(a => 4, 5);
+            var subject = new TestClass(Expression.Constant(4));
 
             // act
-            // assert            
-            Assert.AreEqual(4, subject.CompileAndCall<object, int>(parameters, null));
-            Assert.AreEqual(5, subject.CompileAndCall<object, int>(parameters, null, new[] { ex }));
-        }
+            var result = subject._CompileInnerExpression(Enumerable.Empty<Mock>());
 
-        [Test]
-        public void DeepEvaluateTest()
-        {
-            // arange
-            ReadOnlyCollection<ParameterExpression> parameters;
-            var subject = ExpressionWrapperBase.ToWrapper<object, string>(a => 4.ToString(), out parameters);
-            var ex = Mock.Create<object, int>(a => 4, 5);
-
-            // act
-            // assert            
-            Assert.AreEqual(4.ToString(), subject.CompileAndCall<object, string>(parameters, null));
-            Assert.AreEqual(5.ToString(), subject.CompileAndCall<object, string>(parameters, null, new[] { ex }));
+            // assert
+            Assert.AreEqual(subject.Expression, result);
         }
     }
 }

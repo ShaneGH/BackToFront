@@ -35,6 +35,9 @@ namespace BackToFront.Expressions
 
         public override bool IsSameExpression(ExpressionWrapperBase expression)
         {
+            if (!base.IsSameExpression(expression))
+                return false;
+
             var ex = expression as BinaryExpressionWrapper;
             if (ex == null)
                 return false;
@@ -45,7 +48,7 @@ namespace BackToFront.Expressions
                 Right.IsSameExpression(ex.Right);                
         }
 
-        protected override Expression OnCompile(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
         {
             Expression lhs = Left.Compile(mocks);
             Expression rhs = Right.Compile(mocks);

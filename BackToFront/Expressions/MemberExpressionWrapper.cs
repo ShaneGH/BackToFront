@@ -27,6 +27,9 @@ namespace BackToFront.Expressions
 
         public override bool IsSameExpression(ExpressionWrapperBase expression)
         {
+            if (!base.IsSameExpression(expression))
+                return false;
+
             var ex = expression as MemberExpressionWrapper;
             if (ex == null)
                 return false;
@@ -35,16 +38,12 @@ namespace BackToFront.Expressions
         }
 
         // TODO, what if member is event or other memberinfo
-        protected override Expression OnCompile(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
         {
             var eval = InnerExpression.Compile(mocks);
-            Expression returnVal;
-            if (eval == InnerExpression.WrappedExpression)
-                returnVal = Expression;
-            else
-                returnVal= E.Expression.MakeMemberAccess(eval, Expression.Member);
-
-            return returnVal;
+            return eval == InnerExpression.WrappedExpression ? 
+                Expression :
+                E.Expression.MakeMemberAccess(eval, Expression.Member);
         }
 
         public bool CanSet

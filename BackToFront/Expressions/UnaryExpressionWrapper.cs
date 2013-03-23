@@ -24,14 +24,18 @@ namespace BackToFront.Expressions
 
         public override bool IsSameExpression(ExpressionWrapperBase expression)
         {
+            if (!base.IsSameExpression(expression))
+                return false;
+
             var ex = expression as UnaryExpressionWrapper;
             if (ex == null)
                 return false;
 
-            return ex.Expression.Method == Expression.Method && Operand.IsSameExpression(ex.Operand);
+            return ex.Expression.Method == Expression.Method &&
+                Operand.IsSameExpression(ex.Operand);
         }
 
-        protected override Expression OnCompile(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
         {
             var result = Operand.Compile(mocks);
 
