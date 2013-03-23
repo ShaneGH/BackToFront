@@ -6,11 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BackToFront.Framework.Base;
-using BackToFront.Framework.Requirement;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 
-namespace BackToFront.Framework.Requirement
+namespace BackToFront.Framework
 {
     public class RequireOperator<TEntity> : ExpressionElement<TEntity, bool>, IRequirementFailed<TEntity>
     {

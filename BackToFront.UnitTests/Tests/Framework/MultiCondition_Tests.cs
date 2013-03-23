@@ -42,9 +42,9 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             var conditions = new []
             {
-                new BackToFront.Framework.Condition.Operator<object>(a => cond1Result, null),
-                new BackToFront.Framework.Condition.Operator<object>(a => cond2Result, null),
-                new BackToFront.Framework.Condition.Operator<object>(a => cond3Result, null)
+                new BackToFront.Framework.Operator<object>(a => cond1Result, null),
+                new BackToFront.Framework.Operator<object>(a => cond2Result, null),
+                new BackToFront.Framework.Operator<object>(a => cond3Result, null)
             };
 
             int pos = 0;

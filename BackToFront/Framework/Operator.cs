@@ -1,12 +1,11 @@
 ﻿using BackToFront.Framework.Base;
-using BackToFront.Framework.Requirement;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace BackToFront.Framework.Condition
+namespace BackToFront.Framework
 {
     public class Operator<TEntity> : ExpressionElement<TEntity, bool>, IConditionSatisfied<TEntity>
     {

@@ -1,18 +1,11 @@
-﻿using System;
+﻿using BackToFront.Framework;
+using BackToFront.Framework.Base;
+using BackToFront.UnitTests.Utilities;
+using Moq;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using NUnit.Framework;
-using BackToFront.Framework;
-using BackToFront.Framework.Condition;
-using BackToFront.Framework.Base;
-using BackToFront.Extensions.IEnumerable;
-using BackToFront.UnitTests.Utilities;
 using U = BackToFront.Utils;
-
-using Moq;
 
 namespace BackToFront.UnitTests.Tests.Framework
 {

@@ -10,7 +10,7 @@ using BackToFront.Logic;
 
 using BackToFront.Logic.Compilations;
 
-namespace BackToFront.Framework.Requirement
+namespace BackToFront.Framework
 {
     public class RequirementFailed<TEntity> : ModelViolation<TEntity, bool>, IModelViolation<TEntity>
     {
