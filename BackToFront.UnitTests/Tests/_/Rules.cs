@@ -5,22 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
+using BackToFront.Utils;
 
 namespace BackToFront.UnitTests.Tests
 {
     [TestFixture]
-    public class Rules_Tests
+    public class Rules_Tests : Base.TestBase
     {
         public static bool notFirst = false;
         public class TestClass { }
 
-        [Test]
-        public void Add_Test()
+        public override void Setup()
         {
+            base.Setup();
 
-            // arrange
-
-            // act
             if (notFirst)
                 Assert.IsTrue(Rules<TestClass>.Repository.Registered.Any());
             else
@@ -28,11 +26,37 @@ namespace BackToFront.UnitTests.Tests
 
             // added to static dictionary
             notFirst = true;
+        }
 
-            Rules<TestClass>.Add(a => a.If(b => b == null));
+        [Test]
+        public void Add_Test()
+        {
+            // arrange
+            IRule<TestClass> rule = null;
+
+            // act
+            Rules<TestClass>.AddRule(a => rule = a);
 
             // assert
-            Assert.NotNull(Rules<TestClass>.Repository.Registered.Any());
+            Assert.NotNull(rule);
+            Assert.IsTrue(Rules<TestClass>.Repository.Registered.Contains(rule));
+        }
+
+        [Test]
+        public void Add_Test_1Generic()
+        {
+            // arrange
+            IRule<TestClass> rule = null;
+            DependencyWrapper<object> dependency = null;
+
+            // act
+            Rules<TestClass>.AddRule<object>((a, asdsad) => { rule = a; dependency = asdsad; });
+
+            // assert
+            Assert.NotNull(rule);
+            Assert.NotNull(dependency);
+            Assert.AreEqual("asdsad", dependency.DependencyName);
+            Assert.IsTrue(Rules<TestClass>.Repository.Registered.Contains(rule));
         }
     }
 }

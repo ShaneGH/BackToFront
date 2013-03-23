@@ -25,7 +25,7 @@ namespace BackToFront.UnitTests.Tests.Logic
 
             static TestEntity()
             {
-                Rules<TestEntity>.Add(rule => rule
+                Rules<TestEntity>.AddRule(rule => rule
                     .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2)
 
                     .RequireThat(a => a.RequiredSwitch1 && a.RequiredSwitch2).OrModelViolationIs(Violation));

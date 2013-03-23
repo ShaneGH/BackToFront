@@ -26,7 +26,7 @@ namespace BackToFront.Expressions
             return ex.Expression.Type.Is(Expression.Type);
         }
 
-        protected override Expression OnEvaluate(IEnumerable<Mock> mocks)
+        protected override Expression OnCompile(IEnumerable<Mock> mocks)
         {
             return Expression;
         }

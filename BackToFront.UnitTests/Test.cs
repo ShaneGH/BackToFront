@@ -41,13 +41,13 @@ namespace BackToFront.UnitTests
 
         public static void SetupTestpad()
         {
-            Rules<Something>.Add(trunk => trunk
+            Rules<Something>.AddRule(trunk => trunk
                 .RequireThat(b => b.Value1 == 0).OrModelViolationIs(new ViolationClass("Invalid")));
 
-            Rules<Something>.Add(trunk => trunk
+            Rules<Something>.AddRule(trunk => trunk
                 .If(b => b.Value1 != 0).RequirementFailed.OrModelViolationIs(new ViolationClass("Invalid")));
 
-            Rules<Something>.Add(trunk => trunk
+            Rules<Something>.AddRule(trunk => trunk
                 .If(b => b.Value1 == 2 && b.Value2 == 6)
                     .Then(branch1 =>
                     {
@@ -56,10 +56,10 @@ namespace BackToFront.UnitTests
                         branch1.If(c => c.Value4 == 0).RequireThat(c => c.Value5 == 8).OrModelViolationIs(new ViolationClass("Invalid"));
                     }));
 
-            Rules<Something>.Add(trunk => trunk
+            Rules<Something>.AddRule(trunk => trunk
                 .If(b => b.Value4 == 0).RequireThat(b => b.Value5 == 8).OrModelViolationIs(new ViolationClass("Invalid")));
 
-            Rules<Something>.Add(trunk => trunk
+            Rules<Something>.AddRule(trunk => trunk
                 .If(b => b.Value4 == 1 && (b.Value5 == 3 && b.Value5 == 7) && b.Value1 == 7));
 
             var violation = new Something().Validate()
@@ -69,13 +69,13 @@ namespace BackToFront.UnitTests
 
         public static void SetupTestpadWithRepository()
         {
-            Rules<Something>.Add<IRepository>((trunk, repo) => trunk
+            Rules<Something>.AddRule<IRepository>((trunk, repo) => trunk
                 .RequireThat(b => repo.Val.GetValues().Contains(b.Value1)).OrModelViolationIs(new ViolationClass("Invalid")));
 
-            Rules<Something>.Add(trunk => trunk
+            Rules<Something>.AddRule(trunk => trunk
                 .If(b => b.Value1 != 0).RequirementFailed.OrModelViolationIs(new ViolationClass("Invalid")));
 
-            Rules<Something>.Add(trunk => trunk
+            Rules<Something>.AddRule(trunk => trunk
                 .If(b => b.Value1 == 2 && b.Value2 == 6)
                     .Then(branch1 =>
                     {
@@ -84,10 +84,10 @@ namespace BackToFront.UnitTests
                         branch1.If(c => c.Value4 == 0).RequireThat(c => c.Value5 == 8).OrModelViolationIs(new ViolationClass("Invalid"));
                     }));
 
-            Rules<Something>.Add(trunk => trunk
+            Rules<Something>.AddRule(trunk => trunk
                 .If(b => b.Value4 == 0).RequireThat(b => b.Value5 == 8).OrModelViolationIs(new ViolationClass("Invalid")));
 
-            Rules<Something>.Add(trunk => trunk
+            Rules<Something>.AddRule(trunk => trunk
                 .If(b => b.Value4 == 1 && (b.Value5 == 3 && b.Value5 == 7) && b.Value1 == 7));
 
             var violation = new Something().Validate()

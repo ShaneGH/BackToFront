@@ -12,6 +12,16 @@ namespace BackToFront.Utils
         public readonly ExpressionWrapperBase Expression;
         public readonly E.ConstantExpression Value;
 
+        public Mock(E.Expression expression, object value, MockBehavior behavior)
+            : this(ExpressionWrapperBase.CreateChildWrapper(expression), value, behavior)
+        {
+        }
+
+        public Mock(E.Expression expression, object value)
+            : this(ExpressionWrapperBase.CreateChildWrapper(expression), value)
+        {
+        }
+
         public Mock(ExpressionWrapperBase expression, object value, MockBehavior behavior)
         {
             Expression = expression;
@@ -20,7 +30,7 @@ namespace BackToFront.Utils
         }
 
         public Mock(ExpressionWrapperBase expression, object value)
-            : this(expression, value, MockBehavior.MockOnly)
+            : this(expression, value, MockBehavior.MockAndSet)
         {
         }
 

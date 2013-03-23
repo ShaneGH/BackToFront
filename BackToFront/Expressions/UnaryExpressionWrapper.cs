@@ -31,9 +31,9 @@ namespace BackToFront.Expressions
             return ex.Expression.Method == Expression.Method && Operand.IsSameExpression(ex.Operand);
         }
 
-        protected override Expression OnEvaluate(IEnumerable<Mock> mocks)
+        protected override Expression OnCompile(IEnumerable<Mock> mocks)
         {
-            var result = Operand.Evaluate(mocks);
+            var result = Operand.Compile(mocks);
 
             return result == Operand.WrappedExpression ? Expression : Evaluations[Expression.NodeType](result, Expression);
         }

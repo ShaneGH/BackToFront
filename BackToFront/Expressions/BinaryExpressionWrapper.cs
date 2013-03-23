@@ -42,16 +42,13 @@ namespace BackToFront.Expressions
             return Expression.NodeType == ex.Expression.NodeType &&
                 Expression.Method == ex.Expression.Method &&
                 Left.IsSameExpression(ex.Left) &&
-                Right.IsSameExpression(ex.Right);
-                
+                Right.IsSameExpression(ex.Right);                
         }
 
-        // TODO, if Expression.Method is not null
-        // TODO all node types
-        protected override Expression OnEvaluate(IEnumerable<Mock> mocks)
+        protected override Expression OnCompile(IEnumerable<Mock> mocks)
         {
-            Expression lhs = Left.Evaluate(mocks);
-            Expression rhs = Right.Evaluate(mocks);
+            Expression lhs = Left.Compile(mocks);
+            Expression rhs = Right.Compile(mocks);
 
             if (lhs == Left.WrappedExpression && rhs == Right.WrappedExpression)
                 return Expression;

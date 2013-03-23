@@ -68,23 +68,25 @@ namespace BackToFront.Expressions
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
-        protected abstract Expression OnEvaluate(IEnumerable<Mock> mocks);
+        protected abstract Expression OnCompile(IEnumerable<Mock> mocks);
         public abstract bool IsSameExpression(ExpressionWrapperBase expression);
         public abstract Expression WrappedExpression { get; }
                 
-        public Expression Evaluate()
+        public Expression Compile()
         {
-            // TODO: just return expression
-            return Evaluate(Enumerable.Empty<Mock>());
+            return WrappedExpression;
         }
 
-        public Expression Evaluate(IEnumerable<Mock> mocks)
+        public Expression Compile(IEnumerable<Mock> mocks)
         {
+            if (mocks == null || mocks.Count() == 0)
+                return Compile();
+
             foreach (var mock in mocks)
                 if (IsSameExpression(mock.Expression))
                         return mock.Value;
 
-            return OnEvaluate(mocks);
+            return OnCompile(mocks);
         }
 
         public static ExpressionWrapperBase CreateChildWrapper(Expression expression)

@@ -27,7 +27,7 @@ namespace BackToFront.Framework.Base
 
         public Func<TEntity, TMember> Compile(IEnumerable<Utils.Mock> mocks)
         {
-            return Expression.Lambda<Func<TEntity, TMember>>(Descriptor.Evaluate(mocks), Parameters).Compile();
+            return Expression.Lambda<Func<TEntity, TMember>>(Descriptor.Compile(mocks), Parameters).Compile();
         }
     }
 }

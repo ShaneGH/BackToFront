@@ -27,7 +27,7 @@ namespace BackToFront.UnitTests.Tests.Logic
 
             static TestEntity()
             {
-                Rules<TestEntity>.Add(rule => rule
+                Rules<TestEntity>.AddRule(rule => rule
                     // pass through if
                     .If(a => a.ContinueSwitch).Then(subRule =>
                     {

@@ -16,6 +16,19 @@ namespace BackToFront.UnitTests.Tests.Expressions
     [TestFixture]
     public class BinaryExpressionWrapper_Tests : Base.TestBase
     {
+        public class TestClass : BinaryExpressionWrapper
+        {
+            public TestClass(BinaryExpression expression)
+                : base(expression)
+            {
+            }
+
+            public Expression _Compile(IEnumerable<Mock> mocks)
+            {
+                return OnCompile(mocks);
+            }
+        }
+
         [Test]
         public void IsSameExpression_Test()
         {
@@ -35,37 +48,40 @@ namespace BackToFront.UnitTests.Tests.Expressions
         }
 
         [Test]
-        public void EvaluateTest()
+        public void OnEvaluate_Test_nothing_mocked()
         {
             // arange
-            ReadOnlyCollection<ParameterExpression> parameters;
-            var subject = ExpressionWrapperBase.ToWrapper<int, bool>(a => a == 0, out parameters);
-            var ex = Mock.Create<int, bool>(a => a == 0, true);
+            var subject = new TestClass(
+                Expression.Add(Expression.Constant(2), Expression.Constant(3)));
 
             // act
-            // assert            
-            Assert.IsTrue(subject.CompileAndCall<int, bool>(parameters, 0));
-            Assert.IsFalse(subject.CompileAndCall<int, bool>(parameters, 1));
+            var result = subject._Compile(Enumerable.Empty<Mock>());
 
-            Assert.IsTrue(subject.CompileAndCall<int, bool>(parameters, 0, new[] { ex }));
-            Assert.IsTrue(subject.CompileAndCall<int, bool>(parameters, 1, new[] { ex }));
+            // assert
+            Assert.AreEqual(subject.Expression, result);
         }
 
         [Test]
-        public void Deep_EvaluateTest()
+        public void OnEvaluate_Test_withMocks()
         {
+            const int mockedVal = 99;
+
             // arange
-            ReadOnlyCollection<ParameterExpression> parameters;
-            var subject = ExpressionWrapperBase.ToWrapper<int, string>(a => (a == 0).ToString(), out parameters);
-            var ex = Mock.Create<int, bool>(a => a == 0, true);
+            var mockedExp = Expression.Add(Expression.Constant(4), Expression.Constant(2));
+            var testExp = Expression.Add(mockedExp, Expression.Constant(3));
+            var subject = new TestClass(testExp);
 
             // act
-            // assert          
-            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(parameters, 0));
-            Assert.AreEqual(false.ToString(), subject.CompileAndCall<int, string>(parameters, 1));
+            var result = subject._Compile(new[] { new Mock(mockedExp, mockedVal) }) as BinaryExpression;
 
-            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(parameters, 0, new[] { ex }));
-            Assert.AreEqual(true.ToString(), subject.CompileAndCall<int, string>(parameters, 1, new[] { ex }));
+            // assert
+            Assert.IsNotNull(result);
+            Assert.AreNotEqual(subject.Expression, result);
+            Assert.IsInstanceOf<ConstantExpression>(result.Left);
+            Assert.AreEqual(mockedVal, (result.Left as ConstantExpression).Value);
+            Assert.AreEqual(testExp.Right, result.Right);
+            Assert.AreEqual(testExp.NodeType, result.NodeType);
+            Assert.AreEqual(testExp.Method, result.Method);
         }
     }
 }

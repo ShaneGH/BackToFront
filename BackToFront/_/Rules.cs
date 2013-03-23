@@ -2,6 +2,8 @@
 using BackToFront.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace BackToFront
@@ -20,9 +22,9 @@ namespace BackToFront
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="rule"></param>
-        public static void Add(Action<IRule<TEntity>> rule)
+        public static void AddRule(Action<IRule<TEntity>> rule)
         {
-            Repository._Add(rule);
+            Repository.Add(rule);
         }
 
         /// <summary>
@@ -30,24 +32,30 @@ namespace BackToFront
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="rule"></param>
-        public static void Add<TDependency>(Action<IRule<TEntity>, DependencyWrapper<TDependency>> rule)
+        public static void AddRule<TDependency>(Action<IRule<TEntity>, DependencyWrapper<TDependency>> rule)
             where TDependency : class
         {
-            Repository._Add<TDependency>(rule);
+            Repository.Add<TDependency>(rule);
         }
 
         #endregion
 
-        private readonly IList<Rule<TEntity>> _Registered = new List<Rule<TEntity>>();
+        private Rules()
+        {
+            _Rules.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => { _Registered = null; };
+        }
+        
+        private readonly ObservableCollection<Rule<TEntity>> _Rules = new ObservableCollection<Rule<TEntity>>();
+        public IEnumerable<Rule<TEntity>> _Registered;
         public IEnumerable<Rule<TEntity>> Registered
         {
             get
             {
-                return _Registered.ToArray();
+                return _Registered ?? (_Registered = _Rules.ToArray()); 
             }
         }
 
-        private void _Add<TDependency>(Action<IRule<TEntity>, DependencyWrapper<TDependency>> rule)
+        public void Add<TDependency>(Action<IRule<TEntity>, DependencyWrapper<TDependency>> rule)
             where TDependency : class
         {
             var ruleObject = new Rule<TEntity>();
@@ -58,7 +66,7 @@ namespace BackToFront
 
             // apply logic to rule
             rule(ruleObject, mock1);
-            _Registered.Add(ruleObject);
+            _Rules.Add(ruleObject);
         }
 
         /// <summary>
@@ -67,13 +75,13 @@ namespace BackToFront
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TViolation"></typeparam>
         /// <param name="rule"></param>
-        private void _Add(Action<IRule<TEntity>> rule)
+        public void Add(Action<IRule<TEntity>> rule)
         {
             var ruleObject = new Rule<TEntity>();
 
             // apply logic to rule
             rule(ruleObject);
-            _Registered.Add(ruleObject);
+            _Rules.Add(ruleObject);
         }
     }
 }

@@ -13,10 +13,10 @@ namespace BackToFront.UnitTests.Tests.Logic
 
         static TestPass1()
         {
-            Rules<TestPass1>.Add(rule => rule
+            Rules<TestPass1>.AddRule(rule => rule
                 .If(a => a.ThrowViolation1).RequirementFailed.OrModelViolationIs(Violation1));
 
-            Rules<TestPass1>.Add(rule => rule
+            Rules<TestPass1>.AddRule(rule => rule
                 .If(a => a.ThrowViolation2).RequirementFailed.OrModelViolationIs(Violation2));
         }
 
