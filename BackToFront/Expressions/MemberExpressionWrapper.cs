@@ -38,7 +38,7 @@ namespace BackToFront.Expressions
         }
 
         // TODO, what if member is event or other memberinfo
-        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(Mocks mocks)
         {
             var eval = InnerExpression.Compile(mocks);
             return eval == InnerExpression.WrappedExpression ? 

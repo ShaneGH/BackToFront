@@ -48,7 +48,7 @@ namespace BackToFront.Expressions
                 Right.IsSameExpression(ex.Right);                
         }
 
-        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(Mocks mocks)
         {
             Expression lhs = Left.Compile(mocks);
             Expression rhs = Right.Compile(mocks);

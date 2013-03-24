@@ -66,5 +66,10 @@ namespace BackToFront.Extensions.IEnumerable
 
             return Enumerable.Empty<T>();
         }
+
+        public static int IndexOf<T>(this T[] array, T item)
+        {
+            return Array.IndexOf(array, item);
+        }
     }
 }

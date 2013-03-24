@@ -16,7 +16,7 @@ namespace BackToFront.Framework
     {
         private readonly List<IValidate<TEntity>> _Rules = new List<IValidate<TEntity>>();
 
-        public IViolation ValidateEntity(object subject, IEnumerable<Mock> mocks)
+        public IViolation ValidateEntity(object subject, Mocks mocks)
         {
             IViolation violation;
             // TODO: catch cast exception
@@ -30,7 +30,7 @@ namespace BackToFront.Framework
             return null;
         }
 
-        public IEnumerable<IViolation> FullyValidateEntity(object subject, IEnumerable<Mock> mocks)
+        public IEnumerable<IViolation> FullyValidateEntity(object subject, Mocks mocks)
         {
             // TODO: catch cast exception
             var sub = (TEntity)subject;

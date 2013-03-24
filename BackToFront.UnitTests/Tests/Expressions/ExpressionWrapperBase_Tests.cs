@@ -23,7 +23,7 @@ namespace BackToFront.UnitTests.Tests.Expressions
 
             public bool IsSame { get; set; }
 
-            protected override Expression CompileInnerExpression(IEnumerable<BackToFront.Utils.Mock> mocks)
+            protected override Expression CompileInnerExpression(Mocks mocks)
             {
                 return CompileInnerExpressionExpression;
             }
@@ -427,14 +427,22 @@ namespace BackToFront.UnitTests.Tests.Expressions
         {
             // arrange
             var subject = new TestClass() { IsSame = true };
-            var mock = new Mock(expression: Expression.Constant(4), value: null);
-            Assert.NotNull(mock.Value);
+            var mock = new Mock(expression: Expression.Constant(4), value: null, valueType: typeof(object));
+            var mocks = new Mocks(new[] { mock });
 
             // act
-            var result = subject.Compile(new[] { mock });
+            var result = subject.Compile(mocks);
 
             // assert
-            Assert.AreEqual(mock.Value, result);
+            Assert.IsInstanceOf<UnaryExpression>(result);
+            Assert.AreEqual(ExpressionType.Convert, result.NodeType);
+            Assert.AreEqual(typeof(object), result.Type);
+
+            Assert.IsInstanceOf<BinaryExpression>((result as UnaryExpression).Operand);
+            Assert.AreEqual(ExpressionType.ArrayIndex, (result as UnaryExpression).Operand.NodeType);
+
+            // this is all we really want to test here, the rest is superflous to need
+            Assert.AreEqual(mocks.Parameter, ((result as UnaryExpression).Operand as BinaryExpression).Left);
         }
 
         [Test]
@@ -442,7 +450,7 @@ namespace BackToFront.UnitTests.Tests.Expressions
         {
             // arrange
             var subject = new TestClass() { IsSame = false };
-            var mock = new Mock(expression: Expression.Constant(4), value: null);
+            var mock = new Mock(expression: Expression.Constant(4), value: null, valueType: typeof(object));
 
             // act
             var result = subject.Compile(new[] { mock });

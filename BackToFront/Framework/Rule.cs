@@ -26,7 +26,7 @@ namespace BackToFront.Framework
             return Do(() => _RequireThat = new RequirementFailed<TEntity>(property, this));
         }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks)
         {
             yield return _Condition;
             yield return _RequireThat;
@@ -57,17 +57,17 @@ namespace BackToFront.Framework
             get { return ElseIf(a => true); }
         }
 
-        public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        public override IViolation ValidateEntity(TEntity subject, Utils.Mocks mocks)
         {
             return ValidateNext(subject, mocks);
         }
 
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
         {
             ValidateAllNext(subject, violationList, mocks);
         }
 
-        IViolation IValidate.ValidateEntity(object subject, IEnumerable<Utils.Mock> mocks)
+        IViolation IValidate.ValidateEntity(object subject, Utils.Mocks mocks)
         {
             if (subject is TEntity)
             {
@@ -77,7 +77,7 @@ namespace BackToFront.Framework
             throw new InvalidOperationException("##");
         }
 
-        IEnumerable<IViolation> IValidate.FullyValidateEntity(object subject, IEnumerable<Utils.Mock> mocks)
+        IEnumerable<IViolation> IValidate.FullyValidateEntity(object subject, Utils.Mocks mocks)
         {
             if (subject is TEntity)
             {

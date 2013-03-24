@@ -26,12 +26,12 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
                 : base(null)
             { }
 
-            public IViolation _ValidateNext(T subject, IEnumerable<Mock> mocks)
+            public IViolation _ValidateNext(T subject, Mocks mocks)
             {
                 return ValidateNext(subject, mocks);
             }
 
-            public void _ValidateAllNext(T subject, IList<IViolation> violations, IEnumerable<Mock> mocks)
+            public void _ValidateAllNext(T subject, IList<IViolation> violations, Mocks mocks)
             {
                 ValidateAllNext(subject, violations, mocks);
             }
@@ -52,9 +52,9 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new Mock[0];
+            var mocks = new Mocks(new Mocks(new Mock[0]));
             var subject = new M.Mock<PathElement<object>>(null);
-            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
                     return new PathElement<object>[] { null, null, null, null };
@@ -73,9 +73,9 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
             // arrange
             var v = new SimpleIValidate { Violation = new SimpleViolation("violation") };
             var entity = new object();
-            var mocks = new Mock[0];
+            var mocks = new Mocks(new Mock[0]);
             var subject = new M.Mock<PathElement<object>>(null);
-            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
                     return new[] { null, null, v, null };
@@ -94,9 +94,9 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new Mock[0];
+            var mocks = new Mocks(new Mock[0]);
             var subject = new M.Mock<PathElement<object>>(null);
-            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
                     return new[] 
@@ -115,14 +115,14 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new Mock[0];
+            var mocks = new Mocks(new Mock[0]);
             var nextElement = new M.Mock<PathElement<object>>(null);
             var violation = new M.Mock<IViolation>().Object;
-            nextElement.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+            nextElement.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() => violation);
 
             var subject = new M.Mock<PathElement_Test<object>>();
-            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
                     return new[] { nextElement.Object };
@@ -140,10 +140,10 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new Mock[0];
+            var mocks = new Mocks(new Mock[0]);
 
             var subject = new M.Mock<PathElement_Test<object>>();
-            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
                     return new PathElement<object>[0];
@@ -161,15 +161,15 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new Mock[0];
+            var mocks = new Mocks(new Mock[0]);
             var nextElement = new M.Mock<PathElement<object>>(null);
             var violation1 = new M.Mock<IViolation>().Object;
             var violation2 = new M.Mock<IViolation>().Object;
-            nextElement.Setup(a => a.FullyValidateEntity(M.It.Is<object>(b => b == entity), M.It.IsAny<IList<IViolation>>(), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
-                .Callback<object, IList<IViolation>, IEnumerable<Mock>>((a, b, c) => { b.Add(violation1); b.Add(violation2); });
+            nextElement.Setup(a => a.FullyValidateEntity(M.It.Is<object>(b => b == entity), M.It.IsAny<IList<IViolation>>(), M.It.Is<Mocks>(b => b == mocks)))
+                .Callback<object, IList<IViolation>, Mocks>((a, b, c) => { b.Add(violation1); b.Add(violation2); });
 
             var subject = new M.Mock<PathElement_Test<object>>();
-            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
                     return new[] { nextElement.Object };
@@ -190,10 +190,10 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new Mock[0];
+            var mocks = new Mocks(new Mock[0]);
 
             var subject = new M.Mock<PathElement_Test<object>>();
-            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
                     return new PathElement<object>[0];

@@ -68,8 +68,13 @@ namespace BackToFront.Expressions
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
-        protected abstract Expression CompileInnerExpression(IEnumerable<Mock> mocks);
+        protected abstract Expression CompileInnerExpression(Mocks mocks);
         public abstract Expression WrappedExpression { get; }
+
+        protected Expression CompileInnerExpression(IEnumerable<Mock> mocks)
+        {
+            return CompileInnerExpression(new Mocks(mocks));
+        }
 
         public virtual bool IsSameExpression(ExpressionWrapperBase expression)
         {
@@ -83,12 +88,17 @@ namespace BackToFront.Expressions
 
         public Expression Compile(IEnumerable<Mock> mocks)
         {
+            return Compile(new Mocks(mocks));
+        }
+
+        public Expression Compile(Mocks mocks)
+        {
             if (mocks == null || mocks.Count() == 0)
                 return Compile();
 
             foreach (var mock in mocks)
                 if (IsSameExpression(mock.Expression))
-                        return mock.Value;
+                    return mocks.ParameterForMock(mock);
 
             return CompileInnerExpression(mocks);
         }

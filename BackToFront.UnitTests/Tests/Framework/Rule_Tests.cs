@@ -21,7 +21,7 @@ namespace BackToFront.UnitTests.Tests.Framework
 
             public IEnumerable<PathElement<TEntity>> _NextPathElements()
             {
-                return NextPathElements(null, Enumerable.Empty<U.Mock>());
+                return NextPathElements(null, new U.Mocks(new U.Mock[0]));
             }
         }
 
@@ -66,7 +66,7 @@ namespace BackToFront.UnitTests.Tests.Framework
             var pe = subject._NextPathElements();
 
             // assert
-            Assert.IsTrue(((Operator<object>)result).ConditionIsTrue(null, Enumerable.Empty<U.Mock>()));
+            Assert.IsTrue(((Operator<object>)result).ConditionIsTrue(null, new U.Mocks()));
             Assert.AreEqual(1, pe.Count(a => a != null));
             Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last());
         }
@@ -78,8 +78,8 @@ namespace BackToFront.UnitTests.Tests.Framework
             var subject = new Mock<TestClass<object>>();
             var violation = new SimpleViolation();
             var input1 = new object();
-            var input2 = Enumerable.Empty<U.Mock>();
-            subject.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<IEnumerable<BackToFront.Utils.Mock>>(b => b.Equals(input2)))).Returns(violation);
+            var input2 = new  U.Mocks();
+            subject.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<BackToFront.Utils.Mocks>(b => b.Equals(input2)))).Returns(violation);
 
             // act
             var result = ((IValidate)subject.Object).ValidateEntity(input1, input2);
@@ -95,8 +95,8 @@ namespace BackToFront.UnitTests.Tests.Framework
             var subject = new Mock<TestClass<object>>();
             var violation = new SimpleViolation();
             var input1 = new object();
-            var input2 = Enumerable.Empty<U.Mock>();
-            subject.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<IEnumerable<BackToFront.Utils.Mock>>(b => b.Equals(input2))))
+            var input2 = new U.Mocks();
+            subject.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<BackToFront.Utils.Mocks>(b => b.Equals(input2))))
                 .Callback<object, IList<IViolation>, IEnumerable<BackToFront.Utils.Mock>>((a, b, c) => b.Add(violation));
 
             // act

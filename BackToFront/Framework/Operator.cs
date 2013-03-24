@@ -3,6 +3,7 @@ using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace BackToFront.Framework
@@ -14,26 +15,26 @@ namespace BackToFront.Framework
         {
         }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks)
         {
             yield return _RequirementFailed;
             yield return _Then;
             yield return _RequireThat;
         }
 
-        public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        public override IViolation ValidateEntity(TEntity subject, Utils.Mocks mocks)
         {
             return ValidateNext(subject, mocks);
         }
 
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
         {
             ValidateAllNext(subject, violationList, mocks);
         }
 
-        public bool ConditionIsTrue(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        public bool ConditionIsTrue(TEntity subject, Utils.Mocks mocks)
         {
-            return Compile(mocks)(subject, null);
+            return Compile(mocks)(subject, mocks.AsValueArray);
         }
 
         private RequirementFailed<TEntity> _RequireThat = null;

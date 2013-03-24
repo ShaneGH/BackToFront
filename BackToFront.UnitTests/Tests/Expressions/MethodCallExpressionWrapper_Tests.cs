@@ -75,13 +75,14 @@ namespace BackToFront.UnitTests.Tests.Expressions
             var subject = new TestSubjectWrapper(testExp);
 
             // act
-            var result = subject._CompileInnerExpression(new[] { new Mock(mockedExp, mockedVal) }) as MethodCallExpression;
+            var result = subject._CompileInnerExpression(new[] { new Mock(mockedExp, mockedVal, mockedVal.GetType()) }) as MethodCallExpression;
 
             // assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(subject.Expression, result);
-            Assert.IsInstanceOf<ConstantExpression>(result.Object);
-            Assert.AreEqual(mockedVal, (result.Object as ConstantExpression).Value);
+            Assert.IsInstanceOf<UnaryExpression>(result.Object);
+            Assert.AreEqual(mockedVal.GetType(), (result.Object as UnaryExpression).Type);
+            Assert.AreEqual(ExpressionType.Convert, result.Object.NodeType);
 
             Assert.AreEqual(testExp.Method, result.Method);
             Assert.AreEqual(testExp.NodeType, result.NodeType);

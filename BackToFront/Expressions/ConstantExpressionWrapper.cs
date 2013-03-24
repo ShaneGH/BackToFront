@@ -26,7 +26,7 @@ namespace BackToFront.Expressions
             return Expression.Value.Equals(ex.Expression.Value);                
         }
 
-        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(Mocks mocks)
         {
             return Expression;
         }

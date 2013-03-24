@@ -29,7 +29,7 @@ namespace BackToFront.Expressions
             return ex.Expression.Type.Is(Expression.Type);
         }
 
-        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(Mocks mocks)
         {
             return Expression;
         }

@@ -35,7 +35,7 @@ namespace BackToFront.Expressions
                 Operand.IsSameExpression(ex.Operand);
         }
 
-        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(Mocks mocks)
         {
             var result = Operand.Compile(mocks);
 

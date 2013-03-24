@@ -72,7 +72,6 @@
     <Compile Include="Framework\ThrowViolation.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Framework\Base\ModelViolation.cs" />
     <Compile Include="Logic\Compilations\IRequirementFailed.cs" />
     <Compile Include="Logic\Compilations\IConditionSatisfied.cs" />
     <Compile Include="Logic\ValidateResult.cs" />

@@ -13,14 +13,14 @@ namespace BackToFront
         /// </summary>
         /// <param name="subject">To validate</param>
         /// <returns>Validation or null</returns>
-        IViolation ValidateEntity(object subject, IEnumerable<Mock> mocks);
+        IViolation ValidateEntity(object subject, Mocks mocks);
 
         /// <summary>
         /// Validate the subject and return all business rule violations
         /// </summary>
         /// <param name="subject">The subject</param>
         /// <returns>Violations</returns>
-        IEnumerable<IViolation> FullyValidateEntity(object subject, IEnumerable<Mock> mocks);
+        IEnumerable<IViolation> FullyValidateEntity(object subject, Mocks mocks);
     }
 
     /// <summary>
@@ -34,13 +34,13 @@ namespace BackToFront
         /// </summary>
         /// <param name="subject">To validate</param>
         /// <returns>Validation or null</returns>
-        IViolation ValidateEntity(TEntity subject, IEnumerable<Mock> mocks);
+        IViolation ValidateEntity(TEntity subject, Mocks mocks);
 
         /// <summary>
         /// Validate the subject and return all business rule violations
         /// </summary>
         /// <param name="subject">The subject</param>
         /// <param name="violationList">Violations</param>
-        void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Mock> mocks);
+        void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Mocks mocks);
     }
 }

@@ -52,7 +52,7 @@ namespace BackToFront.Expressions
                 Arguments.All((a, b) => a.IsSameExpression(ex.Arguments.ElementAt(b)));
         }
 
-        protected override Expression CompileInnerExpression(IEnumerable<Mock> mocks)
+        protected override Expression CompileInnerExpression(Mocks mocks)
         {
             var arguments = Arguments.Select(a => a.Compile(mocks)).ToArray();
             var eval = Object.Compile(mocks);

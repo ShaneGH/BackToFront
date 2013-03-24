@@ -93,7 +93,7 @@ namespace BackToFront.Logic
         {
             // invalidate previous result
             ResetResult();
-            Mocks.Add(new Mock(ExpressionWrapperBase.ToWrapper(property), value, behavior));
+            Mocks.Add(new Mock(ExpressionWrapperBase.ToWrapper(property), value, typeof(TParameter), behavior));
             return this;
         }
 
@@ -106,10 +106,10 @@ namespace BackToFront.Logic
         /// Orders rules, mocks and dependencies and delivers them to a function (for vaslidation)
         /// </summary>
         /// <param name="action">Validation function. Returns </param>
-        private void RunValidation(Func<Rule<TEntity>, IEnumerable<Mock>, bool> action)
+        private void RunValidation(Func<Rule<TEntity>, Mocks, bool> action)
         {
             // segregate from global object
-            IEnumerable<Mock> mocks = Mocks.ToArray();
+            var mocks = Mocks.ToArray();
 
             // mocks which require their value to be persisted
             var setters = mocks.Where(a => a.Behavior == MockBehavior.MockAndSet || a.Behavior == MockBehavior.SetOnly).ToArray();
@@ -129,10 +129,11 @@ namespace BackToFront.Logic
                 // add each dependency class as a MockOnly mock.
                 dependencies.Each(a => 
                 {
-                    newMocks.Add(new Mock(new ConstantExpressionWrapper(Expression.Constant(a)), a.Value, MockBehavior.MockOnly));
+                    // TODO: Null reference in GetType
+                    newMocks.Add(new Mock(new ConstantExpressionWrapper(Expression.Constant(a)), a.Value, a.Value.GetType(), MockBehavior.MockOnly));
                 });
 
-                success &= action(rule, newMocks);
+                success &= action(rule, new Mocks(newMocks));
             }
 
             // success, persist mock values

@@ -14,7 +14,7 @@ namespace BackToFront.Framework
 {
     public class RequirementFailed<TEntity> : ExpressionElement<TEntity, bool>, IModelViolation<TEntity>
     {
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks)
         {
             yield return Violation;
         }
@@ -31,17 +31,17 @@ namespace BackToFront.Framework
             return ParentRule;
         }
 
-        public override IViolation ValidateEntity(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        public override IViolation ValidateEntity(TEntity subject, Utils.Mocks mocks)
         {
-            if (!Compile(mocks)(subject, null))
+            if (!Compile(mocks)(subject, mocks.AsValueArray))
                 return ValidateNext(subject, mocks);
             else
                 return null;
         }
 
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, IEnumerable<Utils.Mock> mocks)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
         {
-            if (!Compile(mocks)(subject, null))
+            if (!Compile(mocks)(subject, mocks.AsValueArray))
                 ValidateAllNext(subject, violationList, mocks);
         }
     }
