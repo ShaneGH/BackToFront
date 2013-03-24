@@ -14,8 +14,11 @@ namespace BackToFront.Utils
             _Mocks = mocks;
         }
 
-        public TMember Invoke(TEntity entity, object[] mockedValues)
+        public TMember Invoke(TEntity entity, params object[] mockedValues)
         {
+            if (mockedValues == null)
+                mockedValues = new object[0];
+
             // TODO: check each type and compile some very descriptive exception details
             if (_Mocks.Count() != mockedValues.Length)
                 throw new InvalidOperationException("##");

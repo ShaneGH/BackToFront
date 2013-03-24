@@ -103,6 +103,9 @@
     <Compile Include="Tests\Expressions\ParameterExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\Utils\CompiledMockedExpression_Tests.cs" />
+    <Compile Include="Tests\Utils\Mocks_Tests.cs" />
+    <Compile Include="Tests\Utils\Mock_Tests.cs" />
     <Compile Include="Tests\Utils\Operators.cs" />
     <Compile Include="Tests\_\Rules.cs" />
     <Compile Include="Utilities\Extensions.cs" />

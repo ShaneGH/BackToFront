@@ -25,6 +25,11 @@ namespace BackToFront.Framework.Base
             Descriptor = ExpressionWrapperBase.ToWrapper(descriptor, out Parameters);
         }
 
+        public CompiledMockedExpression<TEntity, TMember> Compile()
+        {
+            return Compile(new Mocks());
+        }
+
         public CompiledMockedExpression<TEntity, TMember> Compile(Mocks mocks)
         {
             // add extra parameter for mock values

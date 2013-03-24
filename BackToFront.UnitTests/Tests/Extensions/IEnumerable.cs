@@ -65,7 +65,7 @@ namespace BackToFront.UnitTests.Tests.Extensions
         public void AddRange_Test()
         {
             // arange
-            var range = new int[] { 4,5,6,7,8 };
+            var range = new int[] { 4, 5, 6, 7, 8 };
             IList<int> subject = new List<int>();
 
             // act
@@ -77,6 +77,19 @@ namespace BackToFront.UnitTests.Tests.Extensions
             {
                 Assert.AreEqual(range[i], subject[i]);
             }
+        }
+
+        [Test]
+        public void IndexOf_Test()
+        {
+            // arange
+            var range = new int[] { 4, 5, 6, 7, 8 };
+
+            // act
+            var index = IEnumerable.IndexOf(range, 5);
+
+            // assert
+            Assert.AreEqual(1, index);
         }
     }
 }
