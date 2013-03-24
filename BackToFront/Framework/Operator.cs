@@ -34,7 +34,7 @@ namespace BackToFront.Framework
 
         public bool ConditionIsTrue(TEntity subject, Utils.Mocks mocks)
         {
-            return Compile(mocks)(subject, mocks.AsValueArray);
+            return Compile(mocks).Invoke(subject, mocks.AsValueArray);
         }
 
         private RequirementFailed<TEntity> _RequireThat = null;

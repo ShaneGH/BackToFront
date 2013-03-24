@@ -1,8 +1,8 @@
 ﻿using BackToFront.Expressions;
+using BackToFront.Utils;
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace BackToFront.Framework.Base
@@ -25,12 +25,12 @@ namespace BackToFront.Framework.Base
             Descriptor = ExpressionWrapperBase.ToWrapper(descriptor, out Parameters);
         }
 
-        public Func<TEntity, object[], TMember> Compile(Utils.Mocks mocks)
+        public CompiledMockedExpression<TEntity, TMember> Compile(Mocks mocks)
         {
             // add extra parameter for mock values
             var parameters = Parameters.Concat(new[] { mocks.Parameter });
-
-            return Expression.Lambda<Func<TEntity, object[], TMember>>(Descriptor.Compile(mocks), parameters).Compile();
+            var compiled = Expression.Lambda<Func<TEntity, object[], TMember>>(Descriptor.Compile(mocks), parameters).Compile();
+            return new CompiledMockedExpression<TEntity, TMember>(compiled, mocks);
         }
     }
 }

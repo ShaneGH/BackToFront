@@ -75,6 +75,7 @@
     <Compile Include="Logic\Compilations\IRequirementFailed.cs" />
     <Compile Include="Logic\Compilations\IConditionSatisfied.cs" />
     <Compile Include="Logic\ValidateResult.cs" />
+    <Compile Include="Utils\CompiledMockedExpression.cs" />
     <Compile Include="Utils\DependencyWrapper.cs" />
     <Compile Include="Utils\EX.cs" />
     <Compile Include="Expressions\BinaryExpressionWrapper.cs" />
