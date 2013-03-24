@@ -11,6 +11,8 @@ using BackToFront.Logic;
 using BackToFront.Framework.Base;
 using NUnit.Framework;
 
+using M = Moq;
+
 using BackToFront.UnitTests.Utilities;
 
 namespace BackToFront.UnitTests.Tests.Framework.Base
@@ -18,120 +20,233 @@ namespace BackToFront.UnitTests.Tests.Framework.Base
     [TestFixture]
     public class PathElementTests
     {
-        private class TestClass : PathElement<object>
+        public abstract class PathElement_Test<T> : PathElement<T>
         {
-            public TestClass()
+            public PathElement_Test()
                 : base(null)
             { }
 
-            public readonly IList<SimpleIValidate> Els = new List<SimpleIValidate>();
-
-            protected override IEnumerable<PathElement<object>> NextPathElements(object subject, IEnumerable<BackToFront.Utils.Mock> mocks)
+            public IViolation _ValidateNext(T subject, IEnumerable<Mock> mocks)
             {
-                return Els;
+                return ValidateNext(subject, mocks);
             }
 
-            public IViolation ValNext(object subject)
+            public void _ValidateAllNext(T subject, IList<IViolation> violations, IEnumerable<Mock> mocks)
             {
-                return ValidateNext(subject, null);
+                ValidateAllNext(subject, violations, mocks);
             }
 
-            public void ValAllNext(object subject, IList<IViolation> list)
+            public TOutput _Do<TOutput>(Func<TOutput> action)
             {
-                ValidateAllNext(subject, list, null);
+                return Do(action);
             }
 
-            public override IViolation ValidateEntity(object subject, IEnumerable<Mock> mocks)
+            public void _Do(Action action)
             {
-                throw new InvalidOperationException();
-            }
-
-            public override void FullyValidateEntity(object subject, IList<IViolation> violationList, IEnumerable<Mock> mocks)
-            {
-                throw new InvalidOperationException();
+                Do(action);
             }
         }
 
         [Test]
-        public void ValidateTest_violation()
+        public void NextOption_Test_no_Options()
         {
             // arrange
-            var v = new SimpleViolation("violation");
-
-            var test = new TestClass();
-            test.Els.Add(null);
-            test.Els.Add(null);
-            test.Els.Add(new SimpleIValidate { Violation = v });
-            test.Els.Add(null);
+            var entity = new object();
+            var mocks = new Mock[0];
+            var subject = new M.Mock<PathElement<object>>(null);
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+                .Returns(() =>
+                {
+                    return new PathElement<object>[] { null, null, null, null };
+                });
 
             // act
-            var result = test.ValNext(null);
+            var result = subject.Object.NextOption(entity, mocks);
+
+            // assert
+            Assert.Null(result);
+        }
+
+        [Test]
+        public void NextOption_Test_1_Option()
+        {
+            // arrange
+            var v = new SimpleIValidate { Violation = new SimpleViolation("violation") };
+            var entity = new object();
+            var mocks = new Mock[0];
+            var subject = new M.Mock<PathElement<object>>(null);
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+                .Returns(() =>
+                {
+                    return new[] { null, null, v, null };
+                });
+
+            // act
+            var result = subject.Object.NextOption(entity, mocks);
 
             // assert
             Assert.AreEqual(v, result);
         }
 
         [Test]
-        public void ValidateAllTest_violation()
-        {
-            // arrange
-            var v = new SimpleViolation("violation");
-
-            var test = new TestClass();
-            test.Els.Add(null);
-            test.Els.Add(null);
-            test.Els.Add(new SimpleIValidate { Violation = v });
-            test.Els.Add(null);
-            var violations = new List<IViolation>();
-
-            // act
-            test.ValAllNext(null, violations);
-
-            // assert
-            Assert.AreEqual(1, violations.Count);
-            Assert.AreEqual(v, violations.ElementAt(0));
-        }
-
-        [Test]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void ValidateTest_moreThan1Path()
+        public void NextOption_Test_2_Options()
         {
             // arrange
-            var v = new SimpleViolation("violation");
-
-            var test = new TestClass();
-            test.Els.Add(new SimpleIValidate { Violation = v });
-            test.Els.Add(new SimpleIValidate { Violation = v });
+            var entity = new object();
+            var mocks = new Mock[0];
+            var subject = new M.Mock<PathElement<object>>(null);
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+                .Returns(() =>
+                {
+                    return new[] 
+                    { 
+                        new SimpleIValidate { Violation = new SimpleViolation("violation") }, 
+                        new SimpleIValidate { Violation = new SimpleViolation("violation") } 
+                    };
+                });
 
             // act
-            var result = test.ValNext(null);
+            var result = subject.Object.NextOption(entity, mocks);
         }
 
         [Test]
-        public void ValidateTest_Noviolation()
+        public void ValidateNext_Test_NextHasValue()
         {
             // arrange
-            var test = new TestClass();
-            test.Els.Add(new SimpleIValidate());
+            var entity = new object();
+            var mocks = new Mock[0];
+            var nextElement = new M.Mock<PathElement<object>>(null);
+            var violation = new M.Mock<IViolation>().Object;
+            nextElement.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+                .Returns(() => violation);
+
+            var subject = new M.Mock<PathElement_Test<object>>();
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+                .Returns(() =>
+                {
+                    return new[] { nextElement.Object };
+                });
 
             // act
-            var result = test.ValNext(null);
+            var result = subject.Object._ValidateNext(entity, mocks);
+
+            // assert
+            Assert.AreEqual(violation, result);
+        }
+
+        [Test]
+        public void ValidateNext_Test_NextDoesNotHaveValue()
+        {
+            // arrange
+            var entity = new object();
+            var mocks = new Mock[0];
+
+            var subject = new M.Mock<PathElement_Test<object>>();
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+                .Returns(() =>
+                {
+                    return new PathElement<object>[0];
+                });
+
+            // act
+            var result = subject.Object._ValidateNext(entity, mocks);
 
             // assert
             Assert.IsNull(result);
         }
 
         [Test]
-        public void ValidateTest_noNextPath()
+        public void ValidateAllNext_Test_NextHasValue()
         {
             // arrange
-            var test = new TestClass();
+            var entity = new object();
+            var mocks = new Mock[0];
+            var nextElement = new M.Mock<PathElement<object>>(null);
+            var violation1 = new M.Mock<IViolation>().Object;
+            var violation2 = new M.Mock<IViolation>().Object;
+            nextElement.Setup(a => a.FullyValidateEntity(M.It.Is<object>(b => b == entity), M.It.IsAny<IList<IViolation>>(), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+                .Callback<object, IList<IViolation>, IEnumerable<Mock>>((a, b, c) => { b.Add(violation1); b.Add(violation2); });
+
+            var subject = new M.Mock<PathElement_Test<object>>();
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+                .Returns(() =>
+                {
+                    return new[] { nextElement.Object };
+                });
 
             // act
-            var result = test.ValNext(null);
+            List<IViolation> result = new List<IViolation>();
+            subject.Object._ValidateAllNext(entity, result, mocks);
 
             // assert
-            Assert.IsNull(result);
+            Assert.AreEqual(2, result.Count);
+            Assert.IsTrue(result.Contains(violation1));
+            Assert.IsTrue(result.Contains(violation2));
+        }
+
+        [Test]
+        public void ValidateAllNext_Test_NextDoesNotHaveValue()
+        {
+            // arrange
+            var entity = new object();
+            var mocks = new Mock[0];
+
+            var subject = new M.Mock<PathElement_Test<object>>();
+            subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<IEnumerable<Mock>>(b => b == mocks)))
+                .Returns(() =>
+                {
+                    return new PathElement<object>[0];
+                });
+
+            // act
+            List<IViolation> result = new List<IViolation>();
+            subject.Object._ValidateAllNext(entity, result, mocks);
+
+            // assert
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [Test]
+        public void Do_Action()
+        {
+            // arrange
+            var subject = new M.Mock<PathElement_Test<object>>();
+            object val = new object();
+            object newVal = new object();
+
+            // act
+            subject.Object._Do(() => { val = newVal; });
+
+            // assert
+            Assert.AreEqual(val, newVal);
+        }
+
+        [Test]
+        public void Do_Func()
+        {
+            // arrange
+            var subject = new M.Mock<PathElement_Test<object>>();
+            object val = new object();
+
+            // act
+            var result = subject.Object._Do(() => val);
+
+            // assert
+            Assert.AreEqual(val, result);
+        }
+
+        [Test]
+        public void Do_Locked()
+        {
+            // arrange
+            var subject = new M.Mock<PathElement_Test<object>>();
+
+            // act
+            subject.Object._Do(() => { });
+
+            // assert
+            Assert.Throws<InvalidOperationException>(() => { subject.Object._Do(() => { }); });
         }
     }
 }

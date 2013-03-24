@@ -14,7 +14,7 @@ namespace BackToFront.Framework
         {
         }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             yield return _RequirementFailed;
             yield return _Then;
@@ -33,7 +33,7 @@ namespace BackToFront.Framework
 
         public bool ConditionIsTrue(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
-            return Compile(mocks)(subject);
+            return Compile(mocks)(subject, null);
         }
 
         private RequirementFailed<TEntity> _RequireThat = null;

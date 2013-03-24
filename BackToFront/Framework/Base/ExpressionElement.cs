@@ -1,5 +1,6 @@
 ﻿using BackToFront.Expressions;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
@@ -7,7 +8,7 @@ using System.Linq.Expressions;
 namespace BackToFront.Framework.Base
 {
     /// <summary>
-    /// A class which holds reference to a property. Also has a lockable action
+    /// A class which holds reference to a a piece of code
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public abstract class ExpressionElement<TEntity, TMember> : PathElement<TEntity>
@@ -21,13 +22,14 @@ namespace BackToFront.Framework.Base
             if (descriptor == null)
                 throw new ArgumentNullException("##4");
 
-            Descriptor = ExpressionWrapperBase.ToWrapper(descriptor);
-            Parameters = descriptor.Parameters;
+            Descriptor = ExpressionWrapperBase.ToWrapper(descriptor, out Parameters);
         }
 
-        public Func<TEntity, TMember> Compile(IEnumerable<Utils.Mock> mocks)
+        public Func<TEntity, object[], TMember> Compile(IEnumerable<Utils.Mock> mocks)
         {
-            return Expression.Lambda<Func<TEntity, TMember>>(Descriptor.Compile(mocks), Parameters).Compile();
+            // add extra parameter for mock values
+            var parameters = Parameters.Concat(new[] { Expression.Parameter(typeof(object[])) });
+            return Expression.Lambda<Func<TEntity, object[], TMember>>(Descriptor.Compile(mocks), parameters).Compile();
         }
     }
 }

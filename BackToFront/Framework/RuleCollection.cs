@@ -20,9 +20,10 @@ namespace BackToFront.Framework
         {
             IViolation violation;
             // TODO: catch cast exception
+            var sub = (TEntity)subject;
             foreach (var rule in _Rules)
             {
-                if ((violation = rule.ValidateEntity((TEntity)subject, mocks)) != null)
+                if ((violation = rule.ValidateEntity(sub, mocks)) != null)
                     return violation;
             }
 
@@ -32,8 +33,9 @@ namespace BackToFront.Framework
         public IEnumerable<IViolation> FullyValidateEntity(object subject, IEnumerable<Mock> mocks)
         {
             // TODO: catch cast exception
+            var sub = (TEntity)subject;
             IList<IViolation> violationList = new List<IViolation>();
-            _Rules.Each(i => i.FullyValidateEntity((TEntity)subject, violationList, mocks));
+            _Rules.Each(i => i.FullyValidateEntity(sub, violationList, mocks));
             return violationList.ToArray();
         }
 

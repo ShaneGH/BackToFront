@@ -26,7 +26,7 @@ namespace BackToFront.Framework
             return Do(() => _RequireThat = new RequirementFailed<TEntity>(property, this));
         }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             yield return _Condition;
             yield return _RequireThat;

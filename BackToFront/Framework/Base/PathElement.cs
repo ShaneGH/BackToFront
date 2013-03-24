@@ -17,7 +17,7 @@ namespace BackToFront.Framework.Base
     {
         private bool _locked = false;
         protected readonly Rule<TEntity> ParentRule;
-        protected abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks);
+        public abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks);
 
         public PathElement<TEntity> NextOption(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {

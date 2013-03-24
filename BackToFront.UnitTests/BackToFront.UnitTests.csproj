@@ -58,6 +58,7 @@
     <Compile Include="Tests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs" />
     <Compile Include="Tests\Extensions\Reflection.cs" />
     <Compile Include="Tests\Extensions\IEnumerable.cs" />
+    <Compile Include="Tests\Framework\Base\ExpressionElementTests.cs" />
     <Compile Include="Tests\Framework\Base\PathElementTests.cs">
       <SubType>Code</SubType>
     </Compile>

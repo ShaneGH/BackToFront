@@ -14,7 +14,7 @@ namespace BackToFront.Framework
         public MultiCondition(Rule<TEntity> rule)
             : base(rule) { }
 
-        protected override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, IEnumerable<Utils.Mock> mocks)
         {
             foreach (var i in If)
             {

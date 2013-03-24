@@ -60,10 +60,10 @@
     <Compile Include="Framework\Base\ExpressionElement.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Framework\Condition\Operator.cs" />
+    <Compile Include="Framework\Operator.cs" />
     <Compile Include="Framework\MultiCondition.cs" />
-    <Compile Include="Framework\Requirement\RequirementFailed.cs" />
-    <Compile Include="Framework\Requirement\RequireOperator.cs" />
+    <Compile Include="Framework\RequirementFailed.cs" />
+    <Compile Include="Framework\RequireOperator.cs" />
     <Compile Include="Framework\Rule.cs">
       <SubType>Code</SubType>
     </Compile>

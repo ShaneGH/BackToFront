@@ -25,7 +25,7 @@ namespace BackToFront.UnitTests.Utilities
             violationList.Add(Violation);
         }
 
-        protected override IEnumerable<PathElement<object>> NextPathElements(object subject, IEnumerable<Utils.Mock> mocks)
+        public override IEnumerable<PathElement<object>> NextPathElements(object subject, IEnumerable<Utils.Mock> mocks)
         {
             yield break;
         }
