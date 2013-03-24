@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using E = System.Linq.Expressions;
 using BackToFront.Utils;
 
 namespace BackToFront.Expressions
@@ -39,7 +40,8 @@ namespace BackToFront.Expressions
         {
             var result = Operand.Compile(mocks);
 
-            return result == Operand.WrappedExpression ? Expression : Evaluations[Expression.NodeType](result, Expression);
+            return result == Operand.WrappedExpression ? Expression :
+                E.Expression.MakeUnary(Expression.NodeType, result, Expression.Type, Expression.Method);
         }
     }
 }

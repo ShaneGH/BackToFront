@@ -17,50 +17,21 @@ namespace BackToFront.Expressions
         public static readonly ReadOnlyDictionary<Type, Func<Expression, ExpressionWrapperBase>> Constructors;
         private static readonly Dictionary<Type, Func<Expression, ExpressionWrapperBase>> _Constructors = new Dictionary<Type, Func<Expression, ExpressionWrapperBase>>();
 
-        public static readonly ReadonlyDictionary<ExpressionType, Func<Expression, Expression, Expression>> Evaluations;
-        private static readonly Dictionary<ExpressionType, Func<Expression, Expression, Expression>> _Evaluations = new Dictionary<ExpressionType, Func<Expression, Expression, Expression>>();
-
         static ExpressionWrapperBase()
         {
-            Evaluations = new ReadonlyDictionary<ExpressionType, Func<Expression, Expression, Expression>>(_Evaluations);
             Constructors = new ReadOnlyDictionary<Type, Func<Expression, ExpressionWrapperBase>>(_Constructors);
-            
-            //TODO: All of this needs to be changed. Static constructor methods cannot be bundled together like this
-
-            // add operators
-            _Evaluations[ExpressionType.Add] = (lhs, rhs) => Expression.Add(lhs, rhs);
-            _Evaluations[ExpressionType.AndAlso] = (lhs, rhs) => Expression.AndAlso(lhs, rhs);
-            _Evaluations[ExpressionType.ArrayIndex] = (lhs, rhs) => Expression.ArrayIndex(lhs, rhs);
-            _Evaluations[ExpressionType.Coalesce] = (lhs, rhs) => Expression.Coalesce(lhs, rhs);
-            //TODO: this is wrong
-            _Evaluations[ExpressionType.Convert] = (lhs, rhs) => Expression.Convert(lhs, rhs.Type);
-            _Evaluations[ExpressionType.Divide] = (lhs, rhs) => Expression.Divide(lhs, rhs);
-            _Evaluations[ExpressionType.Equal] = (lhs, rhs) => Expression.Equal(lhs, rhs);
-            _Evaluations[ExpressionType.ExclusiveOr] = (lhs, rhs) => Expression.ExclusiveOr(lhs, rhs);
-            _Evaluations[ExpressionType.GreaterThan] = (lhs, rhs) => Expression.GreaterThan(lhs, rhs);
-            _Evaluations[ExpressionType.GreaterThanOrEqual] = (lhs, rhs) => Expression.GreaterThanOrEqual(lhs, rhs);
-            _Evaluations[ExpressionType.LessThan] = (lhs, rhs) => Expression.LessThan(lhs, rhs);
-            _Evaluations[ExpressionType.LessThanOrEqual] = (lhs, rhs) => Expression.LessThanOrEqual(lhs, rhs);
-            _Evaluations[ExpressionType.Modulo] = (lhs, rhs) => Expression.Modulo(lhs, rhs);
-            _Evaluations[ExpressionType.Multiply] = (lhs, rhs) => Expression.Multiply(lhs, rhs);
-            // todo unaryExpression method
-            _Evaluations[ExpressionType.Not] = (lhs, rhs) => Expression.Not(lhs);
-            _Evaluations[ExpressionType.NotEqual] = (lhs, rhs) => Expression.NotEqual(lhs, rhs);
-            _Evaluations[ExpressionType.OrElse] = (lhs, rhs) => Expression.OrElse(lhs, rhs);
-            _Evaluations[ExpressionType.Power] = (lhs, rhs) => Expression.Power(lhs, rhs);
-            _Evaluations[ExpressionType.Subtract] = (lhs, rhs) => Expression.Subtract(lhs, rhs);
 
             _Constructors[typeof(BinaryExpression)] = expression => new BinaryExpressionWrapper(expression as BinaryExpression);
             _Constructors[typeof(ConstantExpression)] = expression => new ConstantExpressionWrapper(expression as ConstantExpression);
+            _Constructors[typeof(MethodCallExpression)] = expression => new MethodCallExpressionWrapper(expression as MethodCallExpression);
+            _Constructors[typeof(UnaryExpression)] = expression => new UnaryExpressionWrapper(expression as UnaryExpression);
+            _Constructors[typeof(ParameterExpression)] = expression => new ParameterExpressionWrapper(expression as ParameterExpression);
             _Constructors[typeof(MemberExpression)] = expression =>
             {
                 DependencyInjectionExpressionWrapper result;
                 return DependencyInjectionExpressionWrapper.TryCreate(expression as MemberExpression, out result) ? result :
                     (ExpressionWrapperBase)new MemberExpressionWrapper(expression as MemberExpression);
             };
-            _Constructors[typeof(MethodCallExpression)] = expression => new MethodCallExpressionWrapper(expression as MethodCallExpression);
-            _Constructors[typeof(UnaryExpression)] = expression => new UnaryExpressionWrapper(expression as UnaryExpression);
-            _Constructors[typeof(ParameterExpression)] = expression => new ParameterExpressionWrapper(expression as ParameterExpression);
         }
 
         /// <summary>

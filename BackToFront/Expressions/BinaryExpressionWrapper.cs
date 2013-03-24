@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using E = System.Linq.Expressions;
 using BackToFront.Utils;
 
 
@@ -56,10 +57,7 @@ namespace BackToFront.Expressions
             if (lhs == Left.WrappedExpression && rhs == Right.WrappedExpression)
                 return Expression;
 
-            if (!Evaluations.ContainsKey(Expression.NodeType))
-                throw new NotImplementedException("##" + Expression.NodeType);
-
-            return Evaluations[Expression.NodeType](lhs, rhs);
+            return E.Expression.MakeBinary(Expression.NodeType, lhs, rhs, Expression.IsLiftedToNull, Expression.Method, Expression.Conversion);
         }
     }
 }
