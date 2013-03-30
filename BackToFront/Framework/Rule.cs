@@ -57,16 +57,6 @@ namespace BackToFront.Framework
             get { return ElseIf(a => true); }
         }
 
-        public override IViolation ValidateEntity(TEntity subject, Utils.Mocks mocks)
-        {
-            return ValidateNext(subject, mocks);
-        }
-
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
-        {
-            ValidateAllNext(subject, violationList, mocks);
-        }
-
         IViolation IValidate.ValidateEntity(object subject, Utils.Mocks mocks)
         {
             if (subject is TEntity)

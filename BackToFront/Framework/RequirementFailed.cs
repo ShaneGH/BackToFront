@@ -34,7 +34,7 @@ namespace BackToFront.Framework
         public override IViolation ValidateEntity(TEntity subject, Utils.Mocks mocks)
         {
             if (!Compile(mocks).Invoke(subject, mocks.AsValueArray))
-                return ValidateNext(subject, mocks);
+                return base.ValidateEntity(subject, mocks);
             else
                 return null;
         }
@@ -42,7 +42,7 @@ namespace BackToFront.Framework
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
         {
             if (!Compile(mocks).Invoke(subject, mocks.AsValueArray))
-                ValidateAllNext(subject, violationList, mocks);
+                base.FullyValidateEntity(subject, violationList, mocks);
         }
     }
 }

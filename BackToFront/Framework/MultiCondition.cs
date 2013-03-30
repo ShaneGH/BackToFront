@@ -29,15 +29,5 @@ namespace BackToFront.Framework
                 }
             }
         }
-
-        public override IViolation ValidateEntity(TEntity subject, Utils.Mocks mocks)
-        {
-            return ValidateNext(subject, mocks);
-        }
-
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
-        {
-            ValidateAllNext(subject, violationList, mocks);
-        }
     }
 }

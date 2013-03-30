@@ -24,16 +24,6 @@ namespace BackToFront.Framework
             yield return _RequireThat;
         }
 
-        public override IViolation ValidateEntity(TEntity subject, Utils.Mocks mocks)
-        {
-            return ValidateNext(subject, mocks);
-        }
-
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
-        {
-            ValidateAllNext(subject, violationList, mocks);
-        }
-
         private RequirementFailed<TEntity> _RequireThat = null;
         public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> condition)
         {

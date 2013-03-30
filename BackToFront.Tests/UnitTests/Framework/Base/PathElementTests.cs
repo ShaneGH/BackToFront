@@ -26,16 +26,6 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
                 : base(null)
             { }
 
-            public IViolation _ValidateNext(T subject, Mocks mocks)
-            {
-                return ValidateNext(subject, mocks);
-            }
-
-            public void _ValidateAllNext(T subject, IList<IViolation> violations, Mocks mocks)
-            {
-                ValidateAllNext(subject, violations, mocks);
-            }
-
             public TOutput _Do<TOutput>(Func<TOutput> action)
             {
                 return Do(action);
@@ -64,7 +54,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
             var result = subject.Object.NextOption(entity, mocks);
 
             // assert
-            Assert.Null(result);
+            Assert.IsInstanceOf<DeadEnd<object>>(result);
         }
 
         [Test]
@@ -111,7 +101,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
         }
 
         [Test]
-        public void ValidateNext_Test_NextHasValue()
+        public void ValidateEntity_Test_NextHasValue()
         {
             // arrange
             var entity = new object();
@@ -121,7 +111,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
             nextElement.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() => violation);
 
-            var subject = new M.Mock<PathElement_Test<object>>();
+            var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
             subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
@@ -129,20 +119,20 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
                 });
 
             // act
-            var result = subject.Object._ValidateNext(entity, mocks);
+            var result = subject.Object.ValidateEntity(entity, mocks);
 
             // assert
             Assert.AreEqual(violation, result);
         }
 
         [Test]
-        public void ValidateNext_Test_NextDoesNotHaveValue()
+        public void ValidateEntity_Test_NextDoesNotHaveValue()
         {
             // arrange
             var entity = new object();
             var mocks = new Mocks(new Mock[0]);
 
-            var subject = new M.Mock<PathElement_Test<object>>();
+            var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
             subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
@@ -150,14 +140,14 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
                 });
 
             // act
-            var result = subject.Object._ValidateNext(entity, mocks);
+            var result = subject.Object.ValidateEntity(entity, mocks);
 
             // assert
             Assert.IsNull(result);
         }
 
         [Test]
-        public void ValidateAllNext_Test_NextHasValue()
+        public void FullyValidateEntity_Test_NextHasValue()
         {
             // arrange
             var entity = new object();
@@ -168,7 +158,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
             nextElement.Setup(a => a.FullyValidateEntity(M.It.Is<object>(b => b == entity), M.It.IsAny<IList<IViolation>>(), M.It.Is<Mocks>(b => b == mocks)))
                 .Callback<object, IList<IViolation>, Mocks>((a, b, c) => { b.Add(violation1); b.Add(violation2); });
 
-            var subject = new M.Mock<PathElement_Test<object>>();
+            var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
             subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
@@ -177,7 +167,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
 
             // act
             List<IViolation> result = new List<IViolation>();
-            subject.Object._ValidateAllNext(entity, result, mocks);
+            subject.Object.FullyValidateEntity(entity, result, mocks);
 
             // assert
             Assert.AreEqual(2, result.Count);
@@ -186,13 +176,13 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
         }
 
         [Test]
-        public void ValidateAllNext_Test_NextDoesNotHaveValue()
+        public void FullyValidateEntity_Test_NextDoesNotHaveValue()
         {
             // arrange
             var entity = new object();
             var mocks = new Mocks(new Mock[0]);
 
-            var subject = new M.Mock<PathElement_Test<object>>();
+            var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
             subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<Mocks>(b => b == mocks)))
                 .Returns(() =>
                 {
@@ -201,7 +191,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
 
             // act
             List<IViolation> result = new List<IViolation>();
-            subject.Object._ValidateAllNext(entity, result, mocks);
+            subject.Object.FullyValidateEntity(entity, result, mocks);
 
             // assert
             Assert.AreEqual(0, result.Count);
