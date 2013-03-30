@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackToFront", "BackToFront\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackToFront.Web", "BackToFront.Web\BackToFront.Web.csproj", "{94EEE243-91B5-4DEB-A192-1DA94C1E2442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackToFront.UnitTests", "BackToFront.UnitTests\BackToFront.UnitTests.csproj", "{08A726FB-5441-48C2-8EF5-61B140E4A040}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackToFront.Tests", "BackToFront.Tests\BackToFront.Tests.csproj", "{08A726FB-5441-48C2-8EF5-61B140E4A040}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

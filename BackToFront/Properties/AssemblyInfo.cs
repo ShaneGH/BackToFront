@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: InternalsVisibleTo("BackToFront.UnitTests")]
+[assembly: InternalsVisibleTo("BackToFront.Tests")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
