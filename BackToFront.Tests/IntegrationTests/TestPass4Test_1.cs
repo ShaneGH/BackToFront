@@ -9,23 +9,24 @@ using BackToFront.Tests.Utilities;
 
 using NUnit.Framework;
 
-namespace BackToFront.Tests.UnitTests.Logic
+namespace BackToFront.Tests.IntegrationTests
 {
     /// <summary>
-    /// ToTest: and
-    ///         If, is true, OR, is true, model violation is
+    /// ToTest: Require And
+    ///         If.....
+    ///         Require, is false, AND, is false, model violation is
     /// </summary>
     [TestFixture]
-    public class TestPass3Test : Base.TestBase
+    public class TestPass4Test_1 : Base.TestBase
     {
-        public class TestClass
+        public class TestPass4
         {
             public static SimpleViolation Violation = new SimpleViolation("Violation");
 
-            static TestClass()
+            static TestPass4()
             {
-                Rules<TestClass>.AddRule(rule => rule
-                    .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(Violation));
+                Rules<TestPass4>.AddRule(rule => rule
+                    .RequireThat(a => !a.ThrowViolationSwitch1 && !a.ThrowViolationSwitch2).WithModelViolation(Violation));
             }
 
             public bool ThrowViolationSwitch1 { get; set; }
@@ -37,11 +38,11 @@ namespace BackToFront.Tests.UnitTests.Logic
         [TestCase(false, true)]
         [TestCase(true, false)]
         [TestCase(false, false)]
-        public void If_Or(bool switch1, bool switch2)
+        public void Require_And(bool switch1, bool switch2)
         {
             // arrange
-            var v = switch1 || switch2 ? TestClass.Violation : null;
-            var subject = new TestClass
+            var v = switch1 || switch2 ? TestPass4.Violation : null;
+            var subject = new TestPass4
             {
                 ThrowViolationSwitch1 = switch1,
                 ThrowViolationSwitch2 = switch2

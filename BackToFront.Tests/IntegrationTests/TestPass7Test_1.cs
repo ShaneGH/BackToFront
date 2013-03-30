@@ -9,7 +9,7 @@ using BackToFront.Tests.Utilities;
 
 using NUnit.Framework;
 
-namespace BackToFront.Tests.UnitTests.Logic
+namespace BackToFront.Tests.IntegrationTests
 {
     /// <summary>
     /// ToTest: Require And
@@ -17,7 +17,7 @@ namespace BackToFront.Tests.UnitTests.Logic
     ///         Require, is false, OR, is false, model violation is
     /// </summary>
     [TestFixture]
-    public class TestPass7Test_2 : Base.TestBase
+    public class TestPass7Test_1 : Base.TestBase
     {
         public static SimpleViolation Violation1 = new SimpleViolation("Violation");
         public static SimpleViolation Violation2 = new SimpleViolation("Violation");
@@ -31,8 +31,8 @@ namespace BackToFront.Tests.UnitTests.Logic
                     // pass through if
                     .If(a => a.ContinueSwitch).Then(subRule =>
                     {
-                        subRule.If(a => !a.RequiredSwitch1).RequirementFailed.WithModelViolation(Violation1);
-                        subRule.If(a => !a.RequiredSwitch2).RequirementFailed.WithModelViolation(Violation1);
+                        subRule.RequireThat(a => a.RequiredSwitch1).WithModelViolation(Violation1);
+                        subRule.RequireThat(a => a.RequiredSwitch2).WithModelViolation(Violation1);
                     }));
             }
 

@@ -4,7 +4,7 @@ using BackToFront.Validate;
 using NUnit.Framework;
 using System.Linq;
 
-namespace BackToFront.Tests.UnitTests.Logic
+namespace BackToFront.Tests.IntegrationTests
 {
     public class TestPass1
     {

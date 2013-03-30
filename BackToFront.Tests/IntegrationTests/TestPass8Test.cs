@@ -9,7 +9,7 @@ using BackToFront.Tests.Utilities;
 
 using NUnit.Framework;
 
-namespace BackToFront.Tests.UnitTests.Logic
+namespace BackToFront.Tests.IntegrationTests
 {
     /// <summary>
     /// ToTest: If, else if, else

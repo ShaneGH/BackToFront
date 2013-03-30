@@ -9,7 +9,7 @@ using BackToFront.Tests.Utilities;
 
 using NUnit.Framework;
 
-namespace BackToFront.Tests.UnitTests.Logic
+namespace BackToFront.Tests.IntegrationTests
 {
     /// <summary>
     /// ToTest: Require And
@@ -17,7 +17,7 @@ namespace BackToFront.Tests.UnitTests.Logic
     ///         Require, is false, OR, is false, model violation is
     /// </summary>
     [TestFixture]
-    public class TestPass7Test : Base.TestBase
+    public class TestPass7Test_2 : Base.TestBase
     {
         public static SimpleViolation Violation1 = new SimpleViolation("Violation");
         public static SimpleViolation Violation2 = new SimpleViolation("Violation");
@@ -29,55 +29,47 @@ namespace BackToFront.Tests.UnitTests.Logic
             {
                 Rules<TestEntity>.AddRule(rule => rule
                     // pass through if
-                    .If(a => a.ThrowViolationSwitch1 || !a.ThrowViolationSwitch1).Then(subRule =>
+                    .If(a => a.ContinueSwitch).Then(subRule =>
                     {
-                        subRule.RequireThat(a => a.RequiredSwitch1).WithModelViolation(Violation1);
-                        subRule.RequireThat(a => a.RequiredSwitch2).WithModelViolation(Violation1);
+                        subRule.If(a => !a.RequiredSwitch1).RequirementFailed.WithModelViolation(Violation1);
+                        subRule.If(a => !a.RequiredSwitch2).RequirementFailed.WithModelViolation(Violation1);
                     }));
-
-                Rules<TestEntity>.AddRule(rule => rule
-                    .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(Violation2));
             }
 
-            public bool ThrowViolationSwitch1 { get; set; }
-            public bool ThrowViolationSwitch2 { get; set; }
+            public bool ContinueSwitch { get; set; }
             public bool RequiredSwitch1 { get; set; }
             public bool RequiredSwitch2 { get; set; }
         }
 
-        public static IEnumerable<Tuple<bool, bool, bool, bool>> GetData()
+        public static IEnumerable<Tuple<bool, bool, bool>> GetData()
         {
-            for (var i = 0; i < 16; i++)
+            for (var i = 0; i < 8; i++)
             {
                 var bits = new System.Collections.BitArray(new[] { (byte)i });
-                yield return new Tuple<bool, bool, bool, bool>(bits[3], bits[2], bits[1], bits[0]);
+                yield return new Tuple<bool, bool, bool>(bits[2], bits[1], bits[0]);
             }
         }
 
         [Test]
         [TestCaseSource("GetData")]
-        public void If_Or_Then_if_allVio9lations(Tuple<bool, bool, bool, bool> input)
+        public void If_Or_Then_if_allVio9lations(Tuple<bool, bool, bool> input)
         {
-            bool throw1 = input.Item1,
-                throw2 = input.Item2,
-                required1 = input.Item3,
-                required2 = input.Item4;
+            bool continueOn = input.Item1,
+                required1 = input.Item2,
+                required2 = input.Item3;
 
             // arrange
             var v = new List<SimpleViolation>();
-            if (!required1)
+            if (continueOn && !required1)
                 v.Add(Violation1);
-            if (!required2)
+            if (continueOn && !required2)
                 v.Add(Violation1);
-            if (throw1 || throw2)
-                v.Add(Violation2);
 
             var subject = new TestEntity
             {
                 RequiredSwitch1 = required1,
                 RequiredSwitch2 = required2,
-                ThrowViolationSwitch1 = throw1,
-                ThrowViolationSwitch2 = throw2
+                ContinueSwitch = continueOn
             };
 
             // act
@@ -91,28 +83,24 @@ namespace BackToFront.Tests.UnitTests.Logic
 
         [Test]
         [TestCaseSource("GetData")]
-        public void If_Or_Then_if_oneViolation(Tuple<bool, bool, bool, bool> input)
+        public void If_Or_Then_if_oneViolation(Tuple<bool, bool, bool> input)
         {
-            bool throw1 = input.Item1,
-                throw2 = input.Item2,
-                required1 = input.Item3,
-                required2 = input.Item4;
+            bool continueOn = input.Item1,
+                required1 = input.Item2,
+                required2 = input.Item3;
 
             // arrange
             SimpleViolation v = null;
-            if (!required1)
+            if (continueOn && !required1)
                 v = Violation1;
-            else if (!required2)
+            else if (continueOn && !required2)
                 v = Violation1;
-            else if (throw1 || throw2)
-                v = Violation2;
 
             var subject = new TestEntity
             {
                 RequiredSwitch1 = required1,
                 RequiredSwitch2 = required2,
-                ThrowViolationSwitch1 = throw1,
-                ThrowViolationSwitch2 = throw2
+                ContinueSwitch = continueOn
             };
 
             // act

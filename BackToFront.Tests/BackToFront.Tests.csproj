@@ -71,22 +71,22 @@
     <Compile Include="UnitTests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Logic\TestPass7Test_2.cs" />
-    <Compile Include="UnitTests\Logic\TestPass1_1_Test.cs" />
-    <Compile Include="UnitTests\Logic\TestPass7Test_1.cs" />
-    <Compile Include="UnitTests\Logic\TestPass4Test_1.cs" />
-    <Compile Include="UnitTests\Logic\TestPass8Test.cs" />
-    <Compile Include="UnitTests\Logic\TestPass7Test.cs" />
-    <Compile Include="UnitTests\Logic\TestPass6Test.cs" />
-    <Compile Include="UnitTests\Logic\TestPass5Test.cs" />
-    <Compile Include="UnitTests\Logic\TestPass4Test.cs" />
-    <Compile Include="UnitTests\Logic\TestPass1Test.cs">
+    <Compile Include="IntegrationTests\TestPass7Test_2.cs" />
+    <Compile Include="IntegrationTests\TestPass1_1_Test.cs" />
+    <Compile Include="IntegrationTests\TestPass7Test_1.cs" />
+    <Compile Include="IntegrationTests\TestPass4Test_1.cs" />
+    <Compile Include="IntegrationTests\TestPass8Test.cs" />
+    <Compile Include="IntegrationTests\TestPass7Test.cs" />
+    <Compile Include="IntegrationTests\TestPass6Test.cs" />
+    <Compile Include="IntegrationTests\TestPass5Test.cs" />
+    <Compile Include="IntegrationTests\TestPass4Test.cs" />
+    <Compile Include="IntegrationTests\TestPass1Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Logic\TestPass2Test.cs">
+    <Compile Include="IntegrationTests\TestPass2Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Logic\TestPass3Test.cs">
+    <Compile Include="IntegrationTests\TestPass3Test.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTests\Expressions\BinaryExpressionWrapper_Tests.cs">
@@ -134,7 +134,9 @@
   <ItemGroup>
     <Content Include="Roadmap.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="UnitTests\Logic\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
