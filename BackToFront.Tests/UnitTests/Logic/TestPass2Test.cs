@@ -26,7 +26,7 @@ namespace BackToFront.Tests.UnitTests.Logic
             static TestPass2()
             {
                 Rules<TestPass2>.AddRule(rule => rule
-                    .If(a => a.ThrowViolationSwitch1 && a.ThrowViolationSwitch2).RequirementFailed.OrModelViolationIs(Violation));
+                    .If(a => a.ThrowViolationSwitch1 && a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(Violation));
             }
 
             public bool ThrowViolationSwitch1 { get; set; }

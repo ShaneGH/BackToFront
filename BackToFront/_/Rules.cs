@@ -17,6 +17,19 @@ namespace BackToFront
 
         public static readonly Rules<TEntity> Repository = new Rules<TEntity>();
 
+        public static IEnumerable<IEnumerable<IRuleXXX<TEntity>>> ParentClassRepositories
+        {
+            get 
+            {
+                var current = typeof(TEntity).BaseType;
+                while (current != null)
+                {
+                    yield return new ParentRuleWrappers<TEntity>(current);
+                    current = current.BaseType;
+                }
+            }
+        }
+
         /// <summary>
         /// Add a business rule
         /// </summary>
@@ -44,10 +57,10 @@ namespace BackToFront
         {
             _Rules.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => { _Registered = null; };
         }
-        
-        private readonly ObservableCollection<Rule<TEntity>> _Rules = new ObservableCollection<Rule<TEntity>>();
-        public IEnumerable<Rule<TEntity>> _Registered;
-        public IEnumerable<Rule<TEntity>> Registered
+
+        private readonly ObservableCollection<IRuleXXX<TEntity>> _Rules = new ObservableCollection<IRuleXXX<TEntity>>();
+        public IEnumerable<IRuleXXX<TEntity>> _Registered;
+        public IEnumerable<IRuleXXX<TEntity>> Registered
         {
             get
             {

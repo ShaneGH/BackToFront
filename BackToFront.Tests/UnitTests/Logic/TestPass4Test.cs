@@ -29,7 +29,7 @@ namespace BackToFront.Tests.UnitTests.Logic
                     // pass through if
                     .If(a => a.ThrowViolationSwitch1 || !a.ThrowViolationSwitch1)
 
-                    .RequireThat(a => !a.ThrowViolationSwitch1 && !a.ThrowViolationSwitch2).OrModelViolationIs(Violation));
+                    .RequireThat(a => !a.ThrowViolationSwitch1 && !a.ThrowViolationSwitch2).WithModelViolation(Violation));
             }
 
             public bool ThrowViolationSwitch1 { get; set; }

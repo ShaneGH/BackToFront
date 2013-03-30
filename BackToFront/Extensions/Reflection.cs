@@ -19,7 +19,8 @@ namespace BackToFront.Extensions.Reflection
         /// <returns></returns>
         public static bool Is(this Type target, Type parentClass)
         {
-            return target == parentClass || target.IsSubclassOf(parentClass);
+            return target == parentClass || 
+                (parentClass.IsInterface ? target.GetInterfaces().Any(a => a == parentClass) : target.IsSubclassOf(parentClass));
         }
 
         /// <summary>

@@ -1,8 +1,14 @@
 ﻿
+using System;
 namespace BackToFront.Logic
 {
     public interface IModelViolation<TEntity>
     {
-        IAdditionalRuleCondition<TEntity> OrModelViolationIs(IViolation violation);
+        IAdditionalRuleCondition<TEntity> WithModelViolation(IViolation violation);
+
+        // TODO: uncomment
+        /*IAdditionalRuleCondition<TEntity> WithModelViolation(string violation);
+        IAdditionalRuleCondition<TEntity> WithModelViolation(Func<IViolation> violation);
+        IAdditionalRuleCondition<TEntity> WithModelViolation(Func<TEntity, IViolation> violation);*/
     }    
 }

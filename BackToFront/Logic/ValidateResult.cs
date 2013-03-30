@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using BackToFront.Extensions.Reflection;
+using BackToFront.Validate;
 
 namespace BackToFront.Logic
 {
@@ -22,13 +23,14 @@ namespace BackToFront.Logic
         private readonly TEntity Entity;
         private readonly IEnumerable<Dependency> Dependencies;
         private readonly List<Mock> Mocks = new List<Mock>();
+        private ValidateOptions Options;
 
         public ValidateResult(TEntity entity)
-            : this(entity, null)
+            : this(entity, new ValidateOptions(), null)
         {
         }
 
-        public ValidateResult(TEntity entity, object dependencyClasses)
+        public ValidateResult(TEntity entity, ValidateOptions options, object dependencyClasses)
         {
             if(dependencyClasses == null)
             {
@@ -41,6 +43,7 @@ namespace BackToFront.Logic
             }
 
             Entity = entity;
+            Options = options ?? new ValidateOptions();
         }
 
         public IViolation _FirstViolation;
@@ -111,7 +114,7 @@ namespace BackToFront.Logic
         /// Orders rules, mocks and dependencies and delivers them to a function (for vaslidation)
         /// </summary>
         /// <param name="action">Validation function. Returns </param>
-        private void RunValidation(Func<Rule<TEntity>, Mocks, bool> action)
+        private void RunValidation(Func<IRuleXXX<TEntity>, Mocks, bool> action)
         {
             // segregate from global object
             var mocks = Mocks.ToArray();
@@ -125,21 +128,26 @@ namespace BackToFront.Logic
             // result of all violations. If true, mocks will be persisted
             bool success = true;
             var dependencies = (IEnumerable<Dependency>)Dependencies.ToArray();
-            foreach (var rule in Rules<TEntity>.Repository.Registered)
+
+            IEnumerable<IEnumerable<IRuleXXX<TEntity>>> rulesRepository = new[] { Rules<TEntity>.Repository.Registered };
+            if (Options.ValidateAgainstParentClassRules)
+                rulesRepository = rulesRepository.Concat(Rules<TEntity>.ParentClassRepositories);
+
+            rulesRepository.Aggregate().Each(rule =>
             {
                 ValidateDependencies(rule.Dependencies, ref dependencies);
 
                 var newMocks = mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet).ToList();
 
                 // add each dependency class as a MockOnly mock.
-                dependencies.Each(a => 
+                dependencies.Each(a =>
                 {
                     // TODO: Null reference in GetType
                     newMocks.Add(new Mock(new ConstantExpressionWrapper(Expression.Constant(a)), a.Value, a.Value.GetType(), MockBehavior.MockOnly));
                 });
 
                 success &= action(rule, new Mocks(newMocks));
-            }
+            });
 
             // success, persist mock values
             if(success)

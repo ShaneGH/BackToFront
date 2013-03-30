@@ -8,7 +8,12 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Framework
 {
-    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate
+    public interface IRuleXXX<TEntity> : IValidate<TEntity>
+    {
+        List<DependencyWrapper> Dependencies { get; }
+    }
+
+    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate, IRuleXXX<TEntity>
     {
         public readonly List<DependencyWrapper> Dependencies = new List<DependencyWrapper>();
 
@@ -44,7 +49,7 @@ namespace BackToFront.Framework
 
         public IConditionSatisfied<TEntity> ElseIf(Expression<Func<TEntity, bool>> property)
         {
-            if(_Condition == null)
+            if (_Condition == null)
                 return If(property);
 
             var @if = new Operator<TEntity>(property, this);
@@ -77,6 +82,11 @@ namespace BackToFront.Framework
             }
 
             throw new InvalidOperationException("##");
+        }
+
+        List<DependencyWrapper> IRuleXXX<TEntity>.Dependencies
+        {
+            get { return this.Dependencies; }
         }
     }
 }

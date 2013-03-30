@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 using BackToFront.Utils;
+using BackToFront.Framework;
 
 namespace BackToFront.Tests.UnitTests
 {
     [TestFixture]
-    public class Rules_Tests : Base.TestBase
+    public partial class Rules_Tests : Base.TestBase
     {
         public static bool notFirst = false;
         public class TestClass { }
@@ -32,10 +33,10 @@ namespace BackToFront.Tests.UnitTests
         public void Add_Test()
         {
             // arrange
-            IRule<TestClass> rule = null;
+            Rule<TestClass> rule = null;
 
             // act
-            Rules<TestClass>.AddRule(a => rule = a);
+            Rules<TestClass>.AddRule(a => rule = (Rule<TestClass>)a);
 
             // assert
             Assert.NotNull(rule);
@@ -46,11 +47,11 @@ namespace BackToFront.Tests.UnitTests
         public void Add_Test_1Generic()
         {
             // arrange
-            IRule<TestClass> rule = null;
+            Rule<TestClass> rule = null;
             DependencyWrapper<object> dependency = null;
 
             // act
-            Rules<TestClass>.AddRule<object>((a, asdsad) => { rule = a; dependency = asdsad; });
+            Rules<TestClass>.AddRule<object>((a, asdsad) => { rule = (Rule<TestClass>)a; dependency = asdsad; });
 
             // assert
             Assert.NotNull(rule);

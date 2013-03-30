@@ -62,6 +62,7 @@
     <Compile Include="UnitTests\Framework\Base\PathElementTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UnitTests\Framework\Operator_Tests.cs" />
     <Compile Include="UnitTests\Framework\RequirementFailed_Tests.cs" />
     <Compile Include="UnitTests\Framework\RequireOperator_Tests.cs" />
     <Compile Include="UnitTests\Framework\RuleCollection_Tests.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="UnitTests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UnitTests\Logic\TestPass7Test_2.cs" />
     <Compile Include="UnitTests\Logic\TestPass1_1_Test.cs" />
     <Compile Include="UnitTests\Logic\TestPass7Test_1.cs" />
     <Compile Include="UnitTests\Logic\TestPass4Test_1.cs" />
@@ -106,8 +108,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTests\Utils\CompiledMockedExpression_Tests.cs" />
+    <Compile Include="UnitTests\Utils\ParentRuleWrappers_Tests.cs" />
+    <Compile Include="UnitTests\Utils\ParentRuleWrapper_Tests.cs" />
     <Compile Include="UnitTests\Utils\Mocks_Tests.cs" />
     <Compile Include="UnitTests\Utils\Mock_Tests.cs" />
+    <Compile Include="UnitTests\_\Rules_Static_Tests.cs" />
     <Compile Include="UnitTests\_\Rules.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\SimpleIValidate.cs">

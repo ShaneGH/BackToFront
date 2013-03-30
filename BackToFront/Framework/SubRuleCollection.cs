@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Framework.Base;
 using BackToFront.Logic;
+using BackToFront.Logic.Compilations;
 
 namespace BackToFront.Framework
 {
@@ -30,9 +31,11 @@ namespace BackToFront.Framework
             yield break;
         }
 
-        Logic.Compilations.IConditionSatisfied<TEntity> IRule<TEntity>.If(Expression<Func<TEntity, bool>> property)
+        public IConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property)
         {
-            throw new NotImplementedException();
+            var subRule = new Rule<TEntity>(ParentRule);
+            _subRules.AddRule(subRule);
+            return subRule.If(property);
         }
 
         public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)
@@ -49,7 +52,7 @@ namespace BackToFront.Framework
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
         {
-            violationList.AddRange(_subRules.FullyValidateEntity(subject, mocks));
+            _subRules.FullyValidateEntity(subject, violationList, mocks);
         }
     }
 }

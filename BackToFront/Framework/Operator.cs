@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Framework
 {
-    public class Operator<TEntity> : ExpressionElement<TEntity, bool>, IConditionSatisfied<TEntity>
+    public class Operator<TEntity> : RequireOperator<TEntity>, IConditionSatisfied<TEntity>
     {
         public Operator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)
@@ -18,31 +18,15 @@ namespace BackToFront.Framework
         public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks)
         {
             yield return _RequirementFailed;
-            yield return _Then;
-            yield return _RequireThat;
+            foreach (var element in base.NextPathElements(subject, mocks))
+            {
+                yield return element;
+            }
         }
 
         public bool ConditionIsTrue(TEntity subject, Utils.Mocks mocks)
         {
             return Compile(mocks).Invoke(subject, mocks.AsValueArray);
-        }
-
-        private RequirementFailed<TEntity> _RequireThat = null;
-        public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> condition)
-        {
-            return Do(() => _RequireThat = new RequirementFailed<TEntity>(condition, ParentRule));
-        }
-
-        private SubRuleCollection<TEntity> _Then = null;
-        public IAdditionalRuleCondition<TEntity> Then(Action<IRule<TEntity>> action)
-        {
-            Do(() => _Then = new SubRuleCollection<TEntity>(ParentRule));
-
-            // run action on new sub rule
-            action(_Then);
-
-            // present rule to begin process again
-            return ParentRule;
         }
 
         RequirementFailed<TEntity> _RequirementFailed;

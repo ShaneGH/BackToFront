@@ -14,10 +14,10 @@ namespace BackToFront.Tests.UnitTests.Logic
         static TestPass1()
         {
             Rules<TestPass1>.AddRule(rule => rule
-                .If(a => a.ThrowViolation1).RequirementFailed.OrModelViolationIs(Violation1));
+                .If(a => a.ThrowViolation1).RequirementFailed.WithModelViolation(Violation1));
 
             Rules<TestPass1>.AddRule(rule => rule
-                .If(a => a.ThrowViolation2).RequirementFailed.OrModelViolationIs(Violation2));
+                .If(a => a.ThrowViolation2).RequirementFailed.WithModelViolation(Violation2));
         }
 
         public bool ThrowViolation1 { get; set; }

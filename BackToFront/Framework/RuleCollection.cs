@@ -12,22 +12,15 @@ using BackToFront.Logic;
 
 namespace BackToFront.Framework
 {
-    public class RuleCollection<TEntity> : IValidate
+    public class RuleCollection<TEntity> : IValidate, IValidate<TEntity>
     {
         private readonly List<IValidate<TEntity>> _Rules = new List<IValidate<TEntity>>();
 
         public IViolation ValidateEntity(object subject, Mocks mocks)
         {
-            IViolation violation;
             // TODO: catch cast exception
             var sub = (TEntity)subject;
-            foreach (var rule in _Rules)
-            {
-                if ((violation = rule.ValidateEntity(sub, mocks)) != null)
-                    return violation;
-            }
-
-            return null;
+            return ValidateEntity(sub, mocks);
         }
 
         public IEnumerable<IViolation> FullyValidateEntity(object subject, Mocks mocks)
@@ -35,13 +28,31 @@ namespace BackToFront.Framework
             // TODO: catch cast exception
             var sub = (TEntity)subject;
             IList<IViolation> violationList = new List<IViolation>();
-            _Rules.Each(i => i.FullyValidateEntity(sub, violationList, mocks));
+            FullyValidateEntity(sub, violationList, mocks);
             return violationList.ToArray();
         }
 
         public void AddRule(IValidate<TEntity> rule)
         {
             _Rules.Add(rule);
+        }
+
+        public IViolation ValidateEntity(TEntity subject, Mocks mocks)
+        {
+            IViolation violation;
+            foreach (var rule in _Rules)
+            {
+                if ((violation = rule.ValidateEntity(subject, mocks)) != null)
+                    return violation;
+            }
+
+            return null;
+        }
+
+        public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Mocks mocks)
+        {
+            // TODO: catch cast exception
+            _Rules.Each(i => i.FullyValidateEntity(subject, violationList, mocks));
         }
     }
 }
