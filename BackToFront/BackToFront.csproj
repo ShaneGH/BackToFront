@@ -91,7 +91,6 @@
     <Compile Include="Expressions\UnaryExpressionWrapper.cs" />
     <Compile Include="Expressions\ParameterExpressionWrapper.cs" />
     <Compile Include="Utils\Mock.cs" />
-    <Compile Include="Utils\Operators.cs" />
     <Compile Include="Utils\ReadonlyDictionary.cs" />
     <Compile Include="_\IRule.cs" />
     <Compile Include="_\Rules.cs" />

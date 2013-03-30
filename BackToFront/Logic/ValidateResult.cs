@@ -23,6 +23,11 @@ namespace BackToFront.Logic
         private readonly IEnumerable<Dependency> Dependencies;
         private readonly List<Mock> Mocks = new List<Mock>();
 
+        public ValidateResult(TEntity entity)
+            : this(entity, null)
+        {
+        }
+
         public ValidateResult(TEntity entity, object dependencyClasses)
         {
             if(dependencyClasses == null)
@@ -32,7 +37,7 @@ namespace BackToFront.Logic
             else
             {
                 var dependencies = dependencyClasses.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                Dependencies = dependencies.Select(h => new Dependency { Name = h.Name, Value = h.GetValue(dependencyClasses) });
+                Dependencies = dependencies.Select(d => new Dependency { Name = d.Name, Value = d.GetValue(dependencyClasses) });
             }
 
             Entity = entity;
@@ -117,11 +122,11 @@ namespace BackToFront.Logic
             if (setters.Any(a => !a.CanSet))
                 throw new InvalidOperationException("##");
 
-            // resut of all violations. If true, mocks will be persisted
+            // result of all violations. If true, mocks will be persisted
             bool success = true;
+            var dependencies = (IEnumerable<Dependency>)Dependencies.ToArray();
             foreach (var rule in Rules<TEntity>.Repository.Registered)
             {
-                var dependencies = (IEnumerable<Dependency>)Dependencies.ToArray();
                 ValidateDependencies(rule.Dependencies, ref dependencies);
 
                 var newMocks = mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet).ToList();
@@ -141,19 +146,19 @@ namespace BackToFront.Logic
                 setters.Each(a => a.SetValue(Entity));
         }
 
-        private static void ValidateDependencies(IEnumerable<DependencyWrapper> required, ref IEnumerable<Dependency> delivered)
+        internal static void ValidateDependencies(IEnumerable<DependencyWrapper> required, ref IEnumerable<Dependency> delivered)
         {
             List<Dependency> requiredByRule = new List<Dependency>();
             foreach (var r in required)
             {
                 var match = delivered.FirstOrDefault(a => a.Name == r.DependencyName);
-                if (match == null)
-                    throw new InvalidOperationException("##");
+                if (match != null && match.Value != null)
+                {
+                    if (!match.Value.GetType().Is(r.DependencyType))
+                        throw new InvalidOperationException("##");
 
-                if (match.Value == null || !match.Value.GetType().Is(r.DependencyType))
-                    throw new InvalidOperationException("##");
-
-                requiredByRule.Add(match);
+                    requiredByRule.Add(match);
+                }
             }
 
             delivered = requiredByRule.ToArray();
