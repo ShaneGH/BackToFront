@@ -66,7 +66,7 @@ namespace BackToFront.Framework.Base
         {
             //TODO: make private and handle next logic here (rather than in child)
             var no = NextOption(subject, mocks);
-            if(no != null)
+            if (no != null)
                 no.FullyValidateEntity(subject, violations, mocks);
         }
 
