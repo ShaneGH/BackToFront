@@ -23,7 +23,8 @@ namespace BackToFront.Logic
         private readonly TEntity Entity;
         private readonly IEnumerable<Dependency> Dependencies;
         private readonly List<Mock> Mocks = new List<Mock>();
-        private ValidateOptions Options;
+        private readonly List<Func<IValidateResult>> ValidateChildMembers = new List<Func<IValidateResult>>();
+        private readonly ValidateOptions Options;
 
         public ValidateResult(TEntity entity)
             : this(entity, new ValidateOptions(), null)
@@ -32,7 +33,7 @@ namespace BackToFront.Logic
 
         public ValidateResult(TEntity entity, ValidateOptions options, object dependencyClasses)
         {
-            if(dependencyClasses == null)
+            if (dependencyClasses == null)
             {
                 Dependencies = Enumerable.Empty<Dependency>();
             }
@@ -44,6 +45,21 @@ namespace BackToFront.Logic
 
             Entity = entity;
             Options = options ?? new ValidateOptions();
+        }
+
+        /// <summary>
+        /// Create a carbon copy which shares readonly ref data 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="options"></param>
+        /// <param name="dependencyClasses"></param>
+        /// <param name="mocks"></param>
+        private ValidateResult(TEntity entity, ValidateOptions options, IEnumerable<Dependency> dependencyClasses, List<Mock> mocks)
+        {
+            Entity = entity;
+            Options = options;
+            Dependencies = dependencyClasses;
+            Mocks = mocks;
         }
 
         public IViolation _FirstViolation;
@@ -69,6 +85,14 @@ namespace BackToFront.Logic
 
                         return true;
                     });
+
+                    foreach (var child in ValidateChildMembers)
+                    {
+                        if (_FirstViolation != null)
+                            break;
+
+                        _FirstViolation = child().FirstViolation;
+                    }
                 }
 
                 return _FirstViolation;
@@ -82,15 +106,18 @@ namespace BackToFront.Logic
             {
                 if (_AllViolations == null)
                 {
-                    _AllViolations = Enumerable.Empty<IViolation>();
+                    var violations = new List<IViolation>();
                     RunValidation((rule, mocks) => 
                     {
                         var allViolations = new List<IViolation>();
                         rule.FullyValidateEntity(Entity, allViolations, mocks);
 
-                        _AllViolations = _AllViolations.Concat(allViolations);
-                        return !allViolations.Any(); 
+                        violations.AddRange(allViolations);
+                        return !allViolations.Any();
                     });
+
+                    ValidateChildMembers.Each(child => violations.AddRange(child().AllViolations));
+                    _AllViolations = violations.ToArray();
                 }
 
                 return _AllViolations;
@@ -177,6 +204,27 @@ namespace BackToFront.Logic
         {
             _FirstViolation = null;
             _AllViolations = null;
+        }
+
+        public IValidateResult<TEntity> ValidateMember<TParameter>(Expression<Func<TEntity, TParameter>> member)
+        {
+            if(member.Body is ParameterExpression)
+                throw new InvalidOperationException("##");
+                        
+            MemberExpression tester = member.Body as MemberExpression;
+            while(tester != null)
+            {
+                if (tester.Expression is ParameterExpression)
+                {
+                    var compiled = member.Compile();
+                    ValidateChildMembers.Add(() => new ValidateResult<TParameter>(compiled(Entity), Options, Dependencies, Mocks));
+                    return this;
+                }
+
+                tester = tester.Expression as MemberExpression;
+            }
+
+            throw new InvalidOperationException("##");
         }
     }
 }

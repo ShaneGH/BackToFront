@@ -51,6 +51,7 @@
     <Compile Include="Base\TestBase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IntegrationTests\Children.cs" />
     <Compile Include="IntegrationTests\Inheritance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />

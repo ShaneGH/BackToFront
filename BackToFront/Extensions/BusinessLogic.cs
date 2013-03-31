@@ -2,24 +2,19 @@
 
 namespace BackToFront.Validate
 {
-        public class ValidateOptions
+    public class ValidateOptions
+    {
+        /// <summary>
+        /// If true, validates against all of the rules defined against all ancestors. Default, true
+        /// </summary>
+        public bool ValidateAgainstParentClassRules { get; set; }
+
+        public ValidateOptions()
         {
-            /// <summary>
-            /// If true, validates against all of the rules defined against all ancestors. Default, true
-            /// </summary>
-            public bool ValidateAgainstParentClassRules { get; set; }
-
-            /// <summary>
-            /// If true, recursively validates fields and properties of the object, Default, false
-            /// </summary>
-            public bool ValidateMembers { get; set; }
-
-            public ValidateOptions()
-            {
-                ValidateAgainstParentClassRules = true;
-                ValidateMembers = false;
-            }
+            ValidateAgainstParentClassRules = true;
         }
+    }
+
     public static class BusinessLogic
     {
 

@@ -5,14 +5,19 @@ using System.Linq.Expressions;
 
 namespace BackToFront
 {
-    public interface IValidateResult<TEntity>
+    public interface IValidateResult
     {
         IViolation FirstViolation { get; }
 
         IEnumerable<IViolation> AllViolations { get; }
+    }
 
+    public interface IValidateResult<TEntity> : IValidateResult
+    {
         IValidateResult<TEntity> WithMockedParameter<TParameter>(Expression<Func<TEntity, TParameter>> property, TParameter value, MockBehavior behavior);
         IValidateResult<TEntity> WithMockedParameter<TParameter>(Expression<Func<TEntity, TParameter>> property, TParameter value);
+
+        IValidateResult<TEntity> ValidateMember<TParameter>(Expression<Func<TEntity, TParameter>> member);
     }
 
     /// <summary>
