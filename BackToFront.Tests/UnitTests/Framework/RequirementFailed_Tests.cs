@@ -19,7 +19,7 @@ namespace BackToFront.Tests.UnitTests.Framework
             var subject = new RequirementFailed<object>(a => true, null);
 
             // act
-            var result = subject.WithModelViolation(new M.Mock<IViolation>().Object);
+            var result = subject.WithModelViolation(() => new M.Mock<IViolation>().Object);
             var npe = subject.NextPathElements(null, null);
 
             // assert
@@ -36,7 +36,7 @@ namespace BackToFront.Tests.UnitTests.Framework
             var violation = new M.Mock<IViolation>().Object;
 
             // act
-            var result = subject.WithModelViolation(violation);
+            var result = subject.WithModelViolation(() => violation);
             var npe = subject.NextPathElements(null, null);
 
             // assert

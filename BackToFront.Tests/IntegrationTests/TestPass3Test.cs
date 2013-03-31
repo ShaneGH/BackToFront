@@ -25,7 +25,7 @@ namespace BackToFront.Tests.IntegrationTests
             static TestClass()
             {
                 Rules<TestClass>.AddRule(rule => rule
-                    .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(Violation));
+                    .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(() => Violation));
             }
 
             public bool ThrowViolationSwitch1 { get; set; }

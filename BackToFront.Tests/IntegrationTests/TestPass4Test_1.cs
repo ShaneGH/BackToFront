@@ -26,7 +26,7 @@ namespace BackToFront.Tests.IntegrationTests
             static TestPass4()
             {
                 Rules<TestPass4>.AddRule(rule => rule
-                    .RequireThat(a => !a.ThrowViolationSwitch1 && !a.ThrowViolationSwitch2).WithModelViolation(Violation));
+                    .RequireThat(a => !a.ThrowViolationSwitch1 && !a.ThrowViolationSwitch2).WithModelViolation(() => Violation));
             }
 
             public bool ThrowViolationSwitch1 { get; set; }

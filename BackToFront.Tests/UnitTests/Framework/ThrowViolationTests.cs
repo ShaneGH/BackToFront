@@ -21,7 +21,7 @@ namespace BackToFront.Tests.UnitTests.Framework
         {
             base.Setup();
 
-            Subject = new ThrowViolation<object>(Violation, null);
+            Subject = new ThrowViolation<object>(() => Violation, null);
         }
 
         [Test]
@@ -30,10 +30,12 @@ namespace BackToFront.Tests.UnitTests.Framework
             // global arrange
 
             // act
-            IViolation v = Subject.ValidateEntity(null, null);
+            var item = new object();
+            IViolation v = Subject.ValidateEntity(item, null);
 
             // assert
             Assert.AreEqual(Violation, v);
+            Assert.AreEqual(item, v.ViolatedEntity);
         }
 
         [Test]
@@ -43,11 +45,13 @@ namespace BackToFront.Tests.UnitTests.Framework
             List<IViolation> list = new List<IViolation>();
 
             // act
-            Subject.FullyValidateEntity(null, list, null);
+            var item = new object();
+            Subject.FullyValidateEntity(item, list, null);
 
             // assert
             Assert.AreEqual(1, list.Count);
             Assert.AreEqual(Violation, list.First());
+            Assert.AreEqual(item, list.First().ViolatedEntity);
         }
     }
 }

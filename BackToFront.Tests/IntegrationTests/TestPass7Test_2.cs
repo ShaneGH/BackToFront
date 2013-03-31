@@ -31,8 +31,8 @@ namespace BackToFront.Tests.IntegrationTests
                     // pass through if
                     .If(a => a.ContinueSwitch).Then(subRule =>
                     {
-                        subRule.If(a => !a.RequiredSwitch1).RequirementFailed.WithModelViolation(Violation1);
-                        subRule.If(a => !a.RequiredSwitch2).RequirementFailed.WithModelViolation(Violation1);
+                        subRule.If(a => !a.RequiredSwitch1).RequirementFailed.WithModelViolation(() => Violation1);
+                        subRule.If(a => !a.RequiredSwitch2).RequirementFailed.WithModelViolation(() => Violation1);
                     }));
             }
 

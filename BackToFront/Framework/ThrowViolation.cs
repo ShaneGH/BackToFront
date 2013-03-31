@@ -15,8 +15,8 @@ namespace BackToFront.Framework
     /// <typeparam name="TEntity"></typeparam>
     public class ThrowViolation<TEntity> : PathElement<TEntity>
     {
-        private readonly IViolation _violation;
-        public ThrowViolation(IViolation violation, Rule<TEntity> parentRule)
+        private readonly Func<IViolation> _violation;
+        public ThrowViolation(Func<IViolation> violation, Rule<TEntity> parentRule)
             : base(parentRule)
         {
             if(violation == null)
@@ -35,7 +35,9 @@ namespace BackToFront.Framework
             if (_violation is IViolation<TEntity>)
                 (_violation as IViolation<TEntity>).OnViolation(subject);
 
-            return _violation;
+            var violation = _violation();
+            violation.ViolatedEntity = subject;
+            return violation;
         }
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)

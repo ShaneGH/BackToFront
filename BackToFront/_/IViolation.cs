@@ -24,6 +24,11 @@ namespace BackToFront
         /// The message to display to a user
         /// </summary>
         string UserMessage { get; }
+
+        /// <summary>
+        /// The object which is in a violated state
+        /// </summary>
+        object ViolatedEntity { get; set; }
     }
 
     /// <summary>

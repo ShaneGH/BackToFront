@@ -32,5 +32,11 @@ namespace BackToFront.Tests.Utilities
         {
             return UserMessage;
         }
+
+        public object ViolatedEntity
+        {
+            get;
+            set;
+        }
     }
 }

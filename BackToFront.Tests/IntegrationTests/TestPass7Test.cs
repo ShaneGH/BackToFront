@@ -31,12 +31,12 @@ namespace BackToFront.Tests.IntegrationTests
                     // pass through if
                     .If(a => a.ThrowViolationSwitch1 || !a.ThrowViolationSwitch1).Then(subRule =>
                     {
-                        subRule.RequireThat(a => a.RequiredSwitch1).WithModelViolation(Violation1);
-                        subRule.RequireThat(a => a.RequiredSwitch2).WithModelViolation(Violation1);
+                        subRule.RequireThat(a => a.RequiredSwitch1).WithModelViolation(() => Violation1);
+                        subRule.RequireThat(a => a.RequiredSwitch2).WithModelViolation(() => Violation1);
                     }));
 
                 Rules<TestEntity>.AddRule(rule => rule
-                    .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(Violation2));
+                    .If(a => a.ThrowViolationSwitch1 || a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(() => Violation2));
             }
 
             public bool ThrowViolationSwitch1 { get; set; }
