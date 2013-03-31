@@ -17,7 +17,10 @@ namespace BackToFront
 
         public static readonly Rules<TEntity> Repository = new Rules<TEntity>();
 
-        public static IEnumerable<IEnumerable<IRuleXXX<TEntity>>> ParentClassRepositories
+        /// <summary>
+        /// The rules applied to the ancestor classes of TEntity
+        /// </summary>
+        public static IEnumerable<ParentRuleWrappers<TEntity>> ParentClassRepositories
         {
             get 
             {
@@ -58,9 +61,9 @@ namespace BackToFront
             _Rules.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => { _Registered = null; };
         }
 
-        private readonly ObservableCollection<IRuleXXX<TEntity>> _Rules = new ObservableCollection<IRuleXXX<TEntity>>();
-        public IEnumerable<IRuleXXX<TEntity>> _Registered;
-        public IEnumerable<IRuleXXX<TEntity>> Registered
+        private readonly ObservableCollection<IRuleValidation<TEntity>> _Rules = new ObservableCollection<IRuleValidation<TEntity>>();
+        public IEnumerable<IRuleValidation<TEntity>> _Registered;
+        public IEnumerable<IRuleValidation<TEntity>> Registered
         {
             get
             {

@@ -10,14 +10,14 @@ namespace BackToFront.Validate
             public bool ValidateAgainstParentClassRules { get; set; }
 
             /// <summary>
-            /// If true, recursively validates fields and properties of the object, Default, true
+            /// If true, recursively validates fields and properties of the object, Default, false
             /// </summary>
-            public bool ValidateProperties { get; set; }
+            public bool ValidateMembers { get; set; }
 
             public ValidateOptions()
             {
                 ValidateAgainstParentClassRules = true;
-                ValidateProperties = true;
+                ValidateMembers = false;
             }
         }
     public static class BusinessLogic

@@ -8,12 +8,12 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Framework
 {
-    public interface IRuleXXX<TEntity> : IValidate<TEntity>
+    public interface IRuleValidation<TEntity> : IValidate<TEntity>
     {
         List<DependencyWrapper> Dependencies { get; }
     }
 
-    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate, IRuleXXX<TEntity>
+    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate, IRuleValidation<TEntity>
     {
         public readonly List<DependencyWrapper> Dependencies = new List<DependencyWrapper>();
 
@@ -84,7 +84,7 @@ namespace BackToFront.Framework
             throw new InvalidOperationException("##");
         }
 
-        List<DependencyWrapper> IRuleXXX<TEntity>.Dependencies
+        List<DependencyWrapper> IRuleValidation<TEntity>.Dependencies
         {
             get { return this.Dependencies; }
         }

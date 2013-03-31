@@ -114,7 +114,7 @@ namespace BackToFront.Logic
         /// Orders rules, mocks and dependencies and delivers them to a function (for vaslidation)
         /// </summary>
         /// <param name="action">Validation function. Returns </param>
-        private void RunValidation(Func<IRuleXXX<TEntity>, Mocks, bool> action)
+        private void RunValidation(Func<IRuleValidation<TEntity>, Mocks, bool> action)
         {
             // segregate from global object
             var mocks = Mocks.ToArray();
@@ -129,7 +129,8 @@ namespace BackToFront.Logic
             bool success = true;
             var dependencies = (IEnumerable<Dependency>)Dependencies.ToArray();
 
-            IEnumerable<IEnumerable<IRuleXXX<TEntity>>> rulesRepository = new[] { Rules<TEntity>.Repository.Registered };
+            // add parent class rules
+            IEnumerable<IEnumerable<IRuleValidation<TEntity>>> rulesRepository = new[] { Rules<TEntity>.Repository.Registered };
             if (Options.ValidateAgainstParentClassRules)
                 rulesRepository = rulesRepository.Concat(Rules<TEntity>.ParentClassRepositories);
 

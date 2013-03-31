@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace BackToFront.Utils
 {
-    public class ParentRuleWrapper<TEntity> : IRuleXXX<TEntity>
+    public class ParentRuleWrapper<TEntity> : IRuleValidation<TEntity>
     {
         public readonly Type EntityType;
         public readonly object Rule;
@@ -22,12 +22,12 @@ namespace BackToFront.Utils
 
             EntityType = entityType;
 
-            if (!rule.GetType().Is(typeof(IRuleXXX<>).MakeGenericType(EntityType)))
+            if (!rule.GetType().Is(typeof(IRuleValidation<>).MakeGenericType(EntityType)))
                 throw new InvalidOperationException("##");
 
             Rule = rule;
 
-            DependenciesProperty = typeof(IRuleXXX<>).MakeGenericType(EntityType).GetProperty("Dependencies");
+            DependenciesProperty = typeof(IRuleValidation<>).MakeGenericType(EntityType).GetProperty("Dependencies");
             ValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("ValidateEntity", new[] { EntityType, typeof(Mocks) });
             FullyValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("FullyValidateEntity", new[] { EntityType, typeof(IList<IViolation>), typeof(Mocks) });
         }

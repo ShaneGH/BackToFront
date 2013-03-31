@@ -10,7 +10,7 @@ namespace BackToFront.Utils
     public class ParentRuleWrappers<TEntity> : IEnumerable<ParentRuleWrapper<TEntity>>
     {
         public readonly Type EntityType;
-        private readonly IEnumerable<ParentRuleWrapper<TEntity>> InnerSomethings;
+        private readonly IEnumerable<ParentRuleWrapper<TEntity>> Rules;
 
         public ParentRuleWrappers(Type entityType)
         {
@@ -18,17 +18,17 @@ namespace BackToFront.Utils
                 throw new InvalidOperationException("##");
 
             EntityType = entityType;
-            InnerSomethings = Rules.GetRules(entityType).Select(r => new ParentRuleWrapper<TEntity>(entityType, r)).ToArray();
+            Rules = BackToFront.Rules.GetRules(entityType).Select(r => new ParentRuleWrapper<TEntity>(entityType, r)).ToArray();
         }
 
         public IEnumerator<ParentRuleWrapper<TEntity>> GetEnumerator()
         {
-            return InnerSomethings.GetEnumerator();
+            return Rules.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return InnerSomethings.GetEnumerator();
+            return Rules.GetEnumerator();
         }
     }
 }

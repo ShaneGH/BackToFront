@@ -20,7 +20,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         public class TestClass { }
         public class TestClassChild : TestClass { }
 
-        public class TestRule<T> : IRuleXXX<T>
+        public class TestRule<T> : IRuleValidation<T>
         {
             public IViolation Violation { get; set; }
 
