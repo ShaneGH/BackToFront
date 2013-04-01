@@ -12,6 +12,10 @@ using NUnit.Framework;
 using System.Collections.ObjectModel;
 using BackToFront.Utils;
 
+using M = Moq;
+using Moq.Protected;
+using System.Reflection;
+
 namespace BackToFront.Tests.UnitTests.Expressions
 {
     class ExpressionWrapperBase_Tests : Base.TestBase
@@ -165,7 +169,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
         }
 
         [Test]
-        public void CreateChildWrapper_Test_Fopund_Constructor()
+        public void CreateChildWrapper_Test_Found_Constructor()
         {
             // arrange
             var exp = Expression.Constant(4);
@@ -175,6 +179,42 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
             // assert
             Assert.NotNull(result);
+        }
+
+        [Test]
+        public void GetMembersForParameter_Test_NonCache()
+        {
+            // arrange
+            var expected = new MemberInfo[0];
+            var param = Expression.Parameter(typeof(object));
+            var subject = new M.Mock<ExpressionWrapperBase> { CallBase = true };
+            subject.Protected().Setup<IEnumerable<MemberInfo>>("_GetMembersForParameter", ItExpr.Is<ParameterExpression>(a => a == param)).Returns(expected);
+
+            // act
+            var actual = subject.Object.GetMembersForParameter(param);
+
+            // assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetMembersForParameter_Test_WithCache()
+        {
+            // arrange
+            var expected1 = new MemberInfo[0];
+            var expected2 = new MemberInfo[0];
+            var param = Expression.Parameter(typeof(object));
+            var subject = new M.Mock<ExpressionWrapperBase> { CallBase = true };
+            subject.Protected().Setup<IEnumerable<MemberInfo>>("_GetMembersForParameter", ItExpr.Is<ParameterExpression>(a => a == param)).Returns(expected1);
+
+            // act
+            var actual1 = subject.Object.GetMembersForParameter(param);
+            subject.Protected().Setup<IEnumerable<MemberInfo>>("_GetMembersForParameter", ItExpr.Is<ParameterExpression>(a => a == param)).Returns(expected2);
+            var actual2 = subject.Object.GetMembersForParameter(param);
+
+            // assert
+            Assert.AreEqual(expected1, actual1);
+            Assert.AreEqual(actual1, actual2);
         }
 
         [Test]

@@ -14,6 +14,7 @@ namespace BackToFront.Expressions
 {
     public abstract class ExpressionWrapperBase
     {
+        private readonly Dictionary<ParameterExpression, IEnumerable<MemberInfo>> _MembersCache = new Dictionary<ParameterExpression, IEnumerable<MemberInfo>>();
         public static readonly ReadOnlyDictionary<Type, Func<Expression, ExpressionWrapperBase>> Constructors;
         private static readonly Dictionary<Type, Func<Expression, ExpressionWrapperBase>> _Constructors = new Dictionary<Type, Func<Expression, ExpressionWrapperBase>>();
 
@@ -90,6 +91,18 @@ namespace BackToFront.Expressions
                 throw new InvalidOperationException("##" + expression.GetType().ToString());
 
             return Constructors[type](expression);
+        }
+
+        // TODO: this should be abstract
+        protected virtual IEnumerable<MemberInfo> _GetMembersForParameter(ParameterExpression parameter) { yield break; }
+        public IEnumerable<MemberInfo> GetMembersForParameter(ParameterExpression parameter)
+        {
+            if (!_MembersCache.ContainsKey(parameter))
+            {
+                _MembersCache.Add(parameter, _GetMembersForParameter(parameter).ToArray());
+            }
+
+            return _MembersCache[parameter];
         }
 
         #region linq constructors

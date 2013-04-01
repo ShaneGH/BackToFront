@@ -9,5 +9,14 @@ namespace BackToFront.Utils
     public class ValidationContext
     {
         public Mocks Mocks { get; set; }
+
+        /// <summary>
+        /// Copies all properties of the validation context down to 1 level
+        /// </summary>
+        /// <returns></returns>
+        public ValidationContext Copy()
+        {
+            return new ValidationContext { Mocks = new Utils.Mocks(Mocks) };
+        }
     }
 }

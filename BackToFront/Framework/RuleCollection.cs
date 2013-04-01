@@ -43,7 +43,7 @@ namespace BackToFront.Framework
             IViolation violation;
             foreach (var rule in _Rules)
             {
-                if ((violation = rule.ValidateEntity(subject, context)) != null)
+                if ((violation = rule.ValidateEntity(subject, context.Copy())) != null)
                     return violation;
             }
 
@@ -53,7 +53,7 @@ namespace BackToFront.Framework
         public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
             // TODO: catch cast exception
-            _Rules.Each(i => i.FullyValidateEntity(subject, violationList, context));
+            _Rules.Each(i => i.FullyValidateEntity(subject, violationList, context.Copy()));
         }
     }
 }

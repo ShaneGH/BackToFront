@@ -1,4 +1,6 @@
 ﻿
+Expression wrapper base, there is a virtual method which has to be made abstract
+
 Profiler
 Vallidation attribute
 Client side
