@@ -1,4 +1,5 @@
-﻿
+﻿FIX BUILD!!!!!
+
 Expression wrapper base, there is a virtual method which has to be made abstract
 
 Profiler
@@ -9,6 +10,8 @@ Domain Model
 More Expression types
 
 unit test BackToFront.Logic.ValidateResult<TEntity>
+
+unit test BackToFront.Rules<TEntity>.ParentClassRepositories
 
 Hole in dependencies (what if user creates instance of DependencyWrapper)
 
