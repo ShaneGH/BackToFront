@@ -53,5 +53,17 @@ namespace BackToFront.Extensions.Reflection
             else
                 throw new EX("##");
         }
+
+        public static Type MemberType(this MemberInfo member)
+        {
+            if (member is MethodInfo)
+                return (member as MethodInfo).ReturnType;
+            if (member is PropertyInfo)
+                return (member as PropertyInfo).PropertyType;
+            if (member is FieldInfo)
+                return (member as FieldInfo).FieldType;
+
+            return null;
+        }
     }
 }

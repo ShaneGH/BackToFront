@@ -185,10 +185,10 @@ namespace BackToFront.Tests.UnitTests.Expressions
         public void GetMembersForParameter_Test_NonCache()
         {
             // arrange
-            var expected = new MemberInfo[0];
+            var expected = new MemberChainItem[0];
             var param = Expression.Parameter(typeof(object));
             var subject = new M.Mock<ExpressionWrapperBase> { CallBase = true };
-            subject.Protected().Setup<IEnumerable<MemberInfo>>("_GetMembersForParameter", ItExpr.Is<ParameterExpression>(a => a == param)).Returns(expected);
+            subject.Protected().Setup<IEnumerable<MemberChainItem>>("_GetMembersForParameter", ItExpr.Is<ParameterExpression>(a => a == param)).Returns(expected);
 
             // act
             var actual = subject.Object.GetMembersForParameter(param);
@@ -201,15 +201,15 @@ namespace BackToFront.Tests.UnitTests.Expressions
         public void GetMembersForParameter_Test_WithCache()
         {
             // arrange
-            var expected1 = new MemberInfo[0];
-            var expected2 = new MemberInfo[0];
+            var expected1 = new MemberChainItem[0];
+            var expected2 = new MemberChainItem[0];
             var param = Expression.Parameter(typeof(object));
             var subject = new M.Mock<ExpressionWrapperBase> { CallBase = true };
-            subject.Protected().Setup<IEnumerable<MemberInfo>>("_GetMembersForParameter", ItExpr.Is<ParameterExpression>(a => a == param)).Returns(expected1);
+            subject.Protected().Setup<IEnumerable<MemberChainItem>>("_GetMembersForParameter", ItExpr.Is<ParameterExpression>(a => a == param)).Returns(expected1);
 
             // act
             var actual1 = subject.Object.GetMembersForParameter(param);
-            subject.Protected().Setup<IEnumerable<MemberInfo>>("_GetMembersForParameter", ItExpr.Is<ParameterExpression>(a => a == param)).Returns(expected2);
+            subject.Protected().Setup<IEnumerable<MemberChainItem>>("_GetMembersForParameter", ItExpr.Is<ParameterExpression>(a => a == param)).Returns(expected2);
             var actual2 = subject.Object.GetMembersForParameter(param);
 
             // assert

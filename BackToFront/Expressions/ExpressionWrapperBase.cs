@@ -14,7 +14,7 @@ namespace BackToFront.Expressions
 {
     public abstract class ExpressionWrapperBase
     {
-        private readonly Dictionary<ParameterExpression, IEnumerable<MemberInfo>> _MembersCache = new Dictionary<ParameterExpression, IEnumerable<MemberInfo>>();
+        private readonly Dictionary<ParameterExpression, IEnumerable<MemberChainItem>> _MembersCache = new Dictionary<ParameterExpression, IEnumerable<MemberChainItem>>();
         public static readonly ReadOnlyDictionary<Type, Func<Expression, ExpressionWrapperBase>> Constructors;
         private static readonly Dictionary<Type, Func<Expression, ExpressionWrapperBase>> _Constructors = new Dictionary<Type, Func<Expression, ExpressionWrapperBase>>();
 
@@ -42,6 +42,7 @@ namespace BackToFront.Expressions
         /// <returns></returns>
         protected abstract Expression CompileInnerExpression(Mocks mocks);
         public abstract Expression WrappedExpression { get; }
+        protected virtual IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter) { yield break; }
 
         protected Expression CompileInnerExpression(IEnumerable<Mock> mocks)
         {
@@ -93,9 +94,7 @@ namespace BackToFront.Expressions
             return Constructors[type](expression);
         }
 
-        // TODO: this should be abstract
-        protected virtual IEnumerable<MemberInfo> _GetMembersForParameter(ParameterExpression parameter) { yield break; }
-        public IEnumerable<MemberInfo> GetMembersForParameter(ParameterExpression parameter)
+        public IEnumerable<MemberChainItem> GetMembersForParameter(ParameterExpression parameter)
         {
             if (!_MembersCache.ContainsKey(parameter))
             {

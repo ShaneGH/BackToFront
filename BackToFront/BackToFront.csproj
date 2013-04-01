@@ -76,6 +76,7 @@
     <Compile Include="Logic\Compilations\IConditionSatisfied.cs" />
     <Compile Include="Logic\ValidateResult.cs" />
     <Compile Include="Utils\CompiledMockedExpression.cs" />
+    <Compile Include="Utils\MemberChainItem.cs" />
     <Compile Include="Utils\ParentRuleWrappers.cs" />
     <Compile Include="Utils\Mocks.cs" />
     <Compile Include="Utils\DependencyWrapper.cs" />

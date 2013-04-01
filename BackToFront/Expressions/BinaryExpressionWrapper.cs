@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using E = System.Linq.Expressions;
 using BackToFront.Utils;
+using System.Reflection;
 
 
 namespace BackToFront.Expressions
@@ -58,6 +59,15 @@ namespace BackToFront.Expressions
                 return Expression;
 
             return E.Expression.MakeBinary(Expression.NodeType, lhs, rhs, Expression.IsLiftedToNull, Expression.Method, Expression.Conversion);
+        }
+
+        protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
+        {
+            foreach (var item in Left.GetMembersForParameter(parameter))
+                yield return item;
+
+            foreach (var item in Right.GetMembersForParameter(parameter))
+                yield return item;
         }
     }
 }
