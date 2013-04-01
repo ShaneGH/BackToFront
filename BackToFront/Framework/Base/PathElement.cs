@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 using BackToFront.Extensions;
+using BackToFront.Utils;
 
 namespace BackToFront.Framework.Base
 {
@@ -14,20 +15,25 @@ namespace BackToFront.Framework.Base
         public DeadEnd()
             : base(null) { }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
             yield break;
         }
 
-        public override IViolation ValidateEntity(TEntity subject, Utils.Mocks mocks)
+        public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
             return null;
         }
 
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
             return;
         }
+    }
+
+    public class ValidationContext
+    {
+        public Mocks Mocks { get; set; }
     }
 
     /// <summary>
@@ -38,12 +44,12 @@ namespace BackToFront.Framework.Base
     {
         private bool _locked = false;
         protected readonly Rule<TEntity> ParentRule;
-        public abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks);
+        public abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context);
         private static readonly DeadEnd<TEntity> _DeadEnd = new DeadEnd<TEntity>();
 
-        public PathElement<TEntity> NextOption(TEntity subject, Utils.Mocks mocks)
+        public PathElement<TEntity> NextOption(TEntity subject, ValidationContext context)
         {
-            var options = NextPathElements(subject, mocks).Where(a => a != null).ToArray();
+            var options = NextPathElements(subject, context).Where(a => a != null).ToArray();
             if (options.Length == 0)
             {
                 return _DeadEnd;
@@ -61,43 +67,15 @@ namespace BackToFront.Framework.Base
             ParentRule = rule;
         }
 
-        public virtual IViolation ValidateEntity(TEntity subject, Utils.Mocks mocks)
+        public virtual IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
-            return NextOption(subject, mocks).ValidateEntity(subject, mocks);
+            return NextOption(subject, context).ValidateEntity(subject, context);
         }
 
-        public virtual void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
+        public virtual void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
-            NextOption(subject, mocks).FullyValidateEntity(subject, violationList, mocks);
+            NextOption(subject, context).FullyValidateEntity(subject, violationList, context);
         }
-
-        ///// <summary>
-        ///// Validate the next element in the chain or return no violation if no more elements
-        ///// </summary>
-        ///// <param name="subject"></param>
-        ///// <returns></returns>
-        //protected IViolation ValidateNext(TEntity subject, Utils.Mocks mocks)
-        //{
-        //    //TODO: make private and handle next logic here (rather than in child)
-        //    var no = NextOption(subject, mocks);
-        //    if (no == null)
-        //        return null;
-
-        //    return no.ValidateEntity(subject, mocks);
-        //}
-
-        ///// <summary>
-        ///// Validate the next element in the chain or return no violation if no more elements
-        ///// </summary>
-        ///// <param name="subject"></param>
-        ///// <param name="violations"></param>
-        //protected void ValidateAllNext(TEntity subject, IList<IViolation> violations, Utils.Mocks mocks)
-        //{
-        //    //TODO: make private and handle next logic here (rather than in child)
-        //    var no = NextOption(subject, mocks);
-        //    if(no != null)
-        //        no.FullyValidateEntity(subject, violations, mocks);
-        //}
 
         protected TOutput Do<TOutput>(Func<TOutput> action)
         {

@@ -18,7 +18,7 @@ namespace BackToFront.Framework
         {
         }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
             yield return _Then;
             yield return _RequireThat;

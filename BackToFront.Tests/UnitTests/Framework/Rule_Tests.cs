@@ -21,7 +21,7 @@ namespace BackToFront.Tests.UnitTests.Framework
 
             public IEnumerable<PathElement<TEntity>> _NextPathElements()
             {
-                return NextPathElements(null, new U.Mocks(new U.Mock[0]));
+                return NextPathElements(null, new ValidationContext { Mocks = new U.Mocks(new U.Mock[0]) });
             }
         }
 
@@ -79,7 +79,7 @@ namespace BackToFront.Tests.UnitTests.Framework
             var violation = new SimpleViolation();
             var input1 = new object();
             var input2 = new  U.Mocks();
-            subject.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<BackToFront.Utils.Mocks>(b => b.Equals(input2)))).Returns(violation);
+            subject.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<ValidationContext>(b => b.Mocks == input2))).Returns(violation);
 
             // act
             var result = ((IValidate)subject.Object).ValidateEntity(input1, input2);
@@ -96,8 +96,8 @@ namespace BackToFront.Tests.UnitTests.Framework
             var violation = new SimpleViolation();
             var input1 = new object();
             var input2 = new U.Mocks();
-            subject.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<BackToFront.Utils.Mocks>(b => b.Equals(input2))))
-                .Callback<object, IList<IViolation>, IEnumerable<BackToFront.Utils.Mock>>((a, b, c) => b.Add(violation));
+            subject.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<ValidationContext>(b => b.Mocks == input2)))
+                .Callback<object, IList<IViolation>, ValidationContext>((a, b, c) => b.Add(violation));
 
             // act
             var result = ((IValidate)subject.Object).FullyValidateEntity(input1, input2);

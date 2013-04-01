@@ -31,7 +31,7 @@ namespace BackToFront.Framework
             return Do(() => _RequireThat = new RequirementFailed<TEntity>(property, this));
         }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
             yield return _Condition;
             yield return _RequireThat;
@@ -66,7 +66,7 @@ namespace BackToFront.Framework
         {
             if (subject is TEntity)
             {
-                return ValidateEntity((TEntity)subject, mocks);
+                return ValidateEntity((TEntity)subject, new ValidationContext { Mocks = mocks });
             }
 
             throw new InvalidOperationException("##");
@@ -77,7 +77,7 @@ namespace BackToFront.Framework
             if (subject is TEntity)
             {
                 List<IViolation> violations = new List<IViolation>();
-                FullyValidateEntity((TEntity)subject, violations, mocks);
+                FullyValidateEntity((TEntity)subject, violations, new ValidationContext { Mocks = mocks });
                 return violations.ToArray();
             }
 

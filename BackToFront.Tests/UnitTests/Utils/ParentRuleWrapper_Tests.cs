@@ -10,6 +10,7 @@ using M = Moq;
 using NUnit.Framework;
 using BackToFront.Utils;
 using BackToFront.Framework;
+using BackToFront.Framework.Base;
 
 namespace BackToFront.Tests.UnitTests.Utils
 {
@@ -29,12 +30,12 @@ namespace BackToFront.Tests.UnitTests.Utils
                 get { throw new NotImplementedException(); }
             }
 
-            public IViolation ValidateEntity(T subject, Mocks mocks)
+            public IViolation ValidateEntity(T subject, BackToFront.Framework.Base.ValidationContext context)
             {
                 return Violation;
             }
 
-            public void FullyValidateEntity(T subject, IList<IViolation> violationList, Mocks mocks)
+            public void FullyValidateEntity(T subject, IList<IViolation> violationList, BackToFront.Framework.Base.ValidationContext context)
             {
                 violationList.Add(Violation);
             }
@@ -89,7 +90,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         {
             // arrange
             var testClass = new TestClassChild();
-            var mocks = new Mocks();
+            var mocks = new ValidationContext { Mocks = new Mocks() };
             var violation = new M.Mock<IViolation>();
             var rule = new TestRule<TestClass>() { Violation = violation.Object };
 
@@ -107,7 +108,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         {
             // arrange
             var testClass = new TestClassChild();
-            var mocks = new Mocks();
+            var mocks = new ValidationContext { Mocks = new Mocks() };
             var violation = new M.Mock<IViolation>().Object;
             List<IViolation> violations = new List<IViolation>();
             var rule = new TestRule<TestClass>() { Violation = violation };

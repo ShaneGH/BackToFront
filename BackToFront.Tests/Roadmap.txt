@@ -1,11 +1,17 @@
 ﻿
-Deep validation
+Profiler
 Vallidation attribute
 Client side
 Domain Model
-Profiler
 
 More Expression types
 
-unit test Framework namespace
 unit test BackToFront.Logic.ValidateResult<TEntity>
+
+Hole in dependencies (what if user creates instance of DependencyWrapper)
+
+Thoughts on a profiler:	
+	Each sub rule registers itself with its parent rule.
+	Each ExpressionBase element registers itself with its parent rule.
+	Therefore each rule has access to all of its properties
+	Finally, if a rule breaks, we need to know what property broke it. Can we attach an expression to a violation?

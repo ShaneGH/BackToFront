@@ -22,7 +22,7 @@ namespace BackToFront.Tests.UnitTests.Framework
 
             public IEnumerable<PathElement<TEntity>> _NextPathElements(TEntity subject)
             {
-                return NextPathElements(subject, new Mocks(new Mock[0]));
+                return NextPathElements(subject, new ValidationContext { Mocks = new Mocks(new Mock[0]) });
             }
         }
 

@@ -9,6 +9,7 @@ using BackToFront.Utils;
 using BackToFront.Expressions;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Logic;
+using BackToFront.Framework.Base;
 
 namespace BackToFront.Framework
 {
@@ -20,7 +21,7 @@ namespace BackToFront.Framework
         {
             // TODO: catch cast exception
             var sub = (TEntity)subject;
-            return ValidateEntity(sub, mocks);
+            return ValidateEntity(sub, new ValidationContext { Mocks = mocks });
         }
 
         public IEnumerable<IViolation> FullyValidateEntity(object subject, Mocks mocks)
@@ -28,7 +29,7 @@ namespace BackToFront.Framework
             // TODO: catch cast exception
             var sub = (TEntity)subject;
             IList<IViolation> violationList = new List<IViolation>();
-            FullyValidateEntity(sub, violationList, mocks);
+            FullyValidateEntity(sub, violationList, new ValidationContext { Mocks = mocks });
             return violationList.ToArray();
         }
 
@@ -37,22 +38,22 @@ namespace BackToFront.Framework
             _Rules.Add(rule);
         }
 
-        public IViolation ValidateEntity(TEntity subject, Mocks mocks)
+        public IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
             IViolation violation;
             foreach (var rule in _Rules)
             {
-                if ((violation = rule.ValidateEntity(subject, mocks)) != null)
+                if ((violation = rule.ValidateEntity(subject, context)) != null)
                     return violation;
             }
 
             return null;
         }
 
-        public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Mocks mocks)
+        public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
             // TODO: catch cast exception
-            _Rules.Each(i => i.FullyValidateEntity(subject, violationList, mocks));
+            _Rules.Each(i => i.FullyValidateEntity(subject, violationList, context));
         }
     }
 }

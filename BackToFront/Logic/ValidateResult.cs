@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using BackToFront.Extensions.Reflection;
 using BackToFront.Validate;
+using BackToFront.Framework.Base;
 
 namespace BackToFront.Logic
 {
@@ -141,7 +142,7 @@ namespace BackToFront.Logic
         /// Orders rules, mocks and dependencies and delivers them to a function (for vaslidation)
         /// </summary>
         /// <param name="action">Validation function. Returns </param>
-        private void RunValidation(Func<IRuleValidation<TEntity>, Mocks, bool> action)
+        private void RunValidation(Func<IRuleValidation<TEntity>, ValidationContext, bool> action)
         {
             // segregate from global object
             var mocks = Mocks.ToArray();
@@ -174,7 +175,7 @@ namespace BackToFront.Logic
                     newMocks.Add(new Mock(new ConstantExpressionWrapper(Expression.Constant(a)), a.Value, a.Value.GetType(), MockBehavior.MockOnly));
                 });
 
-                success &= action(rule, new Mocks(newMocks));
+                success &= action(rule, new ValidationContext { Mocks = new Mocks(newMocks) });
             });
 
             // success, persist mock values

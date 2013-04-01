@@ -1,5 +1,6 @@
 ﻿using BackToFront.Extensions.Reflection;
 using BackToFront.Framework;
+using BackToFront.Framework.Base;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -28,8 +29,8 @@ namespace BackToFront.Utils
             Rule = rule;
 
             DependenciesProperty = typeof(IRuleValidation<>).MakeGenericType(EntityType).GetProperty("Dependencies");
-            ValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("ValidateEntity", new[] { EntityType, typeof(Mocks) });
-            FullyValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("FullyValidateEntity", new[] { EntityType, typeof(IList<IViolation>), typeof(Mocks) });
+            ValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("ValidateEntity", new[] { EntityType, typeof(ValidationContext) });
+            FullyValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("FullyValidateEntity", new[] { EntityType, typeof(IList<IViolation>), typeof(ValidationContext) });
         }
 
         public List<DependencyWrapper> Dependencies
@@ -40,14 +41,14 @@ namespace BackToFront.Utils
             }
         }
 
-        public IViolation ValidateEntity(TEntity subject, Mocks mocks)
+        public IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
-            return (IViolation)ValidateEntityMethod.Invoke(Rule, new object[] { subject, mocks });
+            return (IViolation)ValidateEntityMethod.Invoke(Rule, new object[] { subject, context });
         }
 
-        public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Mocks mocks)
+        public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
-            FullyValidateEntityMethod.Invoke(Rule, new object[] { subject, violationList, mocks });
+            FullyValidateEntityMethod.Invoke(Rule, new object[] { subject, violationList, context });
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BackToFront.Utils;
+﻿using BackToFront.Framework.Base;
+using BackToFront.Utils;
 using System.Collections.Generic;
 
 namespace BackToFront
@@ -34,13 +35,13 @@ namespace BackToFront
         /// </summary>
         /// <param name="subject">To validate</param>
         /// <returns>Validation or null</returns>
-        IViolation ValidateEntity(TEntity subject, Mocks mocks);
+        IViolation ValidateEntity(TEntity subject, ValidationContext context);
 
         /// <summary>
         /// Validate the subject and return all business rule violations
         /// </summary>
         /// <param name="subject">The subject</param>
         /// <param name="violationList">Violations</param>
-        void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Mocks mocks);
+        void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context);
     }
 }

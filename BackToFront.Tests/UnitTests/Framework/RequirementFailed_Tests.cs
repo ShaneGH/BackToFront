@@ -1,4 +1,5 @@
 ﻿using BackToFront.Framework;
+using BackToFront.Framework.Base;
 using BackToFront.Utils;
 using NUnit.Framework;
 using System;
@@ -49,7 +50,7 @@ namespace BackToFront.Tests.UnitTests.Framework
         public void ValidateEntity_Test()
         {
             var rule = new Rule<object>();
-            var mocks = new Mocks();
+            var mocks = new ValidationContext { Mocks = new Mocks() };
             var entity = new object();
             var violation = new M.Mock<IViolation>().Object;
             Expression<Func<object, bool>> exp = a => true;
@@ -66,7 +67,7 @@ namespace BackToFront.Tests.UnitTests.Framework
         public void FullyValidateEntity_Test()
         {
             var rule = new Rule<object>();
-            var mocks = new Mocks();
+            var mocks = new ValidationContext { Mocks = new Mocks() };
             var entity = new object();
             var violation = new M.Mock<IViolation>().Object;
             Expression<Func<object, bool>> exp = a => true;

@@ -15,17 +15,17 @@ namespace BackToFront.Tests.Utilities
         public SimpleIValidate()
             : base(null) { }
 
-        public override IViolation ValidateEntity(object subject, Utils.Mocks mocks)
+        public override IViolation ValidateEntity(object subject, ValidationContext context)
         {
             return Violation;
         }
 
-        public override void FullyValidateEntity(object subject, IList<IViolation> violationList, Utils.Mocks mocks)
+        public override void FullyValidateEntity(object subject, IList<IViolation> violationList, ValidationContext context)
         {
             violationList.Add(Violation);
         }
 
-        public override IEnumerable<PathElement<object>> NextPathElements(object subject, Utils.Mocks mocks)
+        public override IEnumerable<PathElement<object>> NextPathElements(object subject, ValidationContext context)
         {
             yield break;
         }

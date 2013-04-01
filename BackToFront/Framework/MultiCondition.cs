@@ -14,11 +14,11 @@ namespace BackToFront.Framework
         public MultiCondition(Rule<TEntity> rule)
             : base(rule) { }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
             foreach (var i in If)
             {
-                if (i.ConditionIsTrue(subject, mocks))
+                if (i.ConditionIsTrue(subject, context.Mocks))
                 {
                     yield return i;
                     yield break;

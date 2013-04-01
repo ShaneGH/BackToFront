@@ -15,10 +15,10 @@ namespace BackToFront.Framework
         {
         }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
             yield return _RequirementFailed;
-            foreach (var element in base.NextPathElements(subject, mocks))
+            foreach (var element in base.NextPathElements(subject, context))
             {
                 yield return element;
             }

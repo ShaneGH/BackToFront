@@ -26,7 +26,7 @@ namespace BackToFront.Framework
             _subRules.AddRule(subRule);
         }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, Utils.Mocks mocks)
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
             yield break;
         }
@@ -45,14 +45,14 @@ namespace BackToFront.Framework
             return subRule.RequireThat(property);
         }
 
-        public override IViolation ValidateEntity(TEntity subject, Utils.Mocks mocks)
+        public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
-            return _subRules.ValidateEntity(subject, mocks);
+            return _subRules.ValidateEntity(subject, context);
         }
 
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, Utils.Mocks mocks)
+        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
-            _subRules.FullyValidateEntity(subject, violationList, mocks);
+            _subRules.FullyValidateEntity(subject, violationList, context);
         }
     }
 }
