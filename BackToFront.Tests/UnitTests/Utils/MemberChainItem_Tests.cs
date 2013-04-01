@@ -29,7 +29,7 @@ namespace BackToFront.Tests.UnitTests.Utils
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void Constructor_Test_SetNext()
+        public void SetNext_Test_Invalid()
         {
             // arrange
             var intThing = typeof(int).GetMethod("CompareTo", new[] { typeof(int) });
@@ -43,7 +43,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         }
 
         [Test]
-        public void Constructor_Test_SetNext_Valid()
+        public void SetNext_Test_Valid()
         {
             // arrange
             var objectThing = typeof(object).GetMethod("ToString");
@@ -58,6 +58,62 @@ namespace BackToFront.Tests.UnitTests.Utils
             // assert
             Assert.AreEqual(objectThing, subject.Member);
             Assert.AreEqual(stringThing, subject.NextItem.Member);
+        }
+
+        [Test]
+        public void AreSame_Test_referenceEquals_true()
+        {
+            // arrange
+            var subject = new MemberChainItem(typeof(string));
+
+            // act
+            // assert
+            Assert.IsTrue(subject.AreSame(subject));
+        }
+
+        [Test]
+        public void AreSame_Test_valueEquals_true()
+        {
+            // arrange
+            var subject1 = new MemberChainItem(typeof(string));
+            subject1.SetNext(typeof(string).GetMethod("GetHashCode"));
+
+            var subject2 = new MemberChainItem(typeof(string));
+            subject2.SetNext(typeof(string).GetMethod("GetHashCode"));
+
+            // act
+            // assert
+            Assert.IsTrue(subject1.AreSame(subject2));
+        }
+
+        [Test]
+        public void AreSame_Test_valueEquals_false_Member()
+        {
+            // arrange
+            var subject1 = new MemberChainItem(typeof(string));
+            subject1.SetNext(typeof(string).GetMethod("GetHashCode"));
+
+            var subject2 = new MemberChainItem(typeof(object));
+            subject2.SetNext(typeof(object).GetMethod("GetHashCode"));
+
+            // act
+            // assert
+            Assert.IsFalse(subject1.AreSame(subject2));
+        }
+
+        [Test]
+        public void AreSame_Test_valueEquals_false_next()
+        {
+            // arrange
+            var subject1 = new MemberChainItem(typeof(object));
+            subject1.SetNext(typeof(object).GetMethod("ToString"));
+
+            var subject2 = new MemberChainItem(typeof(object));
+            subject2.SetNext(typeof(object).GetMethod("GetHashCode"));
+
+            // act
+            // assert
+            Assert.IsFalse(subject1.AreSame(subject2));
         }
     }
 }

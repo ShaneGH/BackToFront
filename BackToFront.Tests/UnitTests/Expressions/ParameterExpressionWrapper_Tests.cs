@@ -24,6 +24,11 @@ namespace BackToFront.Tests.UnitTests.Expressions
         {
             return CompileInnerExpression(mocks);
         }
+
+        public IEnumerable<MemberChainItem> __GetMembersForParameter(ParameterExpression p)
+        {
+            return base._GetMembersForParameter(p);
+        }
     }
 
     [TestFixture]
@@ -72,6 +77,38 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
             // assert
             Assert.AreEqual(subject.Expression, result);
+        }
+
+        [Test]
+        public void _GetMembersForParameter_Test_ValidParameter()
+        {
+            // arange
+            var member = Expression.Parameter(typeof(string));
+            var subject = new TestSubjectWrapper(member);
+
+            // act
+            var result = subject.__GetMembersForParameter(member);
+
+            // assert
+            Assert.AreEqual(1, result.Count());
+            var test = result.ElementAt(0);
+
+            Assert.AreEqual(typeof(string), test.Member);
+            Assert.IsNull(test.NextItem);
+        }
+
+        [Test]
+        public void _GetMembersForParameter_Test_InvalidParameter()
+        {
+            // arange
+            var member = Expression.Parameter(typeof(string));
+            var subject = new TestSubjectWrapper(member);
+
+            // act
+            var result = subject.__GetMembersForParameter(Expression.Parameter(typeof(string)));
+
+            // assert
+            Assert.AreEqual(0, result.Count());
         }
 
         [Test]

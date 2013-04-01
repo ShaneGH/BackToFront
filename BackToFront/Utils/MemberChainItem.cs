@@ -12,7 +12,7 @@ namespace BackToFront.Utils
     public class MemberChainItem
     {
         public readonly MemberInfo Member;
-        public MemberChainItem _NextItem;
+        private MemberChainItem _NextItem;
         public MemberChainItem NextItem
         {
             get
@@ -21,7 +21,6 @@ namespace BackToFront.Utils
             }
             set
             {
-
                 if (value != null && value.Member.DeclaringType != Member.MemberType())
                     throw new InvalidOperationException("##");
 
@@ -40,6 +39,17 @@ namespace BackToFront.Utils
         public void SetNext(MemberInfo member)
         {
             NextItem = new MemberChainItem(member);
+        }
+
+        public bool AreSame(MemberChainItem item)
+        {
+            if (this.Equals(item))
+                return true;
+
+            if (item == null || item.Member!= Member)
+                return false;
+
+            return (NextItem == null && item.NextItem == null) || NextItem.AreSame(item.NextItem);
         }
     }
 }

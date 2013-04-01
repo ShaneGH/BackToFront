@@ -43,5 +43,10 @@ namespace BackToFront.Expressions
             return result == Operand.WrappedExpression ? Expression :
                 E.Expression.MakeUnary(Expression.NodeType, result, Expression.Type, Expression.Method);
         }
+
+        protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
+        {
+            return Operand.GetMembersForParameter(parameter);
+        }
     }
 }

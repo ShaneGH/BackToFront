@@ -27,6 +27,11 @@ namespace BackToFront.Tests.UnitTests.Expressions
             {
                 return CompileInnerExpression(mocks);
             }
+
+            public IEnumerable<MemberChainItem> __GetMembersForParameter(ParameterExpression p)
+            {
+                return base._GetMembersForParameter(p);
+            }
         }
 
         [Test]
@@ -62,6 +67,26 @@ namespace BackToFront.Tests.UnitTests.Expressions
         }
 
         [Test]
+        public void _GetMembersForParameter_Test()
+        {
+            // arange
+            var param = Expression.Parameter(typeof(int));
+            var item2 = Expression.Call(param, typeof(int).GetMethod("GetHashCode"));
+            var subject = new TestClass(Expression.Add(param, item2));
+            
+            // act
+            var actual = subject.__GetMembersForParameter(param);
+            var expected = new MemberChainItem[] 
+            { 
+                new ParameterExpressionWrapper(param).GetMembersForParameter(param).ElementAt(0), 
+                new MethodCallExpressionWrapper(item2).GetMembersForParameter(param).ElementAt(0) 
+            };
+
+            // assert
+            Assert.IsTrue(AreKindOfEqual(expected, actual, (a, b) => a.AreSame(b)));
+        }
+
+        [Test]
         public void CompileInnerExpression_Test_withMocks()
         {
             const int mockedVal = 99;
@@ -84,7 +109,5 @@ namespace BackToFront.Tests.UnitTests.Expressions
             Assert.AreEqual(testExp.NodeType, result.NodeType);
             Assert.AreEqual(testExp.Method, result.Method);
         }
-
-      //  public void 
     }
 }

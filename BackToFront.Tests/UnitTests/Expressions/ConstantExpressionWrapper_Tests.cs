@@ -27,6 +27,11 @@ namespace BackToFront.Tests.UnitTests.Expressions
             {
                 return CompileInnerExpression(mocks);
             }
+
+            public IEnumerable<MemberChainItem> __GetMembersForParameter(ParameterExpression p)
+            {
+                return base._GetMembersForParameter(p);
+            }
         }
 
         [Test]
@@ -56,6 +61,19 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
             // assert
             Assert.AreEqual(subject.Expression, result);
+        }
+
+        [Test]
+        public void _GetMembersForParameter_Test()
+        {
+            // arange
+            var subject = new TestClass(Expression.Constant(4));
+
+            // act
+            var result = subject.__GetMembersForParameter(null);
+
+            // assert
+            Assert.AreEqual(0, result.Count());
         }
     }
 }

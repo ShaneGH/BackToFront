@@ -14,11 +14,13 @@ namespace BackToFront.Extensions.IEnumerable
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
         /// <param name="action"></param>
-        public static void Each<T>(this IEnumerable<T> items, Action<T> action)
+        public static IEnumerable<T> Each<T>(this IEnumerable<T> items, Action<T> action)
         {
             var enumerated = items.ToArray();
             for (int i = 0, ii = enumerated.Length; i < ii; i++)
                 action(enumerated[i]);
+
+            return items;
         }
 
         /// <summary>

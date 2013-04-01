@@ -99,6 +99,19 @@ namespace BackToFront.Tests.UnitTests.Extensions
         }
 
         [Test]
+        public void MemberType_Test_Type()
+        {
+            // arrange
+            var member = typeof(TestClass1);
+
+            // act
+            var subject = Reflection.MemberType(member);
+
+            // assert
+            Assert.AreEqual(member, subject);
+        }
+
+        [Test]
         public void MemberType_Test_Method()
         {
             // arrange

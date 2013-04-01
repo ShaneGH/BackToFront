@@ -41,6 +41,11 @@ namespace BackToFront.Tests.UnitTests.Expressions
             {
                 get { return WExpression; }
             }
+
+            protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         #region constructors

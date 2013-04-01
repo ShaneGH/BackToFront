@@ -43,5 +43,11 @@ namespace BackToFront.Expressions
 
             return root;
         }
+
+        protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
+        {
+            if (parameter == Expression)
+                yield return new MemberChainItem(parameter.Type);
+        }
     }
 }

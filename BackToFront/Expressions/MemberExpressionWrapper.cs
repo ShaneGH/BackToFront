@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using E = System.Linq.Expressions;
 using BackToFront.Utils;
 
+using BackToFront.Extensions.IEnumerable;
 using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Expressions
@@ -80,6 +82,13 @@ namespace BackToFront.Expressions
             {
                 throw new InvalidOperationException("##");
             }
+        }
+
+        protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
+        {
+            var root = InnerExpression.GetMembersForParameter(parameter);
+            root.Each(r => r.SetNext(Expression.Member));
+            return root;
         }
     }
 }

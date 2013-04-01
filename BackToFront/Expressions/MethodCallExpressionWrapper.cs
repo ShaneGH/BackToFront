@@ -62,5 +62,16 @@ namespace BackToFront.Expressions
 
             return E.Expression.Call(eval, Expression.Method, arguments);
         }
+
+        protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
+        {
+            var items = 
+                new[] { Object.GetMembersForParameter(parameter).Each(i => i.SetNext(Expression.Method)) }
+                .Concat(Arguments.Select(a => a.GetMembersForParameter(parameter)))
+                .Aggregate();
+
+            foreach (var item in items)
+                yield return item;
+        }
     }
 }

@@ -42,7 +42,7 @@ namespace BackToFront.Expressions
         /// <returns></returns>
         protected abstract Expression CompileInnerExpression(Mocks mocks);
         public abstract Expression WrappedExpression { get; }
-        protected virtual IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter) { yield break; }
+        protected abstract IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter);
 
         protected Expression CompileInnerExpression(IEnumerable<Mock> mocks)
         {

@@ -30,5 +30,10 @@ namespace BackToFront.Expressions
         {
             return Expression;
         }
+
+        protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
+        {
+            yield break;
+        }
     }
 }

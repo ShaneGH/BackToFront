@@ -56,6 +56,8 @@ namespace BackToFront.Extensions.Reflection
 
         public static Type MemberType(this MemberInfo member)
         {
+            if (member is Type)
+                return member as Type;
             if (member is MethodInfo)
                 return (member as MethodInfo).ReturnType;
             if (member is PropertyInfo)

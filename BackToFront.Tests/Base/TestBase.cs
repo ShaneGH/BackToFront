@@ -76,16 +76,21 @@ namespace BackToFront.Tests.Base
             return Expression.Lambda<Func<TEntity, TMember>>(expression, parameters).Compile();
         }
 
-        public static bool AreKindOfEqual<T>(IEnumerable<T> item1, IEnumerable<T> item2)
+        public static bool AreKindOfEqual<T>(IEnumerable<T> item1, IEnumerable<T> item2, Func<T,T,bool> comparitor)
         {
             if (item1.Count() != item2.Count())
                 return false;
 
             for (var i = 0; i < item1.Count(); i++)
-                if (!item1.ElementAt(i).Equals(item2.ElementAt(i)))
+                if (!comparitor(item1.ElementAt(i), item2.ElementAt(i)))
                     return false;
 
             return true;
+        }
+
+        public static bool AreKindOfEqual<T>(IEnumerable<T> item1, IEnumerable<T> item2)
+        {
+            return AreKindOfEqual(item1, item2, (a, b) => a.Equals(b));
         }
     }
 }
