@@ -31,13 +31,13 @@ namespace BackToFront.Tests.UnitTests.Framework
             var subject = new RuleCollection<object>();
 
             var input1 = new object();
-            var input2 = new U.Mocks(new U.Mock[0]);
+            var input2 = new U.Mocks(new[] { new U.Mock(wrapperExpression: null, value: null, valueType: null, behavior: Enum.MockBehavior.MockAndSet) });
 
             var rule1 = new Mock<IValidate<object>>();
             var rule2 = new Mock<IValidate<object>>();
-            rule1.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => b.Mocks == input2)))
+            rule1.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
                 .Returns<IViolation>(null);
-            rule2.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => b.Mocks == input2)))
+            rule2.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
                 .Returns<IViolation>(null);
 
             subject.AddRule(rule1.Object);
@@ -64,9 +64,9 @@ namespace BackToFront.Tests.UnitTests.Framework
             IViolation v1 = new SimpleViolation();
             var rule1 = new Mock<IValidate<object>>();
             var rule2 = new Mock<IValidate<object>>();
-            rule1.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => b.Mocks == input2)))
+            rule1.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
                 .Returns(v1);
-            rule2.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => b.Mocks == input2)))
+            rule2.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
                 .Throws(new NUnit.Framework.AssertionException("rule2.ValidateEntity Should not be called"));
 
             subject.AddRule(rule1.Object);
@@ -92,9 +92,9 @@ namespace BackToFront.Tests.UnitTests.Framework
             IViolation v2 = new SimpleViolation();
             var rule1 = new Mock<IValidate<object>>();
             var rule2 = new Mock<IValidate<object>>();
-            rule1.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => b.Mocks == input2)))
+            rule1.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
                 .Returns<IViolation>(null);
-            rule2.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => b.Mocks == input2)))
+            rule2.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
                 .Returns(v2);
 
             subject.AddRule(rule1.Object);
@@ -122,9 +122,9 @@ namespace BackToFront.Tests.UnitTests.Framework
             IViolation v2 = new SimpleViolation();
             var rule1 = new Mock<IValidate<object>>();
             var rule2 = new Mock<IValidate<object>>();
-            rule1.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<U.ValidationContext>(b => b.Mocks == input2)))
+            rule1.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
                 .Callback<object, IList<IViolation>, U.ValidationContext>((a, b, c) => b.Add(v1));
-            rule2.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<U.ValidationContext>(b => b.Mocks == input2)))
+            rule2.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
                 .Callback<object, IList<IViolation>, U.ValidationContext>((a, b, c) => b.Add(v2));
 
             subject.AddRule(rule1.Object);
