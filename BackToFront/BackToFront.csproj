@@ -94,6 +94,7 @@
     <Compile Include="Utils\Mock.cs" />
     <Compile Include="Utils\ParentRuleWrapper.cs" />
     <Compile Include="Utils\ReadonlyDictionary.cs" />
+    <Compile Include="Utils\ValidationContext.cs" />
     <Compile Include="_\IRule.cs" />
     <Compile Include="_\Rules.cs" />
     <Compile Include="Logic\IBeginSubRule.cs" />

@@ -31,11 +31,6 @@ namespace BackToFront.Framework.Base
         }
     }
 
-    public class ValidationContext
-    {
-        public Mocks Mocks { get; set; }
-    }
-
     /// <summary>
     /// A class attached to a Rule which points to the next step in the operation
     /// </summary>

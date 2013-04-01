@@ -30,12 +30,12 @@ namespace BackToFront.Tests.UnitTests.Utils
                 get { throw new NotImplementedException(); }
             }
 
-            public IViolation ValidateEntity(T subject, BackToFront.Framework.Base.ValidationContext context)
+            public IViolation ValidateEntity(T subject, ValidationContext context)
             {
                 return Violation;
             }
 
-            public void FullyValidateEntity(T subject, IList<IViolation> violationList, BackToFront.Framework.Base.ValidationContext context)
+            public void FullyValidateEntity(T subject, IList<IViolation> violationList, ValidationContext context)
             {
                 violationList.Add(Violation);
             }
