@@ -16,6 +16,14 @@ namespace BackToFront.Framework
     public class RuleCollection<TEntity> : IValidate, IValidate<TEntity>
     {
         private readonly List<IValidate<TEntity>> _Rules = new List<IValidate<TEntity>>();
+        public IEnumerable<IValidate<TEntity>> Rules
+        {
+            get
+            {
+                // TODO: cache
+                return _Rules.ToArray();
+            }
+        }
 
         public IViolation ValidateEntity(object subject, Mocks mocks)
         {
@@ -42,18 +50,20 @@ namespace BackToFront.Framework
         {
             IViolation violation;
             foreach (var rule in _Rules)
-            {
                 if ((violation = rule.ValidateEntity(subject, context.Copy())) != null)
                     return violation;
-            }
 
             return null;
         }
 
         public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
-            // TODO: catch cast exception
-            _Rules.Each(i => i.FullyValidateEntity(subject, violationList, context.Copy()));
+            _Rules.Each(r => r.FullyValidateEntity(subject, violationList, context.Copy()));
+        }
+
+        public IEnumerable<MemberChainItem> AffectedMembers
+        {
+            get { return _Rules.Select(r => r.AffectedMembers).Aggregate(); }
         }
     }
 }

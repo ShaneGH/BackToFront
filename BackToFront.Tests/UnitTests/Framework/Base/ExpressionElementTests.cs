@@ -15,11 +15,12 @@ using NUnit.Framework;
 using M = Moq;
 
 using BackToFront.Tests.Utilities;
+using BackToFront.Expressions;
 
 namespace BackToFront.Tests.UnitTests.Framework.Base
 {
     [TestFixture]
-    public class ExpressionElementTests    
+    public class ExpressionElementTests :BackToFront.Tests.Base.TestBase
     {
         [Test]
         public void CompileTest()
@@ -27,13 +28,29 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
             // arrange
             var hello = "hello";
             Expression<Func<object, string>> desc = a => hello;
-            var subject = new M.Mock<ExpressionElement<object, string>>(desc, null);
+            var subject = new M.Mock<ExpressionElement<object, string>>(desc, null) { CallBase = true };
 
             // act
             var actual = subject.Object.Compile();
 
             // assert
             Assert.AreEqual(hello, actual.Invoke(new object()));
+        }
+
+        [Test]
+        public void AffectedMembers_Test()
+        {
+            // arrange
+            Expression<Func<object, string>> desc = a => a.ToString();
+            var subject = new M.Mock<ExpressionElement<object, string>>(desc, null) { CallBase = true };
+            var expected = ((MethodCallExpressionWrapper)GetPrivateProperty(subject.Object, "Descriptor")).GetMembersForParameter(desc.Parameters.First());
+
+            // act
+            var actual = subject.Object.AffectedMembers;
+
+            // assert
+            Assert.AreEqual(1, actual.Count());
+            Assert.AreEqual(expected, actual);
         }
     }
 }

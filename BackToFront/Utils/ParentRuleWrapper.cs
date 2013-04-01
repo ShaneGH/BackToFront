@@ -11,8 +11,9 @@ namespace BackToFront.Utils
     {
         public readonly Type EntityType;
         public readonly object Rule;
-        
+
         public readonly PropertyInfo DependenciesProperty;
+        public readonly PropertyInfo AffectedMembersProperty;
         public readonly MethodInfo ValidateEntityMethod;
         public readonly MethodInfo FullyValidateEntityMethod;
 
@@ -29,6 +30,7 @@ namespace BackToFront.Utils
             Rule = rule;
 
             DependenciesProperty = typeof(IRuleValidation<>).MakeGenericType(EntityType).GetProperty("Dependencies");
+            AffectedMembersProperty = typeof(IValidate<>).MakeGenericType(EntityType).GetProperty("AffectedMembers");
             ValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("ValidateEntity", new[] { EntityType, typeof(ValidationContext) });
             FullyValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("FullyValidateEntity", new[] { EntityType, typeof(IList<IViolation>), typeof(ValidationContext) });
         }
@@ -49,6 +51,14 @@ namespace BackToFront.Utils
         public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
             FullyValidateEntityMethod.Invoke(Rule, new object[] { subject, violationList, context });
+        }
+
+        public IEnumerable<MemberChainItem> AffectedMembers
+        {
+            get
+            {
+                return (IEnumerable<MemberChainItem>)AffectedMembersProperty.GetValue(Rule);                    
+            }
         }
     }
 }

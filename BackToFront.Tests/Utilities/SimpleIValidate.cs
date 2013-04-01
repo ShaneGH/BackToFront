@@ -30,5 +30,10 @@ namespace BackToFront.Tests.Utilities
         {
             yield break;
         }
+
+        public override IEnumerable<MemberChainItem> AffectedMembers
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

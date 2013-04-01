@@ -62,7 +62,7 @@ namespace BackToFront
         }
 
         private readonly ObservableCollection<IRuleValidation<TEntity>> _Rules = new ObservableCollection<IRuleValidation<TEntity>>();
-        public IEnumerable<IRuleValidation<TEntity>> _Registered;
+        private IEnumerable<IRuleValidation<TEntity>> _Registered;
         public IEnumerable<IRuleValidation<TEntity>> Registered
         {
             get

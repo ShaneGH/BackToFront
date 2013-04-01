@@ -29,6 +29,14 @@ namespace BackToFront.Framework.Base
         {
             return;
         }
+
+        public override IEnumerable<MemberChainItem> AffectedMembers
+        {
+            get
+            {
+                yield break;
+            }
+        }
     }
 
     /// <summary>
@@ -41,6 +49,8 @@ namespace BackToFront.Framework.Base
         protected readonly Rule<TEntity> ParentRule;
         public abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context);
         private static readonly DeadEnd<TEntity> _DeadEnd = new DeadEnd<TEntity>();
+
+        public abstract IEnumerable<MemberChainItem> AffectedMembers { get; }
 
         public PathElement<TEntity> NextOption(TEntity subject, ValidationContext context)
         {
@@ -60,6 +70,8 @@ namespace BackToFront.Framework.Base
         public PathElement(Rule<TEntity> rule)
         {
             ParentRule = rule;
+            if (ParentRule != null)
+                ParentRule.Register(this);
         }
 
         public virtual IViolation ValidateEntity(TEntity subject, ValidationContext context)

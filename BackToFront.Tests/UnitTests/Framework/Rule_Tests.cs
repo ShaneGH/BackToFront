@@ -26,6 +26,29 @@ namespace BackToFront.Tests.UnitTests.Framework
         }
 
         [Test]
+        public void AllSubRules_Test()
+        {
+            // arrange
+            var r1 = new Rule<object>();
+            var r2 = new Rule<object>(r1);
+            var r3 = new Rule<object>(r2);
+            var r4 = new Rule<object>(r3);
+            var r5 = new Rule<object>(r1);
+            var r6 = new Rule<object>(r2);
+
+            // act
+            var result = r1.AllChildRules.ToArray();
+
+            // assert
+            Assert.AreEqual(5, result.Count());
+            Assert.IsTrue(result.Contains(r2));
+            Assert.IsTrue(result.Contains(r3));
+            Assert.IsTrue(result.Contains(r4));
+            Assert.IsTrue(result.Contains(r5));
+            Assert.IsTrue(result.Contains(r6));
+        }
+
+        [Test]
         public void RequireThat_Test()
         {
             // arrange
@@ -127,6 +150,29 @@ namespace BackToFront.Tests.UnitTests.Framework
 
             // act
             var result = ((IValidate)subject).ValidateEntity(76, null);
+        }
+
+        [Test]
+        public void AffectedMembers_Test()
+        {
+            // arrange
+            var subject = new Rule<object>();
+
+            var item1 = new U.MemberChainItem(typeof(string));
+            var v1 = new Mock<IValidate<object>>();
+            v1.Setup(a => a.AffectedMembers).Returns(new[] { item1 });
+            subject.Register(v1.Object);
+
+            var item2 = new U.MemberChainItem(typeof(string));
+            var v2 = new Mock<IValidate<object>>();
+            v2.Setup(a => a.AffectedMembers).Returns(new[] { item2 });
+            subject.Register(v2.Object);
+
+            // act
+            var actual = subject.AffectedMembers;
+
+            // assert
+            Assert.IsTrue(AreKindOfEqual(new[] { item1, item2 }, actual));
         }
     }
 }

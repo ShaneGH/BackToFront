@@ -47,5 +47,13 @@ namespace BackToFront.Framework
             if (violation != null)
                 violationList.Add(violation);
         }
+
+        public override IEnumerable<MemberChainItem> AffectedMembers
+        {
+            get
+            {
+                yield break;
+            }
+        }
     }
 }

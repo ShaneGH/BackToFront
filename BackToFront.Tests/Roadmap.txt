@@ -1,7 +1,4 @@
 ﻿
-Expression wrapper base, there is a virtual method which has to be made abstract
-
-Profiler
 Vallidation attribute
 Client side
 Domain Model
@@ -14,10 +11,14 @@ unit test BackToFront.Rules<TEntity>.ParentClassRepositories
 
 Special case for IEnumerables
 
-Hole in dependencies (what if user creates instance of DependencyWrapper)
+Hole in dependencies. What if user creates instance of DependencyWrapper
 
-Thoughts on a profiler:	
-	Each sub rule registers itself with its parent rule.
-	Each ExpressionBase element registers itself with its parent rule.
-	Therefore each rule has access to all of its properties
-	Finally, if a rule breaks, we need to know what property broke it. Can we attach an expression to a violation?
+Thoughts on validation attribute: 
+	Find all rules which target the member in question
+	filter by those which do not have dependencies
+	filter by rules which appear in a Require statement (not an if)
+	add filtered rules to a validation context (TargetedRules)
+	ensure each rule will only validate if it is on of the TargetedRules or TargetedRules == null
+	cache result of validation in ValidationAttribute validationContext 
+
+Reflection: if a parent type implements an interface, does the child type aswell?

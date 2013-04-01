@@ -43,5 +43,10 @@ namespace BackToFront
         /// <param name="subject">The subject</param>
         /// <param name="violationList">Violations</param>
         void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context);
+
+        /// <summary>
+        /// All of the members which are touched by this object and its children
+        /// </summary>
+        IEnumerable<MemberChainItem> AffectedMembers { get; }
     }
 }

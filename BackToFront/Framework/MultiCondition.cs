@@ -1,6 +1,8 @@
-﻿using BackToFront.Framework.Base;
+﻿using BackToFront.Extensions.IEnumerable;
+using BackToFront.Framework.Base;
 using BackToFront.Utils;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BackToFront.Framework
 {
@@ -28,6 +30,14 @@ namespace BackToFront.Framework
                 {
                     yield return null;
                 }
+            }
+        }
+
+        public override IEnumerable<MemberChainItem> AffectedMembers
+        {
+            get
+            {
+                return If.Select(i => i.AffectedMembers).Aggregate();
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using BackToFront.Framework;
 using BackToFront.Framework.Base;
 using BackToFront.Tests.Utilities;
+using BackToFront.Utils;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -139,6 +140,29 @@ namespace BackToFront.Tests.UnitTests.Framework
             Assert.AreEqual(v2, result.ElementAt(1));
             rule1.VerifyAll();
             rule2.VerifyAll();
+        }
+
+        [Test]
+        public void AffectedMembers_Test()
+        {
+            // arrange
+            var subject = new RuleCollection<object>();
+
+            var item1 = new MemberChainItem(typeof(string));
+            var rule1 = new Mock<IValidate<object>>();
+            rule1.Setup(a => a.AffectedMembers).Returns(new[] { item1 });
+            subject.AddRule(rule1.Object);
+
+            var item2 = new MemberChainItem(typeof(string));
+            var rule2 = new Mock<IValidate<object>>();
+            rule2.Setup(a => a.AffectedMembers).Returns(new[] { item2 });
+            subject.AddRule(rule2.Object);
+
+            // act
+            var actual = subject.AffectedMembers;
+
+            // assert
+            Assert.IsTrue(AreKindOfEqual(new[] { item1, item2 }, actual));
         }
     }
 }

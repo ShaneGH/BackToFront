@@ -23,6 +23,9 @@ namespace BackToFront.Tests.UnitTests.Utils
 
         public class TestRule<T> : IRuleValidation<T>
         {
+            public static IEnumerable<MemberChainItem> AffectedMembersStatic = new MemberChainItem[0];
+
+
             public IViolation Violation { get; set; }
 
             public List<DependencyWrapper> Dependencies
@@ -38,6 +41,11 @@ namespace BackToFront.Tests.UnitTests.Utils
             public void FullyValidateEntity(T subject, IList<IViolation> violationList, ValidationContext context)
             {
                 violationList.Add(Violation);
+            }
+
+            public IEnumerable<MemberChainItem> AffectedMembers
+            {
+                get { return AffectedMembersStatic; }
             }
         }
 
@@ -83,6 +91,18 @@ namespace BackToFront.Tests.UnitTests.Utils
             // act
             // assert
             Assert.AreEqual(rule.Dependencies, subject.Dependencies);
+        }
+
+        [Test]
+        public void AffectedProperties_Test()
+        {
+            // arrange
+            var rule = new TestRule<TestClass>();
+            var subject = new ParentRuleWrapper<TestClass>(typeof(TestClass), rule);
+
+            // act
+            // assert
+            Assert.AreEqual(rule.AffectedMembers, subject.AffectedMembers);
         }
 
         [Test]

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using M = Moq;
 using NUnit.Framework;
 using BackToFront.Framework;
 using BackToFront.Framework.Base;
@@ -67,6 +67,29 @@ namespace BackToFront.Tests.UnitTests.Framework
             Assert.IsTrue(result.Count() > 0 && result.Count(a => a != null) <= 1);
             Assert.AreEqual(pos, index);
 
+        }
+
+        [Test]
+        public void AffectedMembers_Test()
+        {
+            // arrange
+            var subject = new MultiCondition<object>(null);
+
+            var conditions = new[]
+            {
+                new BackToFront.Framework.Operator<object>(a => a.GetHashCode() == 6, null),
+                new BackToFront.Framework.Operator<object>(a => a.GetHashCode() == 6, null),
+                new BackToFront.Framework.Operator<object>(a => a.GetHashCode() == 6, null)
+            };
+
+            subject.If.AddRange(conditions);
+            var expected = subject.If.Select(i => i.AffectedMembers).Aggregate();
+            
+            // act
+            var actual = subject.AffectedMembers;
+
+            // assert
+            Assert.IsTrue(AreKindOfEqual(expected, actual, (a, b) => a.AreSame(b)));
         }
     }
 }
