@@ -22,3 +22,6 @@ Thoughts on validation attribute:
 	cache result of validation in ValidationAttribute validationContext 
 
 Reflection: if a parent type implements an interface, does the child type aswell?
+
+Validate child properties: 	allow specification of new dependencies
+				Re format mocks for child object
