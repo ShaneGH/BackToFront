@@ -34,16 +34,7 @@ namespace BackToFront.Logic
 
         public ValidateResult(TEntity entity, ValidateOptions options, object dependencyClasses)
         {
-            if (dependencyClasses == null)
-            {
-                Dependencies = Enumerable.Empty<Dependency>();
-            }
-            else
-            {
-                var dependencies = dependencyClasses.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                Dependencies = dependencies.Select(d => new Dependency { Name = d.Name, Value = d.GetValue(dependencyClasses) });
-            }
-
+            Dependencies = dependencyClasses == null ? Enumerable.Empty<Dependency>() : ToDependencies(dependencyClasses);
             Entity = entity;
             Options = options ?? new ValidateOptions();
         }
@@ -201,6 +192,12 @@ namespace BackToFront.Logic
             delivered = requiredByRule.ToArray();
         }
 
+        internal static IEnumerable<Dependency> ToDependencies(object input)
+        {
+            var dependencies = input.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            return dependencies.Select(d => new Dependency { Name = d.Name, Value = d.GetValue(input) });
+        }
+
         public void ResetResult()
         {
             _FirstViolation = null;
@@ -209,16 +206,23 @@ namespace BackToFront.Logic
 
         public IValidateResult<TEntity> ValidateMember<TParameter>(Expression<Func<TEntity, TParameter>> member)
         {
-            if(member.Body is ParameterExpression)
+            return ValidateMember(member, null);
+        }
+
+        public IValidateResult<TEntity> ValidateMember<TParameter>(Expression<Func<TEntity, TParameter>> member, object dependencyClasses)
+        {
+            if (member.Body is ParameterExpression)
                 throw new InvalidOperationException("##");
-                        
+
+            IEnumerable<Dependency> dependencies = dependencyClasses == null ? null : ToDependencies(dependencyClasses);
+
             MemberExpression tester = member.Body as MemberExpression;
-            while(tester != null)
+            while (tester != null)
             {
                 if (tester.Expression is ParameterExpression)
                 {
                     var compiled = member.Compile();
-                    ValidateChildMembers.Add(() => new ValidateResult<TParameter>(compiled(Entity), Options, Dependencies, Mocks));
+                    ValidateChildMembers.Add(() => new ValidateResult<TParameter>(compiled(Entity), Options, dependencies ?? Dependencies, Mocks));
                     return this;
                 }
 
