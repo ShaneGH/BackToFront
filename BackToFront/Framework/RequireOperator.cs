@@ -42,5 +42,10 @@ namespace BackToFront.Framework
             // present rule to begin process again
             return ParentRule;
         }
+
+        public override bool PropertyRequirement
+        {
+            get { return true; }
+        }
     }
 }

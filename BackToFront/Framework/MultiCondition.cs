@@ -40,5 +40,10 @@ namespace BackToFront.Framework
                 return If.Select(i => i.AffectedMembers).Aggregate();
             }
         }
+
+        public override bool PropertyRequirement
+        {
+            get { return false; }
+        }
     }
 }

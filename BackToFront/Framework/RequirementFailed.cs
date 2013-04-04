@@ -45,5 +45,10 @@ namespace BackToFront.Framework
             if (!Compile(context.Mocks).Invoke(subject, context.Mocks.AsValueArray))
                 base.FullyValidateEntity(subject, violationList, context);
         }
+
+        public override bool PropertyRequirement
+        {
+            get { return false; }
+        }
     }
 }

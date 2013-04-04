@@ -55,5 +55,10 @@ namespace BackToFront.Framework
                 yield break;
             }
         }
+
+        public override bool PropertyRequirement
+        {
+            get { return false; }
+        }
     }
 }

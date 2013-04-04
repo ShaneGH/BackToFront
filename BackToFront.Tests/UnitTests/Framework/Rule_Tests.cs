@@ -37,7 +37,7 @@ namespace BackToFront.Tests.UnitTests.Framework
             var r6 = new Rule<object>(r2);
 
             // act
-            var result = r1.AllChildRules.ToArray();
+            var result = r1.AllAncestorRules.ToArray();
 
             // assert
             Assert.AreEqual(5, result.Count());

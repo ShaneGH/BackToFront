@@ -63,5 +63,10 @@ namespace BackToFront.Framework
                 return _subRules.AffectedMembers;
             }
         }
+
+        public override bool PropertyRequirement
+        {
+            get { return false; }
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         public class TestRule<T> : IRuleValidation<T>
         {
             public static IEnumerable<MemberChainItem> AffectedMembersStatic = new MemberChainItem[0];
+            public static bool PropertyRequirementStatic = true;
 
 
             public IViolation Violation { get; set; }
@@ -46,6 +47,11 @@ namespace BackToFront.Tests.UnitTests.Utils
             public IEnumerable<MemberChainItem> AffectedMembers
             {
                 get { return AffectedMembersStatic; }
+            }
+
+            public bool PropertyRequirement
+            {
+                get { return PropertyRequirementStatic; }
             }
         }
 
@@ -103,6 +109,18 @@ namespace BackToFront.Tests.UnitTests.Utils
             // act
             // assert
             Assert.AreEqual(rule.AffectedMembers, subject.AffectedMembers);
+        }
+
+        [Test]
+        public void PropertyRequirement_Test()
+        {
+            // arrange
+            var rule = new TestRule<TestClass>();
+            var subject = new ParentRuleWrapper<TestClass>(typeof(TestClass), rule);
+
+            // act
+            // assert
+            Assert.AreEqual(rule.PropertyRequirement, subject.PropertyRequirement);
         }
 
         [Test]

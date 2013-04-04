@@ -48,5 +48,10 @@ namespace BackToFront
         /// All of the members which are touched by this object and its children
         /// </summary>
         IEnumerable<MemberChainItem> AffectedMembers { get; }
+
+        /// <summary>
+        /// Gets the function of this element
+        /// </summary>
+        bool PropertyRequirement { get; }
     }
 }

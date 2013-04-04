@@ -65,5 +65,10 @@ namespace BackToFront.Framework
         {
             get { return _Rules.Select(r => r.AffectedMembers).Aggregate(); }
         }
+
+        public bool PropertyRequirement
+        {
+            get { return false; }
+        }
     }
 }

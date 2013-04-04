@@ -15,17 +15,23 @@ namespace BackToFront.Framework
         List<DependencyWrapper> Dependencies { get; }
     }
 
+    //public class AffectedMembers
+    //{
+    //    public MemberChainItem Member { get; set; }
+    //    public Type Member { get; set; }
+    //}
+
     public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate, IRuleValidation<TEntity>
     {
         private readonly HashSet<IValidate<TEntity>> RegisteredItems = new HashSet<IValidate<TEntity>>();
         public readonly List<DependencyWrapper> Dependencies = new List<DependencyWrapper>();
         private readonly HashSet<Rule<TEntity>> SubRules = new HashSet<Rule<TEntity>>();
 
-        public IEnumerable<Rule<TEntity>> AllChildRules
+        public IEnumerable<Rule<TEntity>> AllAncestorRules
         {
             get
             {
-                return SubRules.Select(sr => new[] { sr }.Concat(sr.AllChildRules)).Aggregate();
+                return SubRules.Select(sr => new[] { sr }.Concat(sr.AllAncestorRules)).Aggregate();
             }
         }
 
@@ -112,6 +118,11 @@ namespace BackToFront.Framework
         List<DependencyWrapper> IRuleValidation<TEntity>.Dependencies
         {
             get { return this.Dependencies; }
+        }
+
+        public override bool PropertyRequirement
+        {
+            get { return false; }
         }
     }
 }

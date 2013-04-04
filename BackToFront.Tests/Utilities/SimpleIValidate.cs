@@ -35,5 +35,10 @@ namespace BackToFront.Tests.Utilities
         {
             get { throw new NotImplementedException(); }
         }
+
+        public override bool PropertyRequirement
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

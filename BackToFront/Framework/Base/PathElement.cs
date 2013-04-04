@@ -37,6 +37,11 @@ namespace BackToFront.Framework.Base
                 yield break;
             }
         }
+
+        public override bool PropertyRequirement
+        {
+            get { return false; }
+        }
     }
 
     /// <summary>
@@ -51,6 +56,7 @@ namespace BackToFront.Framework.Base
         private static readonly DeadEnd<TEntity> _DeadEnd = new DeadEnd<TEntity>();
 
         public abstract IEnumerable<MemberChainItem> AffectedMembers { get; }
+        public abstract bool PropertyRequirement { get; }
 
         public PathElement<TEntity> NextOption(TEntity subject, ValidationContext context)
         {

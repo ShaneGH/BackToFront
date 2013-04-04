@@ -16,6 +16,7 @@ namespace BackToFront.Utils
         public readonly PropertyInfo AffectedMembersProperty;
         public readonly MethodInfo ValidateEntityMethod;
         public readonly MethodInfo FullyValidateEntityMethod;
+        public readonly PropertyInfo PropertyRequirementProperty;
 
         public ParentRuleWrapper(Type entityType, object rule)
         {
@@ -33,6 +34,7 @@ namespace BackToFront.Utils
             AffectedMembersProperty = typeof(IValidate<>).MakeGenericType(EntityType).GetProperty("AffectedMembers");
             ValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("ValidateEntity", new[] { EntityType, typeof(ValidationContext) });
             FullyValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("FullyValidateEntity", new[] { EntityType, typeof(IList<IViolation>), typeof(ValidationContext) });
+            PropertyRequirementProperty = typeof(IValidate<>).MakeGenericType(EntityType).GetProperty("PropertyRequirement");
         }
 
         public List<DependencyWrapper> Dependencies
@@ -58,6 +60,14 @@ namespace BackToFront.Utils
             get
             {
                 return (IEnumerable<MemberChainItem>)AffectedMembersProperty.GetValue(Rule);                    
+            }
+        }
+
+        public bool PropertyRequirement
+        {
+            get
+            {
+                return (bool)PropertyRequirementProperty.GetValue(Rule);    
             }
         }
     }
