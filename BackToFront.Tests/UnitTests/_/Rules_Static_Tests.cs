@@ -16,13 +16,13 @@ namespace BackToFront.Tests.UnitTests
         public void GetRules_Test()
         {
             // arrange
-            Rules<TestClass>.AddRule(a => { });
+            Rules<TestClass2>.AddRule(a => { });
             
             // act
-            var rules = Rules.GetRules(typeof(TestClass));
+            var rules = Rules.GetRules(typeof(TestClass2));
 
             // assert
-            Assert.AreEqual(Rules<TestClass>.Repository.Registered, rules);
+            Assert.AreEqual(Rules<TestClass2>.Repository.Registered, rules);
         }
     }
 }

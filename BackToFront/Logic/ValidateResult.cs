@@ -222,7 +222,15 @@ namespace BackToFront.Logic
                 if (tester.Expression is ParameterExpression)
                 {
                     var compiled = member.Compile();
-                    ValidateChildMembers.Add(() => new ValidateResult<TParameter>(compiled(Entity), Options, dependencies ?? Dependencies, Mocks));
+                    ValidateChildMembers.Add(() => new ValidateResult<TParameter>(compiled(Entity), Options, dependencies ?? Dependencies, Mocks.Select(m => 
+                        {
+                            Mock output;
+                            if (m.TryForChild(member, out output))
+                                return output;
+
+                            return null;
+                        }).Where(m => m!= null).ToList()));
+
                     return this;
                 }
 

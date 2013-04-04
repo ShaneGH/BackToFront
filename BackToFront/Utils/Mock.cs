@@ -1,6 +1,7 @@
 ﻿using BackToFront.Enum;
 using BackToFront.Expressions;
 using System;
+using System.Linq.Expressions;
 using E = System.Linq.Expressions;
 
 namespace BackToFront.Utils
@@ -25,9 +26,9 @@ namespace BackToFront.Utils
         public Mock(ExpressionWrapperBase wrapperExpression, object value, Type valueType, MockBehavior behavior)
         {
             Expression = wrapperExpression;
-            Behavior = behavior;
             Value = value;
             ValueType = valueType;
+            Behavior = behavior;
         }
 
         public Mock(ExpressionWrapperBase wrapperExpression, object value, Type valueType)
@@ -35,9 +36,9 @@ namespace BackToFront.Utils
         {
         }
 
-        public static Mock Create<TEntity, TReturnVal>(E.Expression<Func<TEntity, TReturnVal>> expression, object value, Type valueType)
+        public static Mock Create<TEntity, TReturnVal>(E.Expression<Func<TEntity, TReturnVal>> expression, TReturnVal value)
         {
-            return new Mock(ExpressionWrapperBase.ToWrapper(expression), value, valueType);
+            return new Mock(ExpressionWrapperBase.ToWrapper(expression), value, typeof(TReturnVal));
         }
 
         public bool CanSet
@@ -54,6 +55,25 @@ namespace BackToFront.Utils
                 throw new InvalidOperationException("##");
 
             (Expression as IPropertyChain).Set(root, Value);
+        }
+
+        public Mock ForChild<TEntity, TChild>(Expression<Func<TEntity, TChild>> child)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryForChild<TEntity, TChild>(Expression<Func<TEntity, TChild>> child, out Mock forChild)
+        {
+            try
+            {
+                forChild = ForChild(child);
+                return true;
+            }
+            catch(Exception)
+            {
+                forChild = null;
+                return false;
+            }
         }
     }
 }

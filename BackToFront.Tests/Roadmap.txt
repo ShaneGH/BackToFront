@@ -7,8 +7,6 @@ More Expression types
 
 unit test BackToFront.Logic.ValidateResult<TEntity>
 
-unit test BackToFront.Rules<TEntity>.ParentClassRepositories
-
 Special case for IEnumerables
 
 Hole in dependencies. What if user creates instance of DependencyWrapper
