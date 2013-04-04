@@ -15,12 +15,6 @@ namespace BackToFront.Framework
         List<DependencyWrapper> Dependencies { get; }
     }
 
-    //public class AffectedMembers
-    //{
-    //    public MemberChainItem Member { get; set; }
-    //    public Type Member { get; set; }
-    //}
-
     public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate, IRuleValidation<TEntity>
     {
         private readonly HashSet<IValidate<TEntity>> RegisteredItems = new HashSet<IValidate<TEntity>>();
@@ -46,8 +40,9 @@ namespace BackToFront.Framework
                 ParentRule.SubRules.Add(this);
         }
 
-        public override IEnumerable<MemberChainItem> AffectedMembers
+        public override IEnumerable<AffectedMembers> AffectedMembers
         {
+            // TODO: cache???
             get { return RegisteredItems.Select(a => a.AffectedMembers).Aggregate(); }
         }
 

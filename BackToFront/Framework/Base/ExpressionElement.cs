@@ -44,11 +44,11 @@ namespace BackToFront.Framework.Base
             return new CompiledMockedExpression<TEntity, TMember>(compiled, mocks);
         }
 
-        public override IEnumerable<MemberChainItem> AffectedMembers
+        public override IEnumerable<AffectedMembers> AffectedMembers
         {
             get 
             {
-                return Descriptor.GetMembersForParameter(EntityParameter);
+                return Descriptor.GetMembersForParameter(EntityParameter).Select(m => new AffectedMembers { Member = m, Requirement = PropertyRequirement });
             }
         }
     }

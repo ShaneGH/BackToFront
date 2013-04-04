@@ -55,11 +55,11 @@ namespace BackToFront.Utils
             FullyValidateEntityMethod.Invoke(Rule, new object[] { subject, violationList, context });
         }
 
-        public IEnumerable<MemberChainItem> AffectedMembers
+        public IEnumerable<AffectedMembers> AffectedMembers
         {
             get
             {
-                return (IEnumerable<MemberChainItem>)AffectedMembersProperty.GetValue(Rule);                    
+                return (IEnumerable<AffectedMembers>)AffectedMembersProperty.GetValue(Rule);                    
             }
         }
 

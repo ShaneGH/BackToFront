@@ -89,7 +89,7 @@ namespace BackToFront.Tests.UnitTests.Framework
             var actual = subject.AffectedMembers;
 
             // assert
-            Assert.IsTrue(AreKindOfEqual(expected, actual, (a, b) => a.AreSame(b)));
+            Assert.IsTrue(AreKindOfEqual(expected, actual, (a, b) => a.Requirement == b.Requirement && a.Member.AreSame(b.Member)));
         }
     }
 }

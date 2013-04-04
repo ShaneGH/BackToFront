@@ -23,7 +23,7 @@ namespace BackToFront.Tests.UnitTests.Utils
 
         public class TestRule<T> : IRuleValidation<T>
         {
-            public static IEnumerable<MemberChainItem> AffectedMembersStatic = new MemberChainItem[0];
+            public static IEnumerable<AffectedMembers> AffectedMembersStatic = new AffectedMembers[0];
             public static bool PropertyRequirementStatic = true;
 
 
@@ -44,7 +44,7 @@ namespace BackToFront.Tests.UnitTests.Utils
                 violationList.Add(Violation);
             }
 
-            public IEnumerable<MemberChainItem> AffectedMembers
+            public IEnumerable<AffectedMembers> AffectedMembers
             {
                 get { return AffectedMembersStatic; }
             }

@@ -47,7 +47,7 @@ namespace BackToFront
         /// <summary>
         /// All of the members which are touched by this object and its children
         /// </summary>
-        IEnumerable<MemberChainItem> AffectedMembers { get; }
+        IEnumerable<AffectedMembers> AffectedMembers { get; }
 
         /// <summary>
         /// Gets the function of this element

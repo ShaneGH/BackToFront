@@ -56,7 +56,7 @@ namespace BackToFront.Framework
             _subRules.FullyValidateEntity(subject, violationList, context);
         }
 
-        public override IEnumerable<MemberChainItem> AffectedMembers
+        public override IEnumerable<AffectedMembers> AffectedMembers
         {
             get 
             {

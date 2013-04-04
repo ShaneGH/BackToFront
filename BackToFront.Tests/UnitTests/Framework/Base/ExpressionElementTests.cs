@@ -50,7 +50,9 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
 
             // assert
             Assert.AreEqual(1, actual.Count());
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual.Select(a => a.Member));
+            foreach (var r in actual.Select(a => a.Requirement))
+                Assert.AreEqual(subject.Object.PropertyRequirement, r);
         }
     }
 }

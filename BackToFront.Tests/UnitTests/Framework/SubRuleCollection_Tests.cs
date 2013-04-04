@@ -18,12 +18,12 @@ namespace BackToFront.Tests.UnitTests.Framework
             // arrange
             var subject = new SubRuleCollection<object>(null);
 
-            var item1 = new MemberChainItem(typeof(string));
+            var item1 = new AffectedMembers { Member = new MemberChainItem(typeof(string)) };
             var rule1 = new M.Mock<Rule<object>>(null);
             rule1.Setup(a => a.AffectedMembers).Returns(new[] { item1 });
             subject.AddSubRule(rule1.Object);
 
-            var item2 = new MemberChainItem(typeof(string));
+            var item2 = new AffectedMembers { Member = new MemberChainItem(typeof(string)) };
             var rule2 = new M.Mock<Rule<object>>(null);
             rule2.Setup(a => a.AffectedMembers).Returns(new[] { item2 });
             subject.AddSubRule(rule2.Object);

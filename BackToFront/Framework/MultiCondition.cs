@@ -33,7 +33,7 @@ namespace BackToFront.Framework
             }
         }
 
-        public override IEnumerable<MemberChainItem> AffectedMembers
+        public override IEnumerable<AffectedMembers> AffectedMembers
         {
             get
             {

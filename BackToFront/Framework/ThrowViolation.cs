@@ -48,7 +48,7 @@ namespace BackToFront.Framework
                 violationList.Add(violation);
         }
 
-        public override IEnumerable<MemberChainItem> AffectedMembers
+        public override IEnumerable<AffectedMembers> AffectedMembers
         {
             get
             {

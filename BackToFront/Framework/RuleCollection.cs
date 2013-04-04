@@ -61,7 +61,7 @@ namespace BackToFront.Framework
             _Rules.Each(r => r.FullyValidateEntity(subject, violationList, context.Copy()));
         }
 
-        public IEnumerable<MemberChainItem> AffectedMembers
+        public IEnumerable<AffectedMembers> AffectedMembers
         {
             get { return _Rules.Select(r => r.AffectedMembers).Aggregate(); }
         }

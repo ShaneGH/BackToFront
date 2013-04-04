@@ -148,12 +148,12 @@ namespace BackToFront.Tests.UnitTests.Framework
             // arrange
             var subject = new RuleCollection<object>();
 
-            var item1 = new MemberChainItem(typeof(string));
+            var item1 = new AffectedMembers { Member = new MemberChainItem(typeof(string)) };
             var rule1 = new Mock<IValidate<object>>();
             rule1.Setup(a => a.AffectedMembers).Returns(new[] { item1 });
             subject.AddRule(rule1.Object);
 
-            var item2 = new MemberChainItem(typeof(string));
+            var item2 = new AffectedMembers { Member = new MemberChainItem(typeof(string)) };
             var rule2 = new Mock<IValidate<object>>();
             rule2.Setup(a => a.AffectedMembers).Returns(new[] { item2 });
             subject.AddRule(rule2.Object);

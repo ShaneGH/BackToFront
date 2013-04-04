@@ -30,7 +30,7 @@ namespace BackToFront.Framework.Base
             return;
         }
 
-        public override IEnumerable<MemberChainItem> AffectedMembers
+        public override IEnumerable<AffectedMembers> AffectedMembers
         {
             get
             {
@@ -44,6 +44,12 @@ namespace BackToFront.Framework.Base
         }
     }
 
+    public class AffectedMembers
+    {
+        public MemberChainItem Member { get; set; }
+        public bool Requirement { get; set; }
+    }
+
     /// <summary>
     /// A class attached to a Rule which points to the next step in the operation
     /// </summary>
@@ -55,7 +61,7 @@ namespace BackToFront.Framework.Base
         public abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context);
         private static readonly DeadEnd<TEntity> _DeadEnd = new DeadEnd<TEntity>();
 
-        public abstract IEnumerable<MemberChainItem> AffectedMembers { get; }
+        public abstract IEnumerable<AffectedMembers> AffectedMembers { get; }
         public abstract bool PropertyRequirement { get; }
 
         public PathElement<TEntity> NextOption(TEntity subject, ValidationContext context)
