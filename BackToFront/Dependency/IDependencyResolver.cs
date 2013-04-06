@@ -46,4 +46,9 @@ namespace BackToFront.Dependency
             yield break;
         }
     }
+
+    public interface IRuleDependencies
+    {
+        RuleDependency GetDependency(string dependencyName, Type dependencyType, object rule);
+    }
 }

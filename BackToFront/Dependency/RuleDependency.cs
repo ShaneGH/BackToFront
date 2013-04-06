@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Dependency
 {
-    internal class RuleDependency
+    public class RuleDependency
     {
         public readonly string Name;
         public readonly object Value;
@@ -16,7 +16,7 @@ namespace BackToFront.Dependency
             Value = value;
         }
 
-        public Mock ToMock()
+        internal Mock ToMock()
         {
             return new Mock(new ConstantExpressionWrapper(Expression.Constant(this)), Value, Value.GetType(), MockBehavior.MockOnly);
         }

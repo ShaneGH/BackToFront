@@ -11,18 +11,8 @@ Special case for IEnumerables
 
 Hole in dependencies. What if user creates instance of DependencyWrapper
 
-Thoughts on validation attribute: 
-	Find all rules which target the member in question
-	filter by those which do not have dependencies
-	filter by rules which appear in a Require statement (not an if)
-	add filtered rules to a validation context (TargetedRules)
-	ensure each rule will only validate if it is on of the TargetedRules or TargetedRules == null
-	cache result of validation in ValidationAttribute validationContext 
-
 Reflection: if a parent type implements an interface, does the child type aswell?
 
 Validate child properties: 	Re format mocks for child object
 
 Define rule: must have same dependencies as parent class rule
-
-dependencies in ValidationAttribute

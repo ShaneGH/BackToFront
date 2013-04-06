@@ -13,11 +13,13 @@ namespace BackToFront.DataAnnotations
     {
         public readonly ReflectionWrapper Rule;
         public readonly object ValidationSubject;
+        private readonly Func<IRuleDependencies> ServiceContainer;
 
-        public RuleWrapper(object rule, object toValidate)
+        public RuleWrapper(object rule, object toValidate, Func<IRuleDependencies> serviceContainer)
         {
             Rule = new ReflectionWrapper(rule);
             ValidationSubject = toValidate;
+            ServiceContainer = serviceContainer;
         }
 
         public List<DependencyWrapper> Dependencies
@@ -36,18 +38,39 @@ namespace BackToFront.DataAnnotations
             }
         }
 
-        private IEnumerable<IViolation> _Result;
-        public IEnumerable<IViolation> Result
+        public IEnumerable<IViolation> Result(bool useServiceContainerDI)
+        {
+            return useServiceContainerDI ? ResultWithSC : ResultWithoutSC;
+        }
+
+        private IEnumerable<IViolation> _ResultWithSC;
+        private IEnumerable<IViolation> ResultWithSC
         {
             get
             {
-                if (_Result == null)
+                if (_ResultWithSC == null)
                 {
-                    // TODO: dependencies
-                    _Result = Rule.Method<IEnumerable<IViolation>, object, Mocks>("FullyValidateEntity", ValidationSubject, new Mocks());
+                    var di = ServiceContainer();
+                    if (di == null)
+                        throw new InvalidOperationException("##");
+
+                    var mocks = new Mocks(Dependencies.Select(d => di.GetDependency(d.DependencyName, d.DependencyType, Rule.Item).ToMock()));
+                    _ResultWithSC = Rule.Method<IEnumerable<IViolation>, object, Mocks>("FullyValidateEntity", ValidationSubject, mocks);
                 }
 
-                return _Result;
+                return _ResultWithSC;
+            }
+        }
+
+        private IEnumerable<IViolation> _ResultWithoutSC;
+        private IEnumerable<IViolation> ResultWithoutSC
+        {
+            get
+            {
+                if (_ResultWithoutSC == null)
+                    _ResultWithoutSC = Rule.Method<IEnumerable<IViolation>, object, Mocks>("FullyValidateEntity", ValidationSubject, new Mocks());
+                
+                return _ResultWithoutSC;
             }
         }
     }
@@ -119,10 +142,12 @@ namespace BackToFront.DataAnnotations
 
             var member = Create(validationContext.ObjectType, validationContext.MemberName);
 
+            var useDependencies = DependencyBehavior == DependencyBehavior.UseServiceContainerAndInbuiltDI;
+
             // TODO: dependencies
             var violations =
                 ctxt.Rules.Where(rule => DependencyBehaviorChooser(rule) && rule.RequireThatMembers.Contains(member))
-                .Select(rule => rule.Result.Where(result => result.Violated.Contains(member))).Aggregate();
+                .Select(rule => rule.Result(useDependencies).Where(result => result.Violated.Contains(member))).Aggregate();
 
             if (!violations.Any())
                 return DA.ValidationResult.Success;
