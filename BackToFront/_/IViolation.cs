@@ -1,4 +1,5 @@
 ﻿using BackToFront.Enum;
+using BackToFront.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -49,13 +50,10 @@ namespace BackToFront
         /// The object which is in a violated state
         /// </summary>
         object ViolatedEntity { get; set; }
-    }
 
-    /// <summary>
-    /// Represents a business rule violation.
-    /// </summary>
-    public interface IViolation<TEntity> : IViolation
-    {
-        void OnViolation(TEntity subject);
+        /// <summary>
+        /// The properties which have been violated
+        /// </summary>
+        IEnumerable<MemberChainItem> Violated { get; set; }
     }
 }

@@ -15,8 +15,19 @@ namespace BackToFront.Logic
 {
     internal class Dependency
     {
-        public string Name { get; set; }
-        public object Value { get; set; }
+        public readonly string Name;
+        public readonly object Value;
+
+        public Dependency(string name, object value) 
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public Mock ToMock()
+        {
+            return new Mock(new ConstantExpressionWrapper(Expression.Constant(this)), Value, Value.GetType(), MockBehavior.MockOnly);
+        }
     }
 
     public class ValidateResult<TEntity> : IValidateResult<TEntity>
@@ -156,15 +167,8 @@ namespace BackToFront.Logic
             rulesRepository.Aggregate().Each(rule =>
             {
                 ValidateDependencies(rule.Dependencies, ref dependencies);
-
                 var newMocks = mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet).ToList();
-
-                // add each dependency class as a MockOnly mock.
-                dependencies.Each(a =>
-                {
-                    // TODO: Null reference in GetType
-                    newMocks.Add(new Mock(new ConstantExpressionWrapper(Expression.Constant(a)), a.Value, a.Value.GetType(), MockBehavior.MockOnly));
-                });
+                newMocks.AddRange(dependencies.Select(d => d.ToMock()));
 
                 success &= action(rule, new ValidationContext { Mocks = new Mocks(newMocks) });
             });
@@ -195,7 +199,7 @@ namespace BackToFront.Logic
         internal static IEnumerable<Dependency> ToDependencies(object input)
         {
             var dependencies = input.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            return dependencies.Select(d => new Dependency { Name = d.Name, Value = d.GetValue(input) });
+            return dependencies.Select(d => new Dependency(d.Name, d.GetValue(input)));
         }
 
         public void ResetResult()

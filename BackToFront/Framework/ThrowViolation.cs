@@ -33,9 +33,6 @@ namespace BackToFront.Framework
 
         public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
-            if (_violation is IViolation<TEntity>)
-                (_violation as IViolation<TEntity>).OnViolation(subject);
-
             var violation = _violation();
             violation.ViolatedEntity = subject;
             return violation;

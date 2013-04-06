@@ -83,7 +83,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             };
 
             // assert
-            Assert.IsTrue(AreKindOfEqual(expected, actual, (a, b) => a.AreSame(b)));
+            Assert.IsTrue(AreKindOfEqual(expected, actual, (a, b) => a.Equals(b)));
         }
 
         [Test]

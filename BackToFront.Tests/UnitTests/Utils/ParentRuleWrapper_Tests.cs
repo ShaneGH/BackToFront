@@ -71,7 +71,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         {
             // arrange
             var rule = new Rule<TestClass>();
-            rule._Dependencies.Add(new DependencyWrapper<TestClass>("Hello"));
+            rule._Dependencies.Add(new DependencyWrapper<TestClass>("Hello", null));
             var subject = new ParentRuleWrapper<TestClassChild>(typeof(TestClass), rule);
 
             // act

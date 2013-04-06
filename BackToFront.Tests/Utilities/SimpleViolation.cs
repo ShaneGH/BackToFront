@@ -38,5 +38,11 @@ namespace BackToFront.Tests.Utilities
             get;
             set;
         }
+
+        public IEnumerable<Utils.MemberChainItem> Violated
+        {
+            get;
+            set;
+        }
     }
 }

@@ -32,6 +32,12 @@ namespace BackToFront.Tests
                 get;
                 set;
             }
+
+            public IEnumerable<Utils.MemberChainItem> Violated
+            {
+                get;
+                set;
+            }
         }
 
         public static void SetupTestpad()

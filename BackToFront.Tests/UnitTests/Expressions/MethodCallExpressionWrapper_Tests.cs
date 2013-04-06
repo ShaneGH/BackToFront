@@ -111,7 +111,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             Assert.IsNull(actual.ElementAt(0).NextItem.NextItem);
 
             var tmp = actual.ElementAt(1);
-            Assert.IsTrue(tmp.AreSame(expected));
+            Assert.IsTrue(tmp.Equals(expected));
         }
 
         [Test]

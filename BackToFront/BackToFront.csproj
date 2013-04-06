@@ -40,7 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAnnotations\BTFValidationContext.cs" />
     <Compile Include="DataAnnotations\ValidateMemberAttribute.cs" />
+    <Compile Include="Dependencies\IDependencyResolver.cs" />
     <Compile Include="Enum\LogicalOperator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -76,6 +78,7 @@
     <Compile Include="Logic\Compilations\IConditionSatisfied.cs" />
     <Compile Include="Logic\ValidateResult.cs" />
     <Compile Include="Utils\CompiledMockedExpression.cs" />
+    <Compile Include="Utils\GenericIEqualityComparer.cs" />
     <Compile Include="Utils\ReflectionWrapper.cs" />
     <Compile Include="Utils\MemberChainItem.cs" />
     <Compile Include="Utils\ParentRuleWrappers.cs" />

@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
+using BackToFront.Extensions.IEnumerable;
 using BackToFront.Framework.Base;
 using BackToFront.Logic;
 
@@ -35,7 +36,10 @@ namespace BackToFront.Framework
         public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
             if (!Compile(context.Mocks).Invoke(subject, context.Mocks.AsValueArray))
+            {
+                context.ViolatedMembers.AddRange(AffectedMembers.Select(am => am.Member));
                 return base.ValidateEntity(subject, context);
+            }
             else
                 return null;
         }
@@ -43,7 +47,10 @@ namespace BackToFront.Framework
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
             if (!Compile(context.Mocks).Invoke(subject, context.Mocks.AsValueArray))
+            {
+                context.ViolatedMembers.AddRange(AffectedMembers.Select(am => am.Member));
                 base.FullyValidateEntity(subject, violationList, context);
+            }
         }
 
         public override bool PropertyRequirement

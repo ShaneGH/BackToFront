@@ -102,7 +102,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
             // assert
             Assert.AreEqual(1, actual.Count());
-            Assert.IsTrue(expected.AreSame(actual.ElementAt(0)));
+            Assert.IsTrue(expected.Equals(actual.ElementAt(0)));
         }
 
         [Test]

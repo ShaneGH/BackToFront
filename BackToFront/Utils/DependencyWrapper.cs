@@ -1,10 +1,10 @@
-﻿using System;
+﻿using BackToFront.Dependencies;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace BackToFront.Utils
 {
-
     public abstract class DependencyWrapper
     {
         public readonly string DependencyName;
@@ -28,16 +28,23 @@ namespace BackToFront.Utils
     public sealed class DependencyWrapper<TDependency> : DependencyWrapper
     {
         private static readonly Type _DependencyType = typeof(TDependency);
+        private readonly Func<IDependencyResolver> _Resolver;
 
-        internal DependencyWrapper(string name)
+        internal DependencyWrapper(string name, Func<IDependencyResolver> resolver)
             : base(name) 
         {
-            //TODO: get calling method and ensure it is correct
+            _Resolver = resolver;
         }
 
         public TDependency Val
         {
-            get { throw new InvalidOperationException("##" + "Item is not mocked"); }
+            get 
+            {
+                var dependency = (TDependency)_Resolver().GetService(typeof(TDependency));
+                if (dependency != null)
+                    return dependency;
+
+                throw new InvalidOperationException("##" + "Item is not mocked"); }
         }
 
         public override Type DependencyType

@@ -13,7 +13,7 @@ namespace BackToFront.Utils
         private static readonly Dictionary<Tuple<Type, string>, FieldInfo> CachedFields = new Dictionary<Tuple<Type, string>, FieldInfo>();
         private static readonly Dictionary<Tuple<Type, string, Type[]>, MethodInfo> CachedMethods = new Dictionary<Tuple<Type, string, Type[]>, MethodInfo>(new MethodComparer());
 
-        private readonly object Item;
+        public readonly object Item;
         private readonly Type Type;
 
         private static bool _UseCache = true;

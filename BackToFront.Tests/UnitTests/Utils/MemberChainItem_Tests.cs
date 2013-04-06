@@ -17,6 +17,11 @@ namespace BackToFront.Tests.UnitTests.Utils
     [TestFixture]
     public class MemberChainItem_Tests : Base.TestBase
     {
+        public class TestClass
+        {
+            public int Prop { get; set; }
+        }
+
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor_Test_Null_Member()
@@ -61,18 +66,18 @@ namespace BackToFront.Tests.UnitTests.Utils
         }
 
         [Test]
-        public void AreSame_Test_referenceEquals_true()
+        public void Equals_Test_referenceEquals_true()
         {
             // arrange
             var subject = new MemberChainItem(typeof(string));
 
             // act
             // assert
-            Assert.IsTrue(subject.AreSame(subject));
+            Assert.IsTrue(subject.Equals(subject));
         }
 
         [Test]
-        public void AreSame_Test_valueEquals_true()
+        public void Equals_Test_valueEquals_true()
         {
             // arrange
             var subject1 = new MemberChainItem(typeof(string));
@@ -83,11 +88,11 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // act
             // assert
-            Assert.IsTrue(subject1.AreSame(subject2));
+            Assert.IsTrue(subject1 == subject2);
         }
 
         [Test]
-        public void AreSame_Test_valueEquals_false_Member()
+        public void Equals_Test_valueEquals_false_Member()
         {
             // arrange
             var subject1 = new MemberChainItem(typeof(string));
@@ -98,11 +103,11 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // act
             // assert
-            Assert.IsFalse(subject1.AreSame(subject2));
+            Assert.IsFalse(subject1.Equals(subject2));
         }
 
         [Test]
-        public void AreSame_Test_valueEquals_false_next()
+        public void Equals_Test_valueEquals_false_next()
         {
             // arrange
             var subject1 = new MemberChainItem(typeof(object));
@@ -113,7 +118,25 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // act
             // assert
-            Assert.IsFalse(subject1.AreSame(subject2));
+            Assert.IsFalse(subject1.Equals(subject2));
+        }
+
+        [Test]
+        public void UltimateMemberTest()
+        {
+            // arrange
+            var subject = new MemberChainItem(typeof(TestClass));
+            subject.NextItem = new MemberChainItem(typeof(TestClass).GetProperty("Prop"));
+            MemberChainItem current = subject.NextItem;
+            for (var i = 0; i < 10; i++)
+            {
+                current.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
+                current = current.NextItem;
+            }
+            
+            // act
+            // assert
+            Assert.AreEqual(typeof(int).GetMethod("GetHashCode"), subject.UltimateMember);
         }
     }
 }

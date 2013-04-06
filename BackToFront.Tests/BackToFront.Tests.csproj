@@ -40,6 +40,7 @@
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />
+    <Compile Include="UnitTests\DataAnnotations\BTFValidationContext_Tests.cs" />
     <Compile Include="UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Extensions\Reflection.cs" />
@@ -111,6 +113,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTests\Utils\CompiledMockedExpression_Tests.cs" />
+    <Compile Include="UnitTests\Utils\DependencyWrapper_Tests.cs" />
     <Compile Include="UnitTests\Utils\ReflectionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Utils\MemberChainItem_Tests.cs" />
     <Compile Include="UnitTests\Utils\ParentRuleWrappers_Tests.cs" />

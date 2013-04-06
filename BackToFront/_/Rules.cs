@@ -1,4 +1,5 @@
-﻿using BackToFront.Framework;
+﻿using BackToFront.Dependencies;
+using BackToFront.Framework;
 using BackToFront.Utils;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace BackToFront
     {
         #region Static
 
-        public static readonly Rules<TEntity> Repository = new Rules<TEntity>();
+        public static readonly Rules<TEntity> Repository = new Rules<TEntity>(() => BackToFrontDependency.ProtectedResolver);
 
         /// <summary>
         /// The rules applied to the ancestor classes of TEntity
@@ -56,11 +57,13 @@ namespace BackToFront
 
         #endregion
 
-        private Rules()
+        private Rules(Func<IDependencyResolver> resolver)
         {
             _Rules.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => { _Registered = null; };
+            _Resolver = resolver;
         }
 
+        private readonly Func<IDependencyResolver> _Resolver;
         private readonly ObservableCollection<IRuleValidation<TEntity>> _Rules = new ObservableCollection<IRuleValidation<TEntity>>();
         private IEnumerable<IRuleValidation<TEntity>> _Registered;
         public IEnumerable<IRuleValidation<TEntity>> Registered
@@ -77,7 +80,7 @@ namespace BackToFront
             var ruleObject = new Rule<TEntity>();
 
             var param = rule.Method.GetParameters();
-            var mock1 = new DependencyWrapper<TDependency>(param[1].Name);
+            var mock1 = new DependencyWrapper<TDependency>(param[1].Name, _Resolver);
             ruleObject._Dependencies.Add(mock1);
 
             // apply logic to rule

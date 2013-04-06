@@ -28,6 +28,18 @@ namespace BackToFront.Utils
             }
         }
 
+        public MemberInfo UltimateMember
+        {
+            get
+            {
+                // use recursive function to force stack overflow exception in case of circular reference
+                Func<MemberChainItem, MemberInfo> result = null;
+                result = a => a.NextItem == null ? a.Member : result(a.NextItem);
+                
+                return result(this);
+            }
+        }
+
         public MemberChainItem(MemberInfo member)
         {
             if (member == null)
@@ -41,15 +53,57 @@ namespace BackToFront.Utils
             NextItem = new MemberChainItem(member);
         }
 
-        public bool AreSame(MemberChainItem item)
+        public override int GetHashCode()
         {
-            if (this.Equals(item))
-                return true;
+            return (Member.GetHashCode() + "_" + (NextItem == null ? string.Empty : NextItem.GetHashCode().ToString())).GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var item = obj as MemberChainItem;
 
             if (item == null || item.Member!= Member)
                 return false;
 
-            return (NextItem == null && item.NextItem == null) || NextItem.AreSame(item.NextItem);
+            return (NextItem == null && item.NextItem == null) || NextItem.Equals(item.NextItem);
+        }
+
+        public static bool operator ==(MemberChainItem item1, MemberChainItem item2)
+        {
+            int? i1Hash = null;
+            int? i2Hash = null;
+
+            try
+            {
+                i1Hash = item1.GetHashCode();
+            }
+            catch (NullReferenceException)
+            {
+            }
+
+            try
+            {
+                i2Hash = item2.GetHashCode();
+            }
+            catch (NullReferenceException)
+            {
+            }
+
+            if (!i1Hash.HasValue && !i2Hash.HasValue)
+                return true;
+
+            if (!i1Hash.HasValue || !i2Hash.HasValue)
+                return false;
+
+            if (i1Hash.Value != i2Hash.Value)
+                return false;
+
+            return item1.Equals(item2);
+        }
+
+        public static bool operator !=(MemberChainItem item1, MemberChainItem item2)
+        {
+            return !(item1 == item2);
         }
     }
 }
