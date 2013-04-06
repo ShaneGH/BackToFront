@@ -31,13 +31,13 @@ namespace BackToFront.Tests.UnitTests.Utils
         }
 
         [Test]
-        [ExpectedException(typeof(AccessViolationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void Constructor_InvalidType()
         {
             // arrange
             // act
             // assert
-            new ParentRuleWrapper<TestClass>(typeof(string), null);
+            new ParentRuleWrappers<TestClass>(typeof(string));
         }
 
         [Test]

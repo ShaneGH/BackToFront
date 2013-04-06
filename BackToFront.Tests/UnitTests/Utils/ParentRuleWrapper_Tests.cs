@@ -67,36 +67,16 @@ namespace BackToFront.Tests.UnitTests.Utils
         }
 
         [Test]
-        [ExpectedException(typeof(AccessViolationException))]
-        public void Constructor_InvalidType()
-        {
-            // arrange
-            // act
-            // assert
-            new ParentRuleWrapper<TestClass>(typeof(string), null);
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void Constructor_InvalidRule()
-        {
-            // arrange
-            // act
-            // assert
-            new ParentRuleWrapper<TestClassChild>(typeof(TestClass), new Rule<string>());
-        }
-
-        [Test]
         public void Dependencies_Test()
         {
             // arrange
             var rule = new Rule<TestClass>();
-            rule.Dependencies.Add(new DependencyWrapper<TestClass>("Hello"));
+            rule._Dependencies.Add(new DependencyWrapper<TestClass>("Hello"));
             var subject = new ParentRuleWrapper<TestClassChild>(typeof(TestClass), rule);
 
             // act
             // assert
-            Assert.AreEqual(rule.Dependencies, subject.Dependencies);
+            Assert.AreEqual(rule._Dependencies, subject.Dependencies);
         }
 
         [Test]

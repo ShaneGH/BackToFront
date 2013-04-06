@@ -33,6 +33,11 @@ namespace BackToFront.Tests.UnitTests.Utils
             {
                 return Method(input1) + input2.ToString();
             }
+
+            public string Method(string input1, int input2, bool input3)
+            {
+                return Method(input1, input2) + input3.ToString();
+            }
         }
 
         public override void Setup()
@@ -117,7 +122,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         [Test]
         public void InvokeMethodTest_NoArgs()
         {
-            CallMethodTest(a => a.Method(), a => a.CallMethod<string>("Method"));
+            CallMethodTest(a => a.Method(), a => a.Method<string>("Method"));
         }
 
         [Test]
@@ -125,7 +130,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         {
             const string arg1 = "ILJKB:OIUHG";
 
-            CallMethodTest(a => a.Method(arg1), a => a.CallMethod<string, string>("Method", arg1));
+            CallMethodTest(a => a.Method(arg1), a => a.Method<string, string>("Method", arg1));
         }
 
         [Test]
@@ -134,7 +139,17 @@ namespace BackToFront.Tests.UnitTests.Utils
             const string arg1 = "ILJKB:OIUHG";
             const int arg2 = 45543;
 
-            CallMethodTest(a => a.Method(arg1, arg2), a => a.CallMethod<string, string, int>("Method", arg1, arg2));
+            CallMethodTest(a => a.Method(arg1, arg2), a => a.Method<string, string, int>("Method", arg1, arg2));
+        }
+
+        [Test]
+        public void InvokeMethodTest_3Args()
+        {
+            const string arg1 = "ILJKB:OIUHG";
+            const int arg2 = 45543;
+            const bool arg3 = true;
+
+            CallMethodTest(a => a.Method(arg1, arg2, arg3), a => a.Method<string, string, int, bool>("Method", arg1, arg2, arg3));
         }
 
 
@@ -214,7 +229,7 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // act
             // assert
-            subject.CallMethod<object>("invalid");
+            subject.Method<object>("invalid");
         }
 
         #endregion

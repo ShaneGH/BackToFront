@@ -18,7 +18,7 @@ namespace BackToFront.Framework
     public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate, IRuleValidation<TEntity>
     {
         private readonly HashSet<IValidate<TEntity>> RegisteredItems = new HashSet<IValidate<TEntity>>();
-        public readonly List<DependencyWrapper> Dependencies = new List<DependencyWrapper>();
+        public readonly List<DependencyWrapper> _Dependencies = new List<DependencyWrapper>();
         private readonly HashSet<Rule<TEntity>> SubRules = new HashSet<Rule<TEntity>>();
 
         public IEnumerable<Rule<TEntity>> AllAncestorRules
@@ -110,9 +110,9 @@ namespace BackToFront.Framework
             throw new InvalidOperationException("##");
         }
 
-        List<DependencyWrapper> IRuleValidation<TEntity>.Dependencies
+        public List<DependencyWrapper> Dependencies
         {
-            get { return this.Dependencies; }
+            get { return _Dependencies; }
         }
 
         public override bool PropertyRequirement

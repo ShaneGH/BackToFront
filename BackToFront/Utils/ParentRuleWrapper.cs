@@ -9,57 +9,36 @@ namespace BackToFront.Utils
 {
     public class ParentRuleWrapper<TEntity> : IRuleValidation<TEntity>
     {
-        public readonly Type EntityType;
-        public readonly object Rule;
-
-        public readonly PropertyInfo DependenciesProperty;
-        public readonly PropertyInfo AffectedMembersProperty;
-        public readonly MethodInfo ValidateEntityMethod;
-        public readonly MethodInfo FullyValidateEntityMethod;
-        public readonly PropertyInfo PropertyRequirementProperty;
+        public readonly ReflectionWrapper Rule;
 
         public ParentRuleWrapper(Type entityType, object rule)
         {
-            if (!typeof(TEntity).Is(entityType))
-                throw new AccessViolationException("##");
-
-            EntityType = entityType;
-
-            if (!rule.GetType().Is(typeof(IRuleValidation<>).MakeGenericType(EntityType)))
-                throw new InvalidOperationException("##");
-
-            Rule = rule;
-
-            DependenciesProperty = typeof(IRuleValidation<>).MakeGenericType(EntityType).GetProperty("Dependencies");
-            AffectedMembersProperty = typeof(IValidate<>).MakeGenericType(EntityType).GetProperty("AffectedMembers");
-            ValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("ValidateEntity", new[] { EntityType, typeof(ValidationContext) });
-            FullyValidateEntityMethod = typeof(IValidate<>).MakeGenericType(EntityType).GetMethod("FullyValidateEntity", new[] { EntityType, typeof(IList<IViolation>), typeof(ValidationContext) });
-            PropertyRequirementProperty = typeof(IValidate<>).MakeGenericType(EntityType).GetProperty("PropertyRequirement");
+            Rule = new ReflectionWrapper(rule);
         }
 
         public List<DependencyWrapper> Dependencies
         {
             get
             {
-                return (List<DependencyWrapper>)DependenciesProperty.GetValue(Rule);
+                return Rule.Property<List<DependencyWrapper>>("Dependencies");
             }
         }
 
         public IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
-            return (IViolation)ValidateEntityMethod.Invoke(Rule, new object[] { subject, context });
+            return Rule.Method<IViolation, TEntity, ValidationContext>("ValidateEntity", subject, context);
         }
 
         public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
-            FullyValidateEntityMethod.Invoke(Rule, new object[] { subject, violationList, context });
+            Rule.Method<object, TEntity, IList<IViolation>, ValidationContext>("FullyValidateEntity", subject, violationList, context);
         }
 
         public IEnumerable<AffectedMembers> AffectedMembers
         {
             get
             {
-                return (IEnumerable<AffectedMembers>)AffectedMembersProperty.GetValue(Rule);                    
+                return Rule.Property<IEnumerable<AffectedMembers>>("AffectedMembers");                 
             }
         }
 
@@ -67,7 +46,7 @@ namespace BackToFront.Utils
         {
             get
             {
-                return (bool)PropertyRequirementProperty.GetValue(Rule);    
+                return Rule.Property<bool>("PropertyRequirement");
             }
         }
     }

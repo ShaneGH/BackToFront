@@ -78,7 +78,7 @@ namespace BackToFront
 
             var param = rule.Method.GetParameters();
             var mock1 = new DependencyWrapper<TDependency>(param[1].Name);
-            ruleObject.Dependencies.Add(mock1);
+            ruleObject._Dependencies.Add(mock1);
 
             // apply logic to rule
             rule(ruleObject, mock1);

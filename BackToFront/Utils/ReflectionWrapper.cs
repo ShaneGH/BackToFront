@@ -48,6 +48,8 @@ namespace BackToFront.Utils
             Type = item.GetType();
         }
 
+        #region reflection getters
+
         private PropertyInfo _GetProperty(string property)
         {
             Func<PropertyInfo> getter = () => Type.GetProperty(property, BindingFlags.Public | BindingFlags.Instance);
@@ -90,6 +92,10 @@ namespace BackToFront.Utils
             return CachedMethods[key];
         }
 
+        #endregion
+
+        #region property
+
         public T Property<T>(string propertyName)
         {
             var prop = _GetProperty(propertyName);
@@ -107,6 +113,10 @@ namespace BackToFront.Utils
 
             prop.SetValue(Item, value);
         }
+
+        #endregion
+
+        #region field
 
         public T Field<T>(string fieldName)
         {
@@ -126,7 +136,11 @@ namespace BackToFront.Utils
             f.SetValue(Item, value);
         }
 
-        public TReturn CallMethod<TReturn>(string methodName)
+        #endregion
+
+        #region Method
+
+        public TReturn Method<TReturn>(string methodName)
         {
             return (TReturn)_CallMethod(methodName, new object[0], new Type[0]);
         }
@@ -134,7 +148,7 @@ namespace BackToFront.Utils
         /// <summary>
         /// Specify arg generics explicitly if args are not exactly the same type o that the method expects (no decendent classes)
         /// </summary>
-        public TReturn CallMethod<TReturn, TArg1>(string methodName, TArg1 arg1)
+        public TReturn Method<TReturn, TArg1>(string methodName, TArg1 arg1)
         {
             return (TReturn)_CallMethod(methodName, new object[] { arg1 }, new Type[] { typeof(TArg1) });
         }
@@ -142,9 +156,17 @@ namespace BackToFront.Utils
         /// <summary>
         /// Specify arg generics explicitly if args are not exactly the same type o that the method expects (no decendent classes)
         /// </summary>
-        public TReturn CallMethod<TReturn, TArg1, TArg2>(string methodName, TArg1 arg1, TArg2 arg2)
+        public TReturn Method<TReturn, TArg1, TArg2>(string methodName, TArg1 arg1, TArg2 arg2)
         {
             return (TReturn)_CallMethod(methodName, new object[] { arg1, arg2 }, new Type[] { typeof(TArg1), typeof(TArg2) });
+        }
+
+        /// <summary>
+        /// Specify arg generics explicitly if args are not exactly the same type o that the method expects (no decendent classes)
+        /// </summary>
+        public TReturn Method<TReturn, TArg1, TArg2, TArg3>(string methodName, TArg1 arg1, TArg2 arg2, TArg3 arg3)
+        {
+            return (TReturn)_CallMethod(methodName, new object[] { arg1, arg2, arg3 }, new Type[] { typeof(TArg1), typeof(TArg2), typeof(TArg3) });
         }
 
         private object _CallMethod(string methodName, object[] parameters, Type[] parameterTypes)
@@ -155,6 +177,10 @@ namespace BackToFront.Utils
 
             return method.Invoke(Item, parameters);
         }
+
+        #endregion
+
+        #region Method comparer
 
         internal class MethodComparer : IEqualityComparer<Tuple<Type, string, Type[]>>
         {
@@ -189,5 +215,7 @@ namespace BackToFront.Utils
                 return true;
             }
         }
+
+        #endregion
     }
 }
