@@ -44,6 +44,22 @@ namespace BackToFront.Expressions
         public abstract Expression WrappedExpression { get; }
         protected abstract IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter);
 
+        private IEnumerable<ParameterExpression> CachedUnorderedParameters;
+        public IEnumerable<ParameterExpression> UnorderedParameters
+        {
+            get
+            {
+                if (CachedUnorderedParameters == null)
+                {
+                    CachedUnorderedParameters = _UnorderedParameters;
+                }
+
+                return CachedUnorderedParameters;
+            }
+        }
+
+        protected abstract IEnumerable<ParameterExpression> _UnorderedParameters { get; }
+
         protected Expression CompileInnerExpression(IEnumerable<Mock> mocks)
         {
             return CompileInnerExpression(new Mocks(mocks));

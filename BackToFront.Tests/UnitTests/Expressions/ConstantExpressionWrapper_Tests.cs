@@ -75,5 +75,18 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // assert
             Assert.AreEqual(0, result.Count());
         }
+
+        [Test]
+        public void UnorderedParameters_Test()
+        {
+            // arange
+            var subject = new TestClass(Expression.Constant(4));
+
+            // act
+            var result = subject.UnorderedParameters;
+
+            // assert
+            Assert.AreEqual(0, result.Count());
+        }
     }
 }

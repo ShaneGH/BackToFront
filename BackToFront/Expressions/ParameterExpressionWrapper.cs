@@ -49,5 +49,10 @@ namespace BackToFront.Expressions
             if (parameter == Expression)
                 yield return new MemberChainItem(parameter.Type);
         }
+
+        protected override IEnumerable<ParameterExpression> _UnorderedParameters
+        {
+            get { yield return Expression; }
+        }
     }
 }

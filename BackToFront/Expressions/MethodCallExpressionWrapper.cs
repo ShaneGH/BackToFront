@@ -73,5 +73,13 @@ namespace BackToFront.Expressions
             foreach (var item in items)
                 yield return item;
         }
+
+        protected override IEnumerable<ParameterExpression> _UnorderedParameters
+        {
+            get 
+            {
+                return Object.UnorderedParameters.Union(Arguments.Select(a => a.UnorderedParameters).Aggregate());
+            }
+        }
     }
 }

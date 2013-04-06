@@ -166,5 +166,18 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // assert
             Assert.AreEqual(expected, result);
         }
+
+        [Test]
+        public void UnorderedParameters_Test()
+        {
+            // arange
+            var member = Expression.Parameter(typeof(object));
+            var subject = new TestSubjectWrapper(member);
+
+            // act
+            // assert
+            Assert.AreEqual(1, subject.UnorderedParameters.Count());
+            Assert.AreEqual(subject.Expression, subject.UnorderedParameters.First());
+        }
     }
 }

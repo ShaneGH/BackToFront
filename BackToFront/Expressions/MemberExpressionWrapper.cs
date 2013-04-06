@@ -90,5 +90,13 @@ namespace BackToFront.Expressions
             root.Each(r => r.SetNext(Expression.Member));
             return root;
         }
+
+        protected override IEnumerable<ParameterExpression> _UnorderedParameters
+        {
+            get 
+            {
+                return InnerExpression.UnorderedParameters;
+            }
+        }
     }
 }

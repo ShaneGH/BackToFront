@@ -115,5 +115,20 @@ namespace BackToFront.Tests.UnitTests.Expressions
             Assert.AreEqual(member, test.NextItem.Member);
             Assert.IsNull(test.NextItem.NextItem);
         }
+
+        [Test]
+        public void UnorderedParameters_Test()
+        {
+            // arange
+            var mockedExp = Expression.Parameter(typeof(TestClass));
+            var member = typeof(TestClass).GetProperty("Member");
+            var testExp = Expression.Property(mockedExp, member);
+            var subject = new TestSubjectWrapper(testExp);
+
+            // act
+            // assert
+            Assert.AreEqual(1, subject.UnorderedParameters.Count());
+            Assert.AreEqual(mockedExp, subject.UnorderedParameters.First());
+        }
     }
 }

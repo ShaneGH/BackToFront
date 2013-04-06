@@ -109,5 +109,21 @@ namespace BackToFront.Tests.UnitTests.Expressions
             Assert.AreEqual(testExp.NodeType, result.NodeType);
             Assert.AreEqual(testExp.Method, result.Method);
         }
+
+        [Test]
+        public void UnorderedParameters_Test()
+        {
+            // arange
+            var param1 = Expression.Parameter(typeof(int));
+            var param2 = Expression.Parameter(typeof(int));
+
+            var mockedExp = Expression.Add(param1, param2);
+            var testExp = Expression.Add(mockedExp, param1);
+            var subject = new TestClass(testExp);
+
+            // act
+            // assert
+            Assert.IsTrue(AreKindOfEqual(subject.UnorderedParameters, new[] { param1, param2 }));
+        }
     }
 }

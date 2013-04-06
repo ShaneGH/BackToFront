@@ -69,5 +69,13 @@ namespace BackToFront.Expressions
             foreach (var item in Right.GetMembersForParameter(parameter))
                 yield return item;
         }
+
+        protected override IEnumerable<ParameterExpression> _UnorderedParameters
+        {
+            get 
+            {
+                return Left.UnorderedParameters.Union(Right.UnorderedParameters);
+            }
+        }
     }
 }

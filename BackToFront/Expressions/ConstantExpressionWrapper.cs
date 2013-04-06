@@ -35,5 +35,10 @@ namespace BackToFront.Expressions
         {
             yield break;
         }
+
+        protected override IEnumerable<ParameterExpression> _UnorderedParameters
+        {
+            get { yield break; }
+        }
     }
 }

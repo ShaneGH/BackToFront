@@ -48,5 +48,13 @@ namespace BackToFront.Expressions
         {
             return Operand.GetMembersForParameter(parameter);
         }
+
+        protected override IEnumerable<ParameterExpression> _UnorderedParameters
+        {
+            get 
+            {
+                return Operand.UnorderedParameters;
+            }
+        }
     }
 }

@@ -39,6 +39,11 @@ namespace BackToFront.Tests.UnitTests.Expressions
             {
                 throw new NotImplementedException();
             }
+
+            protected override IEnumerable<ParameterExpression> _UnorderedParameters
+            {
+                get { return new ParameterExpression[20]; }
+            }
         }
 
         #region constructors
@@ -213,6 +218,17 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // assert
             Assert.AreEqual(expected1, actual1);
             Assert.AreEqual(actual1, actual2);
+        }
+
+        [Test]
+        public void UnorderedParametersCache_Test()
+        {
+            // arrange
+            var subject = new TestClass();
+
+            // act
+            // assert
+            Assert.IsTrue(subject.UnorderedParameters.Equals(subject.UnorderedParameters));
         }
 
         [Test]
