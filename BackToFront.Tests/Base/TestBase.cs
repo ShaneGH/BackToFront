@@ -78,7 +78,10 @@ namespace BackToFront.Tests.Base
 
         public static bool AreKindOfEqual<T>(IEnumerable<T> item1, IEnumerable<T> item2, Func<T,T,bool> comparitor)
         {
-            if (item1.Count() != item2.Count())
+            if (item1 == null && item2 == null)
+                return true;
+
+            if (item1 == null || item2 == null || item1.Count() != item2.Count())
                 return false;
 
             for (var i = 0; i < item1.Count(); i++)

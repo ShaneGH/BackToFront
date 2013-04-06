@@ -111,6 +111,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTests\Utils\CompiledMockedExpression_Tests.cs" />
+    <Compile Include="UnitTests\Utils\ReflectionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Utils\MemberChainItem_Tests.cs" />
     <Compile Include="UnitTests\Utils\ParentRuleWrappers_Tests.cs" />
     <Compile Include="UnitTests\Utils\ParentRuleWrapper_Tests.cs" />
