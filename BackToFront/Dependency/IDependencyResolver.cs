@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BackToFront.Dependencies;
+using BackToFront.Dependency;
 
 namespace BackToFront
 {
@@ -26,7 +26,7 @@ namespace BackToFront
     }
 }
 
-namespace BackToFront.Dependencies
+namespace BackToFront.Dependency
 {
     public interface IDependencyResolver
     {

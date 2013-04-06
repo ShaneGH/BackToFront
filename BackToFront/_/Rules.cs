@@ -1,4 +1,4 @@
-﻿using BackToFront.Dependencies;
+﻿using BackToFront.Dependency;
 using BackToFront.Framework;
 using BackToFront.Utils;
 using System;

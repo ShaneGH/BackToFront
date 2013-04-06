@@ -42,7 +42,8 @@
   <ItemGroup>
     <Compile Include="DataAnnotations\BTFValidationContext.cs" />
     <Compile Include="DataAnnotations\ValidateMemberAttribute.cs" />
-    <Compile Include="Dependencies\IDependencyResolver.cs" />
+    <Compile Include="Dependency\IDependencyResolver.cs" />
+    <Compile Include="Dependency\RuleDependency.cs" />
     <Compile Include="Enum\LogicalOperator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -83,7 +84,7 @@
     <Compile Include="Utils\MemberChainItem.cs" />
     <Compile Include="Utils\ParentRuleWrappers.cs" />
     <Compile Include="Utils\Mocks.cs" />
-    <Compile Include="Utils\DependencyWrapper.cs" />
+    <Compile Include="Dependency\DependencyWrapper.cs" />
     <Compile Include="Utils\EX.cs" />
     <Compile Include="Expressions\BinaryExpressionWrapper.cs" />
     <Compile Include="Expressions\ConstantExpressionWrapper.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Utils\Mock.cs" />
     <Compile Include="Utils\ParentRuleWrapper.cs" />
     <Compile Include="Utils\ReadonlyDictionary.cs" />
+    <Compile Include="Utils\SimpleViolation.cs" />
     <Compile Include="Utils\ValidationContext.cs" />
     <Compile Include="_\IRule.cs" />
     <Compile Include="_\Rules.cs" />

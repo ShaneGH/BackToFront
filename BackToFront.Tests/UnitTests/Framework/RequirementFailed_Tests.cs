@@ -13,6 +13,11 @@ namespace BackToFront.Tests.UnitTests.Framework
     [TestFixture]
     public class RequirementFailed_Tests : BackToFront.Tests.Base.TestBase
     {
+        public class TestClass
+        {
+            public bool Success { get; set; }
+        }
+
         [Test]
         public void NextPathElements_Test()
         {
@@ -47,20 +52,37 @@ namespace BackToFront.Tests.UnitTests.Framework
         }
 
         [Test]
-        public void ValidateEntity_Test()
+        public void ValidateEntity_Test_success()
         {
-            var rule = new Rule<object>();
-            var mocks = new ValidationContext { Mocks = new Mocks() };
-            var entity = new object();
             var violation = new M.Mock<IViolation>().Object;
-            Expression<Func<object, bool>> exp = a => true;
-            var subject = new M.Mock<RequirementFailed<object>>(exp, rule) { CallBase = true };
+            Expression<Func<TestClass, bool>> exp = a => a.Success;
+            var subject = new M.Mock<RequirementFailed<TestClass>>(exp, null) { CallBase = true };
 
             // act
-            var result = subject.Object.ValidateEntity(entity, mocks);
+            var result = subject.Object.ValidateEntity(new TestClass { Success = true }, new ValidationContext { Mocks = new Mocks() });
 
             // assert
             Assert.IsNull(result);
+        }
+
+        [Test]
+        public void ValidateEntity_Test_failure()
+        {
+            var violation = new M.Mock<IViolation>().Object;
+            Expression<Func<TestClass, bool>> exp = a => a.Success;
+            var subject = new M.Mock<RequirementFailed<TestClass>>(exp, null) { CallBase = true };
+            subject.Object.WithModelViolation("efrwsrtw4f");
+            var ctxt = new ValidationContext { Mocks = new Mocks() };
+
+            // act
+            var result = subject.Object.ValidateEntity(new TestClass { Success = false }, ctxt);
+            
+            // assert
+            // do not test more of result, it comes from a different class
+            Assert.NotNull(result);
+
+            Assert.AreEqual(1, ctxt.ViolatedMembers.Count());
+            Assert.AreEqual(new MemberChainItem(typeof(TestClass)) { NextItem = new MemberChainItem(typeof(TestClass).GetProperty("Success")) }, ctxt.ViolatedMembers.First());
         }
 
         [Test]

@@ -1,4 +1,5 @@
-﻿using BackToFront.Extensions.IEnumerable;
+﻿using BackToFront.Dependency;
+using BackToFront.Extensions.IEnumerable;
 using BackToFront.Framework.Base;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;

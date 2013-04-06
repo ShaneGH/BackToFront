@@ -8,23 +8,23 @@ namespace BackToFront.Utils
 {
     public class GenericIEqualityComparer<T> : IEqualityComparer<T>
     {
-        public readonly Func<T, T, bool> Equals;
-        public readonly Func<T, int> GetHashCode;
+        private readonly Func<T, T, bool> _Equals;
+        private readonly Func<T, int> _GetHashCode;
 
         public GenericIEqualityComparer(Func<T, T, bool> equals, Func<T, int> getHashCode)
         {
-            Equals = equals;
-            GetHashCode = getHashCode;
+            _Equals = equals;
+            _GetHashCode = getHashCode;
         }
 
         bool IEqualityComparer<T>.Equals(T x, T y)
         {
-            return this.Equals(x, y);
+            return this._Equals(x, y);
         }
 
         int IEqualityComparer<T>.GetHashCode(T obj)
         {
-            return this.GetHashCode(obj);
+            return this._GetHashCode(obj);
         }
     }
 }

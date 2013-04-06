@@ -33,6 +33,11 @@ namespace BackToFront.Framework
             return ParentRule;
         }
 
+        public IAdditionalRuleCondition<TEntity> WithModelViolation(string violation)
+        {
+            return WithModelViolation(() => new SimpleViolationXXX(violation));
+        }
+
         public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
             if (!Compile(context.Mocks).Invoke(subject, context.Mocks.AsValueArray))

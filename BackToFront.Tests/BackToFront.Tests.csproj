@@ -58,6 +58,7 @@
     <Compile Include="Test.cs" />
     <Compile Include="UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />
     <Compile Include="UnitTests\DataAnnotations\BTFValidationContext_Tests.cs" />
+    <Compile Include="UnitTests\Dependency\RuleDependency.cs" />
     <Compile Include="UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Extensions\Reflection.cs" />
@@ -113,7 +114,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTests\Utils\CompiledMockedExpression_Tests.cs" />
-    <Compile Include="UnitTests\Utils\DependencyWrapper_Tests.cs" />
+    <Compile Include="UnitTests\Dependency\DependencyWrapper_Tests.cs" />
     <Compile Include="UnitTests\Utils\ReflectionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Utils\MemberChainItem_Tests.cs" />
     <Compile Include="UnitTests\Utils\ParentRuleWrappers_Tests.cs" />

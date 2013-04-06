@@ -1,4 +1,5 @@
-﻿using BackToFront.Logic;
+﻿using BackToFront.Dependency;
+using BackToFront.Logic;
 using BackToFront.Utils;
 using System;
 using System.Linq.Expressions;
@@ -66,9 +67,9 @@ namespace BackToFront.Expressions
             // do not use base methods, they are not valid in this special case
 
             if (expression.WrappedExpression is ConstantExpression && 
-                (expression.WrappedExpression as ConstantExpression).Value is Dependency)
+                (expression.WrappedExpression as ConstantExpression).Value is RuleDependency)
             {
-                return ((expression.WrappedExpression as ConstantExpression).Value as Dependency).Name == LinqParamName;
+                return ((expression.WrappedExpression as ConstantExpression).Value as RuleDependency).Name == LinqParamName;
             }
 
             return base.IsSameExpression(expression);

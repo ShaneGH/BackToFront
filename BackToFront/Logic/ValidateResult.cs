@@ -1,39 +1,22 @@
-﻿using BackToFront.Enum;
+﻿using BackToFront.Dependency;
+using BackToFront.Enum;
+using BackToFront.Expressions;
 using BackToFront.Extensions.IEnumerable;
+using BackToFront.Extensions.Reflection;
 using BackToFront.Framework;
 using BackToFront.Utils;
-using BackToFront.Expressions;
+using BackToFront.Validate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using BackToFront.Extensions.Reflection;
-using BackToFront.Validate;
-using BackToFront.Framework.Base;
 
 namespace BackToFront.Logic
 {
-    internal class Dependency
-    {
-        public readonly string Name;
-        public readonly object Value;
-
-        public Dependency(string name, object value) 
-        {
-            Name = name;
-            Value = value;
-        }
-
-        public Mock ToMock()
-        {
-            return new Mock(new ConstantExpressionWrapper(Expression.Constant(this)), Value, Value.GetType(), MockBehavior.MockOnly);
-        }
-    }
-
     public class ValidateResult<TEntity> : IValidateResult<TEntity>
     {
         private readonly TEntity Entity;
-        private readonly IEnumerable<Dependency> Dependencies;
+        private readonly IEnumerable<RuleDependency> Dependencies;
         private readonly List<Mock> Mocks = new List<Mock>();
         private readonly List<Func<IValidateResult>> ValidateChildMembers = new List<Func<IValidateResult>>();
         private readonly ValidateOptions Options;
@@ -45,7 +28,7 @@ namespace BackToFront.Logic
 
         public ValidateResult(TEntity entity, ValidateOptions options, object dependencyClasses)
         {
-            Dependencies = dependencyClasses == null ? Enumerable.Empty<Dependency>() : ToDependencies(dependencyClasses);
+            Dependencies = dependencyClasses == null ? Enumerable.Empty<RuleDependency>() : ToDependencies(dependencyClasses);
             Entity = entity;
             Options = options ?? new ValidateOptions();
         }
@@ -57,7 +40,7 @@ namespace BackToFront.Logic
         /// <param name="options"></param>
         /// <param name="dependencyClasses"></param>
         /// <param name="mocks"></param>
-        private ValidateResult(TEntity entity, ValidateOptions options, IEnumerable<Dependency> dependencyClasses, List<Mock> mocks)
+        private ValidateResult(TEntity entity, ValidateOptions options, IEnumerable<RuleDependency> dependencyClasses, List<Mock> mocks)
         {
             Entity = entity;
             Options = options;
@@ -157,7 +140,7 @@ namespace BackToFront.Logic
 
             // result of all violations. If true, mocks will be persisted
             bool success = true;
-            var dependencies = (IEnumerable<Dependency>)Dependencies.ToArray();
+            var dependencies = (IEnumerable<RuleDependency>)Dependencies.ToArray();
 
             // add parent class rules
             IEnumerable<IEnumerable<IRuleValidation<TEntity>>> rulesRepository = new[] { Rules<TEntity>.Repository.Registered };
@@ -178,9 +161,9 @@ namespace BackToFront.Logic
                 setters.Each(a => a.SetValue(Entity));
         }
 
-        internal static void ValidateDependencies(IEnumerable<DependencyWrapper> required, ref IEnumerable<Dependency> delivered)
+        internal static void ValidateDependencies(IEnumerable<DependencyWrapper> required, ref IEnumerable<RuleDependency> delivered)
         {
-            List<Dependency> requiredByRule = new List<Dependency>();
+            List<RuleDependency> requiredByRule = new List<RuleDependency>();
             foreach (var r in required)
             {
                 var match = delivered.FirstOrDefault(a => a.Name == r.DependencyName);
@@ -196,10 +179,10 @@ namespace BackToFront.Logic
             delivered = requiredByRule.ToArray();
         }
 
-        internal static IEnumerable<Dependency> ToDependencies(object input)
+        internal static IEnumerable<RuleDependency> ToDependencies(object input)
         {
             var dependencies = input.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            return dependencies.Select(d => new Dependency(d.Name, d.GetValue(input)));
+            return dependencies.Select(d => new RuleDependency(d.Name, d.GetValue(input)));
         }
 
         public void ResetResult()
@@ -218,7 +201,7 @@ namespace BackToFront.Logic
             if (member.Body is ParameterExpression)
                 throw new InvalidOperationException("##");
 
-            IEnumerable<Dependency> dependencies = dependencyClasses == null ? null : ToDependencies(dependencyClasses);
+            IEnumerable<RuleDependency> dependencies = dependencyClasses == null ? null : ToDependencies(dependencyClasses);
 
             MemberExpression tester = member.Body as MemberExpression;
             while (tester != null)

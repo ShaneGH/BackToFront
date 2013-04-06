@@ -1,9 +1,9 @@
-﻿using BackToFront.Dependencies;
+﻿using BackToFront.Dependency;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace BackToFront.Utils
+namespace BackToFront.Dependency
 {
     public abstract class DependencyWrapper
     {
