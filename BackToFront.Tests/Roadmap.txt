@@ -1,15 +1,15 @@
 ﻿
-Vallidation attribute
 Client side
 Domain Model
 
 More Expression types
 
+unit test everyting in ValidateMemberAttribute.cs
 unit test BackToFront.Logic.ValidateResult<TEntity>
 
 Special case for IEnumerables
 
-Hole in dependencies. What if user creates instance of DependencyWrapper
+Hole in dependencies. What if user gets hold of an instance of DependencyWrapper
 
 Reflection: if a parent type implements an interface, does the child type aswell?
 
