@@ -1,3 +1,6 @@
+/// <reference path="jquery.d.ts" />
+/// <reference path="jquery.validation.d.ts" />
+
 // Interface
 interface IPoint {
     getDist(): number;

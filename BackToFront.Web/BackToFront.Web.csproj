@@ -64,6 +64,8 @@
       <DependentUpon>BackToFront-0.0.ts</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\jquery.d.ts" />
+    <Content Include="Scripts\jquery.validation.d.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
