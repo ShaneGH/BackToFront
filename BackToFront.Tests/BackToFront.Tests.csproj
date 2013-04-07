@@ -67,6 +67,8 @@
     <Compile Include="UnitTests\Framework\Base\PathElementTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UnitTests\Framework\NonGeneric\RuleWrapper_Tests.cs" />
+    <Compile Include="UnitTests\Framework\NonGeneric\RuleWrapperBase_Tests.cs" />
     <Compile Include="UnitTests\Framework\SubRuleCollection_Tests.cs" />
     <Compile Include="UnitTests\Framework\Operator_Tests.cs" />
     <Compile Include="UnitTests\Framework\RequirementFailed_Tests.cs" />

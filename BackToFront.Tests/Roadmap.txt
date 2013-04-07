@@ -4,6 +4,7 @@ Domain Model
 
 More Expression types
 
+unit test ruleWrapper.Result, with DI
 unit test everyting in ValidateMemberAttribute.cs
 unit test BackToFront.Logic.ValidateResult<TEntity>
 

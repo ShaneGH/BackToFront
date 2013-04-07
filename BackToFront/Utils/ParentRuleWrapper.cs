@@ -2,28 +2,17 @@
 using BackToFront.Extensions.Reflection;
 using BackToFront.Framework;
 using BackToFront.Framework.Base;
+using BackToFront.Framework.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace BackToFront.Utils
 {
-    public class ParentRuleWrapper<TEntity> : IRuleValidation<TEntity>
+    public class ParentRuleWrapper<TEntity> : RuleWrapperBase, IRuleValidation<TEntity>
     {
-        public readonly ReflectionWrapper Rule;
-
-        public ParentRuleWrapper(Type entityType, object rule)
-        {
-            Rule = new ReflectionWrapper(rule);
-        }
-
-        public List<DependencyWrapper> Dependencies
-        {
-            get
-            {
-                return Rule.Property<List<DependencyWrapper>>("Dependencies");
-            }
-        }
+        public ParentRuleWrapper(object rule)
+            : base(rule) { }
 
         public IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
@@ -33,14 +22,6 @@ namespace BackToFront.Utils
         public void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
             Rule.Method<object, TEntity, IList<IViolation>, ValidationContext>("FullyValidateEntity", subject, violationList, context);
-        }
-
-        public IEnumerable<AffectedMembers> AffectedMembers
-        {
-            get
-            {
-                return Rule.Property<IEnumerable<AffectedMembers>>("AffectedMembers");                 
-            }
         }
 
         public bool PropertyRequirement

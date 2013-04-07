@@ -62,36 +62,11 @@ namespace BackToFront.Tests.UnitTests.Utils
         }
 
         [Test]
-        public void Dependencies_Test()
-        {
-            // arrange
-            var rule = new Rule<TestClass>();
-            rule._Dependencies.Add(new DependencyWrapper<TestClass>("Hello", null));
-            var subject = new ParentRuleWrapper<TestClassChild>(typeof(TestClass), rule);
-
-            // act
-            // assert
-            Assert.AreEqual(rule._Dependencies, subject.Dependencies);
-        }
-
-        [Test]
-        public void AffectedProperties_Test()
-        {
-            // arrange
-            var rule = new TestRule<TestClass>();
-            var subject = new ParentRuleWrapper<TestClass>(typeof(TestClass), rule);
-
-            // act
-            // assert
-            Assert.AreEqual(rule.AffectedMembers, subject.AffectedMembers);
-        }
-
-        [Test]
         public void PropertyRequirement_Test()
         {
             // arrange
             var rule = new TestRule<TestClass>();
-            var subject = new ParentRuleWrapper<TestClass>(typeof(TestClass), rule);
+            var subject = new ParentRuleWrapper<TestClass>(rule);
 
             // act
             // assert
@@ -107,7 +82,7 @@ namespace BackToFront.Tests.UnitTests.Utils
             var violation = new M.Mock<IViolation>();
             var rule = new TestRule<TestClass>() { Violation = violation.Object };
 
-            var subject = new ParentRuleWrapper<TestClassChild>(typeof(TestClass), rule);
+            var subject = new ParentRuleWrapper<TestClassChild>(rule);
 
             // act
             var result = subject.ValidateEntity(testClass, mocks);
@@ -125,7 +100,7 @@ namespace BackToFront.Tests.UnitTests.Utils
             var violation = new M.Mock<IViolation>().Object;
             List<IViolation> violations = new List<IViolation>();
             var rule = new TestRule<TestClass>() { Violation = violation };
-            var subject = new ParentRuleWrapper<TestClassChild>(typeof(TestClass), rule);
+            var subject = new ParentRuleWrapper<TestClassChild>(rule);
 
             // act
             subject.FullyValidateEntity(testClass, violations, mocks);

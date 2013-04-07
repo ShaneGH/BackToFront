@@ -18,7 +18,7 @@ namespace BackToFront.Utils
                 throw new InvalidOperationException("##");
 
             EntityType = entityType;
-            Rules = BackToFront.Rules.GetRules(entityType).Select(r => new ParentRuleWrapper<TEntity>(entityType, r)).ToArray();
+            Rules = BackToFront.Rules.GetRules(entityType).Select(r => new ParentRuleWrapper<TEntity>(r)).ToArray();
         }
 
         public IEnumerator<ParentRuleWrapper<TEntity>> GetEnumerator()
