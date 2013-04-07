@@ -71,7 +71,7 @@ namespace BackToFront.DataAnnotations
                 violations.Select(v => v.Violated.Select(m => m.UltimateMember.Name)).Aggregate());
         }
 
-        public static BTFValidationContext ProcessValidationContext(DA.ValidationContext validationContext)
+        internal static BTFValidationContext ProcessValidationContext(DA.ValidationContext validationContext)
         {
             if (!validationContext.Items.ContainsKey(BackToFrontValidationContext))
             {
