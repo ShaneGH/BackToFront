@@ -143,9 +143,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Roadmap.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="UnitTests\Logic\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
