@@ -10,15 +10,15 @@ using BackToFront.Logic.Compilations;
 
 namespace BackToFront
 {
-    public interface IAdditionalRuleCondition<TEntity>
-    {
-        IConditionSatisfied<TEntity> ElseIf(Expression<Func<TEntity, bool>> property);
-        IConditionSatisfied<TEntity> Else { get; }
-    }
-
     public interface IRule<TEntity>
     {
         IConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property);
         IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> property);
+    }
+
+    public interface IAdditionalRuleCondition<TEntity>
+    {
+        IConditionSatisfied<TEntity> ElseIf(Expression<Func<TEntity, bool>> property);
+        IConditionSatisfied<TEntity> Else { get; }
     }
 }

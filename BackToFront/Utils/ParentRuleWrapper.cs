@@ -1,16 +1,20 @@
-﻿using BackToFront.Dependency;
-using BackToFront.Extensions.Reflection;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BackToFront.Framework;
-using BackToFront.Framework.Base;
 using BackToFront.Framework.NonGeneric;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace BackToFront.Utils
 {
     public class ParentRuleWrapper<TEntity> : RuleWrapperBase, IRuleValidation<TEntity>
     {
+        public bool PropertyRequirement
+        {
+            get
+            {
+                return Rule.Property<bool>("PropertyRequirement");
+            }
+        }
+                
         public ParentRuleWrapper(object rule)
             : base(rule) { }
 
@@ -24,12 +28,14 @@ namespace BackToFront.Utils
             Rule.Method<object, TEntity, IList<IViolation>, ValidationContext>("FullyValidateEntity", subject, violationList, context);
         }
 
-        public bool PropertyRequirement
+        public IViolation ValidateEntity(object subject, Mocks mocks)
         {
-            get
-            {
-                return Rule.Property<bool>("PropertyRequirement");
-            }
+            return Rule.Method<IViolation, object, Mocks>("ValidateEntity", subject, mocks);
+        }
+
+        public IEnumerable<IViolation> FullyValidateEntity(object subject, Mocks mocks)
+        {
+            return Rule.Method<IList<IViolation>, object, Mocks>("FullyValidateEntity", subject, mocks).ToArray();
         }
     }
 }

@@ -37,9 +37,9 @@ namespace BackToFront.Tests.UnitTests.DataAnnotations
 
             // assert
             Assert.AreEqual(3, subject.Rules.Length);
-            Assert.AreEqual(Rules<TestClass2>.Repository.Registered.ElementAt(0), subject.Rules[0].Rule.Item);
-            Assert.AreEqual(Rules<TestClass2>.Repository.Registered.ElementAt(1), subject.Rules[1].Rule.Item);
-            Assert.AreEqual(Rules<TestClass1>.Repository.Registered.ElementAt(0), subject.Rules[2].Rule.Item);
+            Assert.AreEqual(Rules<TestClass2>.Repository.Registered.ElementAt(0), subject.Rules[0].Rule);
+            Assert.AreEqual(Rules<TestClass2>.Repository.Registered.ElementAt(1), subject.Rules[1].Rule);
+            Assert.AreEqual(Rules<TestClass1>.Repository.Registered.ElementAt(0), subject.Rules[2].Rule);
         }
     }
 }

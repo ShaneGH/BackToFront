@@ -1,10 +1,11 @@
-﻿using BackToFront.Dependency;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BackToFront.Dependency;
 using BackToFront.Framework;
 using BackToFront.Framework.Base;
 using BackToFront.Utils;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using M = Moq;
 
 namespace BackToFront.Tests.UnitTests.Utils
@@ -48,6 +49,16 @@ namespace BackToFront.Tests.UnitTests.Utils
             {
                 get { return PropertyRequirementStatic; }
             }
+
+            public IViolation ValidateEntity(object subject, Mocks mocks)
+            {
+                return Violation;
+            }
+
+            public IEnumerable<IViolation> FullyValidateEntity(object subject, Mocks mocks)
+            {
+                return new[] { Violation };
+            }
         }
 
         public override void Setup()
@@ -74,7 +85,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         }
 
         [Test]
-        public void ValidateEntity_Test()
+        public void ValidateEntity_Test_Generic()
         {
             // arrange
             var testClass = new TestClassChild();
@@ -92,7 +103,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         }
 
         [Test]
-        public void FullyValidateEntity_Test()
+        public void FullyValidateEntity_Test_Generic()
         {
             // arrange
             var testClass = new TestClassChild();
@@ -108,6 +119,42 @@ namespace BackToFront.Tests.UnitTests.Utils
             // assert
             Assert.AreEqual(1, violations.Count);
             Assert.AreEqual(violation, violations[0]);
+        }
+
+        [Test]
+        public void ValidateEntity_Test_NonGeneric()
+        {
+            // arrange
+            var testClass = new TestClassChild();
+            var mocks = new Mocks();
+            var violation = new M.Mock<IViolation>();
+            var rule = new TestRule<TestClass>() { Violation = violation.Object };
+
+            var subject = new ParentRuleWrapper<TestClassChild>(rule);
+
+            // act
+            var result = subject.ValidateEntity((object)testClass, mocks);
+
+            // assert
+            Assert.AreEqual(violation.Object, result);
+        }
+
+        [Test]
+        public void FullyValidateEntity_Test_NonGeneric()
+        {
+            // arrange
+            var testClass = new TestClassChild();
+            var mocks = new Mocks();
+            var violation = new M.Mock<IViolation>().Object;
+            var rule = new TestRule<TestClass>() { Violation = violation };
+            var subject = new ParentRuleWrapper<TestClassChild>(rule);
+
+            // act
+            var violations = subject.FullyValidateEntity((object)testClass, mocks);
+
+            // assert
+            Assert.AreEqual(1, violations.Count());
+            Assert.AreEqual(violation, violations.ElementAt(0));
         }
     }
 }

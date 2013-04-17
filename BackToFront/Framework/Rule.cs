@@ -11,12 +11,20 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Framework
 {
-    public interface IRuleValidation<TEntity> : IValidate<TEntity>
+    public interface INonGenericRuleXX : IValidate
     {
+        IEnumerable<AffectedMembers> AffectedMembers { get; }
+
         List<DependencyWrapper> Dependencies { get; }
+
+        bool PropertyRequirement { get; }
     }
 
-    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate, IRuleValidation<TEntity>
+    public interface IRuleValidation<TEntity> : IValidate<TEntity>, INonGenericRuleXX
+    {
+    }
+
+    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate<TEntity>, IValidate, IRuleValidation<TEntity>, INonGenericRuleXX
     {
         private readonly HashSet<IValidate<TEntity>> RegisteredItems = new HashSet<IValidate<TEntity>>();
         public readonly List<DependencyWrapper> _Dependencies = new List<DependencyWrapper>();
