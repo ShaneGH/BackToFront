@@ -16,9 +16,12 @@ namespace BackToFront.Tests.Javascript
         public const string BTF = "BackToFront";
 
         [Test]
+        [Explicit]
         public void Run()
         {
             var dir = System.Environment.CurrentDirectory.Substring(0, System.Environment.CurrentDirectory.IndexOf(BTF) + BTF.Length + 1);
+
+            Assert.Fail(string.Format(@"{0}Tools\Chutzpah\chutzpah.console.exe", dir));
 
             Process testRunner = new Process();
 
