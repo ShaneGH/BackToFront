@@ -86,6 +86,7 @@ csx
 AppPackages/
 
 # Others
+_Chutzpah*
 [Bb]in
 [Oo]bj
 sql
