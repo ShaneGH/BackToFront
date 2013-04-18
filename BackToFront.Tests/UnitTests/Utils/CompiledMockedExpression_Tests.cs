@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 
 namespace BackToFront.Tests.UnitTests.Utils
 {

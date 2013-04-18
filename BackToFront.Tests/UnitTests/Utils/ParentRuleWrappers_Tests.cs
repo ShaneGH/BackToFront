@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using M = Moq;
 
 using NUnit.Framework;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using BackToFront.Framework;
 
 namespace BackToFront.Tests.UnitTests.Utils

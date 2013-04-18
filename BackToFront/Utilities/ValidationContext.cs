@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
     public class ValidationContext
     {
@@ -23,7 +23,7 @@ namespace BackToFront.Utils
         /// <returns></returns>
         public ValidationContext Copy()
         {
-            return new ValidationContext { Mocks = new Utils.Mocks(Mocks) };
+            return new ValidationContext { Mocks = new Utilities.Mocks(Mocks) };
         }
     }
 }

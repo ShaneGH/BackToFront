@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 
 using BackToFront.Logic;
+using BackToFront.Utilities;
 
 namespace BackToFront.Tests.Utilities
 {
@@ -39,7 +40,7 @@ namespace BackToFront.Tests.Utilities
             set;
         }
 
-        public IEnumerable<Utils.MemberChainItem> Violated
+        public IEnumerable<MemberChainItem> Violated
         {
             get;
             set;

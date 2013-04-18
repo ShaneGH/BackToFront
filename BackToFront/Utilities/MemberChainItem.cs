@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using BackToFront.Extensions.Reflection;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
     public class MemberChainItem
     {
@@ -91,7 +91,7 @@ namespace BackToFront.Utils
 
         public static bool operator ==(MemberChainItem item1, MemberChainItem item2)
         {
-            return Utilities.BindOperatorToEquals(item1, item2);
+            return Utils.BindOperatorToEquals(item1, item2);
         }
 
         public static bool operator !=(MemberChainItem item1, MemberChainItem item2)

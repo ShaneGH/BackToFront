@@ -8,7 +8,7 @@ using NUnit.Framework;
 using BackToFront.Framework;
 using BackToFront.Framework.Base;
 using BackToFront.Extensions.IEnumerable;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 
 namespace BackToFront.Tests.UnitTests.Framework
 {

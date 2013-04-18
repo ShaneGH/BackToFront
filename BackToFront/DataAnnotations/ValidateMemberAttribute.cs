@@ -2,7 +2,7 @@
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Extensions.Reflection;
 using BackToFront.Framework.NonGeneric;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using System;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;

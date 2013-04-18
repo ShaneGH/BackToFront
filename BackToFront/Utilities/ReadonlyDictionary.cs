@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
     /// <summary>
     /// Wraps a dictionary providing read only access

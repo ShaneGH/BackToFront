@@ -3,7 +3,7 @@ using System.Linq;
 using BackToFront.Framework;
 using BackToFront.Framework.NonGeneric;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
     public class ParentRuleWrapper<TEntity> : RuleWrapperBase, IRuleValidation<TEntity>
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using NUnit.Framework;
 
 namespace BackToFront.Tests.UnitTests.Utils

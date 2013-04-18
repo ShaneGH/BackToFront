@@ -8,7 +8,7 @@ using E = System.Linq.Expressions;
 
 using BackToFront.Extensions.IEnumerable;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
     public class Mocks : IEnumerable<Mock>
     {

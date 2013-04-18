@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using U = BackToFront.Utils;
+using U = BackToFront.Utilities;
 
 namespace BackToFront.Tests.UnitTests.Framework
 {

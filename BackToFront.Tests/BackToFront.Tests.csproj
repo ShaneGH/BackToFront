@@ -129,7 +129,6 @@
     <Compile Include="UnitTests\Utils\Utilities_Tests.cs" />
     <Compile Include="UnitTests\_\Rules_Static_Tests.cs" />
     <Compile Include="UnitTests\_\Rules.cs" />
-    <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\SimpleIValidate.cs">
       <SubType>Code</SubType>
     </Compile>

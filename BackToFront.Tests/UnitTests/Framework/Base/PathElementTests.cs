@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using BackToFront.Extensions;
 
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using BackToFront.Logic;
 using BackToFront.Framework.Base;
 using NUnit.Framework;

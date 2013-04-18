@@ -1,6 +1,6 @@
 ﻿using BackToFront.Enum;
 using BackToFront.Expressions;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using System.Linq.Expressions;
 
 namespace BackToFront.Dependency

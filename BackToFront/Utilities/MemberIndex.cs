@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
     public class MemberIndex
     {
@@ -37,7 +37,7 @@ namespace BackToFront.Utils
 
         public static bool operator ==(MemberIndex item1, MemberIndex item2)
         {
-            return Utilities.BindOperatorToEquals(item1, item2);
+            return Utils.BindOperatorToEquals(item1, item2);
         }
 
         public static bool operator !=(MemberIndex item1, MemberIndex item2)

@@ -3,7 +3,7 @@ using BackToFront.Extensions.IEnumerable;
 using BackToFront.Framework.Base;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,7 +97,7 @@ namespace BackToFront.Framework
             RegisteredItems.Add(element);
         }
 
-        IViolation IValidate.ValidateEntity(object subject, Utils.Mocks mocks)
+        IViolation IValidate.ValidateEntity(object subject, Utilities.Mocks mocks)
         {
             if (subject is TEntity)
             {
@@ -107,7 +107,7 @@ namespace BackToFront.Framework
             throw new InvalidOperationException("##");
         }
 
-        IEnumerable<IViolation> IValidate.FullyValidateEntity(object subject, Utils.Mocks mocks)
+        IEnumerable<IViolation> IValidate.FullyValidateEntity(object subject, Utilities.Mocks mocks)
         {
             if (subject is TEntity)
             {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using BackToFront.Framework.Base;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 
 namespace BackToFront.Framework
 {

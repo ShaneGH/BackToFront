@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
     public class CompiledMockedExpression<TEntity, TMember>
     {
-        private readonly Utils.Mocks _Mocks;
+        private readonly Utilities.Mocks _Mocks;
         private readonly Func<TEntity, object[], TMember> _Function;
 
-        public CompiledMockedExpression(Func<TEntity, object[], TMember> function, Utils.Mocks mocks)
+        public CompiledMockedExpression(Func<TEntity, object[], TMember> function, Utilities.Mocks mocks)
         {
             _Function = function;
             _Mocks = mocks;

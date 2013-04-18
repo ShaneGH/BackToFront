@@ -10,6 +10,8 @@ using BackToFront.Logic;
 using BackToFront.Validate;
 using NUnit.Framework;
 
+using BackToFront.Utilities;
+
 namespace BackToFront.Tests
 {
     public class Testpad
@@ -33,7 +35,7 @@ namespace BackToFront.Tests
                 set;
             }
 
-            public IEnumerable<Utils.MemberChainItem> Violated
+            public IEnumerable<MemberChainItem> Violated
             {
                 get;
                 set;

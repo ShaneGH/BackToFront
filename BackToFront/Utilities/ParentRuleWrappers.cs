@@ -5,7 +5,7 @@ using System.Linq;
 
 using BackToFront.Extensions.Reflection;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
     public class ParentRuleWrappers<TEntity> : IEnumerable<ParentRuleWrapper<TEntity>>
     {

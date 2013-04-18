@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using U = BackToFront.Utils;
+using U = BackToFront.Utilities;
 using NUnit.Framework;
 
 namespace BackToFront.Tests.UnitTests.Utils
@@ -40,7 +40,7 @@ namespace BackToFront.Tests.UnitTests.Utils
             // arrange
             // act
             // assert
-            Assert.IsTrue(U.Utilities.BindOperatorToEquals<object>(null, null));
+            Assert.IsTrue(U.Utils.BindOperatorToEquals<object>(null, null));
         }
         
         [Test]
@@ -49,7 +49,7 @@ namespace BackToFront.Tests.UnitTests.Utils
             // arrange
             // act
             // assert
-            Assert.IsFalse(U.Utilities.BindOperatorToEquals<object>(null, new object()));
+            Assert.IsFalse(U.Utils.BindOperatorToEquals<object>(null, new object()));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // act
             // assert
-            Assert.IsTrue(U.Utilities.BindOperatorToEquals<TestClass>(i1, i2));
+            Assert.IsTrue(U.Utils.BindOperatorToEquals<TestClass>(i1, i2));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // act
             // assert
-            Assert.IsFalse(U.Utilities.BindOperatorToEquals<TestClass>(i1, i2));
+            Assert.IsFalse(U.Utils.BindOperatorToEquals<TestClass>(i1, i2));
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // act
             // assert
-            Assert.IsFalse(U.Utilities.BindOperatorToEquals<TestClass>(i1, i2));
+            Assert.IsFalse(U.Utils.BindOperatorToEquals<TestClass>(i1, i2));
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using BackToFront.Extensions.Reflection;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using NUnit.Framework;
 
 namespace BackToFront.Tests.UnitTests.Extensions

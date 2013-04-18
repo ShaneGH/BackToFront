@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
-    public static class Utilities
+    public static class Utils
     {
         public static bool BindOperatorToEquals<T>(T item1, T item2)
         {

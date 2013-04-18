@@ -4,7 +4,7 @@ using System.Linq;
 using BackToFront.Dependency;
 using BackToFront.Framework;
 using BackToFront.Framework.Base;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using NUnit.Framework;
 using M = Moq;
 

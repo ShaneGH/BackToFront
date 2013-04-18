@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
     public class SimpleViolationXXX : IViolation
     {

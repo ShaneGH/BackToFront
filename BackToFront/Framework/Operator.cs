@@ -1,7 +1,7 @@
 ﻿using BackToFront.Framework.Base;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace BackToFront.Framework
             }
         }
 
-        public bool ConditionIsTrue(TEntity subject, Utils.Mocks mocks)
+        public bool ConditionIsTrue(TEntity subject, Utilities.Mocks mocks)
         {
             return Compile(mocks).Invoke(subject, mocks.AsValueArray);
         }

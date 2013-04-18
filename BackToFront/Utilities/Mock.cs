@@ -4,7 +4,7 @@ using System;
 using System.Linq.Expressions;
 using E = System.Linq.Expressions;
 
-namespace BackToFront.Utils
+namespace BackToFront.Utilities
 {
     public class Mock
     {

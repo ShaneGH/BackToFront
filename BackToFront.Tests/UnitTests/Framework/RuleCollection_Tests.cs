@@ -1,12 +1,12 @@
 ﻿using BackToFront.Framework;
 using BackToFront.Framework.Base;
 using BackToFront.Tests.Utilities;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using U = BackToFront.Utils;
+using U = BackToFront.Utilities;
 
 namespace BackToFront.Tests.UnitTests.Framework
 {

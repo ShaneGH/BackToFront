@@ -1,6 +1,6 @@
 ﻿using BackToFront.Extensions.IEnumerable;
 using BackToFront.Framework.Base;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 

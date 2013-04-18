@@ -6,7 +6,7 @@ using M = Moq;
 using BackToFront.Dependency;
 using System.Collections.Generic;
 using DA = System.ComponentModel.DataAnnotations;
-using BackToFront.Utils;
+using BackToFront.Utilities;
 using BackToFront.Enum;
 
 namespace BackToFront.Tests.UnitTests.DataAnnotations
