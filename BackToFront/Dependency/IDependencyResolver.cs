@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BackToFront.Dependency;
+using BackToFront.Framework;
 
 namespace BackToFront
 {
@@ -49,6 +50,6 @@ namespace BackToFront.Dependency
 
     public interface IRuleDependencies
     {
-        RuleDependency GetDependency(string dependencyName, Type dependencyType, object rule);
+        RuleDependency GetDependency(string dependencyName, Type dependencyType, IRuleMetadata rule);
     }
 }

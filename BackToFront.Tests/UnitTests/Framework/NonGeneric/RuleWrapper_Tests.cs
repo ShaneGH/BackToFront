@@ -77,7 +77,7 @@ namespace BackToFront.Tests.UnitTests.Framework.NonGeneric
             var dependency = new M.Mock<DependencyWrapper>(dependencyName);
             dependency.Setup(d => d.DependencyType).Returns(dependencyType);
 
-            var rule = new M.Mock<INonGenericRuleXX>();
+            var rule = new M.Mock<IRuleMetadata>();
             rule.Setup(a => a.Dependencies).Returns(new List<DependencyWrapper> { dependency.Object });
             if (useDI)
             {
@@ -116,7 +116,7 @@ namespace BackToFront.Tests.UnitTests.Framework.NonGeneric
             var dependency = new M.Mock<DependencyWrapper>(dependencyName);
             dependency.Setup(d => d.DependencyType).Returns(dependencyType);
 
-            var rule = new M.Mock<INonGenericRuleXX>();
+            var rule = new M.Mock<IRuleMetadata>();
             rule.Setup(a => a.Dependencies).Returns(new List<DependencyWrapper> { dependency.Object });
             if (useDI)
             {

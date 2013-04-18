@@ -11,6 +11,9 @@ namespace BackToFront.Utils
 {
     public class MemberChainItem
     {
+        private static readonly Type _IEnumerable = typeof(IEnumerable<>);
+        public readonly Type IndexedType;
+        public readonly int? Index;
         public readonly MemberInfo Member;
         private MemberChainItem _NextItem;
         public MemberChainItem NextItem
@@ -21,10 +24,17 @@ namespace BackToFront.Utils
             }
             set
             {
-                if (value != null && value.Member.DeclaringType != Member.MemberType())
-                    throw new InvalidOperationException("##");
+                if (value != _NextItem)
+                {
+                    if (value != null)
+                    {
+                        var type = Index.HasValue ? IndexedType : Member.MemberType();
+                        if (value.Member.DeclaringType != type)
+                            throw new InvalidOperationException("##");
+                    }
 
-                _NextItem = value;
+                    _NextItem = value;
+                }
             }
         }
 
@@ -41,16 +51,27 @@ namespace BackToFront.Utils
         }
 
         public MemberChainItem(MemberInfo member)
+            : this(member, null) { }
+        
+        public MemberChainItem(MemberInfo member, int? index)
         {
             if (member == null)
                 throw new ArgumentNullException("member");
 
-            Member = member;
-        }
+            if (index.HasValue)
+            {
+                if (member is Type)
+                    throw new InvalidOperationException("A type cannot be indexed"); //"##"
+                if (!member.MemberType().Is(_IEnumerable))
+                    throw new InvalidOperationException("A non enumerable member cannot be indexed"); //"##"
 
-        public void SetNext(MemberInfo member)
-        {
-            NextItem = new MemberChainItem(member);
+                IndexedType = member.MemberType().GetInterfaces()
+                    .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == _IEnumerable)
+                    .GetGenericArguments()[0];
+            }
+
+            Member = member;
+            Index = index;
         }
 
         public override int GetHashCode()
@@ -62,7 +83,7 @@ namespace BackToFront.Utils
         {
             var item = obj as MemberChainItem;
 
-            if (item == null || item.Member!= Member)
+            if (item == null || item.Member!= Member || item.Index != Index)
                 return false;
 
             return (NextItem == null && item.NextItem == null) || NextItem.Equals(item.NextItem);

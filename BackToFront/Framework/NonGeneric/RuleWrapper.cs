@@ -8,13 +8,13 @@ namespace BackToFront.Framework.NonGeneric
 {
     public class RuleWrapper
     {
-        public readonly INonGenericRuleXX Rule;
+        public readonly IRuleMetadata Rule;
 
         public readonly object ValidationSubject;
         private readonly Func<IRuleDependencies> ServiceContainer;
         private Dictionary<bool, IViolation[]> CachedResults = new Dictionary<bool, IViolation[]>();
 
-        public RuleWrapper(INonGenericRuleXX rule, object toValidate, Func<IRuleDependencies> serviceContainer)
+        public RuleWrapper(IRuleMetadata rule, object toValidate, Func<IRuleDependencies> serviceContainer)
         {
             Rule = rule;
             ValidationSubject = toValidate;
@@ -26,14 +26,6 @@ namespace BackToFront.Framework.NonGeneric
             get
             {
                 return Rule.AffectedMembers.Where(a => a.Requirement).Select(a => a.Member);
-            }
-        }
-
-        public List<DependencyWrapper> Dependencies
-        {
-            get
-            {
-                return Rule.Dependencies;
             }
         }
 

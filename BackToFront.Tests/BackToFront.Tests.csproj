@@ -58,6 +58,7 @@
     <Compile Include="Test.cs" />
     <Compile Include="UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />
     <Compile Include="UnitTests\DataAnnotations\BTFValidationContext_Tests.cs" />
+    <Compile Include="UnitTests\DataAnnotations\ValidateMemberAttribute_Tests.cs" />
     <Compile Include="UnitTests\Dependency\RuleDependency.cs" />
     <Compile Include="UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs" />

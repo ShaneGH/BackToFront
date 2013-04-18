@@ -1,40 +1,57 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using BackToFront.Extensions.Reflection;
-
-using NUnit.Framework;
-using System.Reflection;
 using BackToFront.Utils;
+using NUnit.Framework;
 
 namespace BackToFront.Tests.UnitTests.Extensions
 {
     [TestFixture]
     public class Reflection_Tests
     {
-        class TestClass1
+        class TestClass1 : IEnumerable<string>
         {
             public event EventHandler Event;
             public string Method() { return null; }
             public void VoidMethod() { }
             public string Property { get; set; } 
-            public string Field; 
+            public string Field;
+
+            public IEnumerator<string> GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         class TestClass2 : TestClass1 { }
 
         [Test]
-        public void Is_Test()
+        public void Is_Tests()
         {
-            // arrange            
-            // act
-            // assert
+            // is itself
             Assert.IsTrue(typeof(TestClass1).Is(typeof(TestClass1)));
+
+            // class inheritance
             Assert.IsTrue(typeof(TestClass2).Is(typeof(TestClass1)));
             Assert.IsFalse(typeof(string).Is(typeof(TestClass1)));
+
+            // interface implementation
+            Assert.IsTrue(typeof(TestClass1).Is(typeof(IEnumerable<string>)));
+            Assert.IsTrue(typeof(TestClass1).Is(typeof(IEnumerable<>)));
+
+            // interface implementation by inheritance
+            Assert.IsTrue(typeof(TestClass2).Is(typeof(IEnumerable<string>)));
+            Assert.IsTrue(typeof(TestClass2).Is(typeof(IEnumerable<>)));
+
+            // interface inheritance
+            Assert.IsTrue(typeof(TestClass1).Is(typeof(IEnumerable)));
+            Assert.IsTrue(typeof(TestClass2).Is(typeof(IEnumerable)));
         }
 
         [Test]

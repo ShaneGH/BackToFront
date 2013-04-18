@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Framework
 {
-    public interface INonGenericRuleXX : IValidate
+    public interface IRuleMetadata : IValidate
     {
         IEnumerable<AffectedMembers> AffectedMembers { get; }
 
@@ -20,11 +20,11 @@ namespace BackToFront.Framework
         bool PropertyRequirement { get; }
     }
 
-    public interface IRuleValidation<TEntity> : IValidate<TEntity>, INonGenericRuleXX
+    public interface IRuleValidation<TEntity> : IValidate<TEntity>, IRuleMetadata
     {
     }
 
-    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate<TEntity>, IValidate, IRuleValidation<TEntity>, INonGenericRuleXX
+    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate<TEntity>, IValidate, IRuleValidation<TEntity>, IRuleMetadata
     {
         private readonly HashSet<IValidate<TEntity>> RegisteredItems = new HashSet<IValidate<TEntity>>();
         public readonly List<DependencyWrapper> _Dependencies = new List<DependencyWrapper>();

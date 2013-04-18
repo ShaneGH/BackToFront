@@ -87,7 +87,7 @@ namespace BackToFront.Expressions
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
             var root = InnerExpression.GetMembersForParameter(parameter);
-            root.Each(r => r.SetNext(Expression.Member));
+            root.Each(r => r.NextItem = new MemberChainItem(Expression.Member));
             return root;
         }
 

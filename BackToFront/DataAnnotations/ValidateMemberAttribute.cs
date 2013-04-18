@@ -1,17 +1,32 @@
 ﻿using BackToFront.Enum;
 using BackToFront.Extensions.IEnumerable;
+using BackToFront.Extensions.Reflection;
 using BackToFront.Framework.NonGeneric;
 using BackToFront.Utils;
 using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
 using DA = System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace BackToFront.DataAnnotations
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class ValidateMemberAttribute : DA.ValidationAttribute
     {
+        private static readonly Regex _propertyChain;
+        private static readonly Regex _indexedProperty;
+        static ValidateMemberAttribute()
+        {
+            var index = @"\[[0-9]+\]";
+            var indexedProperty = @"[_a-zA-Z][_a-zA-Z0-9]*(" + index + ")?";
+            var dotIndexedProperty = @"\." + indexedProperty;
+
+            _indexedProperty = new Regex(index + "$");
+            _propertyChain = new Regex(@"^" + indexedProperty + @"(" + dotIndexedProperty + @")*$");
+        }
+
         public const string BackToFrontValidationContext = "BackToFront.DataAnnotations.BTFValidationContext";
 
         public override bool RequiresValidationContext
@@ -42,7 +57,7 @@ namespace BackToFront.DataAnnotations
             switch (DependencyBehavior)
             {
                 case DependencyBehavior.IgnoreRulesWithDependencies:
-                    return a.Dependencies.Count == 0;
+                    return a.Rule.Dependencies.Count == 0;
                 case DependencyBehavior.UseInbuiltDI:
                 case DependencyBehavior.UseServiceContainerAndInbuiltDI:
                     return true;
@@ -85,9 +100,33 @@ namespace BackToFront.DataAnnotations
             throw new InvalidOperationException("##");
         }
 
-        private static MemberChainItem Create(Type type, string MemberName)
+        public static MemberChainItem Create(Type type, string memberName)
         {
-            throw new InvalidOperationException();
+            if (!_propertyChain.IsMatch(memberName))
+                throw new InvalidOperationException("##" + memberName); // exception must say that functions are not supported
+
+            var result = new MemberChainItem(type);
+            MemberChainItem current = result; 
+            foreach (var m in memberName.Split('.'))
+            {
+                string member = m;
+                int? index = null;
+                if (_indexedProperty.IsMatch(member))
+                {
+                    var last = member.LastIndexOf('[');
+                    index = int.Parse(member.Substring(last + 1, member.Length - last - 2));
+                    member = member.Substring(0, last);
+                }
+
+                var nextType = current.Index.HasValue ? current.IndexedType : current.Member.MemberType();
+                var newMember = nextType.GetMember(member).FirstOrDefault(a => a is PropertyInfo || a is FieldInfo);
+                if (newMember == null)
+                    throw new InvalidOperationException("##");
+
+                current = current.NextItem = new MemberChainItem(newMember, index);
+            }
+
+            return result;
         }
     }
 }

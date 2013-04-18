@@ -20,7 +20,13 @@ namespace BackToFront.Tests.UnitTests.Utils
         public class TestClass
         {
             public int Prop { get; set; }
+
+            public int[] Array { get; set; }
+
+            public int[] Array2 { get; set; }
         }
+
+        #region Non indexed
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -44,7 +50,7 @@ namespace BackToFront.Tests.UnitTests.Utils
             var subject = new MemberChainItem(typeof(object).GetMethod("ToString"));
 
             // assert
-            subject.SetNext(intThing);
+            subject.NextItem = new MemberChainItem(intThing);
         }
 
         [Test]
@@ -58,7 +64,7 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // act
             var subject = new MemberChainItem(objectThing);
-            subject.SetNext(stringThing);
+            subject.NextItem = new MemberChainItem(stringThing);
 
             // assert
             Assert.AreEqual(objectThing, subject.Member);
@@ -69,7 +75,7 @@ namespace BackToFront.Tests.UnitTests.Utils
         public void Equals_Test_referenceEquals_true()
         {
             // arrange
-            var subject = new MemberChainItem(typeof(string));
+            var subject = new MemberChainItem(typeof(TestClass).GetProperty("Array"));
 
             // act
             // assert
@@ -80,11 +86,11 @@ namespace BackToFront.Tests.UnitTests.Utils
         public void Equals_Test_valueEquals_true()
         {
             // arrange
-            var subject1 = new MemberChainItem(typeof(string));
-            subject1.SetNext(typeof(string).GetMethod("GetHashCode"));
+            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            subject1.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
-            var subject2 = new MemberChainItem(typeof(string));
-            subject2.SetNext(typeof(string).GetMethod("GetHashCode"));
+            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            subject2.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
             // act
             // assert
@@ -95,11 +101,11 @@ namespace BackToFront.Tests.UnitTests.Utils
         public void Equals_Test_valueEquals_false_Member()
         {
             // arrange
-            var subject1 = new MemberChainItem(typeof(string));
-            subject1.SetNext(typeof(string).GetMethod("GetHashCode"));
+            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            subject1.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
-            var subject2 = new MemberChainItem(typeof(object));
-            subject2.SetNext(typeof(object).GetMethod("GetHashCode"));
+            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array2"), 4);
+            subject2.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
             // act
             // assert
@@ -110,15 +116,30 @@ namespace BackToFront.Tests.UnitTests.Utils
         public void Equals_Test_valueEquals_false_next()
         {
             // arrange
-            var subject1 = new MemberChainItem(typeof(object));
-            subject1.SetNext(typeof(object).GetMethod("ToString"));
+            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            subject1.NextItem = new MemberChainItem(typeof(int).GetMethod("ToString", new Type[0]));
 
-            var subject2 = new MemberChainItem(typeof(object));
-            subject2.SetNext(typeof(object).GetMethod("GetHashCode"));
+            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            subject2.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
             // act
             // assert
             Assert.IsFalse(subject1.Equals(subject2));
+        }
+
+        [Test]
+        public void Equals_Test_valueEquals_false_index()
+        {
+            // arrange
+            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            subject1.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
+
+            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 3);
+            subject2.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
+
+            // act
+            // assert
+            Assert.IsFalse(subject1 == subject2);
         }
 
         [Test]
@@ -138,5 +159,77 @@ namespace BackToFront.Tests.UnitTests.Utils
             // assert
             Assert.AreEqual(typeof(int).GetMethod("GetHashCode"), subject.UltimateMember);
         }
+
+        #endregion
+
+        #region indexed
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Constructor_Test_IndexedType()
+        {
+            // arrange
+            // act
+            // assert
+            var subject = new MemberChainItem(typeof(TestClass), 2);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Constructor_Test_IndexedNonEnumerable()
+        {
+            // arrange
+            // act
+            // assert
+            new MemberChainItem(typeof(TestClass).GetProperty("Prop"), 2);
+        }
+
+        [Test]
+        public void Constructor_Test_IndexedEnumerable()
+        {
+            // arrange
+            var property = typeof(TestClass).GetProperty("Array");
+            var index = 4;
+
+            // act
+            var subject = new MemberChainItem(property, index);
+
+            // assert
+            Assert.AreEqual(property, subject.Member);
+            Assert.AreEqual(index, subject.Index.Value);
+            Assert.AreEqual(typeof(int), subject.IndexedType);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void NextItem_Test_Indexed_InvalidProperty()
+        {
+            // arrange
+            var property = typeof(TestClass).GetProperty("Array");
+            var index = 4;
+            var baseMember = new MemberChainItem(property, index);
+
+            // act
+            // assert
+            baseMember.NextItem = new MemberChainItem(typeof(int[]).GetProperty("Length"));
+        }
+
+        [Test]
+        public void NextItem_Test_Indexed_ValidProperty()
+        {
+            // arrange
+            var property = typeof(TestClass).GetProperty("Array");
+            var index = 4;
+            var baseMember = new MemberChainItem(property, index);
+            var toInsert = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
+
+            // act
+            baseMember.NextItem = toInsert;
+
+            // assert
+            Assert.AreEqual(toInsert, baseMember.NextItem);
+        }
+
+        #endregion
     }
 }

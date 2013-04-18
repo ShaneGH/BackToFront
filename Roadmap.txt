@@ -4,16 +4,16 @@ Domain Model
 
 More Expression types
 
-unit test ruleWrapper.Result, with DI
 unit test everyting in ValidateMemberAttribute.cs
 unit test BackToFront.Logic.ValidateResult<TEntity>
+unit test ValidateMemberAttribute Regexes
 
 Special case for IEnumerables
 
 Hole in dependencies. What if user gets hold of an instance of DependencyWrapper
 
-Reflection: if a parent type implements an interface, does the child type aswell?
-
 Validate child properties: 	Re format mocks for child object
 
 Define rule: must have same dependencies as parent class rule
+
+IEnumerables: IfAll, IfAny, RequireThatAll, RequreThatAny, ElseIfAll, ElseIfAny etc.....
