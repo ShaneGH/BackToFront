@@ -166,6 +166,6 @@
     <Exec Command="..\Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
   </Target>
   <Target Name="AfterBuild">
-    <Exec Command="..\Tools\Chutzpah\chutzpah.console /path ..\..\BackToFront.Tests\Javascript\UnitTests /testMode JavaScript /silent /junit bin/debug/hello.xml" />
+    <Exec Command="..\Tools\Chutzpah\chutzpah.console" />
   </Target>
 </Project>
