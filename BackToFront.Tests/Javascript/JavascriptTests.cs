@@ -15,6 +15,7 @@ namespace BackToFront.Tests.Javascript
         public const string TestResultsFile = "unitTestResults.xml";
 
         [Test]
+        [Explicit]
         public void Run()
         {
             Process testRunner = new Process();
@@ -25,10 +26,10 @@ namespace BackToFront.Tests.Javascript
             testRunner.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             testRunner.Start();
 
-            //testRunner.WaitForExit();
-            //testRunner.Close();
+            testRunner.WaitForExit();
+            testRunner.Close();
 
-            //Assert.IsTrue(File.Exists(TestResultsFile));
+            Assert.IsTrue(File.Exists(TestResultsFile));
         }
     }
 }
