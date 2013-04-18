@@ -6,7 +6,6 @@ More Expression types
 
 unit test everyting in ValidateMemberAttribute.cs
 unit test BackToFront.Logic.ValidateResult<TEntity>
-unit test ValidateMemberAttribute Regexes
 
 Special case for IEnumerables
 

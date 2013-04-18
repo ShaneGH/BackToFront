@@ -1,28 +1,12 @@
 /// <reference path="jquery.d.ts" />
 /// <reference path="jquery.validation.d.ts" />
 
-// Interface
-interface IPoint {
-    getDist(): number;
-}
+module __BTF {
+    export var Initialize = function (data) { };
 
-// Module
-module Shapes {
-
-    // Class
-    export class Point implements IPoint {
-        // Constructor
-        constructor (public x: number, public y: number) { }
-
-        // Instance member
-        getDist() { return Math.sqrt(this.x * this.x + this.y * this.y); }
-
-        // Static member
-        static origin = new Point(0, 0);
+    export class TestClass {
+        Test() {
+            return true;
+        }
     }
-
 }
-
-// Local variables
-var p: IPoint = new Shapes.Point(3, 4);
-var dist = p.getDist();

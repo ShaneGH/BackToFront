@@ -1,17 +1,13 @@
-var Shapes;
-(function (Shapes) {
-    var Point = (function () {
-        function Point(x, y) {
-            this.x = x;
-            this.y = y;
-        }
-        Point.prototype.getDist = function () {
-            return Math.sqrt(this.x * this.x + this.y * this.y);
+var __BTF;
+(function (__BTF) {
+    __BTF.Initialize = function (data) {
+    };
+    var TestClass = (function () {
+        function TestClass() { }
+        TestClass.prototype.Test = function () {
+            return true;
         };
-        Point.origin = new Point(0, 0);
-        return Point;
+        return TestClass;
     })();
-    Shapes.Point = Point;    
-})(Shapes || (Shapes = {}));
-var p = new Shapes.Point(3, 4);
-var dist = p.getDist();
+    __BTF.TestClass = TestClass;    
+})(__BTF || (__BTF = {}));

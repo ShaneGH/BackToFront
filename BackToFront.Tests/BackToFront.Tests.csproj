@@ -52,83 +52,83 @@
     <Compile Include="Base\TestBase.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IntegrationTests\Children.cs" />
-    <Compile Include="IntegrationTests\Inheritance.cs" />
+    <Compile Include="CSharp\IntegrationTests\Children.cs" />
+    <Compile Include="CSharp\IntegrationTests\Inheritance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
-    <Compile Include="UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />
-    <Compile Include="UnitTests\DataAnnotations\BTFValidationContext_Tests.cs" />
-    <Compile Include="UnitTests\DataAnnotations\ValidateMemberAttribute_Tests.cs" />
-    <Compile Include="UnitTests\Dependency\RuleDependency.cs" />
-    <Compile Include="UnitTests\Expressions\ElementAtExpressionWrapper_Tests.cs" />
-    <Compile Include="UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs" />
-    <Compile Include="UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs" />
-    <Compile Include="UnitTests\Extensions\Reflection.cs" />
-    <Compile Include="UnitTests\Extensions\IEnumerable.cs" />
-    <Compile Include="UnitTests\Framework\Base\ExpressionElementTests.cs" />
-    <Compile Include="UnitTests\Framework\Base\PathElementTests.cs">
+    <Compile Include="CSharp\UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\DataAnnotations\BTFValidationContext_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\DataAnnotations\ValidateMemberAttribute_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Dependency\RuleDependency.cs" />
+    <Compile Include="CSharp\UnitTests\Expressions\ElementAtExpressionWrapper_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Extensions\Reflection.cs" />
+    <Compile Include="CSharp\UnitTests\Extensions\IEnumerable.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\Base\ExpressionElementTests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\Base\PathElementTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Framework\NonGeneric\RuleWrapper_Tests.cs" />
-    <Compile Include="UnitTests\Framework\NonGeneric\RuleWrapperBase_Tests.cs" />
-    <Compile Include="UnitTests\Framework\SubRuleCollection_Tests.cs" />
-    <Compile Include="UnitTests\Framework\Operator_Tests.cs" />
-    <Compile Include="UnitTests\Framework\RequirementFailed_Tests.cs" />
-    <Compile Include="UnitTests\Framework\RequireOperator_Tests.cs" />
-    <Compile Include="UnitTests\Framework\RuleCollection_Tests.cs" />
-    <Compile Include="UnitTests\Framework\Rule_Tests.cs" />
-    <Compile Include="UnitTests\Framework\MultiCondition_Tests.cs" />
-    <Compile Include="UnitTests\Framework\ThrowViolationTests.cs">
+    <Compile Include="CSharp\UnitTests\Framework\NonGeneric\RuleWrapper_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\NonGeneric\RuleWrapperBase_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\SubRuleCollection_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\Operator_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\RequirementFailed_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\RequireOperator_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\RuleCollection_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\Rule_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\MultiCondition_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IntegrationTests\TestPass7Test_2.cs" />
-    <Compile Include="IntegrationTests\TestPass1_1_Test.cs" />
-    <Compile Include="IntegrationTests\TestPass7Test_1.cs" />
-    <Compile Include="IntegrationTests\TestPass4Test_1.cs" />
-    <Compile Include="IntegrationTests\TestPass8Test.cs" />
-    <Compile Include="IntegrationTests\TestPass7Test.cs" />
-    <Compile Include="IntegrationTests\TestPass6Test.cs" />
-    <Compile Include="IntegrationTests\TestPass5Test.cs" />
-    <Compile Include="IntegrationTests\TestPass4Test.cs" />
-    <Compile Include="IntegrationTests\TestPass1Test.cs">
+    <Compile Include="CSharp\IntegrationTests\TestPass7Test_2.cs" />
+    <Compile Include="CSharp\IntegrationTests\TestPass1_1_Test.cs" />
+    <Compile Include="CSharp\IntegrationTests\TestPass7Test_1.cs" />
+    <Compile Include="CSharp\IntegrationTests\TestPass4Test_1.cs" />
+    <Compile Include="CSharp\IntegrationTests\TestPass8Test.cs" />
+    <Compile Include="CSharp\IntegrationTests\TestPass7Test.cs" />
+    <Compile Include="CSharp\IntegrationTests\TestPass6Test.cs" />
+    <Compile Include="CSharp\IntegrationTests\TestPass5Test.cs" />
+    <Compile Include="CSharp\IntegrationTests\TestPass4Test.cs" />
+    <Compile Include="CSharp\IntegrationTests\TestPass1Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IntegrationTests\TestPass2Test.cs">
+    <Compile Include="CSharp\IntegrationTests\TestPass2Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IntegrationTests\TestPass3Test.cs">
+    <Compile Include="CSharp\IntegrationTests\TestPass3Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Expressions\BinaryExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\UnitTests\Expressions\BinaryExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Expressions\ConstantExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\UnitTests\Expressions\ConstantExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Expressions\ExpressionWrapperBase_Tests.cs">
+    <Compile Include="CSharp\UnitTests\Expressions\ExpressionWrapperBase_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Expressions\MemberExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\UnitTests\Expressions\MemberExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Expressions\MethodCallExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\UnitTests\Expressions\MethodCallExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Expressions\ParameterExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\UnitTests\Expressions\ParameterExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UnitTests\Utils\CompiledMockedExpression_Tests.cs" />
-    <Compile Include="UnitTests\Dependency\DependencyWrapper_Tests.cs" />
-    <Compile Include="UnitTests\Utils\MemberIndex_Tests.cs" />
-    <Compile Include="UnitTests\Utils\ReflectionWrapper_Tests.cs" />
-    <Compile Include="UnitTests\Utils\MemberChainItem_Tests.cs" />
-    <Compile Include="UnitTests\Utils\ParentRuleWrappers_Tests.cs" />
-    <Compile Include="UnitTests\Utils\ParentRuleWrapper_Tests.cs" />
-    <Compile Include="UnitTests\Utils\Mocks_Tests.cs" />
-    <Compile Include="UnitTests\Utils\Mock_Tests.cs" />
-    <Compile Include="UnitTests\Utils\Utilities_Tests.cs" />
-    <Compile Include="UnitTests\_\Rules_Static_Tests.cs" />
-    <Compile Include="UnitTests\_\Rules.cs" />
+    <Compile Include="CSharp\UnitTests\Utils\CompiledMockedExpression_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Dependency\DependencyWrapper_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Utils\MemberIndex_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Utils\ReflectionWrapper_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Utils\MemberChainItem_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Utils\ParentRuleWrappers_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Utils\ParentRuleWrapper_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Utils\Mocks_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Utils\Mock_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Utils\Utilities_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\_\Rules_Static_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\_\Rules.cs" />
     <Compile Include="Utilities\SimpleIValidate.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -146,14 +146,26 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="UnitTests\Logic\" />
+    <Folder Include="CSharp\UnitTests\Logic\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Javascript\Content\qunit.css" />
+    <Content Include="Javascript\UnitTests\BackToFront.js">
+      <DependentUpon>BackToFront.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Javascript\UnitTests\BackToFront.ts" />
+    <TypeScriptCompile Include="Javascript\Scripts\qUnit.d.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+       Other similar extension points exist, see Microsoft.Common.targets. -->
   <Target Name="BeforeBuild">
+    <Message Text="Compiling TypeScript files" />
+    <Message Text="Executing tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+    <!--Use this line when AppHarbour supports typescript. Also delete "BackToFront\Tools\Typescript" <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />-->
+    <Exec Command="..\Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
   </Target>
   <Target Name="AfterBuild">
+    <Exec Command="..\Tools\Chutzpah\chutzpah.console /path ..\..\BackToFront.Tests\Javascript\UnitTests /testMode JavaScript /silent /junit bin/debug/hello.xml" />
   </Target>
-  -->
 </Project>

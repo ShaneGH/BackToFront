@@ -15,16 +15,16 @@ namespace BackToFront.DataAnnotations
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class ValidateMemberAttribute : DA.ValidationAttribute
     {
-        private static readonly Regex _propertyChain;
-        private static readonly Regex _indexedProperty;
+        public static readonly Regex PropertyChain;
+        public static readonly Regex IndexedProperty;
         static ValidateMemberAttribute()
         {
             var index = @"\[[0-9]+\]";
             var indexedProperty = @"[_a-zA-Z][_a-zA-Z0-9]*(" + index + ")?";
             var dotIndexedProperty = @"\." + indexedProperty;
 
-            _indexedProperty = new Regex(index + "$");
-            _propertyChain = new Regex(@"^" + indexedProperty + @"(" + dotIndexedProperty + @")*$");
+            IndexedProperty = new Regex(index + "$");
+            PropertyChain = new Regex(@"^" + indexedProperty + @"(" + dotIndexedProperty + @")*$");
         }
 
         public const string BackToFrontValidationContext = "BackToFront.DataAnnotations.BTFValidationContext";
@@ -102,7 +102,7 @@ namespace BackToFront.DataAnnotations
 
         public static MemberChainItem Create(Type type, string memberName)
         {
-            if (!_propertyChain.IsMatch(memberName))
+            if (!PropertyChain.IsMatch(memberName))
                 throw new InvalidOperationException("##" + memberName); // exception must say that functions are not supported
 
             var result = new MemberChainItem(type);
@@ -111,7 +111,7 @@ namespace BackToFront.DataAnnotations
             {
                 string member = m;
                 MemberIndex index = null;
-                if (_indexedProperty.IsMatch(member))
+                if (IndexedProperty.IsMatch(member))
                 {
                     var last = member.LastIndexOf('[');
                     index = new MemberIndex(int.Parse(member.Substring(last + 1, member.Length - last - 2)));
