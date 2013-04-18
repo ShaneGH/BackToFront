@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="CSharp\IntegrationTests\Children.cs" />
     <Compile Include="CSharp\IntegrationTests\Inheritance.cs" />
+    <Compile Include="Javascript\JavascriptTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="CSharp\UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />
@@ -144,6 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="runChutzpah.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CSharp\UnitTests\Logic\" />
@@ -165,7 +169,7 @@
     <!--Use this line when AppHarbour supports typescript. Also delete "BackToFront\Tools\Typescript" <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />-->
     <Exec Command="..\Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
   </Target>
-  <Target Name="AfterBuild">
+  <!--<Target Name="AfterBuild">
     <Exec Command="..\Tools\Chutzpah\chutzpah.console.exe /path ..\..\BackToFront.Tests\Javascript\UnitTests /testMode JavaScript /junit hello.xml" />
-  </Target>
+  </Target>-->
 </Project>

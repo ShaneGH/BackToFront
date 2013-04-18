@@ -1,3 +1,3 @@
 test("Hello", function () {
-    deepEqual(true, true);
+    deepEqual(false, true);
 });
