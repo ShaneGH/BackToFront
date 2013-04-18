@@ -26,7 +26,6 @@ namespace BackToFront.Tests.Javascript
             testRunner.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             testRunner.Start();
 
-            testRunner.StandardOutput.ReadToEnd();
             testRunner.WaitForExit();
             testRunner.Close();
 
