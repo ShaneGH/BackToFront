@@ -48,7 +48,9 @@
     <Compile Include="Enum\LogicalOperator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Enum\MemberIndexType.cs" />
     <Compile Include="Enum\MockBehavior.cs" />
+    <Compile Include="Expressions\ElementAtExpressionWrapper.cs" />
     <Compile Include="Extensions\BusinessLogic.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -83,6 +85,7 @@
     <Compile Include="Logic\ValidateResult.cs" />
     <Compile Include="Utils\CompiledMockedExpression.cs" />
     <Compile Include="Utils\GenericIEqualityComparer.cs" />
+    <Compile Include="Utils\MemberIndex.cs" />
     <Compile Include="Utils\ReflectionWrapper.cs" />
     <Compile Include="Utils\MemberChainItem.cs" />
     <Compile Include="Utils\ParentRuleWrappers.cs" />
@@ -104,6 +107,7 @@
     <Compile Include="Utils\ParentRuleWrapper.cs" />
     <Compile Include="Utils\ReadonlyDictionary.cs" />
     <Compile Include="Utils\SimpleViolation.cs" />
+    <Compile Include="Utils\Utilities.cs" />
     <Compile Include="Utils\ValidationContext.cs" />
     <Compile Include="_\IRule.cs" />
     <Compile Include="_\Rules.cs" />

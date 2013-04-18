@@ -6,6 +6,8 @@ using M = Moq;
 using BackToFront.Dependency;
 using System.Collections.Generic;
 using DA = System.ComponentModel.DataAnnotations;
+using BackToFront.Utils;
+using BackToFront.Enum;
 
 namespace BackToFront.Tests.UnitTests.DataAnnotations
 {
@@ -92,7 +94,8 @@ namespace BackToFront.Tests.UnitTests.DataAnnotations
             Assert.IsNull(actual.NextItem.Index);
 
             Assert.AreEqual(typeof(Class2).GetProperty(p2), actual.NextItem.NextItem.Member);
-            Assert.AreEqual(index, actual.NextItem.NextItem.Index.Value);
+            Assert.AreEqual(index, actual.NextItem.NextItem.Index.Index);
+            Assert.AreEqual(MemberIndexType.Explicit, actual.NextItem.NextItem.Index.Type);
 
             Assert.AreEqual(typeof(Class3).GetField(p3), actual.NextItem.NextItem.NextItem.Member);
             Assert.IsNull(actual.NextItem.NextItem.NextItem.Index);

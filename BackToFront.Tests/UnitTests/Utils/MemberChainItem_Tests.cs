@@ -86,10 +86,10 @@ namespace BackToFront.Tests.UnitTests.Utils
         public void Equals_Test_valueEquals_true()
         {
             // arrange
-            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), new MemberIndex(4));
             subject1.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
-            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), new MemberIndex(4));
             subject2.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
             // act
@@ -101,10 +101,10 @@ namespace BackToFront.Tests.UnitTests.Utils
         public void Equals_Test_valueEquals_false_Member()
         {
             // arrange
-            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), new MemberIndex(4));
             subject1.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
-            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array2"), 4);
+            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array2"), new MemberIndex(4));
             subject2.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
             // act
@@ -116,10 +116,10 @@ namespace BackToFront.Tests.UnitTests.Utils
         public void Equals_Test_valueEquals_false_next()
         {
             // arrange
-            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), new MemberIndex(4));
             subject1.NextItem = new MemberChainItem(typeof(int).GetMethod("ToString", new Type[0]));
 
-            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), new MemberIndex(4));
             subject2.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
             // act
@@ -131,10 +131,10 @@ namespace BackToFront.Tests.UnitTests.Utils
         public void Equals_Test_valueEquals_false_index()
         {
             // arrange
-            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 4);
+            var subject1 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), new MemberIndex(4));
             subject1.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
-            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), 3);
+            var subject2 = new MemberChainItem(typeof(TestClass).GetProperty("Array"), new MemberIndex(3));
             subject2.NextItem = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
             // act
@@ -171,7 +171,7 @@ namespace BackToFront.Tests.UnitTests.Utils
             // arrange
             // act
             // assert
-            var subject = new MemberChainItem(typeof(TestClass), 2);
+            var subject = new MemberChainItem(typeof(TestClass), new MemberIndex(2));
         }
 
         [Test]
@@ -181,7 +181,7 @@ namespace BackToFront.Tests.UnitTests.Utils
             // arrange
             // act
             // assert
-            new MemberChainItem(typeof(TestClass).GetProperty("Prop"), 2);
+            new MemberChainItem(typeof(TestClass).GetProperty("Prop"), new MemberIndex(2));
         }
 
         [Test]
@@ -192,11 +192,11 @@ namespace BackToFront.Tests.UnitTests.Utils
             var index = 4;
 
             // act
-            var subject = new MemberChainItem(property, index);
+            var subject = new MemberChainItem(property, new MemberIndex(index));
 
             // assert
             Assert.AreEqual(property, subject.Member);
-            Assert.AreEqual(index, subject.Index.Value);
+            Assert.AreEqual(index, subject.Index.Index);
             Assert.AreEqual(typeof(int), subject.IndexedType);
         }
 
@@ -207,7 +207,7 @@ namespace BackToFront.Tests.UnitTests.Utils
             // arrange
             var property = typeof(TestClass).GetProperty("Array");
             var index = 4;
-            var baseMember = new MemberChainItem(property, index);
+            var baseMember = new MemberChainItem(property, new MemberIndex(index));
 
             // act
             // assert
@@ -220,7 +220,7 @@ namespace BackToFront.Tests.UnitTests.Utils
             // arrange
             var property = typeof(TestClass).GetProperty("Array");
             var index = 4;
-            var baseMember = new MemberChainItem(property, index);
+            var baseMember = new MemberChainItem(property, new MemberIndex(index));
             var toInsert = new MemberChainItem(typeof(int).GetMethod("GetHashCode"));
 
             // act

@@ -65,13 +65,9 @@ namespace BackToFront.Expressions
 
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
-            var items =
-                new[] { Object.GetMembersForParameter(parameter).Each(i => i.NextItem = new MemberChainItem(Expression.Method)) }
+            return new[] { Object.GetMembersForParameter(parameter).Each(i => i.NextItem = new MemberChainItem(Expression.Method)) }
                 .Concat(Arguments.Select(a => a.GetMembersForParameter(parameter)))
                 .Aggregate();
-
-            foreach (var item in items)
-                yield return item;
         }
 
         protected override IEnumerable<ParameterExpression> _UnorderedParameters

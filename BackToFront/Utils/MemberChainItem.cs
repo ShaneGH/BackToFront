@@ -13,7 +13,7 @@ namespace BackToFront.Utils
     {
         private static readonly Type _IEnumerable = typeof(IEnumerable<>);
         public readonly Type IndexedType;
-        public readonly int? Index;
+        public readonly MemberIndex Index;
         public readonly MemberInfo Member;
         private MemberChainItem _NextItem;
         public MemberChainItem NextItem
@@ -28,7 +28,7 @@ namespace BackToFront.Utils
                 {
                     if (value != null)
                     {
-                        var type = Index.HasValue ? IndexedType : Member.MemberType();
+                        var type = Index != null ? IndexedType : Member.MemberType();
                         if (value.Member.DeclaringType != type)
                             throw new InvalidOperationException("##");
                     }
@@ -52,13 +52,13 @@ namespace BackToFront.Utils
 
         public MemberChainItem(MemberInfo member)
             : this(member, null) { }
-        
-        public MemberChainItem(MemberInfo member, int? index)
+
+        public MemberChainItem(MemberInfo member, MemberIndex index)
         {
             if (member == null)
                 throw new ArgumentNullException("member");
 
-            if (index.HasValue)
+            if (index != null)
             {
                 if (member is Type)
                     throw new InvalidOperationException("A type cannot be indexed"); //"##"
@@ -91,35 +91,7 @@ namespace BackToFront.Utils
 
         public static bool operator ==(MemberChainItem item1, MemberChainItem item2)
         {
-            int? i1Hash = null;
-            int? i2Hash = null;
-
-            try
-            {
-                i1Hash = item1.GetHashCode();
-            }
-            catch (NullReferenceException)
-            {
-            }
-
-            try
-            {
-                i2Hash = item2.GetHashCode();
-            }
-            catch (NullReferenceException)
-            {
-            }
-
-            if (!i1Hash.HasValue && !i2Hash.HasValue)
-                return true;
-
-            if (!i1Hash.HasValue || !i2Hash.HasValue)
-                return false;
-
-            if (i1Hash.Value != i2Hash.Value)
-                return false;
-
-            return item1.Equals(item2);
+            return Utilities.BindOperatorToEquals(item1, item2);
         }
 
         public static bool operator !=(MemberChainItem item1, MemberChainItem item2)

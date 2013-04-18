@@ -60,6 +60,7 @@
     <Compile Include="UnitTests\DataAnnotations\BTFValidationContext_Tests.cs" />
     <Compile Include="UnitTests\DataAnnotations\ValidateMemberAttribute_Tests.cs" />
     <Compile Include="UnitTests\Dependency\RuleDependency.cs" />
+    <Compile Include="UnitTests\Expressions\ElementAtExpressionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Extensions\Reflection.cs" />
@@ -118,12 +119,14 @@
     </Compile>
     <Compile Include="UnitTests\Utils\CompiledMockedExpression_Tests.cs" />
     <Compile Include="UnitTests\Dependency\DependencyWrapper_Tests.cs" />
+    <Compile Include="UnitTests\Utils\MemberIndex_Tests.cs" />
     <Compile Include="UnitTests\Utils\ReflectionWrapper_Tests.cs" />
     <Compile Include="UnitTests\Utils\MemberChainItem_Tests.cs" />
     <Compile Include="UnitTests\Utils\ParentRuleWrappers_Tests.cs" />
     <Compile Include="UnitTests\Utils\ParentRuleWrapper_Tests.cs" />
     <Compile Include="UnitTests\Utils\Mocks_Tests.cs" />
     <Compile Include="UnitTests\Utils\Mock_Tests.cs" />
+    <Compile Include="UnitTests\Utils\Utilities_Tests.cs" />
     <Compile Include="UnitTests\_\Rules_Static_Tests.cs" />
     <Compile Include="UnitTests\_\Rules.cs" />
     <Compile Include="Utilities\Extensions.cs" />

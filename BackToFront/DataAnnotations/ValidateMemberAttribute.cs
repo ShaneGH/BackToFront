@@ -110,15 +110,15 @@ namespace BackToFront.DataAnnotations
             foreach (var m in memberName.Split('.'))
             {
                 string member = m;
-                int? index = null;
+                MemberIndex index = null;
                 if (_indexedProperty.IsMatch(member))
                 {
                     var last = member.LastIndexOf('[');
-                    index = int.Parse(member.Substring(last + 1, member.Length - last - 2));
+                    index = new MemberIndex(int.Parse(member.Substring(last + 1, member.Length - last - 2)));
                     member = member.Substring(0, last);
                 }
 
-                var nextType = current.Index.HasValue ? current.IndexedType : current.Member.MemberType();
+                var nextType = current.Index != null ? current.IndexedType : current.Member.MemberType();
                 var newMember = nextType.GetMember(member).FirstOrDefault(a => a is PropertyInfo || a is FieldInfo);
                 if (newMember == null)
                     throw new InvalidOperationException("##");
