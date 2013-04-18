@@ -1,3 +1,3 @@
 test("Hello", function () {
-    deepEqual(false, true);
+    deepEqual(false, new __BTF.TestClass().Test());
 });
