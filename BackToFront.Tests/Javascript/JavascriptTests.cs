@@ -16,6 +16,7 @@ namespace BackToFront.Tests.Javascript
         public const string BTF = "BackToFront";
 
         [Test]
+        [Explicit]
         public void Run()
         {
             var dir = System.Environment.CurrentDirectory.Substring(0, System.Environment.CurrentDirectory.IndexOf(BTF) + BTF.Length + 1);
