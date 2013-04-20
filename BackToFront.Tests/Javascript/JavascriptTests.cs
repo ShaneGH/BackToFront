@@ -3,7 +3,9 @@ using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml.Linq;
 using System.Text;
+using System.Xml.Serialization;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -12,29 +14,30 @@ namespace BackToFront.Tests.Javascript
     [TestFixture]
     public class JavascriptTests
     {
-        public const string TestResultsFile = "unitTestResults.xml";
-        public const string BTF = "BackToFront";
+        /*<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+  <testsuite name="C:\Dev\Apps\BackToFront\BackToFront.Tests\Javascript\UnitTests\BackToFront.ts" tests="1" failures="0" time="41">
+    <testcase name="Hello" />
+  </testsuite>
+</testsuites>
+*/
+
+        public const string TestResultsFile = "TestsResults.xml";
 
         [Test]
-        [Explicit]
         public void Run()
         {
-            var dir = System.Environment.CurrentDirectory.Substring(0, System.Environment.CurrentDirectory.IndexOf(BTF) + BTF.Length + 1);
+            using (var file = new FileStream(@"../../Javascript\Runtime\Bin\TestsResults.xml", FileMode.Open))
+            {
+                var results = XDocument.Load(file).Elements()
+                    .Where(e => e.Name == "testsuites");
 
-            Assert.Fail(string.Format(@"{0}Tools\Chutzpah\chutzpah.console.exe", dir));
-
-            Process testRunner = new Process();
-
-            testRunner.StartInfo = new ProcessStartInfo(string.Format(@"{0}Tools\Chutzpah\chutzpah.console.exe", dir), string.Format(@"/path {0}BackToFront.Tests\Javascript\UnitTests /testMode TypeScript /junit {1}", dir, TestResultsFile));
-            testRunner.StartInfo.UseShellExecute = false;
-            testRunner.StartInfo.RedirectStandardOutput = true;
-            testRunner.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            testRunner.Start();
-
-            testRunner.WaitForExit();
-            testRunner.Close();
-
-            Assert.IsTrue(File.Exists(TestResultsFile));
+                foreach (var result in results.Elements().Where(e => e.Name == "testsuite"))
+                {
+                    if (int.Parse(result.Attributes().First(a => a.Name == "failures").Value) != 0)
+                        Assert.Fail();
+                }
+            }
         }
     }
 }
