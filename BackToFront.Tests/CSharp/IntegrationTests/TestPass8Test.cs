@@ -17,9 +17,9 @@ namespace BackToFront.Tests.IntegrationTests
     [TestFixture]
     public class TestPass8Test : Base.TestBase
     {
-        public static SimpleViolation Violation1 = new SimpleViolation("Violation1");
-        public static SimpleViolation Violation2 = new SimpleViolation("Violation2");
-        public static SimpleViolation Violation3= new SimpleViolation("Violation3");
+        public static TestViolation Violation1 = new TestViolation("Violation1");
+        public static TestViolation Violation2 = new TestViolation("Violation2");
+        public static TestViolation Violation3= new TestViolation("Violation3");
 
         public class TestEntity
         {
@@ -54,7 +54,7 @@ namespace BackToFront.Tests.IntegrationTests
                 throw2 = input.Item2;
 
             // arrange
-            SimpleViolation v = null;
+            TestViolation v = null;
             if (throw1)
                 v = Violation1;
             else if (throw2)

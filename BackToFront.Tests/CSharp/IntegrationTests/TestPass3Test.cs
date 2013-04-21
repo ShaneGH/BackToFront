@@ -20,7 +20,7 @@ namespace BackToFront.Tests.IntegrationTests
     {
         public class TestClass
         {
-            public static SimpleViolation Violation = new SimpleViolation("Violation");
+            public static TestViolation Violation = new TestViolation("Violation");
 
             static TestClass()
             {

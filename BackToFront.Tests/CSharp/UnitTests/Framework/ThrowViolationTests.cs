@@ -15,7 +15,7 @@ namespace BackToFront.Tests.UnitTests.Framework
     public class ThrowViolationTests : TestBase
     {
         ThrowViolation<object> Subject;
-        readonly IViolation Violation = new Utilities.SimpleViolation("Hello");
+        readonly IViolation Violation = new Utilities.TestViolation("Hello");
 
         public override void Setup()
         {

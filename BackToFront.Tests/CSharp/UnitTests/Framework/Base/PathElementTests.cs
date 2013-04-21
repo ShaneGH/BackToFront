@@ -61,7 +61,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
         public void NextOption_Test_1_Option()
         {
             // arrange
-            var v = new SimpleIValidate { Violation = new SimpleViolation("violation") };
+            var v = new SimpleIValidate { Violation = new TestViolation("violation") };
             var entity = new object();
             var mocks = new ValidationContext { Mocks = new Mocks(new Mocks(new Mock[0])) };
             var subject = new M.Mock<PathElement<object>>(null);
@@ -91,8 +91,8 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
                 {
                     return new[] 
                     { 
-                        new SimpleIValidate { Violation = new SimpleViolation("violation") }, 
-                        new SimpleIValidate { Violation = new SimpleViolation("violation") } 
+                        new SimpleIValidate { Violation = new TestViolation("violation") }, 
+                        new SimpleIValidate { Violation = new TestViolation("violation") } 
                     };
                 });
 

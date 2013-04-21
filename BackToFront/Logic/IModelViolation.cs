@@ -7,8 +7,7 @@ namespace BackToFront.Logic
         IAdditionalRuleCondition<TEntity> WithModelViolation(Func<IViolation> violation);
 
         // TODO: uncomment
-        /*IAdditionalRuleCondition<TEntity> WithModelViolation(string violation);
-        IAdditionalRuleCondition<TEntity> WithModelViolation(Func<IViolation> violation);
-        IAdditionalRuleCondition<TEntity> WithModelViolation(Func<TEntity, IViolation> violation);*/
+        IAdditionalRuleCondition<TEntity> WithModelViolation(string violation);
+        /*IAdditionalRuleCondition<TEntity> WithModelViolation(Func<TEntity, IViolation> violation);*/
     }    
 }

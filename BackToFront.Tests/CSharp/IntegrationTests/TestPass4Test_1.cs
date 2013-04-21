@@ -21,7 +21,7 @@ namespace BackToFront.Tests.IntegrationTests
     {
         public class TestPass4
         {
-            public static SimpleViolation Violation = new SimpleViolation("Violation");
+            public static TestViolation Violation = new TestViolation("Violation");
 
             static TestPass4()
             {

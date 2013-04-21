@@ -99,7 +99,7 @@ namespace BackToFront.Tests.UnitTests.Framework
         {
             // arrange
             var subject = new Mock<TestClass<object>>();
-            var violation = new SimpleViolation();
+            var violation = new TestViolation();
             var input1 = new object();
             var input2 = new  U.Mocks();
             subject.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => b.Mocks == input2))).Returns(violation);
@@ -116,7 +116,7 @@ namespace BackToFront.Tests.UnitTests.Framework
         {
             // arrange
             var subject = new Mock<TestClass<object>>();
-            var violation = new SimpleViolation();
+            var violation = new TestViolation();
             var input1 = new object();
             var input2 = new U.Mocks();
             subject.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<U.ValidationContext>(b => b.Mocks == input2)))

@@ -13,7 +13,7 @@ namespace BackToFront.Tests.IntegrationTests
     [TestFixture]
     public class TestPass1_1_Test : Base.TestBase
     {
-        public static SimpleViolation Violation1 = new SimpleViolation("Violation");
+        public static TestViolation Violation1 = new TestViolation("Violation");
         public class TestClass
         {
             static TestClass()

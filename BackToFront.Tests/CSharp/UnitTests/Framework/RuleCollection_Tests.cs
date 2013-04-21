@@ -62,7 +62,7 @@ namespace BackToFront.Tests.UnitTests.Framework
             var input1 = new object();
             var input2 = new U.Mocks(new U.Mock[0]);
 
-            IViolation v1 = new SimpleViolation();
+            IViolation v1 = new TestViolation();
             var rule1 = new M.Mock<IValidate<object>>();
             var rule2 = new M.Mock<IValidate<object>>();
             rule1.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
@@ -90,7 +90,7 @@ namespace BackToFront.Tests.UnitTests.Framework
             var input1 = new object();
             var input2 = new U.Mocks();
 
-            IViolation v2 = new SimpleViolation();
+            IViolation v2 = new TestViolation();
             var rule1 = new M.Mock<IValidate<object>>();
             var rule2 = new M.Mock<IValidate<object>>();
             rule1.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
@@ -119,8 +119,8 @@ namespace BackToFront.Tests.UnitTests.Framework
             var input1 = new object();
             var input2 = new U.Mocks();
 
-            IViolation v1 = new SimpleViolation();
-            IViolation v2 = new SimpleViolation();
+            IViolation v1 = new TestViolation();
+            IViolation v2 = new TestViolation();
             var rule1 = new M.Mock<IValidate<object>>();
             var rule2 = new M.Mock<IValidate<object>>();
             rule1.Setup(a => a.FullyValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.IsAny<IList<IViolation>>(), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))

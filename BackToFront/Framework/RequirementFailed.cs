@@ -35,7 +35,7 @@ namespace BackToFront.Framework
 
         public IAdditionalRuleCondition<TEntity> WithModelViolation(string violation)
         {
-            return WithModelViolation(() => new SimpleViolationXXX(violation));
+            return WithModelViolation(() => new SimpleViolation(violation));
         }
 
         public override IViolation ValidateEntity(TEntity subject, ValidationContext context)

@@ -19,8 +19,8 @@ namespace BackToFront.Tests.IntegrationTests
     [TestFixture]
     public class TestPass7Test : Base.TestBase
     {
-        public static SimpleViolation Violation1 = new SimpleViolation("Violation");
-        public static SimpleViolation Violation2 = new SimpleViolation("Violation");
+        public static TestViolation Violation1 = new TestViolation("Violation");
+        public static TestViolation Violation2 = new TestViolation("Violation");
 
         public class TestEntity
         {
@@ -64,7 +64,7 @@ namespace BackToFront.Tests.IntegrationTests
                 required2 = input.Item4;
 
             // arrange
-            var v = new List<SimpleViolation>();
+            var v = new List<TestViolation>();
             if (!required1)
                 v.Add(Violation1);
             if (!required2)
@@ -99,7 +99,7 @@ namespace BackToFront.Tests.IntegrationTests
                 required2 = input.Item4;
 
             // arrange
-            SimpleViolation v = null;
+            TestViolation v = null;
             if (!required1)
                 v = Violation1;
             else if (!required2)

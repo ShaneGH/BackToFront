@@ -88,12 +88,6 @@ namespace BackToFront
             _Rules.Add(ruleObject);
         }
 
-        /// <summary>
-        /// Exposed through static method
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <typeparam name="TViolation"></typeparam>
-        /// <param name="rule"></param>
         public void Add(Action<IRule<TEntity>> rule)
         {
             var ruleObject = new Rule<TEntity>();

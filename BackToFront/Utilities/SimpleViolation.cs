@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Utilities
 {
-    public class SimpleViolationXXX : IViolation
+    public class SimpleViolation : IViolation
     {
         private readonly string _UserMessage;
 
-        public SimpleViolationXXX(string userMessage)
+        public SimpleViolation(string userMessage)
         {
             _UserMessage = userMessage;
         }

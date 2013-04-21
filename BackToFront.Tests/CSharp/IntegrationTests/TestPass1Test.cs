@@ -8,8 +8,8 @@ namespace BackToFront.Tests.IntegrationTests
 {
     public class TestPass1
     {
-        public static SimpleViolation Violation1 = new SimpleViolation("Violation");
-        public static SimpleViolation Violation2 = new SimpleViolation("Violation");
+        public static TestViolation Violation1 = new TestViolation("Violation");
+        public static TestViolation Violation2 = new TestViolation("Violation");
 
         static TestPass1()
         {

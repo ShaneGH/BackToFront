@@ -11,15 +11,15 @@ using BackToFront.Utilities;
 namespace BackToFront.Tests.Utilities
 {
     [DebuggerDisplay("{UserMessage}")]
-    public class SimpleViolation : IViolation
+    public class TestViolation : IViolation
     {
         private readonly string _UserMessage;
-        public SimpleViolation()
+        public TestViolation()
             : this("error")
         {
         }
 
-        public SimpleViolation(string userMessage)
+        public TestViolation(string userMessage)
         {
             _UserMessage = userMessage;
         }
