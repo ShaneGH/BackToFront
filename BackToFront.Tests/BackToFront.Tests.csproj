@@ -133,7 +133,7 @@
     <Compile Include="Utilities\SimpleIValidate.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utilities\SimpleViolation.cs">
+    <Compile Include="Utilities\TestViolation.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

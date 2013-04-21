@@ -29,13 +29,18 @@ namespace BackToFront.Framework
         protected ThrowViolation<TEntity> Violation;
         public IAdditionalRuleCondition<TEntity> WithModelViolation(Func<IViolation> violation)
         {
-            Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule); });
-            return ParentRule;
+            return WithModelViolation(a => violation());
         }
 
         public IAdditionalRuleCondition<TEntity> WithModelViolation(string violation)
         {
-            return WithModelViolation(() => new SimpleViolation(violation));
+            return WithModelViolation(a => new SimpleViolation(violation));
+        }
+
+        public IAdditionalRuleCondition<TEntity> WithModelViolation(Func<TEntity, IViolation> violation)
+        {
+            Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule); });
+            return ParentRule;
         }
 
         public override IViolation ValidateEntity(TEntity subject, ValidationContext context)

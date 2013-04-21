@@ -9,49 +9,55 @@ using NUnit.Framework;
 
 
 using BackToFront.Framework;
+using BackToFront.Tests.Utilities;
 namespace BackToFront.Tests.UnitTests.Framework
 {
     [TestFixture]
     public class ThrowViolationTests : TestBase
     {
-        ThrowViolation<object> Subject;
-        readonly IViolation Violation = new Utilities.TestViolation("Hello");
-
-        public override void Setup()
+        public class TestClass : Utilities.TestViolation
         {
-            base.Setup();
+            public TestClass(string message)
+                : base(message)
+            { }
 
-            Subject = new ThrowViolation<object>(() => Violation, null);
+            public object Property { get; set; }
         }
 
         [Test]
         public void ValidateTest()
         {
             // global arrange
+            var violation = new TestClass("Hello");
+            var subject = new ThrowViolation<object>(a => { violation.Property = a; return violation; }, null);
 
             // act
             var item = new object();
-            IViolation v = Subject.ValidateEntity(item, null);
+            IViolation v = subject.ValidateEntity(item, null);
 
             // assert
-            Assert.AreEqual(Violation, v);
+            Assert.AreEqual(violation, v);
             Assert.AreEqual(item, v.ViolatedEntity);
+            Assert.AreEqual(item, violation.Property);
         }
 
         [Test]
         public void ValidateAllTest()
         {
             // arrange
+            var violation = new TestClass("Hello");
+            var subject = new ThrowViolation<object>(a => { violation.Property = a; return violation; }, null);
             List<IViolation> list = new List<IViolation>();
 
             // act
             var item = new object();
-            Subject.FullyValidateEntity(item, list, null);
+            subject.FullyValidateEntity(item, list, null);
 
             // assert
             Assert.AreEqual(1, list.Count);
-            Assert.AreEqual(Violation, list.First());
+            Assert.AreEqual(violation, list.First());
             Assert.AreEqual(item, list.First().ViolatedEntity);
+            Assert.AreEqual(item, violation.Property);
         }
     }
 }
