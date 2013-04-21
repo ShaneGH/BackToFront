@@ -32,7 +32,14 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
         public class TestClass
         {
+            public int ChildProp { get; set; }
+
             public void Hello(TestClass input) { }
+
+            public bool HelloMethod(int val)
+            {
+                return true;
+            }
         }
 
         [Test]
@@ -127,6 +134,51 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // act
             // assert
             Assert.IsTrue(AreKindOfEqual(subject.UnorderedParameters, new[] { param1, param2 }));
+        }
+
+        [Test]
+        public void WithAlternateRoot_Test_WithoutMethodParams()
+        {
+            // arrnage
+            var helloMethod = typeof(TestClass).GetMethod("HelloMethod");
+            var hashMethod = typeof(TestClass).GetMethod("GetHashCode");
+            var constant = Expression.Constant(new TestClass());
+            var subject = (MethodCallExpressionWrapper)ExpressionWrapperBase.ToWrapper<TestClass, bool>(a => a.HelloMethod(4));
+
+            // act
+            var result = subject.WithAlternateRoot<TestClass, TestClass>(constant, a => a);
+
+            // assert
+            Assert.IsTrue(result.IsSameExpression(new MethodCallExpressionWrapper(Expression.Call(constant, helloMethod, Expression.Constant(4)))));
+        }
+
+        [Test]
+        public void WithAlternateRoot_Test_WithMethodParams()
+        {
+            // arrnage
+            var helloMethod = typeof(TestClass).GetMethod("HelloMethod");
+            var hashMethod = typeof(TestClass).GetMethod("GetHashCode");
+            var constant = Expression.Constant(new TestClass());
+            var subject = (MethodCallExpressionWrapper)ExpressionWrapperBase.ToWrapper<TestClass, bool>(a => a.HelloMethod(a.GetHashCode()));
+
+            // act
+            var result = subject.WithAlternateRoot<TestClass, TestClass>(constant, a => a);
+
+            // assert
+            Assert.IsTrue(result.IsSameExpression(new MethodCallExpressionWrapper(Expression.Call(constant, helloMethod, Expression.Call(constant, hashMethod)))));
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void WithAlternateRoot_Test_MethodArgumentCannotBeMocked()
+        {
+            // arrnage
+            var constant = Expression.Constant(new TestClass());
+            var subject = (MethodCallExpressionWrapper)ExpressionWrapperBase.ToWrapper<TestClass, bool>(a => a.HelloMethod(a.GetHashCode()));
+
+            // act
+            // assert
+            var result = subject.WithAlternateRoot<TestClass, int>(constant, a => a.ChildProp);
         }
     }
 }

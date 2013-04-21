@@ -44,6 +44,16 @@ namespace BackToFront.Expressions
             return root;
         }
 
+        public ExpressionWrapperBase Root
+        {
+            get { return null; }
+        }
+
+        public ExpressionWrapperBase WithAlternateRoot<TEntity, TChild>(Expression root, Expression<Func<TEntity, TChild>> child)
+        {
+            return new ParameterExpressionWrapper(Expression);
+        }
+
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
             if (parameter == Expression)

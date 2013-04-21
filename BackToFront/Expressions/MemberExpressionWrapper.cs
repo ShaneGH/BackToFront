@@ -84,6 +84,16 @@ namespace BackToFront.Expressions
             }
         }
 
+        public ExpressionWrapperBase Root
+        {
+            get { return InnerExpression; }
+        }
+
+        public ExpressionWrapperBase WithAlternateRoot<TEntity, TChild>(Expression root, Expression<Func<TEntity, TChild>> child)
+        {
+            return new MemberExpressionWrapper(E.Expression.PropertyOrField(root, Expression.Member.Name));
+        }
+
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
             var root = InnerExpression.GetMembersForParameter(parameter);

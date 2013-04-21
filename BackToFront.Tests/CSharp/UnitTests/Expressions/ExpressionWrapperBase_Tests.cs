@@ -13,7 +13,28 @@ namespace BackToFront.Tests.UnitTests.Expressions
 {
     class ExpressionWrapperBase_Tests : Base.TestBase
     {
-        public class TestClass : ExpressionWrapperBase
+        public class TestClass1
+        {
+            public bool Prop { get; set; }
+            public bool Func()
+            {
+                throw new NotImplementedException();
+            }
+
+
+            public TestClass2 Prop2 { get; set; }
+        }
+
+        public class TestClass2
+        {
+            public int Prop { get; set; }
+            public bool Func(int arg)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class AccessorClass : ExpressionWrapperBase
         {
             public static readonly Expression CompileInnerExpressionExpression = Expression.Constant(9);
             public static readonly Expression WExpression = Expression.Constant(9);
@@ -92,35 +113,33 @@ namespace BackToFront.Tests.UnitTests.Expressions
         public void Compile_Test_NoArgs()
         {
             // arrange
-            var subject = new TestClass();
+            var subject = new AccessorClass();
 
             // act
             var result = subject.Compile();
 
             // assert
-            Assert.AreEqual(TestClass.WExpression, result);
+            Assert.AreEqual(AccessorClass.WExpression, result);
         }
 
         [Test]
         public void Compile_Test_BlankArgs()
         {
             // arrange
-            var subject = new TestClass();
+            var subject = new AccessorClass();
 
             // act
-            var result1 = subject.Compile(null);
-            var result2 = subject.Compile(Enumerable.Empty<Mock>());
+            var result2 = subject.Compile(Enumerable.Empty<Mock>().ToArray());
 
             // assert
-            Assert.AreEqual(TestClass.WExpression, result1);
-            Assert.AreEqual(TestClass.WExpression, result2);
+            Assert.AreEqual(AccessorClass.WExpression, result2);
         }
 
         [Test]
         public void Compile_Test_Mocked()
         {
             // arrange
-            var subject = new TestClass() { IsSame = true };
+            var subject = new AccessorClass() { IsSame = true };
             var mock = new Mock(expression: Expression.Constant(4), value: null, valueType: typeof(object));
             var mocks = new Mocks(new[] { mock });
 
@@ -143,14 +162,14 @@ namespace BackToFront.Tests.UnitTests.Expressions
         public void Compile_Test_With_Mocks_Not_Mocked()
         {
             // arrange
-            var subject = new TestClass() { IsSame = false };
+            var subject = new AccessorClass() { IsSame = false };
             var mock = new Mock(expression: Expression.Constant(4), value: null, valueType: typeof(object));
 
             // act
             var result = subject.Compile(new[] { mock });
 
             // assert
-            Assert.AreEqual(TestClass.CompileInnerExpressionExpression, result);
+            Assert.AreEqual(AccessorClass.CompileInnerExpressionExpression, result);
         }
 
         [Test]
@@ -224,12 +243,123 @@ namespace BackToFront.Tests.UnitTests.Expressions
         public void UnorderedParametersCache_Test()
         {
             // arrange
-            var subject = new TestClass();
+            var subject = new AccessorClass();
 
             // act
             // assert
             Assert.IsTrue(subject.UnorderedParameters.Equals(subject.UnorderedParameters));
         }
+
+        #region ForChildExpression
+
+        [Test]
+        public void ForChild_Test_Success()
+        {
+            // arrange
+            var subject = ExpressionWrapperBase.ToWrapper<TestClass1, int>(a => a.Prop2.Prop);
+
+            // act
+            var result = subject.ForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)));
+
+            // assert
+            Assert.IsTrue(ExpressionWrapperBase.CreateChildWrapper(result).IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, int>(a => a.Prop)));
+        }
+
+        [Test]
+        public void ForChild_Test_Success_MultiPath_Param()
+        {
+            // arrange
+            var subject = ExpressionWrapperBase.ToWrapper<TestClass1, bool>(a => a.Prop2.Func(a.Prop2.GetHashCode()));
+
+            // act
+            var result = subject.ForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)));
+
+            // assert
+            var ex1 = ExpressionWrapperBase.CreateChildWrapper(result);
+            var ex2 = ExpressionWrapperBase.ToWrapper<TestClass2, bool>(a => a.Func(a.GetHashCode()));
+            Assert.IsTrue(ex1.IsSameExpression(ex2));
+        }
+
+        [Test]
+        public void ForChild_Test_Success_MultiPath_Const()
+        {
+            // arrange
+            var subject = ExpressionWrapperBase.ToWrapper<TestClass1, bool>(a => a.Prop2.Func(5));
+
+            // act
+            var result = subject.ForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)));
+
+            // assert
+            var ex1 = ExpressionWrapperBase.CreateChildWrapper(result);
+            var ex2 = ExpressionWrapperBase.ToWrapper<TestClass2, bool>(a => a.Func(5));
+            Assert.IsTrue(ex1.IsSameExpression(ex2));
+        }
+
+        [Test]
+        public void ForChild_Test_Success_Param()
+        {
+            // arrange
+            var subject = ExpressionWrapperBase.ToWrapper<TestClass1, TestClass2>(a => a.Prop2);
+
+            // act
+            var result = subject.ForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)));
+
+            // assert
+            Assert.IsTrue(ExpressionWrapperBase.CreateChildWrapper(result).IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, TestClass2>(a => a)));
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ForChild_Test_Fail_Invalid_MockExpression()
+        {
+            // arrange
+            var subject = ExpressionWrapperBase.ToWrapper<TestClass1, int>(a => (true ? 1 : 7));
+
+            // act
+            // assert
+            var result = subject.ForChildExpression<TestClass2, int>(null, Expression.Parameter(typeof(int)));
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ForChild_Test_Fail_Wrong_Parameter_Count()
+        {
+            // arrange
+            Expression<Func<TestClass1, int, bool>> input = (a, b) => b == 5 ? a.Prop : true;
+            var subject = ExpressionWrapperBase.ToWrapper(input);
+
+            // act
+            // assert
+            var result = subject.ForChildExpression<TestClass2, int>(null, Expression.Parameter(typeof(int)));
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ForChild_Test_Fail_Wrong_Parameter_Type()
+        {
+            // arrange
+            Expression<Func<TestClass1, int, bool>> input = (a, b) => a.Prop;
+            var subject = ExpressionWrapperBase.ToWrapper<TestClass1, bool>(a => a.Prop);
+
+            // act
+            // assert
+            var result = subject.ForChildExpression<bool, bool>(a => a, Expression.Parameter(typeof(bool)));
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ForChild_Test_Fail_NotLinearInput()
+        {
+            // arrange
+            Expression<Func<TestClass1, int, bool>> input = (a, b) => a.Prop;
+            var subject = ExpressionWrapperBase.ToWrapper<TestClass1, bool>(a => a.Prop);
+
+            // act
+            // assert
+            var result = subject.ForChildExpression<bool, bool>(a => (true ? true : false), Expression.Parameter(typeof(bool)));
+        }
+
+        #endregion
 
         [Test]
         [Ignore]

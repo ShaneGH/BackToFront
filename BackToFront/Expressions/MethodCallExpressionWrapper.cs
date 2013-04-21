@@ -12,7 +12,7 @@ using BackToFront.Extensions.IEnumerable;
 
 namespace BackToFront.Expressions
 {
-    public class MethodCallExpressionWrapper : ExpressionWrapperBase<MethodCallExpression>
+    public class MethodCallExpressionWrapper : ExpressionWrapperBase<MethodCallExpression>, ILinearExpression
     {
         private ExpressionWrapperBase _Object;
         public ExpressionWrapperBase Object
@@ -45,8 +45,8 @@ namespace BackToFront.Expressions
             var ex = expression as MethodCallExpressionWrapper;
             if (ex == null)
                 return false;
-            
-            return Expression.Method == ex.Expression.Method &&
+
+            return Expression.Method.GetBaseDefinition() == ex.Expression.Method.GetBaseDefinition() &&
                 Object.IsSameExpression(ex.Object) &&                
                 Arguments.Count() == ex.Arguments.Count() &&
                 Arguments.All((a, b) => a.IsSameExpression(ex.Arguments.ElementAt(b)));
@@ -76,6 +76,22 @@ namespace BackToFront.Expressions
             {
                 return Object.UnorderedParameters.Union(Arguments.Select(a => a.UnorderedParameters).Aggregate());
             }
+        }
+
+        public ExpressionWrapperBase Root
+        {
+            get { return Object; }
+        }
+
+        public ExpressionWrapperBase WithAlternateRoot<TEntity, TChild>(Expression root, Expression<Func<TEntity, TChild>> child)
+        {
+            return new MethodCallExpressionWrapper(E.Expression.Call(root, Expression.Method, Arguments.Select(a => 
+            {
+                if (a.UnorderedParameters.Count() > 0)
+                    return a.ForChildExpression(child, root);
+                else
+                    return a.WrappedExpression;
+            })));
         }
     }
 }

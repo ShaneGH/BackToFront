@@ -3,11 +3,12 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using E = System.Linq.Expressions;
 using BackToFront.Utilities;
+using System;
 
 namespace BackToFront.Expressions
 {
     // TODO: test
-    public class UnaryExpressionWrapper : ExpressionWrapperBase<UnaryExpression>
+    public class UnaryExpressionWrapper : ExpressionWrapperBase<UnaryExpression>, ILinearExpression
     {
         private ExpressionWrapperBase _Operand;
         public ExpressionWrapperBase Operand
@@ -55,6 +56,16 @@ namespace BackToFront.Expressions
             {
                 return Operand.UnorderedParameters;
             }
+        }
+
+        public ExpressionWrapperBase Root
+        {
+            get { return Operand; }
+        }
+
+        public ExpressionWrapperBase WithAlternateRoot<TEntity, TChild>(Expression root, Expression<Func<TEntity, TChild>> child)
+        {
+            return new UnaryExpressionWrapper(E.Expression.MakeUnary(Expression.NodeType, root, Expression.Type, Expression.Method));
         }
     }
 }

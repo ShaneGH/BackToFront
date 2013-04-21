@@ -40,6 +40,11 @@ namespace BackToFront.Tests.UnitTests.Expressions
             public string Member2 { get; set; }
         }
 
+        public class TestClass2
+        {
+            public TestClass Member { get; set; }
+        }
+
         [Test]
         public void IsSameExpression_Test()
         {
@@ -129,6 +134,26 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // assert
             Assert.AreEqual(1, subject.UnorderedParameters.Count());
             Assert.AreEqual(mockedExp, subject.UnorderedParameters.First());
+        }
+
+        [Test]
+        public void WithAlternateRoot_Test()
+        {
+            // arange
+            var constant = new TestClass();
+            var mockedExp = Expression.Parameter(typeof(TestClass2));
+            var intermediary = Expression.Property(mockedExp, typeof(TestClass2).GetProperty("Member"));
+            var testExp = Expression.Property(intermediary, typeof(TestClass).GetProperty("Member"));
+            var subject = new TestSubjectWrapper(testExp);
+
+            var expected = Expression.Property(Expression.Constant(constant), "Member");
+
+            // act
+            var result = subject.WithAlternateRoot<TestClass2, TestClass>(Expression.Constant(constant), null);
+            var ttt = ((MemberExpression)result.WrappedExpression).Expression.GetType();
+
+            // assert
+            Assert.IsTrue(result.IsSameExpression(new MemberExpressionWrapper(expected)));
         }
     }
 }

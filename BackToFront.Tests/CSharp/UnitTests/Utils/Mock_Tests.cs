@@ -89,88 +89,6 @@ namespace BackToFront.Tests.UnitTests.Utils
         }
 
         [Test]
-        [Ignore]
-        public void ForChild_Test_Success()
-        {
-            // arrange
-            var subject = Mock.Create<TestClass1, int>(a => a.Prop2.Prop, 1);
-
-            // act
-            var result = subject.ForChild<TestClass1, TestClass2>(a => a.Prop2);
-
-            // assert
-            Assert.IsTrue(result.Expression.IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, int>(a => a.Prop)));
-        }
-
-        [Test]
-        [Ignore]
-        public void ForChild_Test_Success_MultiPath_Param()
-        {
-            // arrange
-            var subject = Mock.Create<TestClass1, bool>(a => a.Prop2.Func(a.Prop2.GetHashCode()), true);
-
-            // act
-            var result = subject.ForChild<TestClass1, TestClass2>(a => a.Prop2);
-
-            // assert
-            Assert.IsTrue(result.Expression.IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, bool>(a => a.Func(a.GetHashCode()))));
-        }
-
-        [Test]
-        [Ignore]
-        public void ForChild_Test_Success_MultiPath_Const()
-        {
-            // arrange
-            var subject = Mock.Create<TestClass1, bool>(a => a.Prop2.Func(5), true);
-
-            // act
-            var result = subject.ForChild<TestClass1, TestClass2>(a => a.Prop2);
-
-            // assert
-            Assert.IsTrue(result.Expression.IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, bool>(a => a.Func(5))));
-        }
-
-        [Test]
-        [Ignore]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ForChild_Test_Fail_InvalidChildBaseType()
-        {
-            // arrange
-            var subject = Mock.Create<TestClass1, int>(a => a.Prop2.Prop, 1);
-
-            // act
-            // assert
-            var result = subject.ForChild<TestClass2, int>(a => a.Prop);
-        }
-
-        [Test]
-        [Ignore]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ForChild_Test_Fail_ReferencesOtherPath()
-        {
-            // arrange
-            var subject = Mock.Create<TestClass1, bool>(a => a.Prop, true);
-
-            // act
-            // assert
-            var result = subject.ForChild<TestClass1, TestClass2>(a => a.Prop2);
-        }
-
-        [Test]
-        [Ignore]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ForChild_Test_Fail_PartiallyReferencesOtherPath()
-        {
-            // arrange
-            var subject = Mock.Create<TestClass1, bool>(a => a.Prop2.Func(a.Prop.GetHashCode()), true);
-
-            // act
-            // assert
-            var result = subject.ForChild<TestClass1, TestClass2>(a => a.Prop2);
-        }
-
-        [Test]
-        [Ignore]
         public void TryForChild_Test_Success()
         {
             // arrange
@@ -178,7 +96,7 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // act
             Mock result;
-            var success = subject.TryForChild<TestClass1, TestClass2>(a => a.Prop2, out result);
+            var success = subject.TryForChild<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)), out result);
 
             // assert
             Assert.IsTrue(success);
@@ -186,7 +104,6 @@ namespace BackToFront.Tests.UnitTests.Utils
         }
 
         [Test]
-        [Ignore]
         public void TryForChild_Test_Failure()
         {
             // arrange
@@ -194,7 +111,7 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // act
             Mock dummy;
-            var success = subject.TryForChild<TestClass1, bool>(a => a.Prop, out dummy);
+            var success = subject.TryForChild<TestClass1, bool>(a => a.Prop, Expression.Parameter(typeof(bool)), out dummy);
 
             // assert
             Assert.IsFalse(success);

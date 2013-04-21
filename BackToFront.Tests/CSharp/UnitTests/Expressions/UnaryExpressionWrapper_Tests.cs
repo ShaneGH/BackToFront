@@ -31,6 +31,13 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
         public class TestClass
         {
+            public string Member { get; set; }
+            public string Member2 { get; set; }
+        }
+
+        public class TestClass2
+        {
+            public TestClass Member { get; set; }
         }
 
         [Test]
@@ -117,6 +124,23 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // act
             // assert
             Assert.IsTrue(AreKindOfEqual(subject.UnorderedParameters, new[] { param1 }));
+        }
+
+        [Test]
+        public void WithAlternateRoot_Test()
+        {
+            // arange
+            var constant = new TestClass();
+            var before = Expression.Convert(Expression.Parameter(typeof(TestClass)), typeof(object));
+            var expected = Expression.Convert(Expression.Constant(constant), typeof(object));
+
+            var subject = new UnaryExpressionWrapper(before);
+
+            // act
+            var result = subject.WithAlternateRoot<TestClass, TestClass>(Expression.Constant(constant), null);
+
+            // assert
+            Assert.IsTrue(result.IsSameExpression(new UnaryExpressionWrapper(expected)));
         }
     }
 }

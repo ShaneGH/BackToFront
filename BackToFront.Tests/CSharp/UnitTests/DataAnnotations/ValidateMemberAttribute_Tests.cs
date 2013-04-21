@@ -44,6 +44,9 @@ namespace BackToFront.Tests.UnitTests.DataAnnotations
 
         }
 
+        [Ignore]
+        public void IsValidTest() { }
+
         [Test]
         public void ProcessValidationContext_Test_HasKey()
         {

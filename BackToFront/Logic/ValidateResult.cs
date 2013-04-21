@@ -212,7 +212,7 @@ namespace BackToFront.Logic
                     ValidateChildMembers.Add(() => new ValidateResult<TParameter>(compiled(Entity), Options, dependencies ?? Dependencies, Mocks.Select(m => 
                         {
                             Mock output;
-                            if (m.TryForChild(member, out output))
+                            if (m.TryForChild(member, Expression.Parameter(typeof(TParameter)), out output) && !(output.Expression is ParameterExpressionWrapper))
                                 return output;
 
                             return null;
@@ -221,6 +221,7 @@ namespace BackToFront.Logic
                     return this;
                 }
 
+                // ensure it is a full member chain before validating (no complex expressions)
                 tester = tester.Expression as MemberExpression;
             }
 

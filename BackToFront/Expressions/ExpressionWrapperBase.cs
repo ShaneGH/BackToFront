@@ -12,6 +12,7 @@ using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Expressions
 {
+    [System.Diagnostics.DebuggerDisplay("{WrappedExpression}")]
     public abstract class ExpressionWrapperBase
     {
         private readonly Dictionary<ParameterExpression, IEnumerable<MemberChainItem>> _MembersCache = new Dictionary<ParameterExpression, IEnumerable<MemberChainItem>>();
@@ -75,7 +76,7 @@ namespace BackToFront.Expressions
             return WrappedExpression;
         }
 
-        public Expression Compile(IEnumerable<Mock> mocks)
+        public Expression Compile(params Mock[] mocks)
         {
             return Compile(new Mocks(mocks));
         }
@@ -118,6 +119,69 @@ namespace BackToFront.Expressions
             }
 
             return _MembersCache[parameter];
+        }
+
+        /// <summary>
+        /// Mocks part of the current expression with the given parameter with a specific set of rules:
+        ///     Both the InnerExpression and input expressions must have one argument ahd it has the same type
+        ///     The input expression must be fully linear (ILinearExpression)
+        ///     There is no room for error. If there is no mock, an exception will be thrown
+        ///     All instances of the original parameters of InnerExpression must be mocked out
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TChild"></typeparam>
+        /// <param name="child"></param>
+        /// <param name="root">The root of the returned expression</param>
+        /// <returns></returns>
+        public Expression ForChildExpression<TEntity, TChild>(Expression<Func<TEntity, TChild>> child, Expression root)
+        {
+            if (!(this is ILinearExpression))
+                throw new InvalidOperationException("##");
+
+            if (UnorderedParameters.Count() != 1 ||
+                !child.Parameters.First().Type.Is(UnorderedParameters.First().Type))
+                throw new InvalidOperationException("##");
+
+            var wrapper = ExpressionWrapperBase.ToWrapper(child);
+            if (!(wrapper is ILinearExpression))
+                throw new InvalidOperationException("##");
+
+            // ensure only ILinearExpressions get into this stack
+            Stack<ExpressionWrapperBase> previous = new Stack<ExpressionWrapperBase>();
+            previous.Push(this);
+
+            while (true)
+            {
+                var last = previous.Peek();
+                if (last.IsSameExpression(wrapper))
+                {
+                    // rempve last expression, this will be the expression we are mocking out
+                    previous.Pop();
+                    Expression current = root;
+                    while (previous.Count > 0)
+                    {
+                        var next = previous.Pop();
+                        current = (next as ILinearExpression).WithAlternateRoot(current, child).WrappedExpression;
+                    }
+
+                    return current;
+                }
+
+                if (!(last is ILinearExpression))
+                {
+                    break;
+                }
+                else
+                {
+                    if (!((last as ILinearExpression).Root is ILinearExpression))
+                        break;
+
+                    previous.Push((last as ILinearExpression).Root);
+                }
+            }
+
+            // there is a non-linear expression in there somewhere
+            throw new InvalidOperationException("##");
         }
 
         #region linq constructors
