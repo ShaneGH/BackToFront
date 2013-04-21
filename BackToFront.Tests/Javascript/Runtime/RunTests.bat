@@ -1,2 +1,2 @@
-Javascript\Chutzpah\chutzpah.console.exe /path ..\..\Javascript\UnitTests /testMode TypeScript /junit Javascript\Runtime\TestsResults.xml
+Javascript\Chutzpah\chutzpah.console.exe /path ..\..\Javascript\UnitTests /testMode TypeScript /junit bin\debug\TestsResults.xml
 EXIT 0

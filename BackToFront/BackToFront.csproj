@@ -50,6 +50,7 @@
     </Compile>
     <Compile Include="Enum\MemberIndexType.cs" />
     <Compile Include="Enum\MockBehavior.cs" />
+    <Compile Include="Enum\PathElementType.cs" />
     <Compile Include="Expressions\ElementAtExpressionWrapper.cs" />
     <Compile Include="Extensions\BusinessLogic.cs">
       <SubType>Code</SubType>
