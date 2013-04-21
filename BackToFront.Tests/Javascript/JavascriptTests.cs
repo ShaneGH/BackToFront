@@ -28,7 +28,7 @@ namespace BackToFront.Tests.Javascript
        // [Explicit]
         public void Run()
         {
-            using (var file = new FileStream(@"../../Javascript\Runtime\TestsResults.xml", FileMode.Open))
+            using (var file = new FileStream(@"TestsResults.xml", FileMode.Open))
             {
                 var results = XDocument.Load(file).Elements()
                     .Where(e => e.Name == "testsuites");
