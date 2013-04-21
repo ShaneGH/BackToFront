@@ -52,10 +52,10 @@ namespace BackToFront.Tests.IntegrationTests
             var subject = new ParentClass
             {
                 Child = new TestPass4Child
-                 {
-                     ThrowViolationSwitch1 = switch1,
-                     ThrowViolationSwitch2 = switch2
-                 }
+                {
+                    ThrowViolationSwitch1 = switch1,
+                    ThrowViolationSwitch2 = switch2
+                }
             };
 
             // act
@@ -65,7 +65,35 @@ namespace BackToFront.Tests.IntegrationTests
             // assert
             Assert.IsNull(violation1);
             Assert.AreEqual(v, violation2);
-            if(switch1 || switch2)
+            if (switch1 || switch2)
+                Assert.AreEqual(subject.Child, violation2.ViolatedEntity);
+        }
+
+        [Test]
+        [TestCase(true, true)]
+        [TestCase(false, true)]
+        [TestCase(true, false)]
+        [TestCase(false, false)]
+        public void Require_And_WithMocks(bool switch1, bool switch2)
+        {
+            // arrange
+            var v = switch1 || switch2 ? TestPass4Child.Violation : null;
+            var subject = new ParentClass
+            {
+                Child = new TestPass4Child()
+            };
+
+            // act
+            var violation1 = subject.Validate().FirstViolation;
+            var violation2 = subject.Validate()
+                .WithMockedParameter(a => a.Child.ThrowViolationSwitch1, switch1)
+                .WithMockedParameter(a => a.Child.ThrowViolationSwitch2, switch2)
+                .ValidateMember(a => a.Child).FirstViolation;
+
+            // assert
+            Assert.IsNull(violation1);
+            Assert.AreEqual(v, violation2);
+            if (switch1 || switch2)
                 Assert.AreEqual(subject.Child, violation2.ViolatedEntity);
         }
     }
