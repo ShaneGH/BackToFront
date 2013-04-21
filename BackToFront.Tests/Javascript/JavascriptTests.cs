@@ -21,11 +21,14 @@ namespace BackToFront.Tests.Javascript
   </testsuite>
 </testsuites>
 */
-        
+
+        public const string TestResultsFile = "TestsResults.xml";
+
         [Test]
+        [Explicit]
         public void Run()
         {
-            using (var file = new FileStream(@"../../bin/debug/TestsResults.xml", FileMode.Open))
+            using (var file = new FileStream(@"../../Javascript\Runtime\TestsResults.xml", FileMode.Open))
             {
                 var results = XDocument.Load(file).Elements()
                     .Where(e => e.Name == "testsuites");
