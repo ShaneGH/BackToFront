@@ -9,11 +9,51 @@ using System.Linq;
 
 namespace BackToFront
 {
+    //public class RuleRepository
+    //{
+    //    private readonly IDependencyResolver _Resolver;
+    //    private readonly Dictionary<Type, object> _Rules = new Dictionary<Type, object>();
+
+    //    public RuleRepository()
+    //        : this(new DummyDependencyResolver())
+    //    {
+    //    }
+
+    //    public RuleRepository(IDependencyResolver resolver)
+    //    {
+    //        if (resolver == null)
+    //            throw new ArgumentNullException("resolver");
+
+    //        _Resolver = resolver;
+    //    }
+
+    //    public IEnumerable<ParentRuleWrappers<TEntity>> ParentRules<TEntity>()
+    //    {
+    //        var current = typeof(TEntity).BaseType;
+    //        while (current != null)
+    //        {
+    //            yield return new ParentRuleWrappers<TEntity>(current);
+    //            current = current.BaseType;
+    //        }
+    //    }
+
+    //    public Rule<TEntity> Rules<TEntity>()
+    //    {
+    //        var t = typeof(TEntity);
+    //        if (!_Rules.ContainsKey(t))
+    //        {
+    //            _Rules.Add(t, new Rules<TEntity>(_Resolver));
+    //        }
+
+    //        return (Rule<TEntity>)_Rules[t];
+    //    }
+    //}
+
     /// <summary>
     /// Application business rules
     /// </summary>
     public class Rules<TEntity>
-    {
+    {   
         #region Static
 
         public static readonly Rules<TEntity> Repository = new Rules<TEntity>(() => BackToFrontDependency.ProtectedResolver);
@@ -57,7 +97,7 @@ namespace BackToFront
 
         #endregion
 
-        private Rules(Func<IDependencyResolver> resolver)
+        public Rules(Func<IDependencyResolver> resolver)
         {
             _Rules.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => { _Registered = null; };
             _Resolver = resolver;

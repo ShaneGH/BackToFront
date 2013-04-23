@@ -142,7 +142,7 @@ namespace BackToFront.Tests.UnitTests.Utils
             Assert.IsFalse(subject1 == subject2);
         }
 
-        [Test]
+        [Test(Description = "TODO: This test is quite slow")]
         public void UltimateMemberTest()
         {
             // arrange
