@@ -4,6 +4,9 @@ using System.Linq.Expressions;
 using E = System.Linq.Expressions;
 using BackToFront.Utilities;
 using System;
+using BackToFront.Meta;
+using BackToFront.Enum;
+using System.Runtime.Serialization;
 
 namespace BackToFront.Expressions
 {
@@ -66,6 +69,51 @@ namespace BackToFront.Expressions
         public ExpressionWrapperBase WithAlternateRoot<TEntity, TChild>(Expression root, Expression<Func<TEntity, TChild>> child)
         {
             return new UnaryExpressionWrapper(E.Expression.MakeUnary(Expression.NodeType, root, Expression.Type, Expression.Method));
+        }
+
+        private MetaData _Meta;
+        public override ExpressionElementMeta Meta 
+        {
+            get 
+            {
+                return _Meta ?? (_Meta = new MetaData(this));
+            }
+        }
+
+        [DataContract]
+        private class MetaData : ExpressionElementMeta
+        {
+            private readonly UnaryExpressionWrapper _Owner;
+
+            public MetaData(UnaryExpressionWrapper owner)
+            {
+                _Owner = owner;
+            }
+
+            public override object Descriptor
+            {
+                get { return _Owner.Expression.NodeType.ToString(); }
+            }
+
+            public override IEnumerable<ExpressionElementMeta> Elements
+            {
+                get { yield break; }
+            }
+
+            public override ExpressionWrapperType ExpressionType
+            {
+                get { return ExpressionWrapperType.Unary; }
+            }
+
+            public override Type Type
+            {
+                get { return _Owner.Expression.Type; }
+            }
+
+            public override ExpressionElementMeta Base
+            {
+                get { return _Owner.Operand.Meta; }
+            }
         }
     }
 }

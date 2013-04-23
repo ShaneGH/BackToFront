@@ -1,7 +1,7 @@
 ﻿using BackToFront.Framework.Base;
 using BackToFront.Utilities;
 using System.Collections.Generic;
-using BackToFront.Framework.Meta;
+using BackToFront.Meta;
 
 namespace BackToFront.Validation
 {
@@ -58,6 +58,6 @@ namespace BackToFront.Validation
         /// <summary>
         /// Metadata on the element to validate
         /// </summary>
-        IMetaElement Meta { get; }
+        PathElementMeta Meta { get; }
     }
 }

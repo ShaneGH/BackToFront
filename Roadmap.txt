@@ -19,7 +19,7 @@ Lambdas within rule definition, e.g. If(a => a.Any(b => b.Selected)).Then.....
 
 More Expression types
 
-
+Unit test all Meta classes, framework and expression
 
 
 

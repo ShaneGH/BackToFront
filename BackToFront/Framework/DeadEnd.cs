@@ -2,8 +2,9 @@
 using System.Linq;
 using BackToFront.Enum;
 using BackToFront.Framework.Base;
-using BackToFront.Framework.Meta;
+using BackToFront.Meta;
 using BackToFront.Utilities;
+using System.Runtime.Serialization;
 
 namespace BackToFront.Framework
 {
@@ -41,24 +42,25 @@ namespace BackToFront.Framework
         }
 
         private MetaData _Meta;
-        public override IMetaElement Meta
+        public override PathElementMeta Meta
         {
             get { return _Meta ?? (_Meta = new MetaData()); }
         }
 
-        private class MetaData : IMetaElement
+        [DataContract]
+        private class MetaData : PathElementMeta
         {
-            public IEnumerable<IMetaElement> Children
+            public override IEnumerable<PathElementMeta> Children
             {
-                get { return Enumerable.Empty<IMetaElement>(); }
+                get { return Enumerable.Empty<PathElementMeta>(); }
             }
 
-            public Expressions.ExpressionWrapperBase Code
+            public override ExpressionElementMeta Code
             {
                 get { return null; }
             }
 
-            public PathElementType Type
+            public override PathElementType Type
             {
                 get { return PathElementType.DeadEnd; }
             }

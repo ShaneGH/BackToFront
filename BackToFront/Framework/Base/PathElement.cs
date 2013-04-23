@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using BackToFront.Extensions;
-using BackToFront.Framework.Meta;
+using BackToFront.Meta;
 using BackToFront.Utilities;
 using BackToFront.Validation;
 
@@ -83,7 +83,7 @@ namespace BackToFront.Framework.Base
                 _locked = true;
         }
 
-        public abstract IMetaElement Meta { get; }
+        public abstract PathElementMeta Meta { get; }
         //public virtual IMetaElement Meta { get { return null; } }
     }
 }

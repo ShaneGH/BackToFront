@@ -11,8 +11,9 @@ using BackToFront.Extensions.IEnumerable;
 using BackToFront.Logic;
 using BackToFront.Framework.Base;
 using BackToFront.Validation;
-using BackToFront.Framework.Meta;
+using BackToFront.Meta;
 using BackToFront.Enum;
+using System.Runtime.Serialization;
 
 namespace BackToFront.Framework
 {
@@ -75,12 +76,13 @@ namespace BackToFront.Framework
         }
 
         private MetaData _Meta;
-        public IMetaElement Meta
+        public PathElementMeta Meta
         {
             get { return _Meta ?? (_Meta = new MetaData(this)); }
         }
 
-        private class MetaData : IMetaElement
+        [DataContract]
+        private class MetaData : PathElementMeta
         {
             private readonly RuleCollection<TEntity> _Owner;
 
@@ -89,7 +91,7 @@ namespace BackToFront.Framework
                 _Owner = owner;
             }
 
-            public IEnumerable<IMetaElement> Children
+            public override IEnumerable<PathElementMeta> Children
             {
                 get
                 {
@@ -97,12 +99,12 @@ namespace BackToFront.Framework
                 }
             }
 
-            public ExpressionWrapperBase Code
+            public override ExpressionElementMeta Code
             {
                 get { return null; }
             }
 
-            public PathElementType Type
+            public override PathElementType Type
             {
                 get { return PathElementType.RuleCollection; }
             }

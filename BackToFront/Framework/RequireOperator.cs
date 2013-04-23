@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using BackToFront.Enum;
 using BackToFront.Expressions;
 using BackToFront.Framework.Base;
-using BackToFront.Framework.Meta;
+using BackToFront.Meta;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 using BackToFront.Utilities;
+using System.Runtime.Serialization;
 
 namespace BackToFront.Framework
 {
@@ -56,12 +57,13 @@ namespace BackToFront.Framework
         }
 
         private MetaData _Meta;
-        public override IMetaElement Meta
+        public override PathElementMeta Meta
         {
             get { return _Meta ?? (_Meta = new MetaData(this)); }
         }
 
-        private class MetaData : IMetaElement
+        [DataContract]
+        private class MetaData : PathElementMeta
         {
             private readonly RequireOperator<TEntity> _Owner;
 
@@ -70,7 +72,7 @@ namespace BackToFront.Framework
                 _Owner = owner;
             }
 
-            public IEnumerable<IMetaElement> Children
+            public override IEnumerable<PathElementMeta> Children
             {
                 get
                 {
@@ -78,12 +80,12 @@ namespace BackToFront.Framework
                 }
             }
 
-            public ExpressionWrapperBase Code
+            public override ExpressionElementMeta Code
             {
-                get { return _Owner.Descriptor; }
+                get { return _Owner.Descriptor.Meta; }
             }
 
-            public PathElementType Type
+            public override PathElementType Type
             {
                 get { return PathElementType.RequireOperator; }
             }

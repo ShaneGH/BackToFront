@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using BackToFront.Enum;
 using BackToFront.Expressions;
 using BackToFront.Framework.Base;
-using BackToFront.Framework.Meta;
+using BackToFront.Meta;
 using BackToFront.Utilities;
+using System.Runtime.Serialization;
 
 namespace BackToFront.Framework
 {
@@ -65,13 +66,16 @@ namespace BackToFront.Framework
             get { return false; }
         }
 
+        #region Meta
+
         private MetaData _Meta;
-        public override IMetaElement Meta
+        public override PathElementMeta Meta
         {
             get { return _Meta ?? (_Meta = new MetaData(this)); }
         }
 
-        private class MetaData : IMetaElement
+        [DataContract]
+        private class MetaData : PathElementMeta
         {
             private readonly ThrowViolation<TEntity> _Owner;
 
@@ -80,7 +84,7 @@ namespace BackToFront.Framework
                 _Owner = owner;
             }
 
-            public IEnumerable<IMetaElement> Children
+            public override IEnumerable<PathElementMeta> Children
             {
                 get
                 {
@@ -88,15 +92,17 @@ namespace BackToFront.Framework
                 }
             }
 
-            public ExpressionWrapperBase Code
+            public override ExpressionElementMeta Code
             {
                 get { return null; }
             }
 
-            public PathElementType Type
+            public override PathElementType Type
             {
                 get { return PathElementType.ThrowViolation; }
             }
         }
+
+        #endregion
     }
 }

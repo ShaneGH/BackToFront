@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using BackToFront.Framework.Base;
+using BackToFront.Meta;
 using BackToFront.Utilities;
 
 namespace BackToFront.Tests.Utilities
@@ -41,7 +41,7 @@ namespace BackToFront.Tests.Utilities
             get { throw new NotImplementedException(); }
         }
 
-        public override Framework.Meta.IMetaElement Meta
+        public override PathElementMeta Meta
         {
             get { throw new NotImplementedException(); }
         }

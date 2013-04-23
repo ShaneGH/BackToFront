@@ -6,6 +6,9 @@ using System.Linq.Expressions;
 using E = System.Linq.Expressions;
 using BackToFront.Utilities;
 using System.Reflection;
+using BackToFront.Meta;
+using BackToFront.Enum;
+using System.Runtime.Serialization;
 
 
 namespace BackToFront.Expressions
@@ -75,6 +78,55 @@ namespace BackToFront.Expressions
             get 
             {
                 return Left.UnorderedParameters.Union(Right.UnorderedParameters);
+            }
+        }
+
+        private MetaData _Meta;
+        public override ExpressionElementMeta Meta
+        {
+            get
+            {
+                return _Meta ?? (_Meta = new MetaData(this));
+            }
+        }
+
+        [DataContract]
+        private class MetaData : ExpressionElementMeta
+        {
+            private readonly BinaryExpressionWrapper _Owner;
+
+            public MetaData(BinaryExpressionWrapper owner)
+            {
+                _Owner = owner;
+            }
+
+            public override object Descriptor
+            {
+                get { return _Owner.Expression.NodeType.ToString(); }
+            }
+
+            public override IEnumerable<ExpressionElementMeta> Elements
+            {
+                get
+                {
+                    yield return _Owner.Left.Meta;
+                    yield return _Owner.Right.Meta;
+                }
+            }
+
+            public override ExpressionWrapperType ExpressionType
+            {
+                get { return ExpressionWrapperType.Binary; }
+            }
+
+            public override Type Type
+            {
+                get { return _Owner.Expression.Type; }
+            }
+
+            public override ExpressionElementMeta Base
+            {
+                get { return null; }
             }
         }
     }

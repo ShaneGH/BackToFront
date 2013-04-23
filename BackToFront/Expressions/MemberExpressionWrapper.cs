@@ -8,6 +8,9 @@ using BackToFront.Utilities;
 
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Extensions.Reflection;
+using BackToFront.Meta;
+using BackToFront.Enum;
+using System.Runtime.Serialization;
 
 namespace BackToFront.Expressions
 {
@@ -106,6 +109,51 @@ namespace BackToFront.Expressions
             get 
             {
                 return InnerExpression.UnorderedParameters;
+            }
+        }
+
+        private MetaData _Meta;
+        public override ExpressionElementMeta Meta
+        {
+            get
+            {
+                return _Meta ?? (_Meta = new MetaData(this));
+            }
+        }
+
+        [DataContract]
+        private class MetaData : ExpressionElementMeta
+        {
+            private readonly MemberExpressionWrapper _Owner;
+
+            public MetaData(MemberExpressionWrapper owner)
+            {
+                _Owner = owner;
+            }
+
+            public override object Descriptor
+            {
+                get { return _Owner.Expression.Member.Name; }
+            }
+
+            public override IEnumerable<ExpressionElementMeta> Elements
+            {
+                get { yield break; }
+            }
+
+            public override ExpressionWrapperType ExpressionType
+            {
+                get { return ExpressionWrapperType.Member; }
+            }
+
+            public override Type Type
+            {
+                get { return _Owner.Expression.Type; }
+            }
+
+            public override ExpressionElementMeta Base
+            {
+                get { return _Owner.InnerExpression.Meta; }
             }
         }
     }

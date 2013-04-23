@@ -4,6 +4,10 @@ using BackToFront.Utilities;
 using System;
 using System.Linq.Expressions;
 using E = System.Linq.Expressions;
+using BackToFront.Meta;
+using System.Collections.Generic;
+using BackToFront.Enum;
+using System.Runtime.Serialization;
 
 namespace BackToFront.Expressions
 {
@@ -73,6 +77,51 @@ namespace BackToFront.Expressions
             }
 
             return base.IsSameExpression(expression);
+        }
+
+        private MetaData _Meta;
+        public override ExpressionElementMeta Meta
+        {
+            get
+            {
+                return _Meta ?? (_Meta = new MetaData(this));
+            }
+        }
+
+        [DataContract]
+        private class MetaData : ExpressionElementMeta
+        {
+            private readonly DependencyInjectionExpressionWrapper _Owner;
+
+            public MetaData(DependencyInjectionExpressionWrapper owner)
+            {
+                _Owner = owner;
+            }
+
+            public override object Descriptor
+            {
+                get { return null; }
+            }
+
+            public override IEnumerable<ExpressionElementMeta> Elements
+            {
+                get { yield break; }
+            }
+
+            public override ExpressionWrapperType ExpressionType
+            {
+                get { return ExpressionWrapperType.DependencyInjection; }
+            }
+
+            public override Type Type
+            {
+                get { return _Owner.Expression.Type; }
+            }
+
+            public override ExpressionElementMeta Base
+            {
+                get { return null; }
+            }
         }
     }
 }

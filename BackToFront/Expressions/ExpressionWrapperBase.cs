@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BackToFront.Utilities;
 
 using BackToFront.Extensions.Reflection;
+using BackToFront.Meta;
 
 namespace BackToFront.Expressions
 {
@@ -44,6 +45,8 @@ namespace BackToFront.Expressions
         protected abstract Expression CompileInnerExpression(Mocks mocks);
         public abstract Expression WrappedExpression { get; }
         protected abstract IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter);
+
+        public abstract ExpressionElementMeta Meta { get; }
 
         private IEnumerable<ParameterExpression> CachedUnorderedParameters;
         public IEnumerable<ParameterExpression> UnorderedParameters
