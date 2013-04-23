@@ -123,8 +123,6 @@
     <Compile Include="CSharp\UnitTests\Utils\MemberIndex_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Utils\ReflectionWrapper_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Utils\MemberChainItem_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Utils\ParentRuleWrappers_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Utils\ParentRuleWrapper_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Utils\Mocks_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Utils\Mock_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Utils\Utilities_Tests.cs" />

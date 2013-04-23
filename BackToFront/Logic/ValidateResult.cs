@@ -96,11 +96,9 @@ namespace BackToFront.Logic
                     var violations = new List<IViolation>();
                     RunValidation((rule, mocks) => 
                     {
-                        var allViolations = new List<IViolation>();
-                        rule.FullyValidateEntity(Entity, allViolations, mocks);
-
-                        violations.AddRange(allViolations);
-                        return !allViolations.Any();
+                        var v = rule.FullyValidateEntity(Entity, mocks);
+                        violations.AddRange(v);
+                        return !v.Any();
                     });
 
                     ValidateChildMembers.Each(child => violations.AddRange(child().AllViolations));
@@ -128,7 +126,7 @@ namespace BackToFront.Logic
         /// Orders rules, mocks and dependencies and delivers them to a function (for vaslidation)
         /// </summary>
         /// <param name="action">Validation function. Returns </param>
-        private void RunValidation(Func<IRuleValidation<TEntity>, ValidationContext, bool> action)
+        private void RunValidation(Func<INonGenericRule, Mocks, bool> action)
         {
             // segregate from global object
             var mocks = Mocks.ToArray();
@@ -144,7 +142,7 @@ namespace BackToFront.Logic
             var dependencies = (IEnumerable<RuleDependency>)Dependencies.ToArray();
 
             // add parent class rules
-            IEnumerable<IEnumerable<IRuleValidation<TEntity>>> rulesRepository = new[] { Rules<TEntity>.Repository.Registered };
+            IEnumerable<IEnumerable<INonGenericRule>> rulesRepository = new[] { Rules<TEntity>.Repository.Registered };
             if (Options.ValidateAgainstParentClassRules)
                 rulesRepository = rulesRepository.Concat(Rules<TEntity>.ParentClassRepositories);
 
@@ -154,7 +152,7 @@ namespace BackToFront.Logic
                 var newMocks = mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet).ToList();
                 newMocks.AddRange(dependencies.Select(d => d.ToMock()));
 
-                success &= action(rule, new ValidationContext { Mocks = new Mocks(newMocks) });
+                success &= action(rule, new Mocks(newMocks));
             });
 
             // success, persist mock values

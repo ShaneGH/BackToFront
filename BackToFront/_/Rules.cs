@@ -62,14 +62,14 @@ namespace BackToFront
         /// <summary>
         /// The rules applied to the ancestor classes of TEntity
         /// </summary>
-        public static IEnumerable<ParentRuleWrappers<TEntity>> ParentClassRepositories
+        public static IEnumerable<IEnumerable<INonGenericRule>> ParentClassRepositories
         {
             get
             {
                 var current = typeof(TEntity).BaseType;
                 while (current != null)
                 {
-                    yield return new ParentRuleWrappers<TEntity>(current);
+                    yield return BackToFront.Rules.GetRules(current);
                     current = current.BaseType;
                 }
             }

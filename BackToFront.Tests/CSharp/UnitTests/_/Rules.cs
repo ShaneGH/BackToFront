@@ -42,8 +42,6 @@ namespace BackToFront.Tests.UnitTests
             // assert
             Assert.NotNull(parent);
             Assert.AreEqual(2, parent.Count());
-            Assert.AreEqual(typeof(TestClass1), parent.First().EntityType);
-            Assert.AreEqual(typeof(object), parent.Last().EntityType);
         }
 
         [Test]
