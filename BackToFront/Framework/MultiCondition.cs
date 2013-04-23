@@ -3,6 +3,9 @@ using BackToFront.Framework.Base;
 using BackToFront.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using BackToFront.Framework.Meta;
+using BackToFront.Expressions;
+using BackToFront.Enum;
 
 namespace BackToFront.Framework
 {
@@ -44,6 +47,40 @@ namespace BackToFront.Framework
         public override bool PropertyRequirement
         {
             get { return false; }
+        }
+
+        private MetaData _Meta;
+        public override IMetaElement Meta
+        {
+            get { return _Meta ?? (_Meta = new MetaData(this)); }
+        }
+
+        private class MetaData : IMetaElement
+        {
+            private readonly MultiCondition<TEntity> _Owner;
+
+            public MetaData(MultiCondition<TEntity> owner)
+            {
+                _Owner = owner;
+            }
+
+            public IEnumerable<IMetaElement> Children
+            {
+                get 
+                {
+                    return _Owner.If.Select(i => i.Meta);
+                }
+            }
+
+            public ExpressionWrapperBase Code
+            {
+                get { return null; }
+            }
+
+            public PathElementType Type
+            {
+                get { return PathElementType.MultiCondition; }
+            }
         }
     }
 }

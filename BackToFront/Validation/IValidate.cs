@@ -1,6 +1,7 @@
 ﻿using BackToFront.Framework.Base;
 using BackToFront.Utilities;
 using System.Collections.Generic;
+using BackToFront.Framework.Meta;
 
 namespace BackToFront.Validation
 {
@@ -53,5 +54,10 @@ namespace BackToFront.Validation
         /// Gets the function of this element
         /// </summary>
         bool PropertyRequirement { get; }
+
+        /// <summary>
+        /// Metadata on the element to validate
+        /// </summary>
+        IMetaElement Meta { get; }
     }
 }

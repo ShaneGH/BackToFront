@@ -4,8 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-
+using BackToFront.Enum;
+using BackToFront.Expressions;
 using BackToFront.Framework.Base;
+using BackToFront.Framework.Meta;
 using BackToFront.Utilities;
 
 namespace BackToFront.Framework
@@ -26,9 +28,14 @@ namespace BackToFront.Framework
             _violation = violation;
         }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
+        public IEnumerable<PathElement<TEntity>> NextPathElements()
         {
             yield break;
+        }
+
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
+        {
+            return NextPathElements();
         }
 
         public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
@@ -56,6 +63,40 @@ namespace BackToFront.Framework
         public override bool PropertyRequirement
         {
             get { return false; }
+        }
+
+        private MetaData _Meta;
+        public override IMetaElement Meta
+        {
+            get { return _Meta ?? (_Meta = new MetaData(this)); }
+        }
+
+        private class MetaData : IMetaElement
+        {
+            private readonly ThrowViolation<TEntity> _Owner;
+
+            public MetaData(ThrowViolation<TEntity> owner)
+            {
+                _Owner = owner;
+            }
+
+            public IEnumerable<IMetaElement> Children
+            {
+                get
+                {
+                    return _Owner.NextPathElements().Where(a => a != null).Select(a => a.Meta);
+                }
+            }
+
+            public ExpressionWrapperBase Code
+            {
+                get { return null; }
+            }
+
+            public PathElementType Type
+            {
+                get { return PathElementType.ThrowViolation; }
+            }
         }
     }
 }

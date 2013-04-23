@@ -8,9 +8,13 @@ namespace BackToFront.Enum
 {
     public enum PathElementType
     {
-        //TODO: Remove
-        Invalid,
-
-        Rule
+        Rule,
+        DeadEnd,
+        MultiCondition,
+        RequireOperator,
+        ThrowViolation,
+        RuleCollection,
+        RequirementFailed,
+        SubRuleCollection
     }
 }

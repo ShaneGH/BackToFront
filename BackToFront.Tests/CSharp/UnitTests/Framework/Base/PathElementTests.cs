@@ -14,6 +14,7 @@ using NUnit.Framework;
 using M = Moq;
 
 using BackToFront.Tests.Utilities;
+using BackToFront.Framework;
 
 namespace BackToFront.Tests.UnitTests.Framework.Base
 {

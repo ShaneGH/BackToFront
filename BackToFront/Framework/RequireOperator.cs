@@ -4,8 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-
+using BackToFront.Enum;
+using BackToFront.Expressions;
 using BackToFront.Framework.Base;
+using BackToFront.Framework.Meta;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 using BackToFront.Utilities;
@@ -20,6 +22,11 @@ namespace BackToFront.Framework
         }
 
         public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
+        {
+            return NextPathElements();
+        }
+
+        public IEnumerable<PathElement<TEntity>> NextPathElements()
         {
             yield return _Then;
             yield return _RequireThat;
@@ -46,6 +53,40 @@ namespace BackToFront.Framework
         public override bool PropertyRequirement
         {
             get { return true; }
+        }
+
+        private MetaData _Meta;
+        public override IMetaElement Meta
+        {
+            get { return _Meta ?? (_Meta = new MetaData(this)); }
+        }
+
+        private class MetaData : IMetaElement
+        {
+            private readonly RequireOperator<TEntity> _Owner;
+
+            public MetaData(RequireOperator<TEntity> owner)
+            {
+                _Owner = owner;
+            }
+
+            public IEnumerable<IMetaElement> Children
+            {
+                get
+                {
+                    return _Owner.NextPathElements().Where(a => a != null).Select(a => a.Meta);
+                }
+            }
+
+            public ExpressionWrapperBase Code
+            {
+                get { return _Owner.Descriptor; }
+            }
+
+            public PathElementType Type
+            {
+                get { return PathElementType.RequireOperator; }
+            }
         }
     }
 }

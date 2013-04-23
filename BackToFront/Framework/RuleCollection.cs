@@ -11,6 +11,8 @@ using BackToFront.Extensions.IEnumerable;
 using BackToFront.Logic;
 using BackToFront.Framework.Base;
 using BackToFront.Validation;
+using BackToFront.Framework.Meta;
+using BackToFront.Enum;
 
 namespace BackToFront.Framework
 {
@@ -70,6 +72,40 @@ namespace BackToFront.Framework
         public bool PropertyRequirement
         {
             get { return false; }
+        }
+
+        private MetaData _Meta;
+        public IMetaElement Meta
+        {
+            get { return _Meta ?? (_Meta = new MetaData(this)); }
+        }
+
+        private class MetaData : IMetaElement
+        {
+            private readonly RuleCollection<TEntity> _Owner;
+
+            public MetaData(RuleCollection<TEntity> owner)
+            {
+                _Owner = owner;
+            }
+
+            public IEnumerable<IMetaElement> Children
+            {
+                get
+                {
+                    return _Owner.Rules.Select(a => a.Meta);
+                }
+            }
+
+            public ExpressionWrapperBase Code
+            {
+                get { return null; }
+            }
+
+            public PathElementType Type
+            {
+                get { return PathElementType.RuleCollection; }
+            }
         }
     }
 }

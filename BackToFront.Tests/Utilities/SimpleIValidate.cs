@@ -40,5 +40,10 @@ namespace BackToFront.Tests.Utilities
         {
             get { throw new NotImplementedException(); }
         }
+
+        public override Framework.Meta.IMetaElement Meta
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

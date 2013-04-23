@@ -4,9 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-
+using BackToFront.Enum;
+using BackToFront.Expressions;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Framework.Base;
+using BackToFront.Framework.Meta;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 using BackToFront.Utilities;
@@ -27,9 +29,14 @@ namespace BackToFront.Framework
             _subRules.AddRule(subRule);
         }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
+        public IEnumerable<PathElement<TEntity>> NextPathElements()
         {
             yield break;
+        }
+
+        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
+        {
+            return NextPathElements();
         }
 
         public IConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property)
@@ -67,6 +74,40 @@ namespace BackToFront.Framework
         public override bool PropertyRequirement
         {
             get { return false; }
+        }
+
+        private MetaData _Meta;
+        public override IMetaElement Meta
+        {
+            get { return _Meta ?? (_Meta = new MetaData(this)); }
+        }
+
+        private class MetaData : IMetaElement
+        {
+            private readonly SubRuleCollection<TEntity> _Owner;
+
+            public MetaData(SubRuleCollection<TEntity> owner)
+            {
+                _Owner = owner;
+            }
+
+            public IEnumerable<IMetaElement> Children
+            {
+                get
+                {
+                    return new[] { _Owner._subRules.Meta };
+                }
+            }
+
+            public ExpressionWrapperBase Code
+            {
+                get { return null; }
+            }
+
+            public PathElementType Type
+            {
+                get { return PathElementType.SubRuleCollection; }
+            }
         }
     }
 }

@@ -4,47 +4,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
-
 using BackToFront.Extensions;
+using BackToFront.Framework.Meta;
 using BackToFront.Utilities;
 using BackToFront.Validation;
 
 namespace BackToFront.Framework.Base
 {
-    internal class DeadEnd<TEntity> : PathElement<TEntity>
-    {
-        public DeadEnd()
-            : base(null) { }
-
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
-        {
-            yield break;
-        }
-
-        public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
-        {
-            return null;
-        }
-
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
-        {
-            return;
-        }
-
-        public override IEnumerable<AffectedMembers> AffectedMembers
-        {
-            get
-            {
-                yield break;
-            }
-        }
-
-        public override bool PropertyRequirement
-        {
-            get { return false; }
-        }
-    }
-
     public class AffectedMembers
     {
         public MemberChainItem Member { get; set; }
@@ -116,5 +82,8 @@ namespace BackToFront.Framework.Base
             else
                 _locked = true;
         }
+
+        public abstract IMetaElement Meta { get; }
+        //public virtual IMetaElement Meta { get { return null; } }
     }
 }

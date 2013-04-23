@@ -64,6 +64,8 @@
     <Compile Include="Framework\Base\ExpressionElement.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Framework\DeadEnd.cs" />
+    <Compile Include="Framework\Meta\INextElement.cs" />
     <Compile Include="Framework\NonGeneric\RuleWrapper.cs" />
     <Compile Include="Framework\Operator.cs" />
     <Compile Include="Framework\MultiCondition.cs" />

@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using BackToFront.Validation;
+using BackToFront.Framework.Meta;
+using BackToFront.Expressions;
+using BackToFront.Enum;
 
 namespace BackToFront.Framework
 {
@@ -51,9 +54,14 @@ namespace BackToFront.Framework
 
         public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
+            return NextPathElements();
+        }
+
+        public IEnumerable<PathElement<TEntity>> NextPathElements()
+        {
             yield return _Condition;
             yield return _RequireThat;
-        }
+        }        
 
         MultiCondition<TEntity> _Condition;
         public IConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property)
@@ -89,6 +97,7 @@ namespace BackToFront.Framework
         {
             if (subject is TEntity)
             {
+                //TODO: change cast to as
                 return ValidateEntity((TEntity)subject, new ValidationContext { Mocks = mocks });
             }
 
@@ -100,6 +109,7 @@ namespace BackToFront.Framework
             if (subject is TEntity)
             {
                 List<IViolation> violations = new List<IViolation>();
+                //TODO: change cast to as
                 FullyValidateEntity((TEntity)subject, violations, new ValidationContext { Mocks = mocks });
                 return violations.ToArray();
             }
@@ -115,6 +125,40 @@ namespace BackToFront.Framework
         public override bool PropertyRequirement
         {
             get { return false; }
+        }
+
+        private MetaData _Meta;
+        public override IMetaElement Meta
+        {
+            get { return _Meta ?? (_Meta = new MetaData(this)); }
+        }
+
+        private class MetaData : IMetaElement
+        {
+            private readonly Rule<TEntity> _Owner;
+
+            public MetaData(Rule<TEntity> owner)
+            {
+                _Owner = owner;
+            }
+
+            public IEnumerable<IMetaElement> Children
+            {
+                get
+                {
+                    return _Owner.NextPathElements().Where(a => a != null).Select(a => a.Meta);
+                }
+            }
+
+            public ExpressionWrapperBase Code
+            {
+                get { return null; }
+            }
+
+            public PathElementType Type
+            {
+                get { return PathElementType.Rule; }
+            }
         }
     }
 }
