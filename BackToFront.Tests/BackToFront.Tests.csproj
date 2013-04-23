@@ -71,7 +71,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CSharp\UnitTests\Framework\NonGeneric\RuleWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Framework\NonGeneric\RuleWrapperBase_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Framework\SubRuleCollection_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Framework\Operator_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Framework\RequirementFailed_Tests.cs" />
