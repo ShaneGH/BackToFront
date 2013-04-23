@@ -1,11 +1,12 @@
-﻿using BackToFront.Dependency;
-using BackToFront.Framework;
-using BackToFront.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using BackToFront.Dependency;
+using BackToFront.Framework;
+using BackToFront.Utilities;
+using BackToFront.Validation;
 
 namespace BackToFront
 {
@@ -53,7 +54,7 @@ namespace BackToFront
     /// Application business rules
     /// </summary>
     public class Rules<TEntity>
-    {   
+    {
         #region Static
 
         public static readonly Rules<TEntity> Repository = new Rules<TEntity>(() => BackToFrontDependency.ProtectedResolver);
@@ -63,7 +64,7 @@ namespace BackToFront
         /// </summary>
         public static IEnumerable<ParentRuleWrappers<TEntity>> ParentClassRepositories
         {
-            get 
+            get
             {
                 var current = typeof(TEntity).BaseType;
                 while (current != null)
@@ -110,7 +111,7 @@ namespace BackToFront
         {
             get
             {
-                return _Registered ?? (_Registered = _Rules.ToArray()); 
+                return _Registered ?? (_Registered = _Rules.ToArray());
             }
         }
 

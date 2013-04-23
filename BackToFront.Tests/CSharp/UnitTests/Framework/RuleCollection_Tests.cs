@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using U = BackToFront.Utilities;
+using BackToFront.Validation;
 
 namespace BackToFront.Tests.UnitTests.Framework
 {

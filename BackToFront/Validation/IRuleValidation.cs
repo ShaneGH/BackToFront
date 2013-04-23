@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackToFront.Enum
+namespace BackToFront.Validation
 {
-    public enum LogicalOperator
+    public interface IRuleValidation<TEntity> : IValidate<TEntity>, INonGenericRule
     {
-        And,
-        Or
     }
 }

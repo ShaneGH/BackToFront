@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BackToFront.Dependency;
 using BackToFront.Framework;
+using BackToFront.Validation;
 
 namespace BackToFront
 {
@@ -50,6 +51,6 @@ namespace BackToFront.Dependency
 
     public interface IRuleDependencies
     {
-        RuleDependency GetDependency(string dependencyName, Type dependencyType, IRuleMetadata rule);
+        RuleDependency GetDependency(string dependencyName, Type dependencyType, INonGenericRule rule);
     }
 }

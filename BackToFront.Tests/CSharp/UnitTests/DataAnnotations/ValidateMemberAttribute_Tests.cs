@@ -44,6 +44,7 @@ namespace BackToFront.Tests.UnitTests.DataAnnotations
 
         }
 
+        [Test]
         [Ignore]
         public void IsValidTest() { }
 

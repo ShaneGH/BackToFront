@@ -5,6 +5,7 @@ using BackToFront.Dependency;
 using BackToFront.Framework;
 using BackToFront.Framework.Base;
 using BackToFront.Utilities;
+using BackToFront.Validation;
 using NUnit.Framework;
 using M = Moq;
 

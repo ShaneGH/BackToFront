@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BackToFront.Framework;
+using BackToFront.Validation;
 
 namespace BackToFront
 {
     public static class Rules
     {
         private static Type RepositoryType = typeof(Rules<>);
-        private static readonly Dictionary<Type, Func<IEnumerable<IRuleMetadata>>> _Rules = new Dictionary<Type, Func<IEnumerable<IRuleMetadata>>>();
+        private static readonly Dictionary<Type, Func<IEnumerable<INonGenericRule>>> _Rules = new Dictionary<Type, Func<IEnumerable<INonGenericRule>>>();
 
-        public static IEnumerable<IRuleMetadata> GetRules(Type forType)
+        public static IEnumerable<INonGenericRule> GetRules(Type forType)
         {
             if (!_Rules.ContainsKey(forType))
             {
@@ -20,7 +21,7 @@ namespace BackToFront
                 var repository = repositoryType.GetField("Repository").GetValue(null);
                 var rules = repositoryType.GetProperty("Registered");
 
-                _Rules.Add(forType, () => (IEnumerable<IRuleMetadata>)rules.GetValue(repository));
+                _Rules.Add(forType, () => (IEnumerable<INonGenericRule>)rules.GetValue(repository));
             }
 
             return _Rules[forType]();

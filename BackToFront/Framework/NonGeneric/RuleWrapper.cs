@@ -3,18 +3,19 @@ using BackToFront.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BackToFront.Validation;
 
 namespace BackToFront.Framework.NonGeneric
 {
     public class RuleWrapper
     {
-        public readonly IRuleMetadata Rule;
+        public readonly INonGenericRule Rule;
 
         public readonly object ValidationSubject;
         private readonly Func<IRuleDependencies> ServiceContainer;
         private Dictionary<bool, IViolation[]> CachedResults = new Dictionary<bool, IViolation[]>();
 
-        public RuleWrapper(IRuleMetadata rule, object toValidate, Func<IRuleDependencies> serviceContainer)
+        public RuleWrapper(INonGenericRule rule, object toValidate, Func<IRuleDependencies> serviceContainer)
         {
             Rule = rule;
             ValidationSubject = toValidate;

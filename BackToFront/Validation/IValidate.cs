@@ -2,7 +2,7 @@
 using BackToFront.Utilities;
 using System.Collections.Generic;
 
-namespace BackToFront
+namespace BackToFront.Validation
 {
     /// <summary>
     /// Specifies a rule element that can be validated
