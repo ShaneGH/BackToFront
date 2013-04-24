@@ -25,10 +25,17 @@ namespace BackToFront.Tests.Javascript
         public const string TestResultsFile = "JSTestResults.xml";
 
         [Test]
-        [Explicit]
         public void Run()
         {
             //$(TargetDir)Chutzpah\chutzpah.console.exe /path "$(ProjectDir)Javascript\UnitTests" /testMode TypeScript /junit "$(TargetDir)JSTestResults.xml"
+            using (var process = new Process { StartInfo = new ProcessStartInfo() })
+            {
+                process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                process.StartInfo.FileName = @"Chutzpah\chutzpah.console.exe";
+                process.StartInfo.Arguments = @"/path Javascript\UnitTests /testMode TypeScript /junit JSTestResults.xml";
+                process.Start();
+                process.WaitForExit();
+            }
 
             using (var file = new FileStream(TestResultsFile, FileMode.Open))
             {
