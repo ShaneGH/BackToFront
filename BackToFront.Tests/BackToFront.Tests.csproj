@@ -158,21 +158,16 @@
     <Folder Include="CSharp\UnitTests\Logic\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Javascript\UnitTests\BackToFront.js">
-      <DependentUpon>BackToFront.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="Javascript\UnitTests\BackToFront.ts" />
     <TypeScriptCompile Include="Javascript\Scripts\qUnit.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Javascript\UnitTests\BackToFront.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets. -->
+       Other similar extension points exist, see Microsoft.Common.targets. 
   <Target Name="BeforeBuild">
-    <Message Text="Compiling TypeScript files" />
-    <Message Text="Executing tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
-    <!--Use this line when AppHarbour supports typescript. Also delete "BackToFront\Tools\Typescript" <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />-->
-    <Exec Command="..\Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
-  </Target>
+  </Target>-->
   <PropertyGroup>
     <PostBuildEvent>del "$(TargetDir)JSTestResults.xml"
 del "$(TargetDir)Chutzpah"

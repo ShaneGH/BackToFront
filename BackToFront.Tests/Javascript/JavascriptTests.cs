@@ -32,7 +32,7 @@ namespace BackToFront.Tests.Javascript
             {
                 process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 process.StartInfo.FileName = @"Chutzpah\chutzpah.console.exe";
-                process.StartInfo.Arguments = @"/path Javascript\UnitTests /testMode TypeScript /junit JSTestResults.xml";
+                process.StartInfo.Arguments = @"/path Javascript\UnitTests /testMode JavaScript /junit JSTestResults.xml";
                 process.Start();
                 process.WaitForExit();
             }
