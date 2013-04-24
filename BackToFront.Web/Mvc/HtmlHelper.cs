@@ -32,7 +32,7 @@ namespace BackToFront.Web.Mvc
             WriteRulesToStream<TModel>(helper.ViewContext.HttpContext.Response.OutputStream);
         }
 
-        public static MvcHtmlString RenderRulesForModel<TModel>(this HtmlHelper<TModel> helper)
+        public static MvcHtmlString RenderRulesForModel<TModel>(this HtmlHelper<TModel> helper, bool includeScriptTags = true)
         {
             using (var stream = new MemoryStream())
             {
@@ -52,13 +52,24 @@ namespace BackToFront.Web.Mvc
         /// <param name="stream"></param>
         private static void WriteRulesToStream<TEntity>(Stream stream)
         {
+            Rules<TEntity>.ParentClassRepositories.Aggregate();
             var rules = new RuleCollection
             {
                 Entity = typeof(TEntity).FullName,
-                Rules = Rules<TEntity>.ParentClassRepositories.Concat(new[] { Rules<TEntity>.Repository.Registered }).Aggregate().Select(r => r.Meta).ToArray()
+                Rules = Rules<TEntity>.Repository.Registered.Concat(Rules<TEntity>.ParentClassRepositories.Aggregate()).Select(r => r.Meta).ToArray()
             };
 
-            Serializer.WriteObject(stream, rules);
+            using (var writer = new StreamWriter(stream))
+            {
+                writer.WriteLine("<script type=\"text/javascript\">");
+                writer.WriteLine("if(!__BTF || !__BTF.RegisterRule || __BTF.RegisterRule.constructor !== Function) throw 'BackToFront has not been initialised';");
+                writer.Write("__BTF.RegisterRule(");
+                Serializer.WriteObject(stream, rules);
+                writer.WriteLine(");");
+                writer.WriteLine("</script>");
+
+                writer.Flush();
+            }
         }
     }
 }
