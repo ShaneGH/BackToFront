@@ -4,3 +4,6 @@
 test("Hello", () => {
     deepEqual(true, new __BTF.TestClass().Test());
 });
+test("Hellos", () => {
+    deepEqual(true, new __BTF.TestClass().Test());
+});

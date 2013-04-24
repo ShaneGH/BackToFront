@@ -142,37 +142,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Javascript\Chutzpah\ctz.bat" />
     <None Include="Javascript\JUnit.xsd" />
-    <None Include="Javascript\Runtime\RunTests.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CSharp\UnitTests\Logic\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Javascript\Chutzpah\AntiXssLibrary.dll" />
-    <Content Include="Javascript\Chutzpah\chutzpah.console.exe" />
-    <Content Include="Javascript\Chutzpah\chutzpah.dll" />
-    <Content Include="Javascript\Chutzpah\chutzpah.pdb" />
-    <Content Include="Javascript\Chutzpah\JSRunners\chutzpahRunner.js" />
-    <Content Include="Javascript\Chutzpah\JSRunners\jasmineRunner.js" />
-    <Content Include="Javascript\Chutzpah\JSRunners\qunitRunner.js" />
-    <Content Include="Javascript\Chutzpah\phantomjs.exe" />
-    <Content Include="Javascript\Chutzpah\ServiceStack.Text.dll" />
-    <Content Include="Javascript\Chutzpah\ServiceStack.Text.pdb" />
-    <Content Include="Javascript\Chutzpah\StructureMap.dll" />
-    <Content Include="Javascript\Chutzpah\StructureMap.pdb" />
-    <Content Include="Javascript\Chutzpah\TestFiles\Jasmine\jasmine-html.js" />
-    <Content Include="Javascript\Chutzpah\TestFiles\Jasmine\jasmine.css" />
-    <Content Include="Javascript\Chutzpah\TestFiles\Jasmine\jasmine.html" />
-    <Content Include="Javascript\Chutzpah\TestFiles\Jasmine\jasmine.js" />
-    <Content Include="Javascript\Chutzpah\TestFiles\Jasmine\jasmine_favicon.png" />
-    <Content Include="Javascript\Chutzpah\TestFiles\QUnit\qunit.css" />
-    <Content Include="Javascript\Chutzpah\TestFiles\QUnit\qunit.html" />
-    <Content Include="Javascript\Chutzpah\TestFiles\QUnit\qunit.js" />
     <Content Include="Javascript\Content\qunit.css" />
     <Content Include="Javascript\UnitTests\BackToFront.js">
       <DependentUpon>BackToFront.ts</DependentUpon>
@@ -189,6 +165,12 @@
     <!--Use this line when AppHarbour supports typescript. Also delete "BackToFront\Tools\Typescript" <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />-->
     <Exec Command="..\Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>del "$(TargetDir)JSTestResults.xml"
+xcopy "$(SolutionDir)Tools\Chutzpah" "$(TargetDir)Chutzpah" /E /i /y
+$(TargetDir)Chutzpah\chutzpah.console.exe /path "$(ProjectDir)Javascript\UnitTests" /testMode TypeScript /junit "$(TargetDir)JSTestResults.xml"
+EXIT 0</PostBuildEvent>
+  </PropertyGroup>
   <!--<Target Name="AfterBuild">
     <Exec Command="Javascript/Runtime/RunTests.bat" />
   </Target>-->
