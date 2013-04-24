@@ -25,7 +25,6 @@ namespace BackToFront.Tests.Javascript
         public const string TestResultsFile = "JSTestResults.xml";
 
         [Test]
-        [Explicit]
         public void Run()
         {
             using (var file = new FileStream(TestResultsFile, FileMode.Open))
