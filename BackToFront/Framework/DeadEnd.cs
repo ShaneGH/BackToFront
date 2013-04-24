@@ -41,28 +41,12 @@ namespace BackToFront.Framework
             get { return false; }
         }
 
-        private MetaData _Meta;
+        private PathElementMeta _Meta;
         public override PathElementMeta Meta
         {
-            get { return _Meta ?? (_Meta = new MetaData()); }
-        }
-
-        [DataContract]
-        private class MetaData : PathElementMeta
-        {
-            public override IEnumerable<PathElementMeta> Children
+            get
             {
-                get { return Enumerable.Empty<PathElementMeta>(); }
-            }
-
-            public override ExpressionElementMeta Code
-            {
-                get { return null; }
-            }
-
-            public override PathElementType Type
-            {
-                get { return PathElementType.DeadEnd; }
+                return _Meta ?? (_Meta = new PathElementMeta(Enumerable.Empty<PathElementMeta>(), null, PathElementType.DeadEnd));
             }
         }
     }

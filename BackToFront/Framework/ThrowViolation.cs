@@ -68,38 +68,12 @@ namespace BackToFront.Framework
 
         #region Meta
 
-        private MetaData _Meta;
+        private PathElementMeta _Meta;
         public override PathElementMeta Meta
         {
-            get { return _Meta ?? (_Meta = new MetaData(this)); }
-        }
-
-        [DataContract]
-        private class MetaData : PathElementMeta
-        {
-            private readonly ThrowViolation<TEntity> _Owner;
-
-            public MetaData(ThrowViolation<TEntity> owner)
+            get
             {
-                _Owner = owner;
-            }
-
-            public override IEnumerable<PathElementMeta> Children
-            {
-                get
-                {
-                    return _Owner.NextPathElements().Where(a => a != null).Select(a => a.Meta);
-                }
-            }
-
-            public override ExpressionElementMeta Code
-            {
-                get { return null; }
-            }
-
-            public override PathElementType Type
-            {
-                get { return PathElementType.ThrowViolation; }
+                return _Meta ?? (_Meta = new PathElementMeta(NextPathElements().Where(a => a != null).Select(a => a.Meta), null, PathElementType.ThrowViolation));
             }
         }
 

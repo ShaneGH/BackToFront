@@ -10,15 +10,44 @@ using BackToFront.Expressions;
 namespace BackToFront.Meta
 {
     [DataContract]
-    public abstract class PathElementMeta
+    public class Lockable
     {
-        [DataMember]
-        public abstract IEnumerable<PathElementMeta> Children { get; }
+        private bool _Locked = false;
+
+        public void Lock()
+        {
+            _Locked = true;
+        }
+
+        protected void Set<T>(ref T property, T value)
+        {
+            if(_Locked)
+                throw new InvalidOperationException("##");
+
+            property = value;
+        }
+    }
+
+    [DataContract]
+    public sealed class PathElementMeta
+    {
+        public PathElementMeta() { }
+
+        public PathElementMeta(IEnumerable<PathElementMeta> children, ExpressionElementMeta code, PathElementType type)
+            : this()
+        {
+            Children = children.ToArray();
+            Code = code;
+            Type = type;
+        }
 
         [DataMember]
-        public abstract PathElementType Type { get; }
+        public IEnumerable<PathElementMeta> Children { get; private set; }
 
         [DataMember]
-        public abstract ExpressionElementMeta Code { get; }
+        public ExpressionElementMeta Code { get; private set; }
+
+        [DataMember]
+        public PathElementType Type { get; private set; }
     }
 }

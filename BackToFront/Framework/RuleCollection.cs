@@ -75,38 +75,12 @@ namespace BackToFront.Framework
             get { return false; }
         }
 
-        private MetaData _Meta;
+        private PathElementMeta _Meta;
         public PathElementMeta Meta
         {
-            get { return _Meta ?? (_Meta = new MetaData(this)); }
-        }
-
-        [DataContract]
-        private class MetaData : PathElementMeta
-        {
-            private readonly RuleCollection<TEntity> _Owner;
-
-            public MetaData(RuleCollection<TEntity> owner)
+            get
             {
-                _Owner = owner;
-            }
-
-            public override IEnumerable<PathElementMeta> Children
-            {
-                get
-                {
-                    return _Owner.Rules.Select(a => a.Meta);
-                }
-            }
-
-            public override ExpressionElementMeta Code
-            {
-                get { return null; }
-            }
-
-            public override PathElementType Type
-            {
-                get { return PathElementType.RuleCollection; }
+                return _Meta ?? (_Meta = new PathElementMeta(Rules.Select(a => a.Meta), null, PathElementType.RuleCollection));
             }
         }
     }

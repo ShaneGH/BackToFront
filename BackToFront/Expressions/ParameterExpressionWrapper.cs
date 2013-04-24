@@ -68,48 +68,12 @@ namespace BackToFront.Expressions
             get { yield return Expression; }
         }
 
-        private MetaData _Meta;
+        private ExpressionElementMeta _Meta;
         public override ExpressionElementMeta Meta
         {
             get
             {
-                return _Meta ?? (_Meta = new MetaData(this));
-            }
-        }
-
-        [DataContract]
-        private class MetaData : ExpressionElementMeta
-        {
-            private readonly ParameterExpressionWrapper _Owner;
-
-            public MetaData(ParameterExpressionWrapper owner)
-            {
-                _Owner = owner;
-            }
-
-            public override object Descriptor
-            {
-                get { return _Owner.Expression.Name; }
-            }
-
-            public override IEnumerable<ExpressionElementMeta> Elements
-            {
-                get { yield break; }
-            }
-
-            public override ExpressionWrapperType ExpressionType
-            {
-                get { return ExpressionWrapperType.Parameter; }
-            }
-
-            public override Type Type
-            {
-                get { return _Owner.Expression.Type; }
-            }
-
-            public override ExpressionElementMeta Base
-            {
-                get { return null; }
+                return _Meta ?? (_Meta = new ExpressionElementMeta(Expression.Name, new ExpressionElementMeta[0], ExpressionWrapperType.Parameter, Expression.Type, null));
             }
         }
     }

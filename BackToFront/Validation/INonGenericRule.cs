@@ -15,5 +15,7 @@ namespace BackToFront.Validation
         List<DependencyWrapper> Dependencies { get; }
 
         bool PropertyRequirement { get; }
+
+        Meta.PathElementMeta Meta { get; }
     }
 }

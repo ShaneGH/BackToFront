@@ -11,6 +11,7 @@ using NUnit.Framework;
 using System.Runtime.Serialization;
 using BackToFront.Meta;
 using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace BackToFront.Tests.IntegrationTests
 {
@@ -56,24 +57,6 @@ namespace BackToFront.Tests.IntegrationTests
         [TestCaseSource("GetData")]
         public void If_Or_Then_if_allVio9lations(Tuple<bool, bool, bool> input)
         {
-            //Rules<TestEntity>.AddRule(rule => rule
-            //    .If(a => a.ContinueSwitch).Then(subRule =>
-            //    {
-            //        subRule.If(a => !a.RequiredSwitch1).RequirementFailed.WithModelViolation(() => Violation1);
-            //        subRule.If(a => !a.RequiredSwitch2).RequirementFailed.WithModelViolation(() => Violation1);
-            //    }));
-            //var ttt = Rules<TestEntity>.Repository.Registered.First().Meta;
-            //var ser = new DataContractSerializer(typeof(PathElementMeta));
-            //using (var s = new MemoryStream())
-            //{
-            //    ser.WriteObject(s, Rules<TestEntity>.Repository.Registered.First().Meta);
-            //    s.Position = 0;
-            //    using (var r = new StreamReader(s))
-            //    {
-            //        var xxx = r.ReadToEnd();
-            //    }
-            //}
-
             bool continueOn = input.Item1,
                 required1 = input.Item2,
                 required2 = input.Item3;

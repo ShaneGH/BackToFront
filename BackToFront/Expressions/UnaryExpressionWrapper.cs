@@ -71,48 +71,12 @@ namespace BackToFront.Expressions
             return new UnaryExpressionWrapper(E.Expression.MakeUnary(Expression.NodeType, root, Expression.Type, Expression.Method));
         }
 
-        private MetaData _Meta;
-        public override ExpressionElementMeta Meta 
+        private ExpressionElementMeta _Meta;
+        public override ExpressionElementMeta Meta
         {
-            get 
+            get
             {
-                return _Meta ?? (_Meta = new MetaData(this));
-            }
-        }
-
-        [DataContract]
-        private class MetaData : ExpressionElementMeta
-        {
-            private readonly UnaryExpressionWrapper _Owner;
-
-            public MetaData(UnaryExpressionWrapper owner)
-            {
-                _Owner = owner;
-            }
-
-            public override object Descriptor
-            {
-                get { return _Owner.Expression.NodeType.ToString(); }
-            }
-
-            public override IEnumerable<ExpressionElementMeta> Elements
-            {
-                get { yield break; }
-            }
-
-            public override ExpressionWrapperType ExpressionType
-            {
-                get { return ExpressionWrapperType.Unary; }
-            }
-
-            public override Type Type
-            {
-                get { return _Owner.Expression.Type; }
-            }
-
-            public override ExpressionElementMeta Base
-            {
-                get { return _Owner.Operand.Meta; }
+                return _Meta ?? (_Meta = new ExpressionElementMeta(Expression.NodeType.ToString(), new ExpressionElementMeta[0], ExpressionWrapperType.Unary, Expression.Type, Operand.Meta));
             }
         }
     }
