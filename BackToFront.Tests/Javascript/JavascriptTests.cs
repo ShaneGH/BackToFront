@@ -45,7 +45,13 @@ namespace BackToFront.Tests.Javascript
                 foreach (var result in results.Elements().Where(e => e.Name == "testsuite"))
                 {
                     if (int.Parse(result.Attributes().First(a => a.Name == "failures").Value) != 0)
-                        Assert.Fail();
+                    {
+                        file.Position = 0;
+                        using (var reader = new StreamReader(file))
+                        {
+                            Assert.Fail(reader.ReadToEnd());
+                        }
+                    }
                 }
             }
         }
