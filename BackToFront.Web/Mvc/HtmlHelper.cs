@@ -20,7 +20,7 @@ namespace BackToFront.Web.Mvc
         public string Entity { get; set; }
 
         [DataMember]
-        public IEnumerable<PathElementMeta> Rules { get; set; }
+        public PathElementMeta[] Rules { get; set; }
     }
 
     public static class HtmlHelper
@@ -45,12 +45,17 @@ namespace BackToFront.Web.Mvc
             }
         }
 
+        /// <summary>
+        /// Write the rules in Json form to the given stream
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="stream"></param>
         private static void WriteRulesToStream<TEntity>(Stream stream)
         {
             var rules = new RuleCollection
             {
                 Entity = typeof(TEntity).FullName,
-                Rules = Rules<TEntity>.ParentClassRepositories.Concat(new[] { Rules<TEntity>.Repository.Registered }).Aggregate().Select(r => r.Meta)
+                Rules = Rules<TEntity>.ParentClassRepositories.Concat(new[] { Rules<TEntity>.Repository.Registered }).Aggregate().Select(r => r.Meta).ToArray()
             };
 
             Serializer.WriteObject(stream, rules);

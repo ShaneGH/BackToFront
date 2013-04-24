@@ -66,7 +66,6 @@
   <ItemGroup>
     <Content Include="Scripts\BackToFront-0.0.js">
       <DependentUpon>BackToFront-0.0.ts</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\jquery.validation.d.ts" />

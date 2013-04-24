@@ -43,6 +43,11 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\CodeSharp.Package.AspNetMvc3.3.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -136,6 +141,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BackToFront.Web\BackToFront.Web.csproj">
+      <Project>{94eee243-91b5-4deb-a192-1da94c1e2442}</Project>
+      <Name>BackToFront.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BackToFront\BackToFront.csproj">
       <Project>{811c6a9d-bd86-4947-8074-2ea0cbc26431}</Project>
       <Name>BackToFront</Name>
@@ -149,7 +158,6 @@
     <Folder Include="CSharp\UnitTests\Logic\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Javascript\Content\qunit.css" />
     <Content Include="Javascript\UnitTests\BackToFront.js">
       <DependentUpon>BackToFront.ts</DependentUpon>
     </Content>
@@ -168,8 +176,8 @@
   <PropertyGroup>
     <PostBuildEvent>del "$(TargetDir)JSTestResults.xml"
 xcopy "$(SolutionDir)Tools\Chutzpah" "$(TargetDir)Chutzpah" /E /i /y
-$(TargetDir)Chutzpah\chutzpah.console.exe /path "$(ProjectDir)Javascript\UnitTests" /testMode TypeScript /junit "$(TargetDir)JSTestResults.xml"
-EXIT 0</PostBuildEvent>
+xcopy "$(ProjectDir)Javascript\UnitTests" "$(TargetDir)Javascript\UnitTests" /E /i /y
+	</PostBuildEvent>
   </PropertyGroup>
   <!--<Target Name="AfterBuild">
     <Exec Command="Javascript/Runtime/RunTests.bat" />

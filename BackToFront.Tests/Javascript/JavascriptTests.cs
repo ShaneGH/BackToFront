@@ -25,8 +25,11 @@ namespace BackToFront.Tests.Javascript
         public const string TestResultsFile = "JSTestResults.xml";
 
         [Test]
+        [Explicit]
         public void Run()
         {
+            //$(TargetDir)Chutzpah\chutzpah.console.exe /path "$(ProjectDir)Javascript\UnitTests" /testMode TypeScript /junit "$(TargetDir)JSTestResults.xml"
+
             using (var file = new FileStream(TestResultsFile, FileMode.Open))
             {
                 var results = XDocument.Load(file).Elements()
