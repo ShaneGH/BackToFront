@@ -166,10 +166,10 @@
     <Exec Command="..\Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
   </Target>
   <PropertyGroup>
-    <!--<PostBuildEvent>del "$(TargetDir)JSTestResults.xml"
+    <PostBuildEvent>del "$(TargetDir)JSTestResults.xml"
 xcopy "$(SolutionDir)Tools\Chutzpah" "$(TargetDir)Chutzpah" /E /i /y
 $(TargetDir)Chutzpah\chutzpah.console.exe /path "$(ProjectDir)Javascript\UnitTests" /testMode TypeScript /junit "$(TargetDir)JSTestResults.xml"
-EXIT 0</PostBuildEvent>-->
+EXIT 0</PostBuildEvent>
   </PropertyGroup>
   <!--<Target Name="AfterBuild">
     <Exec Command="Javascript/Runtime/RunTests.bat" />
