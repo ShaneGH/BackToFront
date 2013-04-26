@@ -5,6 +5,7 @@ Domain Model
 unit test BackToFront.Logic.ValidateResult<TEntity>
 
 Duplicate everything in BacktoFront.Framework namespace into BacktoFront.Builder namespace and split rule building and rule execution logic
+Compile pre-mocked rules, can already comile pre mocked expressions
 
 Hole in dependencies. What if user gets hold of an instance of DependencyWrapper
 
@@ -21,6 +22,5 @@ More Expression types
 
 Unit test all Meta Properties, framework and expression
 
-Compile pre-mocked rules, can already comile pre mocked expressions
 
 
