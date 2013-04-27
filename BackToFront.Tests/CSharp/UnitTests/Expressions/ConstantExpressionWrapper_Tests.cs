@@ -45,9 +45,12 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
             // act
             // assert
-            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as ConstantExpressionWrapper));
-            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as ConstantExpressionWrapper));
-            Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func3) as ConstantExpressionWrapper));
+            //Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as ConstantExpressionWrapper));
+            //Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as ConstantExpressionWrapper));
+            //Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func3) as ConstantExpressionWrapper));
+            Assert.IsTrue(subject.IsSameExpression(func1.Body));
+            Assert.IsTrue(subject.IsSameExpression(func2.Body));
+            Assert.IsFalse(subject.IsSameExpression(func3.Body));
         }
 
         [Test]

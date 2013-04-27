@@ -38,17 +38,17 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(ExpressionWrapperBase expression)
+        public override bool IsSameExpression(Expression expression)
         {
             if (!base.IsSameExpression(expression))
                 return false;
 
-            var ex = expression as BinaryExpressionWrapper;
+            var ex = expression as BinaryExpression;
             if (ex == null)
                 return false;
 
-            return Expression.NodeType == ex.Expression.NodeType &&
-                Expression.Method == ex.Expression.Method &&
+            return Expression.NodeType == ex.NodeType &&
+                Expression.Method == ex.Method &&
                 Left.IsSameExpression(ex.Left) &&
                 Right.IsSameExpression(ex.Right);                
         }

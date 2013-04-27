@@ -27,16 +27,16 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(ExpressionWrapperBase expression)
+        public override bool IsSameExpression(Expression expression)
         {
             if (!base.IsSameExpression(expression))
                 return false;
 
-            var ex = expression as UnaryExpressionWrapper;
+            var ex = expression as UnaryExpression;
             if (ex == null)
                 return false;
 
-            return ex.Expression.Method == Expression.Method &&
+            return ex.Method == Expression.Method &&
                 Operand.IsSameExpression(ex.Operand);
         }
 

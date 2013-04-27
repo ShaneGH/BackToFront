@@ -46,10 +46,10 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
             // act
             // assert
-            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as BinaryExpressionWrapper));
-            Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as BinaryExpressionWrapper));
-            Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func3) as BinaryExpressionWrapper));
-            Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func4) as BinaryExpressionWrapper));
+            Assert.IsTrue(subject.IsSameExpression(func1.Body));
+            Assert.IsTrue(subject.IsSameExpression(func2.Body));
+            Assert.IsFalse(subject.IsSameExpression(func3.Body));
+            Assert.IsFalse(subject.IsSameExpression(func4.Body));
         }
 
         [Test]

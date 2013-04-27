@@ -54,9 +54,9 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
             // act
             // assert
-            Assert.IsTrue(subject.IsSameExpression(new UnaryExpressionWrapper(exp1)));
-            Assert.IsTrue(subject.IsSameExpression(new UnaryExpressionWrapper(exp2)));
-            Assert.IsFalse(subject.IsSameExpression(new UnaryExpressionWrapper(exp3)));
+            Assert.IsTrue(subject.IsSameExpression(exp1));
+            Assert.IsTrue(subject.IsSameExpression(exp2));
+            Assert.IsFalse(subject.IsSameExpression(exp3));
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             var result = subject.WithAlternateRoot<TestClass, TestClass>(Expression.Constant(constant), null);
 
             // assert
-            Assert.IsTrue(result.IsSameExpression(new UnaryExpressionWrapper(expected)));
+            Assert.IsTrue(result.IsSameExpression(expected));
         }
     }
 }

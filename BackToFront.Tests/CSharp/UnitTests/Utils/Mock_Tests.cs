@@ -100,7 +100,7 @@ namespace BackToFront.Tests.UnitTests.Utils
 
             // assert
             Assert.IsTrue(success);
-            Assert.IsTrue(result.Expression.IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, int>(a => a.Prop)));
+            Assert.IsTrue(result.Expression.IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, int>(a => a.Prop).WrappedExpression));
         }
 
         [Test]

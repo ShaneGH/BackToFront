@@ -30,16 +30,16 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(ExpressionWrapperBase expression)
+        public override bool IsSameExpression(Expression expression)
         {
             if (!base.IsSameExpression(expression))
                 return false;
 
-            var ex = expression as MemberExpressionWrapper;
+            var ex = expression as MemberExpression;
             if (ex == null)
                 return false;
 
-            return ex.Expression.Member == Expression.Member && InnerExpression.IsSameExpression(ex.InnerExpression);
+            return ex.Member == Expression.Member && InnerExpression.IsSameExpression(ex.Expression);
         }
 
         // TODO, what if member is event or other memberinfo

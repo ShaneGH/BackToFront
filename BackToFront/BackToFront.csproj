@@ -51,6 +51,7 @@
     <Compile Include="Enum\MockBehavior.cs" />
     <Compile Include="Enum\PathElementType.cs" />
     <Compile Include="Expressions\ElementAtExpressionWrapper.cs" />
+    <Compile Include="Expressions\Visitors\MockVisitor.cs" />
     <Compile Include="Extensions\BusinessLogic.cs">
       <SubType>Code</SubType>
     </Compile>

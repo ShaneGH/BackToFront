@@ -1,5 +1,5 @@
 if(window["__BTF"]) {
-    throw "sadsadsa";
+    throw "BackToFront it defined already";
 }
 var __BTF;
 (function (__BTF) {

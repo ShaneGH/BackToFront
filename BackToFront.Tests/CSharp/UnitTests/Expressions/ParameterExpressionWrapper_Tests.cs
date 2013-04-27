@@ -43,8 +43,10 @@ namespace BackToFront.Tests.UnitTests.Expressions
             var subject = ExpressionWrapperBase.ToWrapper(func1) as ParameterExpressionWrapper;
 
             // act
-            var test1 = subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as ParameterExpressionWrapper);
-            var test2 = subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as ParameterExpressionWrapper);
+            //var test1 = subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as ParameterExpressionWrapper);
+            //var test2 = subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as ParameterExpressionWrapper);
+            var test1 = subject.IsSameExpression(func1.Body);
+            var test2 = subject.IsSameExpression(func2.Body);
 
             // assert
             Assert.IsTrue(test1);

@@ -44,7 +44,8 @@ namespace BackToFront.Dependency
                 if (dependency != null)
                     return dependency;
 
-                throw new InvalidOperationException("##" + "Item is not mocked"); }
+                throw new InvalidOperationException("##" + "Item is not mocked"); 
+            }
         }
 
         public override Type DependencyType

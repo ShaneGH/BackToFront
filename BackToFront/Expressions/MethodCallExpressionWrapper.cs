@@ -40,16 +40,16 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(ExpressionWrapperBase expression)
+        public override bool IsSameExpression(Expression expression)
         {
             if (!base.IsSameExpression(expression))
                 return false;
 
-            var ex = expression as MethodCallExpressionWrapper;
+            var ex = expression as MethodCallExpression;
             if (ex == null)
                 return false;
 
-            return Expression.Method.GetBaseDefinition() == ex.Expression.Method.GetBaseDefinition() &&
+            return Expression.Method.GetBaseDefinition() == ex.Method.GetBaseDefinition() &&
                 Object.IsSameExpression(ex.Object) &&                
                 Arguments.Count() == ex.Arguments.Count() &&
                 Arguments.All((a, b) => a.IsSameExpression(ex.Arguments.ElementAt(b)));

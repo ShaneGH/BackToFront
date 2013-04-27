@@ -6,6 +6,7 @@ using BackToFront.Enum;
 using BackToFront.Meta;
 using BackToFront.Utilities;
 using System.Runtime.Serialization;
+using BackToFront.Dependency;
 
 
 namespace BackToFront.Expressions
@@ -17,16 +18,17 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(ExpressionWrapperBase expression)
+        public override bool IsSameExpression(Expression expression)
         {
             if (!base.IsSameExpression(expression))
                 return false;
 
-            var ex = expression as ConstantExpressionWrapper;
+
+            var ex = expression as ConstantExpression;
             if (ex == null)
                 return false;
 
-            return Expression.Value.Equals(ex.Expression.Value);                
+            return Expression.Value.Equals(ex.Value);                
         }
 
         protected override Expression CompileInnerExpression(Mocks mocks)

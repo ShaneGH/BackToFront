@@ -10,6 +10,7 @@ using BackToFront.Utilities;
 
 using BackToFront.Extensions.Reflection;
 using BackToFront.Meta;
+using BackToFront.Dependency;
 
 namespace BackToFront.Expressions
 {
@@ -69,9 +70,9 @@ namespace BackToFront.Expressions
             return CompileInnerExpression(new Mocks(mocks));
         }
 
-        public virtual bool IsSameExpression(ExpressionWrapperBase expression)
+        public virtual bool IsSameExpression(Expression expression)
         {
-            return expression != null && expression.WrappedExpression.NodeType == WrappedExpression.NodeType;
+            return expression != null && expression.NodeType == WrappedExpression.NodeType;
         }
                 
         public Expression Compile()
@@ -89,11 +90,8 @@ namespace BackToFront.Expressions
             if (mocks == null || mocks.Count() == 0)
                 return Compile();
 
-            foreach (var mock in mocks)
-                if (IsSameExpression(mock.Expression))
-                    return mocks.ParameterForMock(mock);
-
-            return CompileInnerExpression(mocks);
+            var val = new Visitors.MockVisitor(mocks).Visit(WrappedExpression);
+            return val != WrappedExpression ? val : CompileInnerExpression(mocks);
         }
 
         public static ExpressionWrapperBase CreateChildWrapper(Expression expression)
@@ -156,7 +154,7 @@ namespace BackToFront.Expressions
             while (true)
             {
                 var last = previous.Peek();
-                if (last.IsSameExpression(wrapper))
+                if (last.IsSameExpression(wrapper.WrappedExpression))
                 {
                     // rempve last expression, this will be the expression we are mocking out
                     previous.Pop();

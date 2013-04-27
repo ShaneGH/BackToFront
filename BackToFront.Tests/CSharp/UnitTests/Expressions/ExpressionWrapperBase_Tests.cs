@@ -46,7 +46,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
                 return CompileInnerExpressionExpression;
             }
 
-            public override bool IsSameExpression(ExpressionWrapperBase expression)
+            public override bool IsSameExpression(Expression expression)
             {
                 return IsSame;
             }
@@ -144,8 +144,8 @@ namespace BackToFront.Tests.UnitTests.Expressions
         public void Compile_Test_Mocked()
         {
             // arrange
-            var subject = new AccessorClass() { IsSame = true };
-            var mock = new Mock(expression: Expression.Constant(4), value: null, valueType: typeof(object));
+            var subject = new AccessorClass();
+            var mock = new Mock(expression: Expression.Constant(9), value: null, valueType: typeof(object));
             var mocks = new Mocks(new[] { mock });
 
             // act
@@ -267,7 +267,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             var result = subject.ForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)));
 
             // assert
-            Assert.IsTrue(ExpressionWrapperBase.CreateChildWrapper(result).IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, int>(a => a.Prop)));
+            Assert.IsTrue(ExpressionWrapperBase.CreateChildWrapper(result).IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, int>(a => a.Prop).WrappedExpression));
         }
 
         [Test]
@@ -282,7 +282,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // assert
             var ex1 = ExpressionWrapperBase.CreateChildWrapper(result);
             var ex2 = ExpressionWrapperBase.ToWrapper<TestClass2, bool>(a => a.Func(a.GetHashCode()));
-            Assert.IsTrue(ex1.IsSameExpression(ex2));
+            Assert.IsTrue(ex1.IsSameExpression(ex2.WrappedExpression));
         }
 
         [Test]
@@ -297,7 +297,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // assert
             var ex1 = ExpressionWrapperBase.CreateChildWrapper(result);
             var ex2 = ExpressionWrapperBase.ToWrapper<TestClass2, bool>(a => a.Func(5));
-            Assert.IsTrue(ex1.IsSameExpression(ex2));
+            Assert.IsTrue(ex1.IsSameExpression(ex2.WrappedExpression));
         }
 
         [Test]
@@ -310,7 +310,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             var result = subject.ForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)));
 
             // assert
-            Assert.IsTrue(ExpressionWrapperBase.CreateChildWrapper(result).IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, TestClass2>(a => a)));
+            Assert.IsTrue(ExpressionWrapperBase.CreateChildWrapper(result).IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, TestClass2>(a => a).WrappedExpression));
         }
 
         [Test]

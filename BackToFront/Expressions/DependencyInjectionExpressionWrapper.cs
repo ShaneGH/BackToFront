@@ -66,14 +66,14 @@ namespace BackToFront.Expressions
             }
         }
 
-        public override bool IsSameExpression(ExpressionWrapperBase expression)
+        public override bool IsSameExpression(Expression expression)
         {
             // do not use base methods, they are not valid in this special case
 
-            if (expression.WrappedExpression is ConstantExpression && 
-                (expression.WrappedExpression as ConstantExpression).Value is RuleDependency)
+            if (expression is ConstantExpression && 
+                (expression as ConstantExpression).Value is RuleDependency)
             {
-                return ((expression.WrappedExpression as ConstantExpression).Value as RuleDependency).Name == LinqParamName;
+                return ((expression as ConstantExpression).Value as RuleDependency).Name == LinqParamName;
             }
 
             return base.IsSameExpression(expression);

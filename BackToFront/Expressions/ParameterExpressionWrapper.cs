@@ -18,18 +18,18 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(ExpressionWrapperBase expression)
+        public override bool IsSameExpression(Expression expression)
         {
             if (!base.IsSameExpression(expression))
                 return false;
 
             // TODO: is this correct?
 
-            var ex = expression as ParameterExpressionWrapper;
+            var ex = expression as ParameterExpression;
             if (ex == null)
                 return false;
 
-            return ex.Expression.Type.Is(Expression.Type);
+            return ex.Type.Is(Expression.Type);
         }
 
         protected override Expression CompileInnerExpression(Mocks mocks)

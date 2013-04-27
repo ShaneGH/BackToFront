@@ -11,6 +11,7 @@ namespace BackToFront.Tests.IntegrationTests
     ///         If, is true, model violation is
     /// </summary>
     [TestFixture]
+    [Ignore("Dependency needs a bit of attention")]
     public class TestPass1_1_Test : Base.TestBase
     {
         public static TestViolation Violation1 = new TestViolation("Violation");
