@@ -8,14 +8,14 @@ namespace BackToFront.Enum
 {
     public enum ExpressionWrapperType
     {
-        Binary,
-        Constant,
-        DependencyInjection,
+        Binary = 1,
+        Constant = 2,
+        DependencyInjection = 3,
         //ElementAt,
         //Invocation,
-        Member,
-        MethodCall,
-        Parameter,
-        Unary
+        Member = 4,
+        MethodCall = 5,
+        Parameter = 6,
+        Unary = 7
     }
 }
