@@ -15,6 +15,7 @@ using M = Moq;
 
 using BackToFront.Tests.Utilities;
 using BackToFront.Framework;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Tests.UnitTests.Framework.Base
 {
@@ -43,7 +44,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new ValidationContext { Mocks = new Mocks(new Mocks(new Mock[0])) };
+            var mocks = new ValidationContext { ExpressionModifier = new SwapPropVisitor() };
             var subject = new M.Mock<PathElement<object>>(null);
             subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<ValidationContext>(b => b == mocks)))
                 .Returns(() =>
@@ -64,7 +65,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
             // arrange
             var v = new SimpleIValidate { Violation = new TestViolation("violation") };
             var entity = new object();
-            var mocks = new ValidationContext { Mocks = new Mocks(new Mocks(new Mock[0])) };
+            var mocks = new ValidationContext { ExpressionModifier = new SwapPropVisitor() };
             var subject = new M.Mock<PathElement<object>>(null);
             subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<ValidationContext>(b => b == mocks)))
                 .Returns(() =>
@@ -85,7 +86,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new ValidationContext { Mocks = new Mocks(new Mocks(new Mock[0])) };
+            var mocks = new ValidationContext { ExpressionModifier = new SwapPropVisitor() };
             var subject = new M.Mock<PathElement<object>>(null);
             subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<ValidationContext>(b => b == mocks)))
                 .Returns(() =>
@@ -106,7 +107,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new ValidationContext { Mocks = new Mocks(new Mocks(new Mock[0])) };
+            var mocks = new ValidationContext { ExpressionModifier = new SwapPropVisitor() };
             var nextElement = new M.Mock<PathElement<object>>(null);
             var violation = new M.Mock<IViolation>().Object;
             nextElement.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b == entity), M.It.Is<ValidationContext>(b => b == mocks)))
@@ -131,7 +132,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new ValidationContext { Mocks = new Mocks(new Mocks(new Mock[0])) };
+            var mocks = new ValidationContext { ExpressionModifier = new SwapPropVisitor() };
 
             var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
             subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<ValidationContext>(b => b == mocks)))
@@ -152,7 +153,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new ValidationContext { Mocks = new Mocks(new Mocks(new Mock[0])) };
+            var mocks = new ValidationContext { ExpressionModifier = new SwapPropVisitor() };
             var nextElement = new M.Mock<PathElement<object>>(null);
             var violation1 = new M.Mock<IViolation>().Object;
             var violation2 = new M.Mock<IViolation>().Object;
@@ -181,7 +182,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
         {
             // arrange
             var entity = new object();
-            var mocks = new ValidationContext { Mocks = new Mocks(new Mocks(new Mock[0])) };
+            var mocks = new ValidationContext { ExpressionModifier = new SwapPropVisitor() };
 
             var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
             subject.Setup(a => a.NextPathElements(M.It.Is<object>(b => b == entity), M.It.Is<ValidationContext>(b => b == mocks)))

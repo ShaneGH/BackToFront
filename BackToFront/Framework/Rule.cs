@@ -13,6 +13,7 @@ using BackToFront.Meta;
 using BackToFront.Expressions;
 using BackToFront.Enum;
 using System.Runtime.Serialization;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework
 {
@@ -94,24 +95,24 @@ namespace BackToFront.Framework
             RegisteredItems.Add(element);
         }
 
-        IViolation IValidate.ValidateEntity(object subject, Utilities.Mocks mocks)
+        IViolation IValidate.ValidateEntity(object subject, SwapPropVisitor visitor)
         {
             if (subject is TEntity)
             {
                 //TODO: change cast to as
-                return ValidateEntity((TEntity)subject, new ValidationContext { Mocks = mocks });
+                return ValidateEntity((TEntity)subject, new ValidationContext { ExpressionModifier = visitor });
             }
 
             throw new InvalidOperationException("##");
         }
 
-        IEnumerable<IViolation> IValidate.FullyValidateEntity(object subject, Utilities.Mocks mocks)
+        IEnumerable<IViolation> IValidate.FullyValidateEntity(object subject, SwapPropVisitor visitor)
         {
             if (subject is TEntity)
             {
                 List<IViolation> violations = new List<IViolation>();
                 //TODO: change cast to as
-                FullyValidateEntity((TEntity)subject, violations, new ValidationContext { Mocks = mocks });
+                FullyValidateEntity((TEntity)subject, violations, new ValidationContext { ExpressionModifier = visitor });
                 return violations.ToArray();
             }
 

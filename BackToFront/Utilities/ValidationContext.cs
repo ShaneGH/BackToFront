@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BackToFront.Expressions.Visitors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,12 +10,12 @@ namespace BackToFront.Utilities
 {
     public class ValidationContext
     {
-        public Mocks Mocks { get; set; }
+        public SwapPropVisitor ExpressionModifier { get; set; }
         public readonly IList<MemberChainItem> ViolatedMembers = new List<MemberChainItem>();
 
         public ValidationContext()
         {
-            Mocks = new Mocks();
+            ExpressionModifier = new SwapPropVisitor();
         }
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace BackToFront.Utilities
         /// <returns></returns>
         public ValidationContext Copy()
         {
-            return new ValidationContext { Mocks = new Utilities.Mocks(Mocks) };
+            return new ValidationContext { ExpressionModifier = ExpressionModifier };
         }
     }
 }

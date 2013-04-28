@@ -11,6 +11,7 @@ using BackToFront.Extensions.Reflection;
 using BackToFront.Meta;
 using BackToFront.Enum;
 using System.Runtime.Serialization;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Expressions
 {
@@ -43,7 +44,7 @@ namespace BackToFront.Expressions
         }
 
         // TODO, what if member is event or other memberinfo
-        protected override Expression CompileInnerExpression(Mocks mocks)
+        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
         {
             var eval = InnerExpression.Compile(mocks);
             return eval == InnerExpression.WrappedExpression ? 

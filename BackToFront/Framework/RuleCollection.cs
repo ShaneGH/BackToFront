@@ -14,6 +14,8 @@ using BackToFront.Validation;
 using BackToFront.Meta;
 using BackToFront.Enum;
 using System.Runtime.Serialization;
+using BackToFront.Dependency;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework
 {
@@ -29,19 +31,19 @@ namespace BackToFront.Framework
             }
         }
 
-        public IViolation ValidateEntity(object subject, Mocks mocks)
+        public IViolation ValidateEntity(object subject, SwapPropVisitor visitor)
         {
-            // TODO: catch cast exception
+            // TODO: catch cast exception/change to as
             var sub = (TEntity)subject;
-            return ValidateEntity(sub, new ValidationContext { Mocks = mocks });
+            return ValidateEntity(sub, new ValidationContext { ExpressionModifier = visitor });
         }
 
-        public IEnumerable<IViolation> FullyValidateEntity(object subject, Mocks mocks)
+        public IEnumerable<IViolation> FullyValidateEntity(object subject, SwapPropVisitor visitor)
         {
-            // TODO: catch cast exception
+            // TODO: catch cast exception/change to as
             var sub = (TEntity)subject;
             IList<IViolation> violationList = new List<IViolation>();
-            FullyValidateEntity(sub, violationList, new ValidationContext { Mocks = mocks });
+            FullyValidateEntity(sub, violationList, new ValidationContext { ExpressionModifier = visitor });
             return violationList.ToArray();
         }
 

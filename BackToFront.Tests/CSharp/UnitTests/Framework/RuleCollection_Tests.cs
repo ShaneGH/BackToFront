@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using U = BackToFront.Utilities;
 using BackToFront.Validation;
+using BackToFront.Expressions.Visitors;
+using BackToFront.Dependency;
 
 namespace BackToFront.Tests.UnitTests.Framework
 {
@@ -22,7 +24,7 @@ namespace BackToFront.Tests.UnitTests.Framework
 
             public IEnumerable<PathElement<TEntity>> _NextPathElements()
             {
-                return NextPathElements(null, new U.ValidationContext { Mocks = new U.Mocks(new U.Mock[0]) });
+                return NextPathElements(null, new U.ValidationContext { ExpressionModifier = new SwapPropVisitor() });
             }
         }
 
@@ -33,13 +35,13 @@ namespace BackToFront.Tests.UnitTests.Framework
             var subject = new RuleCollection<object>();
 
             var input1 = new object();
-            var input2 = new U.Mocks(new[] { new U.Mock(wrapperExpression: null, value: null, valueType: null, behavior: Enum.MockBehavior.MockAndSet) });
+            var input2 = new SwapPropVisitor();
 
             var rule1 = new M.Mock<IValidate<object>>();
             var rule2 = new M.Mock<IValidate<object>>();
-            rule1.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
+            rule1.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2)))
                 .Returns<IViolation>(null);
-            rule2.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
+            rule2.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2)))
                 .Returns<IViolation>(null);
 
             subject.AddRule(rule1.Object);
@@ -61,14 +63,14 @@ namespace BackToFront.Tests.UnitTests.Framework
             var subject = new RuleCollection<object>();
 
             var input1 = new object();
-            var input2 = new U.Mocks(new U.Mock[0]);
+            var input2 = new SwapPropVisitor();
 
             IViolation v1 = new TestViolation();
             var rule1 = new M.Mock<IValidate<object>>();
             var rule2 = new M.Mock<IValidate<object>>();
-            rule1.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
+            rule1.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2)))
                 .Returns(v1);
-            rule2.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
+            rule2.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2)))
                 .Throws(new NUnit.Framework.AssertionException("rule2.ValidateEntity Should not be called"));
 
             subject.AddRule(rule1.Object);
@@ -89,14 +91,14 @@ namespace BackToFront.Tests.UnitTests.Framework
             var subject = new RuleCollection<object>();
 
             var input1 = new object();
-            var input2 = new U.Mocks();
+            var input2 = new SwapPropVisitor();
 
             IViolation v2 = new TestViolation();
             var rule1 = new M.Mock<IValidate<object>>();
             var rule2 = new M.Mock<IValidate<object>>();
-            rule1.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
+            rule1.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2)))
                 .Returns<IViolation>(null);
-            rule2.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
+            rule2.Setup(a => a.ValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2)))
                 .Returns(v2);
 
             subject.AddRule(rule1.Object);
@@ -118,15 +120,15 @@ namespace BackToFront.Tests.UnitTests.Framework
             var subject = new RuleCollection<object>();
 
             var input1 = new object();
-            var input2 = new U.Mocks();
+            var input2 = new SwapPropVisitor();
 
             IViolation v1 = new TestViolation();
             IViolation v2 = new TestViolation();
             var rule1 = new M.Mock<IValidate<object>>();
             var rule2 = new M.Mock<IValidate<object>>();
-            rule1.Setup(a => a.FullyValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.IsAny<IList<IViolation>>(), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
+            rule1.Setup(a => a.FullyValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.IsAny<IList<IViolation>>(), M.It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2)))
                 .Callback<object, IList<IViolation>, U.ValidationContext>((a, b, c) => b.Add(v1));
-            rule2.Setup(a => a.FullyValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.IsAny<IList<IViolation>>(), M.It.Is<U.ValidationContext>(b => AreKindOfEqual(b.Mocks, input2))))
+            rule2.Setup(a => a.FullyValidateEntity(M.It.Is<object>(b => b.Equals(input1)), M.It.IsAny<IList<IViolation>>(), M.It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2)))
                 .Callback<object, IList<IViolation>, U.ValidationContext>((a, b, c) => b.Add(v2));
 
             subject.AddRule(rule1.Object);

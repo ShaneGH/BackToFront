@@ -9,6 +9,7 @@ using BackToFront.Framework;
 using BackToFront.Framework.Base;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Utilities;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Tests.UnitTests.Framework
 {
@@ -57,7 +58,7 @@ namespace BackToFront.Tests.UnitTests.Framework
 
             // act
             // assert
-            Assert.IsTrue(subject.ConditionIsTrue(null, new Mocks()));
+            Assert.IsTrue(subject.ConditionIsTrue(null, new SwapPropVisitor()));
         }
 
         [Test]
@@ -68,7 +69,7 @@ namespace BackToFront.Tests.UnitTests.Framework
 
             // act
             // assert
-            Assert.IsFalse(subject.ConditionIsTrue(null, new Mocks()));
+            Assert.IsFalse(subject.ConditionIsTrue(null, new SwapPropVisitor()));
         }
 
         [Test]

@@ -12,7 +12,7 @@ namespace BackToFront.Utilities
 {
     public class Mocks : IEnumerable<Mock>
     {
-        public readonly E.ParameterExpression Parameter;
+        public readonly E.ParameterExpression Parameter = E.Expression.Parameter(typeof(object[]));
         private readonly Dictionary<Mock, E.UnaryExpression> Params = new Dictionary<Mock, E.UnaryExpression>();
 
         private readonly Mock[] _Mocks;
@@ -23,7 +23,6 @@ namespace BackToFront.Utilities
         public Mocks(IEnumerable<Mock> mocks)
         {
             _Mocks = mocks.ToArray();
-            Parameter = E.Expression.Parameter(typeof(object[]));
         }
 
         public IEnumerator<Mock> GetEnumerator()
@@ -48,14 +47,6 @@ namespace BackToFront.Utilities
             }
 
             return Params[mock];
-        }
-
-        public object[] AsValueArray
-        {
-            get
-            {
-                return _Mocks.Select(m => m.Value).ToArray();
-            }
         }
     }
 }

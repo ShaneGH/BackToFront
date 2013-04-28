@@ -51,7 +51,7 @@
     <Compile Include="Enum\MockBehavior.cs" />
     <Compile Include="Enum\PathElementType.cs" />
     <Compile Include="Expressions\ElementAtExpressionWrapper.cs" />
-    <Compile Include="Expressions\Visitors\MockVisitor.cs" />
+    <Compile Include="Expressions\Visitors\SwapPropVisitor.cs" />
     <Compile Include="Extensions\BusinessLogic.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -87,6 +87,7 @@
     <Compile Include="Logic\Compilations\IConditionSatisfied.cs" />
     <Compile Include="Logic\ValidateResult.cs" />
     <Compile Include="Utilities\CompiledMockedExpression.cs" />
+    <Compile Include="Utilities\Dependencies.cs" />
     <Compile Include="Utilities\GenericIEqualityComparer.cs" />
     <Compile Include="Utilities\MemberIndex.cs" />
     <Compile Include="Utilities\ReflectionWrapper.cs" />

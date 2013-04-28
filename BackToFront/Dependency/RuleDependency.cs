@@ -1,10 +1,12 @@
 ﻿using BackToFront.Enum;
 using BackToFront.Expressions;
 using BackToFront.Utilities;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace BackToFront.Dependency
 {
+    //TODO: delete this class
     public class RuleDependency
     {
         public readonly string Name;

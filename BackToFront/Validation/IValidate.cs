@@ -2,6 +2,8 @@
 using BackToFront.Utilities;
 using System.Collections.Generic;
 using BackToFront.Meta;
+using BackToFront.Dependency;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Validation
 {
@@ -15,14 +17,14 @@ namespace BackToFront.Validation
         /// </summary>
         /// <param name="subject">To validate</param>
         /// <returns>Validation or null</returns>
-        IViolation ValidateEntity(object subject, Mocks mocks);
+        IViolation ValidateEntity(object subject, SwapPropVisitor visitor);
 
         /// <summary>
         /// Validate the subject and return all business rule violations
         /// </summary>
         /// <param name="subject">The subject</param>
         /// <returns>Violations</returns>
-        IEnumerable<IViolation> FullyValidateEntity(object subject, Mocks mocks);
+        IEnumerable<IViolation> FullyValidateEntity(object subject, SwapPropVisitor visitor);
     }
 
     /// <summary>

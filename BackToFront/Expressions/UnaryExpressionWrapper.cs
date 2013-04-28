@@ -7,6 +7,7 @@ using System;
 using BackToFront.Meta;
 using BackToFront.Enum;
 using System.Runtime.Serialization;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Expressions
 {
@@ -40,11 +41,11 @@ namespace BackToFront.Expressions
                 Operand.IsSameExpression(ex.Operand);
         }
 
-        protected override Expression CompileInnerExpression(Mocks mocks)
+        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
         {
             var result = Operand.Compile(mocks);
 
-            return result == Operand.WrappedExpression ? Expression :
+            return result == Operand.WrappedExpression ? WrappedExpression :
                 E.Expression.MakeUnary(Expression.NodeType, result, Expression.Type, Expression.Method);
         }
 

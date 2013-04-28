@@ -25,7 +25,7 @@ namespace BackToFront.Framework
         {
             foreach (var i in If)
             {
-                if (i.ConditionIsTrue(subject, context.Mocks))
+                if (i.ConditionIsTrue(subject, context.ExpressionModifier))
                 {
                     yield return i;
                     yield break;

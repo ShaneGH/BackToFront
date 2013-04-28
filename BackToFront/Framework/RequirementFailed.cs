@@ -52,7 +52,7 @@ namespace BackToFront.Framework
 
         public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
-            if (!Compile(context.Mocks).Invoke(subject, context.Mocks.AsValueArray))
+            if (!Compile(context.ExpressionModifier).Invoke(subject, context.ExpressionModifier.MockValues, context.ExpressionModifier.DependencyValues))
             {
                 context.ViolatedMembers.AddRange(AffectedMembers.Select(am => am.Member));
                 return base.ValidateEntity(subject, context);
@@ -63,7 +63,7 @@ namespace BackToFront.Framework
 
         public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
         {
-            if (!Compile(context.Mocks).Invoke(subject, context.Mocks.AsValueArray))
+            if (!Compile(context.ExpressionModifier).Invoke(subject, context.ExpressionModifier.MockValues, context.ExpressionModifier.DependencyValues))
             {
                 context.ViolatedMembers.AddRange(AffectedMembers.Select(am => am.Member));
                 base.FullyValidateEntity(subject, violationList, context);

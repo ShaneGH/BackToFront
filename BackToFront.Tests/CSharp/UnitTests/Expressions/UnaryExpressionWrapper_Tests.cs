@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using BackToFront.Expressions.Visitors;
+
+using M = Moq;
 
 namespace BackToFront.Tests.UnitTests.Expressions
 {
@@ -18,7 +21,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             {
             }
 
-            public Expression _CompileInnerExpression(IEnumerable<Mock> mocks)
+            public Expression _CompileInnerExpression(ISwapPropVisitor mocks)
             {
                 return CompileInnerExpression(mocks);
             }
@@ -65,9 +68,12 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // arange
             var member = Expression.Not(Expression.Parameter(typeof(bool)));
             var subject = new TestSubjectWrapper(member);
+            var input = new M.Mock<ISwapPropVisitor>();
+            input.Setup(a => a.ContainsNothing).Returns(true);
+            input.Setup(a => a.Visit(M.It.IsAny<Expression>())).Returns<Expression>(a => a);
 
             // act
-            var result = subject._CompileInnerExpression(Enumerable.Empty<Mock>());
+            var result = subject._CompileInnerExpression(input.Object);
 
             // assert
             Assert.AreEqual(subject.Expression, result);
@@ -77,20 +83,21 @@ namespace BackToFront.Tests.UnitTests.Expressions
         public void CompileInnerExpression_Test_withMocks()
         {
             // arange
-            var mockedVal = true;
-            var mockedExp = Expression.Parameter(typeof(bool));
-            var testExp = Expression.Not(mockedExp);
+            var beforeMock = Expression.Parameter(typeof(bool));
+            var afterMock = Expression.Constant(true);
+            var testExp = Expression.Not(beforeMock);
             var subject = new TestSubjectWrapper(testExp);
+            var input = new M.Mock<ISwapPropVisitor>();
+            input.Setup(a => a.ContainsNothing).Returns(false);
+            input.Setup(a => a.Visit(M.It.IsAny<Expression>())).Returns(afterMock);
 
             // act
-            var result = subject._CompileInnerExpression(new[] { new Mock(mockedExp, mockedVal, mockedVal.GetType()) }) as UnaryExpression;
+            var result = subject._CompileInnerExpression(input.Object) as UnaryExpression;
 
             // assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(subject.Expression, result);
-            Assert.IsInstanceOf<UnaryExpression>(result.Operand);
-            Assert.AreEqual(mockedVal.GetType(), (result.Operand as UnaryExpression).Type);
-            Assert.AreEqual(ExpressionType.Convert, result.Operand.NodeType);
+            Assert.AreEqual(afterMock, result.Operand);
 
             Assert.AreEqual(testExp.Method, result.Method);
             Assert.AreEqual(testExp.NodeType, result.NodeType);

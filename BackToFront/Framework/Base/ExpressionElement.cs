@@ -1,4 +1,5 @@
 ﻿using BackToFront.Expressions;
+using BackToFront.Expressions.Visitors;
 using BackToFront.Utilities;
 using System;
 using System.Collections.Generic;
@@ -33,15 +34,15 @@ namespace BackToFront.Framework.Base
 
         public CompiledMockedExpression<TEntity, TMember> Compile()
         {
-            return Compile(new Mocks());
+            return Compile(new SwapPropVisitor());
         }
 
-        public CompiledMockedExpression<TEntity, TMember> Compile(Mocks mocks)
+        public CompiledMockedExpression<TEntity, TMember> Compile(SwapPropVisitor mocks)
         {
             // add extra parameter for mock values
-            var parameters = Parameters.Concat(new[] { mocks.Parameter });
-            var compiled = Expression.Lambda<Func<TEntity, object[], TMember>>(Descriptor.Compile(mocks), parameters).Compile();
-            return new CompiledMockedExpression<TEntity, TMember>(compiled, mocks);
+            var parameters = Parameters.Concat(mocks.Parameters);
+            var compiled = Expression.Lambda<Func<TEntity, object[], IDictionary<string, object>, TMember>>(Descriptor.Compile(mocks), parameters).Compile();
+            return new CompiledMockedExpression<TEntity, TMember>(compiled, mocks.Mocks);
         }
 
         public override IEnumerable<AffectedMembers> AffectedMembers

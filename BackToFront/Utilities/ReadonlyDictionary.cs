@@ -8,7 +8,7 @@ namespace BackToFront.Utilities
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
-    public class ReadonlyDictionary<TKey, TValue>
+    public class ReadonlyDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
     {
         private readonly IDictionary<TKey, TValue> _inner;
         public ReadonlyDictionary(Dictionary<TKey, TValue> wrappedDictionary)
@@ -35,6 +35,16 @@ namespace BackToFront.Utilities
             {
                 return _inner[key];
             }
+        }
+
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return _inner.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((System.Collections.IEnumerable)_inner).GetEnumerator();
         }
     }
 }

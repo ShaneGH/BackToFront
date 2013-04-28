@@ -59,7 +59,7 @@ namespace BackToFront.Tests.UnitTests.Framework
             var subject = new M.Mock<RequirementFailed<TestClass>>(exp, null) { CallBase = true };
 
             // act
-            var result = subject.Object.ValidateEntity(new TestClass { Success = true }, new ValidationContext { Mocks = new Mocks() });
+            var result = subject.Object.ValidateEntity(new TestClass { Success = true }, new ValidationContext { ExpressionModifier = new BackToFront.Expressions.Visitors.SwapPropVisitor() });
 
             // assert
             Assert.IsNull(result);
@@ -72,7 +72,7 @@ namespace BackToFront.Tests.UnitTests.Framework
             Expression<Func<TestClass, bool>> exp = a => a.Success;
             var subject = new M.Mock<RequirementFailed<TestClass>>(exp, null) { CallBase = true };
             subject.Object.WithModelViolation("efrwsrtw4f");
-            var ctxt = new ValidationContext { Mocks = new Mocks() };
+            var ctxt = new ValidationContext { ExpressionModifier = new BackToFront.Expressions.Visitors.SwapPropVisitor() };
 
             // act
             var result = subject.Object.ValidateEntity(new TestClass { Success = false }, ctxt);
@@ -89,7 +89,7 @@ namespace BackToFront.Tests.UnitTests.Framework
         public void FullyValidateEntity_Test()
         {
             var rule = new Rule<object>();
-            var mocks = new ValidationContext { Mocks = new Mocks() };
+            var mocks = new ValidationContext { ExpressionModifier = new BackToFront.Expressions.Visitors.SwapPropVisitor() };
             var entity = new object();
             var violation = new M.Mock<IViolation>().Object;
             Expression<Func<object, bool>> exp = a => true;

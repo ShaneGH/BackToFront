@@ -34,7 +34,7 @@ namespace BackToFront.Tests.UnitTests.Framework.Base
             var actual = subject.Object.Compile();
 
             // assert
-            Assert.AreEqual(hello, actual.Invoke(new object()));
+            Assert.AreEqual(hello, actual.Invoke(new object(), null, null));
         }
 
         [Test]

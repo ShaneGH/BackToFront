@@ -12,6 +12,7 @@ using BackToFront.Extensions.IEnumerable;
 using BackToFront.Meta;
 using BackToFront.Enum;
 using System.Runtime.Serialization;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Expressions
 {
@@ -55,7 +56,7 @@ namespace BackToFront.Expressions
                 Arguments.All((a, b) => a.IsSameExpression(ex.Arguments.ElementAt(b)));
         }
 
-        protected override Expression CompileInnerExpression(Mocks mocks)
+        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
         {
             var arguments = Arguments.Select(a => a.Compile(mocks)).ToArray();
             var eval = Object.Compile(mocks);

@@ -10,6 +10,9 @@ using BackToFront.Utilities;
 using BackToFront.Tests.Utilities;
 using BackToFront.Expressions;
 using NUnit.Framework;
+using BackToFront.Expressions.Visitors;
+
+using M = Moq;
 
 namespace BackToFront.Tests.UnitTests.Expressions
 {
@@ -23,7 +26,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             {
             }
 
-            public Expression _CompileInnerExpression(IEnumerable<Mock> mocks)
+            public Expression _CompileInnerExpression(ISwapPropVisitor mocks)
             {
                 return CompileInnerExpression(mocks);
             }
@@ -58,12 +61,40 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // arange
             var subject = new TestClass(
                 Expression.Add(Expression.Constant(2), Expression.Constant(3)));
+            var input = new M.Mock<ISwapPropVisitor>();
+            input.Setup(a => a.ContainsNothing).Returns(true);
+            input.Setup(a => a.Visit(M.It.IsAny<Expression>())).Returns<Expression>(a => a);
 
             // act
-            var result = subject._CompileInnerExpression(Enumerable.Empty<Mock>());
+            var result = subject._CompileInnerExpression(input.Object);
 
             // assert
             Assert.AreEqual(subject.Expression, result);
+        }
+
+        [Test]
+        public void CompileInnerExpression_Test_withMocks()
+        {
+            // arange
+            var mockedVal = Expression.Constant(43534);
+            var lhs = Expression.Constant(4);
+            var mockedExp = Expression.Add(lhs, Expression.Constant(2));
+            var subject = new TestClass(mockedExp);
+            var input = new M.Mock<ISwapPropVisitor>();
+            input.Setup(a => a.ContainsNothing).Returns(false);
+            input.Setup(a => a.Visit(M.It.Is<Expression>(x => x == lhs))).Returns<Expression>(a => mockedVal);
+            input.Setup(a => a.Visit(M.It.Is<Expression>(x => x != lhs))).Returns<Expression>(a => a);
+
+            // act
+            var result = subject._CompileInnerExpression(input.Object) as BinaryExpression;
+
+            // assert
+            Assert.IsNotNull(result);
+            Assert.AreNotEqual(subject.Expression, result);
+            Assert.AreEqual(mockedVal, result.Left);
+            Assert.AreEqual(mockedExp.Right, result.Right);
+            Assert.AreEqual(mockedExp.NodeType, result.NodeType);
+            Assert.AreEqual(mockedExp.Method, result.Method);
         }
 
         [Test]
@@ -84,30 +115,6 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
             // assert
             Assert.IsTrue(AreKindOfEqual(expected, actual, (a, b) => a.Equals(b)));
-        }
-
-        [Test]
-        public void CompileInnerExpression_Test_withMocks()
-        {
-            const int mockedVal = 99;
-
-            // arange
-            var mockedExp = Expression.Add(Expression.Constant(4), Expression.Constant(2));
-            var testExp = Expression.Add(mockedExp, Expression.Constant(3));
-            var subject = new TestClass(testExp);
-
-            // act
-            var result = subject._CompileInnerExpression(new[] { new Mock(mockedExp, mockedVal, mockedVal.GetType()) }) as BinaryExpression;
-
-            // assert
-            Assert.IsNotNull(result);
-            Assert.AreNotEqual(subject.Expression, result);
-            Assert.IsInstanceOf<UnaryExpression>(result.Left);
-            Assert.AreEqual(mockedVal.GetType(), (result.Left as UnaryExpression).Type);
-            Assert.AreEqual(ExpressionType.Convert, result.Left.NodeType);
-            Assert.AreEqual(testExp.Right, result.Right);
-            Assert.AreEqual(testExp.NodeType, result.NodeType);
-            Assert.AreEqual(testExp.Method, result.Method);
         }
 
         [Test]

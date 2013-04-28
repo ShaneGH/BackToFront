@@ -9,6 +9,7 @@ using System.Reflection;
 using BackToFront.Meta;
 using BackToFront.Enum;
 using System.Runtime.Serialization;
+using BackToFront.Expressions.Visitors;
 
 
 namespace BackToFront.Expressions
@@ -53,7 +54,7 @@ namespace BackToFront.Expressions
                 Right.IsSameExpression(ex.Right);                
         }
 
-        protected override Expression CompileInnerExpression(Mocks mocks)
+        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
         {
             Expression lhs = Left.Compile(mocks);
             Expression rhs = Right.Compile(mocks);

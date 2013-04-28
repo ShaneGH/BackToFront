@@ -84,6 +84,8 @@
     </Compile>
     <Compile Include="CSharp\IntegrationTests\Children.cs" />
     <Compile Include="CSharp\IntegrationTests\Inheritance.cs" />
+    <Compile Include="CSharp\UnitTests\Expressions\Visitors\SwapPropVisitor_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Utils\Dependencies_Tests.cs" />
     <Compile Include="Javascript\JavascriptTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />

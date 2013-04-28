@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BackToFront.Validation;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework.NonGeneric
 {
@@ -34,21 +35,21 @@ namespace BackToFront.Framework.NonGeneric
         {
             if (!CachedResults.ContainsKey(useServiceContainerDI))
             {
-                Mocks mocks = null;
+                Dependencies dependencies = null;
                 if (useServiceContainerDI)
                 {
                     var di = ServiceContainer();
                     if (di == null)
                         throw new InvalidOperationException("##");
 
-                    mocks = new Mocks(Rule.Dependencies.Select(d => di.GetDependency(d.DependencyName, d.DependencyType, Rule).ToMock()));
+                    dependencies = new Dependencies(Rule.Dependencies.Select(d => di.GetDependency(d.DependencyName, d.DependencyType, Rule)));
                 }
                 else
                 {
-                    mocks = new Mocks();
+                    dependencies = new Dependencies(Enumerable.Empty<RuleDependency>());
                 }
 
-                CachedResults[useServiceContainerDI] = Rule.FullyValidateEntity(ValidationSubject, mocks).ToArray();
+                CachedResults[useServiceContainerDI] = Rule.FullyValidateEntity(ValidationSubject, new SwapPropVisitor(new Mocks(), dependencies)).ToArray();
             }
 
             return CachedResults[useServiceContainerDI];

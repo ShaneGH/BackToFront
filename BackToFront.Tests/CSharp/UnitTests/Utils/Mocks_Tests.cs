@@ -19,25 +19,6 @@ namespace BackToFront.Tests.UnitTests.Utils
         }
 
         [Test]
-        public void AsValueArray_Test()
-        {
-            const int val1 = 3;
-            const int val2 = 4;
-
-            // arrange
-            Expression<Func<TestClass, int>> exp = a => a.Prop;
-            var subject = new Mocks(new[] { new Mock(exp.Body, val1, typeof(bool)), new Mock(exp.Body, val2, typeof(bool)) });
-
-            // act
-            var values = subject.AsValueArray;
-
-            // assert
-            Assert.AreEqual(2, values.Count());
-            Assert.True(values.Contains(val1));
-            Assert.True(values.Contains(val2));
-        }
-
-        [Test]
         public void ParameterForMock_test_creation()
         {
             const int testElementAt = 1;

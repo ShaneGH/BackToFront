@@ -1,4 +1,5 @@
 ﻿using BackToFront.Expressions;
+using BackToFront.Expressions.Visitors;
 using BackToFront.Extensions.Reflection;
 using BackToFront.Utilities;
 using Moq.Protected;
@@ -41,7 +42,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
             public bool IsSame { get; set; }
 
-            protected override Expression CompileInnerExpression(Mocks mocks)
+            protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
             {
                 return CompileInnerExpressionExpression;
             }
@@ -128,53 +129,52 @@ namespace BackToFront.Tests.UnitTests.Expressions
         }
 
         [Test]
-        public void Compile_Test_BlankArgs()
+        public void Compile_Test_Args_NoMocks()
         {
             // arrange
             var subject = new AccessorClass();
+            var input = new M.Mock<ISwapPropVisitor>();
+            input.Setup(a => a.ContainsNothing).Returns(true);
 
             // act
-            var result2 = subject.Compile(Enumerable.Empty<Mock>().ToArray());
+            var result = subject.Compile(input.Object);
 
             // assert
-            Assert.AreEqual(AccessorClass.WExpression, result2);
+            Assert.AreEqual(AccessorClass.WExpression, result);
         }
 
         [Test]
         public void Compile_Test_Mocked()
         {
             // arrange
-            var subject = new AccessorClass();
-            var mock = new Mock(expression: Expression.Constant(9), value: null, valueType: typeof(object));
-            var mocks = new Mocks(new[] { mock });
+            var subject = new M.Mock<ExpressionWrapperBase> { CallBase = true };
+            var mockVal = Expression.Constant(new object());
+            var input = new M.Mock<ISwapPropVisitor>();
+            input.Setup(a => a.ContainsNothing).Returns(false);
+            input.Setup(a => a.Visit(M.It.IsAny<Expression>())).Returns<Expression>(a => mockVal);
 
             // act
-            var result = subject.Compile(mocks);
+            var result = subject.Object.Compile(input.Object);
 
             // assert
-            Assert.IsInstanceOf<UnaryExpression>(result);
-            Assert.AreEqual(ExpressionType.Convert, result.NodeType);
-            Assert.AreEqual(typeof(object), result.Type);
-
-            Assert.IsInstanceOf<BinaryExpression>((result as UnaryExpression).Operand);
-            Assert.AreEqual(ExpressionType.ArrayIndex, (result as UnaryExpression).Operand.NodeType);
-
-            // this is all we really want to test here, the rest is superflous to need
-            Assert.AreEqual(mocks.Parameter, ((result as UnaryExpression).Operand as BinaryExpression).Left);
+            Assert.AreEqual(mockVal, result);
         }
 
         [Test]
         public void Compile_Test_With_Mocks_Not_Mocked()
         {
             // arrange
-            var subject = new AccessorClass() { IsSame = false };
-            var mock = new Mock(expression: Expression.Constant(4), value: null, valueType: typeof(object));
+            var exp = Expression.Constant(229);
+            var subject = new M.Mock<ExpressionWrapperBase> { CallBase = true };
+            subject.Setup(a => a.WrappedExpression).Returns(exp);
+            var input = new M.Mock<ISwapPropVisitor>();
+            input.Setup(a => a.ContainsNothing).Returns(true);
 
             // act
-            var result = subject.Compile(new[] { mock });
+            var result = subject.Object.Compile(input.Object);
 
             // assert
-            Assert.AreEqual(AccessorClass.CompileInnerExpressionExpression, result);
+            Assert.AreEqual(exp, result);
         }
 
         [Test]

@@ -1,4 +1,5 @@
 ﻿using BackToFront.Expressions;
+using BackToFront.Expressions.Visitors;
 using BackToFront.Utilities;
 using NUnit.Framework;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using M = Moq;
 
 namespace BackToFront.Tests.UnitTests.Expressions
 {
@@ -19,7 +21,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             {
             }
 
-            public Expression _CompileInnerExpression(IEnumerable<Mock> mocks)
+            public Expression _CompileInnerExpression(BackToFront.Expressions.Visitors.ISwapPropVisitor mocks)
             {
                 return CompileInnerExpression(mocks);
             }
@@ -68,9 +70,12 @@ namespace BackToFront.Tests.UnitTests.Expressions
             // arange
             var member = Expression.Call(Expression.Parameter(typeof(object)), typeof(object).GetMethod("ToString"));
             var subject = new TestSubjectWrapper(member);
+            var input = new M.Mock<ISwapPropVisitor>();
+            input.Setup(a => a.ContainsNothing).Returns(true);
+            input.Setup(a => a.Visit(M.It.IsAny<Expression>())).Returns<Expression>(a => a);
 
             // act
-            var result = subject._CompileInnerExpression(Enumerable.Empty<Mock>());
+            var result = subject._CompileInnerExpression(input.Object);
 
             // assert
             Assert.AreEqual(subject.Expression, result);
@@ -80,20 +85,22 @@ namespace BackToFront.Tests.UnitTests.Expressions
         public void CompileInnerExpression_Test_withMocks()
         {
             // arange
+            var afterMock = Expression.Constant(55);
             var mockedVal = new object();
-            var mockedExp = Expression.Parameter(typeof(object));
-            var testExp = Expression.Call(mockedExp, typeof(object).GetMethod("ToString"));
+            var beforeMock = Expression.Parameter(typeof(object));
+            var testExp = Expression.Call(beforeMock, typeof(object).GetMethod("ToString"));
             var subject = new TestSubjectWrapper(testExp);
+            var input = new M.Mock<ISwapPropVisitor>();
+            input.Setup(a => a.ContainsNothing).Returns(false);
+            input.Setup(a => a.Visit(M.It.Is<Expression>(b => b ==beforeMock))).Returns(afterMock);
 
             // act
-            var result = subject._CompileInnerExpression(new[] { new Mock(mockedExp, mockedVal, mockedVal.GetType()) }) as MethodCallExpression;
+            var result = subject._CompileInnerExpression(input.Object) as MethodCallExpression;
 
             // assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(subject.Expression, result);
-            Assert.IsInstanceOf<UnaryExpression>(result.Object);
-            Assert.AreEqual(mockedVal.GetType(), (result.Object as UnaryExpression).Type);
-            Assert.AreEqual(ExpressionType.Convert, result.Object.NodeType);
+            Assert.AreEqual(afterMock, result.Object);
 
             Assert.AreEqual(testExp.Method, result.Method);
             Assert.AreEqual(testExp.NodeType, result.NodeType);

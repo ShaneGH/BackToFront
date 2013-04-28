@@ -7,6 +7,7 @@ using BackToFront.Meta;
 using BackToFront.Utilities;
 using System.Runtime.Serialization;
 using BackToFront.Dependency;
+using BackToFront.Expressions.Visitors;
 
 
 namespace BackToFront.Expressions
@@ -31,7 +32,7 @@ namespace BackToFront.Expressions
             return Expression.Value.Equals(ex.Value);                
         }
 
-        protected override Expression CompileInnerExpression(Mocks mocks)
+        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
         {
             return Expression;
         }

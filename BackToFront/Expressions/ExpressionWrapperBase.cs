@@ -11,6 +11,7 @@ using BackToFront.Utilities;
 using BackToFront.Extensions.Reflection;
 using BackToFront.Meta;
 using BackToFront.Dependency;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Expressions
 {
@@ -43,7 +44,7 @@ namespace BackToFront.Expressions
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
-        protected abstract Expression CompileInnerExpression(Mocks mocks);
+        protected abstract Expression CompileInnerExpression(ISwapPropVisitor mocks);
         public abstract Expression WrappedExpression { get; }
         protected abstract IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter);
 
@@ -65,11 +66,6 @@ namespace BackToFront.Expressions
 
         protected abstract IEnumerable<ParameterExpression> _UnorderedParameters { get; }
 
-        protected Expression CompileInnerExpression(IEnumerable<Mock> mocks)
-        {
-            return CompileInnerExpression(new Mocks(mocks));
-        }
-
         public virtual bool IsSameExpression(Expression expression)
         {
             return expression != null && expression.NodeType == WrappedExpression.NodeType;
@@ -80,17 +76,12 @@ namespace BackToFront.Expressions
             return WrappedExpression;
         }
 
-        public Expression Compile(params Mock[] mocks)
+        public Expression Compile(ISwapPropVisitor mocks)
         {
-            return Compile(new Mocks(mocks));
-        }
-
-        public Expression Compile(Mocks mocks)
-        {
-            if (mocks == null || mocks.Count() == 0)
+            if (mocks.ContainsNothing)
                 return Compile();
 
-            var val = new Visitors.MockVisitor(mocks).Visit(WrappedExpression);
+            var val = mocks.Visit(WrappedExpression);
             return val != WrappedExpression ? val : CompileInnerExpression(mocks);
         }
 

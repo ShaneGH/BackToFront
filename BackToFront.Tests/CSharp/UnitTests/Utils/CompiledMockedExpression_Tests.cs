@@ -23,11 +23,11 @@ namespace BackToFront.Tests.UnitTests.Utils
         {
             // arrange
             Expression<Func<TestClass, int>> exp = a => a.Prop;
-            var subject = new CompiledMockedExpression<TestClass, int>((a, b) => a.Prop, new Mocks());
+            var subject = new CompiledMockedExpression<TestClass, int>((a, b, c) => a.Prop, new Mocks());
             var test = new TestClass { Prop = 54 };
 
             // act
-            var result = subject.Invoke(test);
+            var result = subject.Invoke(test, null, null);
 
             // assert
             Assert.AreEqual(test.Prop, result);
@@ -39,11 +39,11 @@ namespace BackToFront.Tests.UnitTests.Utils
             // arrange
             Expression<Func<TestClass, int>> exp = a => a.Prop;
             var mocks = new Mocks(new[] { new Mock(exp.Body, null, typeof(int)), new Mock(exp.Body, null, typeof(int)) });
-            var subject = new CompiledMockedExpression<TestClass, int>((a, b) => a.Prop, mocks);
+            var subject = new CompiledMockedExpression<TestClass, int>((a, b, c) => a.Prop, mocks);
             var test = new TestClass { Prop = 54 };
 
             // act
-            var result = subject.Invoke(test, null, null);
+            var result = subject.Invoke(test, new object[]{ 5, 5 }, null);
 
             // assert
             Assert.AreEqual(test.Prop, result);
@@ -56,12 +56,12 @@ namespace BackToFront.Tests.UnitTests.Utils
             // arrange
             Expression<Func<TestClass, int>> exp = a => a.Prop;
             var mocks = new Mocks(new[] { new Mock(exp.Body, null, typeof(int)), new Mock(exp.Body, null, typeof(int)) });
-            var subject = new CompiledMockedExpression<TestClass, int>((a, b) => a.Prop, mocks);
+            var subject = new CompiledMockedExpression<TestClass, int>((a, b, c) => a.Prop, mocks);
             var test = new TestClass { Prop = 54 };
 
             // act
             // assert
-            var result = subject.Invoke(test, null, null, null, null);
+            var result = subject.Invoke(test, new object[] { 5, 5, 5 }, null);
         }
     }
 }

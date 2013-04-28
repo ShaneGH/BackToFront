@@ -1,15 +1,12 @@
-﻿using System;
+﻿using BackToFront.Expressions;
+using BackToFront.Expressions.Visitors;
+using BackToFront.Utilities;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-
-using BackToFront.Utilities;
-using BackToFront.Tests.Utilities;
-using BackToFront.Expressions;
-using NUnit.Framework;
+using M = Moq;
 
 namespace BackToFront.Tests.UnitTests.Expressions
 {
@@ -23,7 +20,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             {
             }
 
-            public Expression _CompileInnerExpression(IEnumerable<Mock> mocks)
+            public Expression _CompileInnerExpression(ISwapPropVisitor mocks)
             {
                 return CompileInnerExpression(mocks);
             }
@@ -45,9 +42,6 @@ namespace BackToFront.Tests.UnitTests.Expressions
 
             // act
             // assert
-            //Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as ConstantExpressionWrapper));
-            //Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as ConstantExpressionWrapper));
-            //Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func3) as ConstantExpressionWrapper));
             Assert.IsTrue(subject.IsSameExpression(func1.Body));
             Assert.IsTrue(subject.IsSameExpression(func2.Body));
             Assert.IsFalse(subject.IsSameExpression(func3.Body));
@@ -60,7 +54,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             var subject = new TestClass(Expression.Constant(4));
 
             // act
-            var result = subject._CompileInnerExpression(Enumerable.Empty<Mock>());
+            var result = subject._CompileInnerExpression(new M.Mock<ISwapPropVisitor>().Object);
 
             // assert
             Assert.AreEqual(subject.Expression, result);

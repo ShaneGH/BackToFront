@@ -1,4 +1,5 @@
-﻿using BackToFront.Framework.Base;
+﻿using BackToFront.Expressions.Visitors;
+using BackToFront.Framework.Base;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 using BackToFront.Utilities;
@@ -25,9 +26,9 @@ namespace BackToFront.Framework
             }
         }
 
-        public bool ConditionIsTrue(TEntity subject, Utilities.Mocks mocks)
+        public bool ConditionIsTrue(TEntity subject, SwapPropVisitor mocks)
         {
-            return Compile(mocks).Invoke(subject, mocks.AsValueArray);
+            return Compile(mocks).Invoke(subject, mocks.MockValues, mocks.DependencyValues);
         }
 
         RequirementFailed<TEntity> _RequirementFailed;

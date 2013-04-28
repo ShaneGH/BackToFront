@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using BackToFront.Validation;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Logic
 {
@@ -57,13 +58,13 @@ namespace BackToFront.Logic
                 if (_FirstViolation == null)
                 {
                     var skip = false;
-                    RunValidation((rule, mocks) =>
+                    RunValidation((rule, mocks, dependencies) =>
                     {
                         // don't run all rules if a violation is found
                         if (skip)
                             return false;
 
-                        _FirstViolation = rule.ValidateEntity(Entity, mocks);
+                        _FirstViolation = rule.ValidateEntity(Entity, new SwapPropVisitor(mocks, dependencies));
                         if (_FirstViolation != null)
                         {
                             skip = true;
@@ -94,9 +95,9 @@ namespace BackToFront.Logic
                 if (_AllViolations == null)
                 {
                     var violations = new List<IViolation>();
-                    RunValidation((rule, mocks) => 
+                    RunValidation((rule, mocks, dependencies) => 
                     {
-                        var v = rule.FullyValidateEntity(Entity, mocks);
+                        var v = rule.FullyValidateEntity(Entity, new SwapPropVisitor(mocks, dependencies));
                         violations.AddRange(v);
                         return !v.Any();
                     });
@@ -126,7 +127,7 @@ namespace BackToFront.Logic
         /// Orders rules, mocks and dependencies and delivers them to a function (for vaslidation)
         /// </summary>
         /// <param name="action">Validation function. Returns </param>
-        private void RunValidation(Func<INonGenericRule, Mocks, bool> action)
+        private void RunValidation(Func<INonGenericRule, Mocks, Dependencies, bool> action)
         {
             // segregate from global object
             var mocks = Mocks.ToArray();
@@ -149,10 +150,7 @@ namespace BackToFront.Logic
             rulesRepository.Aggregate().Each(rule =>
             {
                 ValidateDependencies(rule.Dependencies, ref dependencies);
-                var newMocks = mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet).ToList();
-                newMocks.AddRange(dependencies.Select(d => d.ToMock()));
-
-                success &= action(rule, new Mocks(newMocks));
+                success &= action(rule, new Mocks(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet)), new Dependencies(dependencies));
             });
 
             // success, persist mock values

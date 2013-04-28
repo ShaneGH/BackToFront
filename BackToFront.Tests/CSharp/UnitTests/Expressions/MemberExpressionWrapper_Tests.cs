@@ -10,6 +10,8 @@ using BackToFront.Tests.Utilities;
 using BackToFront.Expressions;
 using NUnit.Framework;
 using System.Collections.ObjectModel;
+using BackToFront.Expressions.Visitors;
+using BackToFront.Dependency;
 
 namespace BackToFront.Tests.UnitTests.Expressions
 {
@@ -23,7 +25,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             {
             }
 
-            public Expression _CompileInnerExpression(IEnumerable<Mock> mocks)
+            public Expression _CompileInnerExpression(ISwapPropVisitor mocks)
             {
                 return CompileInnerExpression(mocks);
             }
@@ -69,7 +71,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             var subject = new TestSubjectWrapper(member);
 
             // act
-            var result = subject._CompileInnerExpression(Enumerable.Empty<Mock>());
+            var result = subject._CompileInnerExpression(new SwapPropVisitor());
 
             // assert
             Assert.AreEqual(subject.Expression, result);
@@ -85,7 +87,7 @@ namespace BackToFront.Tests.UnitTests.Expressions
             var subject = new TestSubjectWrapper(testExp);
 
             // act
-            var result = subject._CompileInnerExpression(new[] { new Mock(mockedExp, mockedVal, mockedVal.GetType()) }) as MemberExpression;
+            var result = subject._CompileInnerExpression(new SwapPropVisitor(new Mocks(new[] { new Mock(mockedExp, mockedVal, mockedVal.GetType()) }), new Dependencies())) as MemberExpression;
 
             // assert
             Assert.IsNotNull(result);

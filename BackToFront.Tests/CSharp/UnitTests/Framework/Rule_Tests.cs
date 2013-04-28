@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using U = BackToFront.Utilities;
 using BackToFront.Validation;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Tests.UnitTests.Framework
 {
@@ -22,7 +23,7 @@ namespace BackToFront.Tests.UnitTests.Framework
 
             public IEnumerable<PathElement<TEntity>> _NextPathElements()
             {
-                return NextPathElements(null, new U.ValidationContext { Mocks = new U.Mocks(new U.Mock[0]) });
+                return NextPathElements(null, new U.ValidationContext { ExpressionModifier = new SwapPropVisitor() });
             }
         }
 
@@ -90,7 +91,7 @@ namespace BackToFront.Tests.UnitTests.Framework
             var pe = subject._NextPathElements();
 
             // assert
-            Assert.IsTrue(((Operator<object>)result).ConditionIsTrue(null, new U.Mocks()));
+            Assert.IsTrue(((Operator<object>)result).ConditionIsTrue(null, new SwapPropVisitor()));
             Assert.AreEqual(1, pe.Count(a => a != null));
             Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last());
         }
@@ -102,8 +103,8 @@ namespace BackToFront.Tests.UnitTests.Framework
             var subject = new Mock<TestClass<object>>();
             var violation = new TestViolation();
             var input1 = new object();
-            var input2 = new  U.Mocks();
-            subject.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => b.Mocks == input2))).Returns(violation);
+            var input2 = new SwapPropVisitor();
+            subject.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2))).Returns(violation);
 
             // act
             var result = ((IValidate)subject.Object).ValidateEntity(input1, input2);
@@ -119,8 +120,8 @@ namespace BackToFront.Tests.UnitTests.Framework
             var subject = new Mock<TestClass<object>>();
             var violation = new TestViolation();
             var input1 = new object();
-            var input2 = new U.Mocks();
-            subject.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<U.ValidationContext>(b => b.Mocks == input2)))
+            var input2 = new SwapPropVisitor();
+            subject.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2)))
                 .Callback<object, IList<IViolation>, U.ValidationContext>((a, b, c) => b.Add(violation));
 
             // act
