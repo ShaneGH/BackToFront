@@ -32,6 +32,10 @@ namespace BackToFront.Framework.Base
         public abstract IEnumerable<AffectedMembers> AffectedMembers { get; }
         public abstract bool PropertyRequirement { get; }
 
+        public static Action<TEntity, ValidationContextX> DoNothing = (a, b) => { };
+
+        public abstract IEnumerable<PathElement<TEntity>> AllPossiblePaths { get; }
+
         public PathElement<TEntity> NextOption(TEntity subject, ValidationContext context)
         {
             var options = NextPathElements(subject, context).Where(a => a != null).ToArray();
@@ -97,12 +101,6 @@ namespace BackToFront.Framework.Base
             };
         }
 
-        // TODO: make abstract
-        protected virtual Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
-        {
-            throw new NotImplementedException();
-        }
-
-        //protected abstract Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor);
+        protected abstract Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor);
     }
 }

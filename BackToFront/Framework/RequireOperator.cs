@@ -24,13 +24,16 @@ namespace BackToFront.Framework
 
         public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
-            return NextPathElements();
+            return AllPossiblePaths;
         }
-
-        public IEnumerable<PathElement<TEntity>> NextPathElements()
+        
+        public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
-            yield return _Then;
-            yield return _RequireThat;
+            get
+            {
+                yield return _Then;
+                yield return _RequireThat;
+            }
         }
 
         private RequirementFailed<TEntity> _RequireThat = null;
@@ -61,8 +64,25 @@ namespace BackToFront.Framework
         {
             get
             {
-                return _Meta ?? (_Meta = new PathElementMeta(NextPathElements().Where(a => a != null).Select(a => a.Meta), Descriptor.Meta, PathElementType.RequireOperator));
+                return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(a => a.Meta), Descriptor.Meta, PathElementType.RequireOperator));
             }
+        }
+
+        protected override Action<TEntity, ValidationContextX> _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        {
+            var next = AllPossiblePaths.SingleOrDefault(a => a != null);
+            if (next != null)
+            {
+                var t = Compile(visitor);
+                var v = next.NewCompile(visitor);
+                return (a, b) =>
+                {
+                    if (t.Invoke(a, b.Mocks, b.Dependencies))
+                        v(a, b);
+                };
+            }
+            else
+                return DoNothing;
         }
     }
 }

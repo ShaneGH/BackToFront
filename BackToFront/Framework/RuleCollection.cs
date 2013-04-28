@@ -52,6 +52,13 @@ namespace BackToFront.Framework
             _Rules.Add(rule);
         }
 
+        public Action<TEntity, ValidationContextX> NewCompile(SwapPropVisitor visitor)
+        {
+            var compiled = Rules.Select(r => r.NewCompile(visitor));
+
+            return (a, b) => compiled.Each(c => c(a, b));
+        }
+
         public IViolation ValidateEntity(TEntity subject, ValidationContext context)
         {
             IViolation violation;

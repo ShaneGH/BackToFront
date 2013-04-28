@@ -113,6 +113,7 @@
     <Compile Include="Utilities\ValidationContext.cs" />
     <Compile Include="Validation\INonGenericRule.cs" />
     <Compile Include="Validation\IRuleValidation.cs" />
+    <Compile Include="Validation\_NewCompile.cs" />
     <Compile Include="_\IRule.cs" />
     <Compile Include="_\Rules.cs" />
     <Compile Include="Logic\IBeginSubRule.cs" />

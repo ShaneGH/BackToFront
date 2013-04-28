@@ -15,8 +15,8 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
     {
         public class TestPass1
         {
-            public static TestViolation Violation1 = new TestViolation("Violation");
-            public static TestViolation Violation2 = new TestViolation("Violation");
+            public static TestViolation Violation1 = new TestViolation("Violation1");
+            public static TestViolation Violation2 = new TestViolation("Violation2");
 
             static TestPass1()
             {
@@ -76,12 +76,12 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
             };
 
             // act
-            var violation = subject.Validate().AllViolations;
+            var violation1 = subject.Validate().AllViolations;
 
             // assert
-            Assert.AreEqual(2, violation.Count());
-            Assert.AreEqual(TestPass1.Violation1, violation.ElementAt(0));
-            Assert.AreEqual(TestPass1.Violation2, violation.ElementAt(1));
+            Assert.AreEqual(2, violation1.Count());
+            Assert.AreEqual(TestPass1.Violation1, violation1.ElementAt(0));
+            Assert.AreEqual(TestPass1.Violation2, violation1.ElementAt(1));
         }
 
         [Test]

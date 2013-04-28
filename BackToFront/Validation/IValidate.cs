@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using BackToFront.Meta;
 using BackToFront.Dependency;
 using BackToFront.Expressions.Visitors;
+using System;
+using BackToFront.Framework;
 
 namespace BackToFront.Validation
 {
@@ -61,5 +63,8 @@ namespace BackToFront.Validation
         /// Metadata on the element to validate
         /// </summary>
         PathElementMeta Meta { get; }
+
+
+        Action<TEntity, ValidationContextX> NewCompile(SwapPropVisitor visitor);
     }
 }

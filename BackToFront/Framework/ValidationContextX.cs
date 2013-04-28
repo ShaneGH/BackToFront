@@ -11,10 +11,14 @@ namespace BackToFront.Framework
     {
         public readonly bool BreakOnFirstError;
         public readonly IList<IViolation> Violations = new List<IViolation>();
+        public readonly object[] Mocks;
+        public readonly IDictionary<string, object> Dependencies;
 
-        public ValidationContextX(bool breakOnFirstError)
+        public ValidationContextX(bool breakOnFirstError, object[] mocks, IDictionary<string, object> dependencies)
         {
             BreakOnFirstError = breakOnFirstError;
+            Mocks = mocks;
+            Dependencies = dependencies;
         }
 
         public bool IsViolated

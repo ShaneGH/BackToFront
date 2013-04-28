@@ -11,15 +11,27 @@ using NUnit.Framework;
 using BackToFront.Framework;
 using BackToFront.Tests.Utilities;
 using BackToFront.Expressions.Visitors;
+using BackToFront.Utilities;
 namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
     [TestFixture]
     public class ThrowViolationTests : TestBase
     {
+        public class Violation : IViolation
+        {
+            public string UserMessage
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public object ViolatedEntity { get; set; }
+            public IEnumerable<MemberChainItem> Violated { get; set; }
+        }
+
         public class Accessor : ThrowViolation<object>
         {
-            public Accessor(Func<object, IViolation> violation)
-                : base(violation, null) { }
+            public Accessor(Func<object, IViolation> violation, IEnumerable<MemberChainItem> items)
+                : base(violation, null, items) { }
 
             public Action<object, ValidationContextX> __NewCompile(SwapPropVisitor visitor)
             {
@@ -41,7 +53,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         {
             // global arrange
             var violation = new TestClass("Hello");
-            var subject = new ThrowViolation<object>(a => { violation.Property = a; return violation; }, null);
+            var subject = new ThrowViolation<object>(a => { violation.Property = a; return violation; }, null, null);
 
             // act
             var item = new object();
@@ -58,7 +70,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         {
             // arrange
             var violation = new TestClass("Hello");
-            var subject = new ThrowViolation<object>(a => { violation.Property = a; return violation; }, null);
+            var subject = new ThrowViolation<object>(a => { violation.Property = a; return violation; }, null, null);
             List<IViolation> list = new List<IViolation>();
 
             // act
@@ -76,17 +88,24 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void _NewCompileTest()
         {
             // arrange
-            var violation = new M.Mock<IViolation>();
-            var subject = new Accessor(a => violation.Object);
+            var item = new object();
+            var violation = new Violation();
+
+            MemberChainItem mci = new MemberChainItem(typeof(int));
+            var subject = new Accessor(a => violation, new []{ mci });
             SwapPropVisitor visitor = new SwapPropVisitor();
-            var ctxt = new ValidationContextX(true);
+            var ctxt = new ValidationContextX(true, null, null);
 
             // act
-            subject.__NewCompile(new SwapPropVisitor())(null, ctxt);
+            subject.__NewCompile(new SwapPropVisitor())(item, ctxt);
 
             // assert
             Assert.AreEqual(1, ctxt.Violations.Count());
-            Assert.AreEqual(violation.Object, ctxt.Violations.First());
+            Assert.AreEqual(violation, ctxt.Violations.First());
+
+            Assert.AreEqual(item, violation.ViolatedEntity);
+            Assert.AreEqual(1, violation.Violated.Count());
+            Assert.AreEqual(mci, violation.Violated.First());
         }
     }
 }

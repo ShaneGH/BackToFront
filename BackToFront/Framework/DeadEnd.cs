@@ -49,5 +49,15 @@ namespace BackToFront.Framework
                 return _Meta ?? (_Meta = new PathElementMeta(Enumerable.Empty<PathElementMeta>(), null, PathElementType.DeadEnd));
             }
         }
+
+        public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
+        {
+            get { yield break; }
+        }
+
+        protected override System.Action<TEntity, ValidationContextX> _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        {
+            return DoNothing;
+        }
     }
 }

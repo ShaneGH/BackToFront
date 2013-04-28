@@ -30,14 +30,17 @@ namespace BackToFront.Framework
             _subRules.AddRule(subRule);
         }
 
-        public IEnumerable<PathElement<TEntity>> NextPathElements()
+        public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
-            yield break;
+            get
+            {
+                yield break;
+            }
         }
 
         public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
-            return NextPathElements();
+            return AllPossiblePaths;
         }
 
         public IConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property)
@@ -45,6 +48,11 @@ namespace BackToFront.Framework
             var subRule = new Rule<TEntity>(ParentRule);
             _subRules.AddRule(subRule);
             return subRule.If(property);
+        }
+
+        protected override Action<TEntity, ValidationContextX> _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        {
+            return _subRules.NewCompile(visitor);
         }
 
         public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)

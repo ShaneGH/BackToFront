@@ -127,7 +127,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             var subject = new Accessor(a => a.Success);
             subject.WithModelViolation(a => violation.Object);
             var item = new TestClass { Success = success };
-            var ctxt = new ValidationContextX(true);
+            var ctxt = new ValidationContextX(true, null, null);
 
             // act
             subject.__NewCompile(new SwapPropVisitor())(item, ctxt);
@@ -142,6 +142,20 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
                 Assert.AreEqual(1, ctxt.Violations.Count());
                 Assert.AreEqual(violation.Object, ctxt.Violations.First());
             }
+        }
+
+        [Test]
+        public void _NewCompileTest_NoNextElement()
+        {
+            // arrange
+            var violation = new M.Mock<IViolation>();
+            var subject = new Accessor(a => a.Success);
+
+            // act
+            var result = subject.__NewCompile(new SwapPropVisitor());
+
+            // assert
+            Assert.AreEqual(PathElement<TestClass>.DoNothing, result);
         }
     }
 }

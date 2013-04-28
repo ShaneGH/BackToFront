@@ -45,5 +45,18 @@ namespace BackToFront.Tests.Utilities
         {
             get { throw new NotImplementedException(); }
         }
+
+        public override IEnumerable<PathElement<object>> AllPossiblePaths
+        {
+            get
+            {
+                yield break;
+            }
+        }
+
+        protected override Action<object, Framework.ValidationContextX> _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

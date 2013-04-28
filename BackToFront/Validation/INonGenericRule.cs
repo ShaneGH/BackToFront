@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BackToFront.Dependency;
+﻿using BackToFront.Dependency;
+using BackToFront.Expressions.Visitors;
+using BackToFront.Framework;
 using BackToFront.Framework.Base;
+using System;
+using System.Collections.Generic;
 
 namespace BackToFront.Validation
 {
@@ -17,5 +16,7 @@ namespace BackToFront.Validation
         bool PropertyRequirement { get; }
 
         Meta.PathElementMeta Meta { get; }
+        
+        Action<object, ValidationContextX> NewCompile(SwapPropVisitor visitor);
     }
 }

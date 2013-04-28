@@ -251,7 +251,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
             subject.Protected().Setup<Action<object, ValidationContextX>>("_NewCompile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns((a, b) => Assert.Pass());
 
             // act
-            subject.Object.NewCompile(visitor)(new object(), new ValidationContextX(false));
+            subject.Object.NewCompile(visitor)(new object(), new ValidationContextX(false, null, null));
 
             // assert
             Assert.Fail("Did not hit pass statement");
@@ -264,7 +264,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
             var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
             SwapPropVisitor visitor = new SwapPropVisitor();
             subject.Protected().Setup<Action<object, ValidationContextX>>("_NewCompile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns((a, b) => Assert.Fail());
-            var ctxt = new ValidationContextX(true);
+            var ctxt = new ValidationContextX(true, null, null);
             ctxt.Violations.Add(null);
 
             // act

@@ -57,47 +57,33 @@ namespace BackToFront.Logic
             {
                 if (_FirstViolation == null)
                 {
-                    var skip = false;
-                    RunValidation((rule, mocks, dependencies) =>
+                    if (_AllViolations != null)
                     {
-                        // don't run all rules if a violation is found
-                        if (skip)
-                            return false;
-
-                        _FirstViolation = rule.ValidateEntity(Entity, new SwapPropVisitor(mocks, dependencies));
-                        if (_FirstViolation != null)
-                        {
-                            skip = true;
-                            return false;
-                        }
-
-                        return true;
-                    });
-
-                    foreach (var child in ValidateChildMembers)
-                    {
-                        if (_FirstViolation != null)
-                            break;
-
-                        _FirstViolation = child().FirstViolation;
+                        _FirstViolation = _AllViolations.FirstOrDefault();
                     }
+                    else
+                    {
+                        ValidationContextX ctxt = null;
+                        SwapPropVisitor visitor = null;
+                        RunValidation(v =>
+                        {
+                            visitor = v;
+                            ctxt = new ValidationContextX(false, visitor.MockValues, visitor.DependencyValues);
+                        }, rule =>
+                        {
+                            rule.NewCompile(visitor)(Entity, ctxt);
+                            _FirstViolation = ctxt.Violations.FirstOrDefault();
+                            return _FirstViolation == null;
+                        });
 
-                    //var ctxt = new ValidationContextX(true);
-                    //RunValidation((rule, mocks, dependencies) =>
-                    //{
-                    //    var rrr = (Rule<TEntity>)rule;
-                    //    rrr.NewCompile(new SwapPropVisitor(mocks, dependencies))(Entity, ctxt);
-                    //    _FirstViolation = ctxt.Violations.FirstOrDefault();
-                    //    return _FirstViolation == null;
-                    //});
+                        foreach (var child in ValidateChildMembers)
+                        {
+                            if (_FirstViolation != null)
+                                break;
 
-                    //foreach (var child in ValidateChildMembers)
-                    //{
-                    //    if (_FirstViolation != null)
-                    //        break;
-
-                    //    _FirstViolation = child().FirstViolation;
-                    //}
+                            _FirstViolation = child().FirstViolation;
+                        }
+                    }
                 }
 
                 return _FirstViolation;
@@ -111,27 +97,20 @@ namespace BackToFront.Logic
             {
                 if (_AllViolations == null)
                 {
-                    var violations = new List<IViolation>();
-                    RunValidation((rule, mocks, dependencies) =>
+                    ValidationContextX ctxt = null;
+                    SwapPropVisitor visitor = null;
+                    RunValidation(v => 
                     {
-                        var v = rule.FullyValidateEntity(Entity, new SwapPropVisitor(mocks, dependencies));
-                        violations.AddRange(v);
-                        return !v.Any();
+                        visitor = v;
+                        ctxt = new ValidationContextX(false, visitor.MockValues, visitor.DependencyValues);
+                    }, rule =>
+                    {
+                        rule.NewCompile(visitor)(Entity, ctxt);
+                        return !ctxt.IsViolated;
                     });
 
-                    ValidateChildMembers.Each(child => violations.AddRange(child().AllViolations));
-                    _AllViolations = violations.ToArray();
-
-                    //var ctxt = new ValidationContextX(false);
-                    //RunValidation((rule, mocks, dependencies) =>
-                    //{
-                    //    var rrr = (Rule<TEntity>)rule;
-                    //    rrr.NewCompile(new SwapPropVisitor(mocks, dependencies))(Entity, ctxt);
-                    //    return !ctxt.IsViolated;
-                    //});
-
-                    //ValidateChildMembers.Each(child => ctxt.Violations.AddRange(child().AllViolations));
-                    //_AllViolations = ctxt.Violations.ToArray();
+                    ValidateChildMembers.Each(child => ctxt.Violations.AddRange(child().AllViolations));
+                    _AllViolations = ctxt.Violations.ToArray();
                 }
 
                 return _AllViolations;
@@ -155,7 +134,7 @@ namespace BackToFront.Logic
         /// Orders rules, mocks and dependencies and delivers them to a function (for vaslidation)
         /// </summary>
         /// <param name="action">Validation function. Returns </param>
-        private void RunValidation(Func<INonGenericRule, Mocks, Dependencies, bool> action)
+        private void RunValidation(Action<SwapPropVisitor> init, Func<INonGenericRule, bool> action)
         {
             // segregate from global object
             var mocks = Mocks.ToArray();
@@ -175,10 +154,13 @@ namespace BackToFront.Logic
             if (Options.ValidateAgainstParentClassRules)
                 rulesRepository = rulesRepository.Concat(Rules<TEntity>.ParentClassRepositories);
 
+            if(init != null)
+                init(new SwapPropVisitor(new Mocks(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet)), new Dependencies(dependencies)));
+
             rulesRepository.Aggregate().Each(rule =>
             {
                 ValidateDependencies(rule.Dependencies, ref dependencies);
-                success &= action(rule, new Mocks(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet)), new Dependencies(dependencies));
+                success &= action(rule);
             });
 
             // success, persist mock values

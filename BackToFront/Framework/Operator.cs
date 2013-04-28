@@ -19,15 +19,24 @@ namespace BackToFront.Framework
 
         public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
-            yield return _RequirementFailed;
-            foreach (var element in base.NextPathElements(subject, context))
+            return AllPossiblePaths;
+        }
+
+        public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
+        {
+            get
             {
-                yield return element;
+                yield return _RequirementFailed;
+                foreach (var element in base.AllPossiblePaths)
+                {
+                    yield return element;
+                }
             }
         }
 
         public bool ConditionIsTrue(TEntity subject, SwapPropVisitor mocks)
         {
+            // TODO: this is inefficient
             return Compile(mocks).Invoke(subject, mocks.MockValues, mocks.DependencyValues);
         }
 

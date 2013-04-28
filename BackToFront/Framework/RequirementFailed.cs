@@ -21,12 +21,15 @@ namespace BackToFront.Framework
     {
         public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
-            return NextPathElements();
+            return AllPossiblePaths;
         }
-
-        public IEnumerable<PathElement<TEntity>> NextPathElements()
+        
+        public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
-            yield return Violation;
+            get
+            {
+                yield return Violation;
+            }
         }
 
         public RequirementFailed(Expression<Func<TEntity, bool>> property, Rule<TEntity> rule)
@@ -47,7 +50,7 @@ namespace BackToFront.Framework
 
         public IAdditionalRuleCondition<TEntity> WithModelViolation(Func<TEntity, IViolation> violation)
         {
-            Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule); });
+            Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule, AffectedMembers.Select(a => a.Member)); });
             return ParentRule;
         }
 
@@ -81,19 +84,25 @@ namespace BackToFront.Framework
         {
             get
             {
-                return _Meta ?? (_Meta = new PathElementMeta(NextPathElements().Where(a => a != null).Select(a => a.Meta), Descriptor.Meta, PathElementType.RequirementFailed));
+                return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(a => a.Meta), Descriptor.Meta, PathElementType.RequirementFailed));
             }
         }
 
         protected override Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
         {
-            var t = Compile(visitor);
-            var v = Violation.NewCompile(visitor);
-            return (a, b) =>
+            var next = AllPossiblePaths.SingleOrDefault(a => a != null);
+            if (next != null)
             {
-                if (!t.Invoke(a, visitor.MockValues, visitor.DependencyValues))
-                    v(a, b);
-            };
+                var t = Compile(visitor);
+                var v = next.NewCompile(visitor);
+                return (a, b) =>
+                {
+                    if (!t.Invoke(a, b.Mocks, b.Dependencies))
+                        v(a, b);
+                };
+            }
+            else
+                return DoNothing;
         }
     }
 }

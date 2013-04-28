@@ -183,9 +183,30 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         }
 
         [Test]
-        [Ignore]
         public void _NewCompileTest()
         {
+            // arrange
+            var subject = new Accessor<object>();
+            subject.RequireThat(a => true);
+
+            // act
+            var result = subject.__NewCompile(new SwapPropVisitor());
+
+            // assert
+            Assert.AreNotEqual(PathElement<object>.DoNothing, result);
+        }
+
+        [Test]
+        public void _NewCompileTest_NoNextElement()
+        {
+            // arrange
+            var subject = new Accessor<object>();
+
+            // act
+            var result = subject.__NewCompile(new SwapPropVisitor());
+
+            // assert
+            Assert.AreEqual(PathElement<object>.DoNothing, result);
         }
     }
 }

@@ -17,7 +17,7 @@ using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework
 {
-    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate<TEntity>, IValidate, IRuleValidation<TEntity>, INonGenericRule
+    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate<TEntity>, IValidate, IRuleValidation<TEntity>, INonGenericRule 
     {
         private readonly HashSet<IValidate<TEntity>> RegisteredItems = new HashSet<IValidate<TEntity>>();
         public readonly List<DependencyWrapper> _Dependencies = new List<DependencyWrapper>();
@@ -36,8 +36,27 @@ namespace BackToFront.Framework
 
         protected override Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
         {
-            var r = _RequireThat.NewCompile(visitor);
-            return (a, b) => r(a, b);
+            var next = AllPossiblePaths.SingleOrDefault(a => a != null);
+            if (next != null)
+            {
+                var r = next.NewCompile(visitor);
+                return (a, b) => r(a, b);
+            }
+            else
+                return DoNothing;
+        }
+
+        Action<object, ValidationContextX> INonGenericRule.NewCompile(SwapPropVisitor visitor)
+        {
+            var tmp = base.NewCompile(visitor);
+            return (a, b) => 
+            {
+                if (!(a is TEntity))
+                    throw new InvalidOperationException("##");
+
+                // TODO: as
+                tmp((TEntity)a, b);
+            };
         }
 
         #region hierarchy
@@ -52,13 +71,16 @@ namespace BackToFront.Framework
 
         public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
         {
-            return NextPathElements();
+            return AllPossiblePaths;
         }
-
-        public IEnumerable<PathElement<TEntity>> NextPathElements()
+        
+        public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
-            yield return _Condition;
-            yield return _RequireThat;
+            get
+            {
+                yield return _Condition;
+                yield return _RequireThat;
+            }
         }
 
         public void Register(IValidate<TEntity> element)
@@ -154,7 +176,7 @@ namespace BackToFront.Framework
         {
             get
             {
-                return _Meta ?? (_Meta = new PathElementMeta(NextPathElements().Where(a => a != null).Select(a => a.Meta), null, PathElementType.Rule));
+                return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(a => a.Meta), null, PathElementType.Rule));
             }
         }
 
