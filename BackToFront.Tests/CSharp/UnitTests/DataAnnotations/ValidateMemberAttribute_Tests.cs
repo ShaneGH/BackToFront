@@ -9,7 +9,7 @@ using DA = System.ComponentModel.DataAnnotations;
 using BackToFront.Utilities;
 using BackToFront.Enum;
 
-namespace BackToFront.Tests.UnitTests.DataAnnotations
+namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
 {
     [TestFixture]
     public class ValidateMemberAttribute_Tests : Base.TestBase

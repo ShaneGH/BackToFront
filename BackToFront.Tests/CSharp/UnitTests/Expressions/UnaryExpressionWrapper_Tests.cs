@@ -9,7 +9,7 @@ using BackToFront.Expressions.Visitors;
 
 using M = Moq;
 
-namespace BackToFront.Tests.UnitTests.Expressions
+namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 {
     [TestFixture]
     public class UnaryExpressionWrapper_Tests : Base.TestBase

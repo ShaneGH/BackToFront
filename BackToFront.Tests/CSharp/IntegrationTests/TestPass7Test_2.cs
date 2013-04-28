@@ -13,7 +13,7 @@ using BackToFront.Meta;
 using System.IO;
 using System.Runtime.Serialization.Json;
 
-namespace BackToFront.Tests.IntegrationTests
+namespace BackToFront.Tests.CSharp.IntegrationTests
 {
     /// <summary>
     /// ToTest: Require And

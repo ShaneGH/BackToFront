@@ -11,7 +11,7 @@ using BackToFront.Validation;
 using BackToFront.Expressions.Visitors;
 using BackToFront.Dependency;
 
-namespace BackToFront.Tests.UnitTests.Framework
+namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
     [TestFixture]
     public class RuleCollection_Tests : BackToFront.Tests.Base.TestBase

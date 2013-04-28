@@ -5,7 +5,7 @@ using BackToFront.Extensions.Reflection;
 using BackToFront.Utilities;
 using NUnit.Framework;
 
-namespace BackToFront.Tests.UnitTests.Extensions
+namespace BackToFront.Tests.CSharp.UnitTests.Extensions
 {
     [TestFixture]
     public class Reflection_Tests

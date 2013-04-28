@@ -10,7 +10,7 @@ using BackToFront.Framework.Base;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Utilities;
 
-namespace BackToFront.Tests.UnitTests.Framework
+namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
     [TestFixture]
     public class RequireOperator_Tests : BackToFront.Tests.Base.TestBase

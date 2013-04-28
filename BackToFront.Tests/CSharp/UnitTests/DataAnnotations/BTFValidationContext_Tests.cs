@@ -1,13 +1,10 @@
 ﻿using BackToFront.DataAnnotations;
 using NUnit.Framework;
 using System;
-using System.Linq;
 using System.ComponentModel.DataAnnotations;
-using M = Moq;
-using BackToFront.Dependency;
-using System.Collections.Generic;
+using System.Linq;
 
-namespace BackToFront.Tests.UnitTests.DataAnnotations
+namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
 {
     [TestFixture]
     public class BTFValidationContext_Tests : Base.TestBase

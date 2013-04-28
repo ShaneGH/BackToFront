@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BackToFront.Utilities;
 
-namespace BackToFront.Tests.UnitTests.Framework
+namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
     [TestFixture]
     public class SubRuleCollection_Tests : BackToFront.Tests.Base.TestBase

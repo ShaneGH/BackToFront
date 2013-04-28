@@ -4,7 +4,7 @@ using BackToFront.Validate;
 using NUnit.Framework;
 using System.Linq;
 
-namespace BackToFront.Tests.IntegrationTests
+namespace BackToFront.Tests.CSharp.IntegrationTests
 {
     /// <summary>
     /// ToTest: multiple rules

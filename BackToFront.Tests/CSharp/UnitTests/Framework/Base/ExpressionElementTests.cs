@@ -17,7 +17,7 @@ using M = Moq;
 using BackToFront.Tests.Utilities;
 using BackToFront.Expressions;
 
-namespace BackToFront.Tests.UnitTests.Framework.Base
+namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
 {
     [TestFixture]
     public class ExpressionElementTests :BackToFront.Tests.Base.TestBase

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using BackToFront.Utilities;
 
-namespace BackToFront.Tests.UnitTests.Utils
+namespace BackToFront.Tests.CSharp.UnitTests.Utils
 {
     [TestFixture]
     public class ReflectionWrapper_Tests : Base.TestBase

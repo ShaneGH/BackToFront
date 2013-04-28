@@ -14,7 +14,7 @@ using BackToFront.Expressions.Visitors;
 
 using M = Moq;
 
-namespace BackToFront.Tests.UnitTests.Expressions
+namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 {
     [TestFixture]
     public class BinaryExpressionWrapper_Tests : Base.TestBase

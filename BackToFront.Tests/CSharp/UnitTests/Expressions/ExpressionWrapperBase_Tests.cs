@@ -10,7 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using M = Moq;
 
-namespace BackToFront.Tests.UnitTests.Expressions
+namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 {
     class ExpressionWrapperBase_Tests : Base.TestBase
     {

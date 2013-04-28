@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 using BackToFront.Framework;
 using BackToFront.Tests.Utilities;
-namespace BackToFront.Tests.UnitTests.Framework
+namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
     [TestFixture]
     public class ThrowViolationTests : TestBase

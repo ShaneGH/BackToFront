@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using BackToFront.Validate;
+﻿
 using BackToFront.Tests.Utilities;
-
+using BackToFront.Validate;
 using NUnit.Framework;
 
-namespace BackToFront.Tests.IntegrationTests
+namespace BackToFront.Tests.CSharp.IntegrationTests
 {
     /// <summary>
     /// ToTest: Require And

@@ -12,7 +12,7 @@ using BackToFront.Utilities;
 using BackToFront.Framework;
 using BackToFront.Framework.Base;
 
-namespace BackToFront.Tests.UnitTests.Utils
+namespace BackToFront.Tests.CSharp.UnitTests.Utils
 {
     [TestFixture]
     public class MemberChainItem_Tests : Base.TestBase

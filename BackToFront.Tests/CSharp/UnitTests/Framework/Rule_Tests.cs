@@ -10,7 +10,7 @@ using U = BackToFront.Utilities;
 using BackToFront.Validation;
 using BackToFront.Expressions.Visitors;
 
-namespace BackToFront.Tests.UnitTests.Framework
+namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
     [TestFixture]
     public class Rule_Tests : BackToFront.Tests.Base.TestBase

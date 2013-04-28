@@ -8,7 +8,7 @@ using NUnit.Framework;
 using BackToFront.Enum;
 using BackToFront.Expressions;
 
-namespace BackToFront.Tests.UnitTests.Dependency
+namespace BackToFront.Tests.CSharp.UnitTests.Dependency
 {
     [TestFixture]
     public class RuleDependency_Tests : Base.TestBase

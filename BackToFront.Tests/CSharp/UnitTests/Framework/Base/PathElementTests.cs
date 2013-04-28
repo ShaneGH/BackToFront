@@ -17,7 +17,7 @@ using BackToFront.Tests.Utilities;
 using BackToFront.Framework;
 using BackToFront.Expressions.Visitors;
 
-namespace BackToFront.Tests.UnitTests.Framework.Base
+namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
 {
     [TestFixture]
     public class PathElementTests

@@ -9,7 +9,7 @@ using BackToFront.Tests.Utilities;
 
 using NUnit.Framework;
 
-namespace BackToFront.Tests.IntegrationTests
+namespace BackToFront.Tests.CSharp.IntegrationTests
 {
     /// <summary>
     /// ToTest: and

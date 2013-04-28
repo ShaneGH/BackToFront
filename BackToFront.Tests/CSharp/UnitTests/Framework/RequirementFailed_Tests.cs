@@ -8,7 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using M = Moq;
 
-namespace BackToFront.Tests.UnitTests.Framework
+namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
     [TestFixture]
     public class RequirementFailed_Tests : BackToFront.Tests.Base.TestBase

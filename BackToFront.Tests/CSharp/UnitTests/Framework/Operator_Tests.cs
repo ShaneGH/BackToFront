@@ -11,7 +11,7 @@ using BackToFront.Extensions.IEnumerable;
 using BackToFront.Utilities;
 using BackToFront.Expressions.Visitors;
 
-namespace BackToFront.Tests.UnitTests.Framework
+namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
     [TestFixture]
     public class Operator_Tests : BackToFront.Tests.Base.TestBase

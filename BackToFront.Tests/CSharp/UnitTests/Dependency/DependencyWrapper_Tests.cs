@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System;
 using M = Moq;
 
-namespace BackToFront.Tests.UnitTests.Dependency
+namespace BackToFront.Tests.CSharp.UnitTests.Dependency
 {
     [TestFixture]
     public class DependencyWrapper_Tests : Base.TestBase

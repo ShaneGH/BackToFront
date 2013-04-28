@@ -11,7 +11,7 @@ using BackToFront.Tests.Utilities;
 using BackToFront.Expressions;
 using NUnit.Framework;
 
-namespace BackToFront.Tests.UnitTests.Expressions
+namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 {
     [TestFixture]
     public class DependencyInjectionExpressionWrapper_Tests : Base.TestBase

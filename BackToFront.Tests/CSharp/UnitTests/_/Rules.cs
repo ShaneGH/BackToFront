@@ -3,7 +3,7 @@ using BackToFront.Framework;
 using NUnit.Framework;
 using System.Linq;
 
-namespace BackToFront.Tests.UnitTests
+namespace BackToFront.Tests.CSharp.UnitTests
 {
     [TestFixture]
     public partial class Rules_Tests : Base.TestBase

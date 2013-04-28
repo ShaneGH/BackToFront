@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 using BackToFront.Expressions.Visitors;
 using BackToFront.Dependency;
 
-namespace BackToFront.Tests.UnitTests.Expressions
+namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 {
     [TestFixture]
     public class MemberExpressionWrapper_Tests : Base.TestBase

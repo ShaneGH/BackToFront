@@ -8,7 +8,7 @@ using NUnit.Framework;
 using BackToFront.Utilities;
 using BackToFront.Framework;
 
-namespace BackToFront.Tests.UnitTests
+namespace BackToFront.Tests.CSharp.UnitTests
 {
     public partial class Rules_Tests
     {

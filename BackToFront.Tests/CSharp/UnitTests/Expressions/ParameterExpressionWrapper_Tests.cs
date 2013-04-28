@@ -12,7 +12,7 @@ using NUnit.Framework;
 using System.Collections.ObjectModel;
 using BackToFront.Expressions.Visitors;
 
-namespace BackToFront.Tests.UnitTests.Expressions
+namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 {
     public class TestSubjectWrapper : ParameterExpressionWrapper
     {

@@ -8,7 +8,7 @@ using BackToFront.Extensions.IEnumerable;
 
 using NUnit.Framework;
 
-namespace BackToFront.Tests.UnitTests.Extensions
+namespace BackToFront.Tests.CSharp.UnitTests.Extensions
 {
     [TestFixture]
     public class IEnumerable_Tests
