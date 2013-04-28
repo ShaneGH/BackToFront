@@ -17,40 +17,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
     public class Operator_Tests : BackToFront.Tests.Base.TestBase
     {
         [Test]
-        public void NextPathElementsTest_RequirementFailed()
-        {
-            // arrange
-            var subject = new Operator<object>(a => true, null);
-
-            // act
-            var result = subject.RequirementFailed;
-            var npe = subject.NextPathElements(null, null);
-
-            // assert
-            Assert.AreEqual(3, npe.Count());
-            Assert.AreEqual(result, npe.ElementAt(0));
-            Assert.IsNull(npe.ElementAt(1));
-            Assert.IsNull(npe.ElementAt(2));
-        }
-
-        [Test]
-        public void NextPathElementsTest_Then()
-        {
-            // arrange
-            var subject = new Operator<object>(a => true, null);
-
-            // act
-            var result = subject.Then((a) => { });
-            var npe = subject.NextPathElements(null, null);
-
-            // assert
-            Assert.AreEqual(3, npe.Count());
-            Assert.IsNull(npe.ElementAt(0));
-            Assert.NotNull(npe.ElementAt(1));
-            Assert.IsNull(npe.ElementAt(2));
-        }
-
-        [Test]
         public void ConditionIsTrue_Test1()
         {
             // arrange
@@ -80,7 +46,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // act
             var result = subject.RequirementFailed;
-            var npe = subject.NextPathElements(null, null);
+            var npe = subject.AllPossiblePaths;
 
             // assert
             Assert.AreEqual(3, npe.Count());
@@ -88,6 +54,5 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             Assert.IsNull(npe.ElementAt(1));
             Assert.IsNull(npe.ElementAt(2));
         }
-
     }
 }

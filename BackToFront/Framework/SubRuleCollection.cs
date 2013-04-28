@@ -38,11 +38,6 @@ namespace BackToFront.Framework
             }
         }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
-        {
-            return AllPossiblePaths;
-        }
-
         public IConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property)
         {
             var subRule = new Rule<TEntity>(ParentRule);
@@ -60,16 +55,6 @@ namespace BackToFront.Framework
             var subRule = new Rule<TEntity>(ParentRule);
             _subRules.AddRule(subRule);
             return subRule.RequireThat(property);
-        }
-
-        public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
-        {
-            return _subRules.ValidateEntity(subject, context);
-        }
-
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
-        {
-            _subRules.FullyValidateEntity(subject, violationList, context);
         }
 
         public override IEnumerable<AffectedMembers> AffectedMembers

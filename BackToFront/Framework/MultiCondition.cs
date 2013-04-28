@@ -23,22 +23,6 @@ namespace BackToFront.Framework
         public MultiCondition(Rule<TEntity> rule)
             : base(rule) { }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
-        {
-            foreach (var i in If)
-            {
-                if (i.ConditionIsTrue(subject, context.ExpressionModifier))
-                {
-                    yield return i;
-                    yield break;
-                }
-                else
-                {
-                    yield return null;
-                }
-            }
-        }
-
         public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
             get { return If.ToArray(); }

@@ -21,11 +21,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             public Accessor()
                 : base(null) { }
 
-            public IEnumerable<PathElement<TEntity>> _NextPathElements()
-            {
-                return NextPathElements(null, new U.ValidationContext { ExpressionModifier = new SwapPropVisitor() });
-            }
-
             public Action<TEntity, ValidationContextX> __NewCompile(SwapPropVisitor visitor)
             {
                 return _NewCompile(visitor);
@@ -63,7 +58,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // act
             var result = subject.RequireThat(a => true);
-            var pe = subject._NextPathElements();
+            var pe = subject.AllPossiblePaths;
 
             // assert
             Assert.AreEqual(1, pe.Count(a => a != null));
@@ -78,7 +73,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // act
             var result = subject.If(a => true);
-            var pe = subject._NextPathElements();
+            var pe = subject.AllPossiblePaths;
 
             // assert
             Assert.AreEqual(1, pe.Count(a => a != null));
@@ -93,70 +88,12 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // act
             var result = subject.Else;
-            var pe = subject._NextPathElements();
+            var pe = subject.AllPossiblePaths;
 
             // assert
             Assert.IsTrue(((Operator<object>)result).ConditionIsTrue(null, new SwapPropVisitor()));
             Assert.AreEqual(1, pe.Count(a => a != null));
             Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last());
-        }
-
-        [Test]
-        public void ValidateEntity_Test()
-        {
-            // arrange
-            var subject = new Mock<Accessor<object>>();
-            var violation = new TestViolation();
-            var input1 = new object();
-            var input2 = new SwapPropVisitor();
-            subject.Setup(a => a.ValidateEntity(It.Is<object>(b => b.Equals(input1)), It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2))).Returns(violation);
-
-            // act
-            var result = ((IValidate)subject.Object).ValidateEntity(input1, input2);
-
-            // assert
-            Assert.AreEqual(violation, result);
-        }
-
-        [Test]
-        public void FullyValidateEntity_Test()
-        {
-            // arrange
-            var subject = new Mock<Accessor<object>>();
-            var violation = new TestViolation();
-            var input1 = new object();
-            var input2 = new SwapPropVisitor();
-            subject.Setup(a => a.FullyValidateEntity(It.Is<object>(b => b.Equals(input1)), It.IsAny<IList<IViolation>>(), It.Is<U.ValidationContext>(b => b.ExpressionModifier == input2)))
-                .Callback<object, IList<IViolation>, U.ValidationContext>((a, b, c) => b.Add(violation));
-
-            // act
-            var result = ((IValidate)subject.Object).FullyValidateEntity(input1, input2);
-
-            // assert
-            Assert.AreEqual(1, result.Count());
-            Assert.AreEqual(violation, result.First());
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void FullyValidateEntity_Test_InvalidOperation()
-        {
-            // arrange
-            var subject = new Accessor<string>();
-
-            // act
-            var result = ((IValidate)subject).FullyValidateEntity(76, null);
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ValidateEntity_Test_InvalidOperation()
-        {
-            // arrange
-            var subject = new Accessor<string>();
-
-            // act
-            var result = ((IValidate)subject).ValidateEntity(76, null);
         }
 
         [Test]

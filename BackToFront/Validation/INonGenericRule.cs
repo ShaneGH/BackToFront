@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace BackToFront.Validation
 {
-    public interface INonGenericRule : IValidate
+    public interface INonGenericRule
     {
         IEnumerable<AffectedMembers> AffectedMembers { get; }
 

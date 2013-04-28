@@ -13,21 +13,6 @@ namespace BackToFront.Framework
         public DeadEnd()
             : base(null) { }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
-        {
-            yield break;
-        }
-
-        public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
-        {
-            return null;
-        }
-
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
-        {
-            return;
-        }
-
         public override IEnumerable<AffectedMembers> AffectedMembers
         {
             get

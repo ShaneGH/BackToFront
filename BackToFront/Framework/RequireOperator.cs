@@ -21,11 +21,6 @@ namespace BackToFront.Framework
             : base(descriptor, rule)
         {
         }
-
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
-        {
-            return AllPossiblePaths;
-        }
         
         public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {

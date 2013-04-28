@@ -26,7 +26,6 @@ namespace BackToFront.Framework.Base
     {
         private bool _locked = false;
         protected readonly Rule<TEntity> ParentRule;
-        public abstract IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context);
         private static readonly DeadEnd<TEntity> _DeadEnd = new DeadEnd<TEntity>();
 
         public abstract IEnumerable<AffectedMembers> AffectedMembers { get; }
@@ -36,36 +35,11 @@ namespace BackToFront.Framework.Base
 
         public abstract IEnumerable<PathElement<TEntity>> AllPossiblePaths { get; }
 
-        public PathElement<TEntity> NextOption(TEntity subject, ValidationContext context)
-        {
-            var options = NextPathElements(subject, context).Where(a => a != null).ToArray();
-            if (options.Length == 0)
-            {
-                return _DeadEnd;
-            }
-            else if (options.Length == 1)
-            {
-                return options[0];
-            }
-
-            throw new InvalidOperationException("##3");
-        }
-
         public PathElement(Rule<TEntity> rule)
         {
             ParentRule = rule;
             if (ParentRule != null)
                 ParentRule.Register(this);
-        }
-
-        public virtual IViolation ValidateEntity(TEntity subject, ValidationContext context)
-        {
-            return NextOption(subject, context).ValidateEntity(subject, context);
-        }
-
-        public virtual void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
-        {
-            NextOption(subject, context).FullyValidateEntity(subject, violationList, context);
         }
 
         protected TOutput Do<TOutput>(Func<TOutput> action)

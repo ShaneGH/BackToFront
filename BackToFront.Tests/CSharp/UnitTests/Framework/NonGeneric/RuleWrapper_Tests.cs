@@ -10,13 +10,14 @@ using System.Collections.Generic;
 using M = Moq;
 using BackToFront.Validation;
 using BackToFront.Expressions.Visitors;
+using BackToFront.Extensions.IEnumerable;
 
 namespace BackToFront.Tests.CSharp.UnitTests.Framework.NonGeneric
 {
     [TestFixture]
     public class RuleWrapper_Tests
     {
-        public class RuleTest : IValidate
+        public class RuleTest
         {
             readonly object Test;
             readonly IEnumerable<IViolation> Violations;
@@ -25,17 +26,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.NonGeneric
             {
                 Test = test;
                 Violations = violations;
-            }
-
-            public IViolation ValidateEntity(object subject, SwapPropVisitor visitor)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IEnumerable<IViolation> FullyValidateEntity(object subject, SwapPropVisitor visitor)
-            {
-                Assert.AreEqual(Test, subject);
-                return Violations;
             }
         }
 
@@ -83,11 +73,27 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.NonGeneric
             rule.Setup(a => a.Dependencies).Returns(new List<DependencyWrapper> { dependency.Object });
             if (useDI)
             {
-                rule.Setup(a => a.FullyValidateEntity(test, M.It.Is<SwapPropVisitor>(m => m.Dependences.Count() == 1 && m.Dependences.ElementAt(0).Value == injected.Value))).Returns(violations);
+                rule.Setup(a => a.NewCompile(M.It.Is<SwapPropVisitor>(m => m.Dependences.Count() == 1 && m.Dependences.ElementAt(0).Value == injected.Value)))
+                    .Returns(() =>
+                    {
+                        return (a, b) =>
+                        {
+                            Assert.AreEqual(test, a);
+                            b.Violations.AddRange(violations);
+                        };
+                    });
             }
             else
             {
-                rule.Setup(a => a.FullyValidateEntity(test, M.It.Is<SwapPropVisitor>(m => m.Dependences.Count() == 0))).Returns(violations);
+                rule.Setup(a => a.NewCompile(M.It.Is<SwapPropVisitor>(m => m.Dependences.Count() == 0)))
+                    .Returns(() =>
+                    {
+                        return (a, b) =>
+                        {
+                            Assert.AreEqual(test, a);
+                            b.Violations.AddRange(violations);
+                        };
+                    });
             }
 
             var di = new M.Mock<IRuleDependencies>();
@@ -122,11 +128,27 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.NonGeneric
             rule.Setup(a => a.Dependencies).Returns(new List<DependencyWrapper> { dependency.Object });
             if (useDI)
             {
-                rule.Setup(a => a.FullyValidateEntity(test, M.It.Is<SwapPropVisitor>(m => m.Dependences.Count() == 1 && m.Dependences.ElementAt(0).Value == injected.Value))).Returns(violations);
+                rule.Setup(a => a.NewCompile(M.It.Is<SwapPropVisitor>(m => m.Dependences.Count() == 1 && m.Dependences.ElementAt(0).Value == injected.Value)))
+                    .Returns(() =>
+                    {
+                        return (a, b) =>
+                        {
+                            Assert.AreEqual(test, a);
+                            b.Violations.AddRange(violations);
+                        };
+                    });
             }
             else
             {
-                rule.Setup(a => a.FullyValidateEntity(test, M.It.Is<SwapPropVisitor>(m => m.Dependences.Count() == 0))).Returns(violations);
+                rule.Setup(a => a.NewCompile(M.It.Is<SwapPropVisitor>(m => m.Dependences.Count() == 0)))
+                    .Returns(() =>
+                    {
+                        return (a, b) =>
+                        {
+                            Assert.AreEqual(test, a);
+                            b.Violations.AddRange(violations);
+                        };
+                    });
             }
 
             var di = new M.Mock<IRuleDependencies>();

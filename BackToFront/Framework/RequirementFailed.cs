@@ -18,12 +18,7 @@ using BackToFront.Expressions.Visitors;
 namespace BackToFront.Framework
 {
     public class RequirementFailed<TEntity> : ExpressionElement<TEntity, bool>, IModelViolation<TEntity>
-    {
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
-        {
-            return AllPossiblePaths;
-        }
-        
+    {        
         public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
             get
@@ -52,26 +47,6 @@ namespace BackToFront.Framework
         {
             Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule, AffectedMembers.Select(a => a.Member)); });
             return ParentRule;
-        }
-
-        public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
-        {
-            if (!Compile(context.ExpressionModifier).Invoke(subject, context.ExpressionModifier.MockValues, context.ExpressionModifier.DependencyValues))
-            {
-                context.ViolatedMembers.AddRange(AffectedMembers.Select(am => am.Member));
-                return base.ValidateEntity(subject, context);
-            }
-            else
-                return null;
-        }
-
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
-        {
-            if (!Compile(context.ExpressionModifier).Invoke(subject, context.ExpressionModifier.MockValues, context.ExpressionModifier.DependencyValues))
-            {
-                context.ViolatedMembers.AddRange(AffectedMembers.Select(am => am.Member));
-                base.FullyValidateEntity(subject, violationList, context);
-            }
         }
 
         public override bool PropertyRequirement

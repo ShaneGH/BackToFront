@@ -42,25 +42,6 @@ namespace BackToFront.Framework
             }
         }
 
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
-        {
-            return AllPossiblePaths;
-        }
-
-        public override IViolation ValidateEntity(TEntity subject, ValidationContext context)
-        {
-            var violation = _violation(subject);
-            violation.ViolatedEntity = subject;
-            return violation;
-        }
-
-        public override void FullyValidateEntity(TEntity subject, IList<IViolation> violationList, ValidationContext context)
-        {
-            var violation = ValidateEntity(subject, context);
-            if (violation != null)
-                violationList.Add(violation);
-        }
-
         public override IEnumerable<AffectedMembers> AffectedMembers
         {
             get

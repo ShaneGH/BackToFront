@@ -17,7 +17,7 @@ using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework
 {
-    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IValidate<TEntity>, IValidate, IRuleValidation<TEntity>, INonGenericRule 
+    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IRuleValidation<TEntity>, INonGenericRule 
     {
         private readonly HashSet<IValidate<TEntity>> RegisteredItems = new HashSet<IValidate<TEntity>>();
         public readonly List<DependencyWrapper> _Dependencies = new List<DependencyWrapper>();
@@ -67,11 +67,6 @@ namespace BackToFront.Framework
             {
                 return SubRules.Select(sr => new[] { sr }.Concat(sr.AllAncestorRules)).Aggregate();
             }
-        }
-
-        public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
-        {
-            return AllPossiblePaths;
         }
         
         public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
@@ -126,30 +121,6 @@ namespace BackToFront.Framework
         #endregion 
 
         #region Validate
-
-        IViolation IValidate.ValidateEntity(object subject, SwapPropVisitor visitor)
-        {
-            if (subject is TEntity)
-            {
-                //TODO: change cast to as
-                return ValidateEntity((TEntity)subject, new ValidationContext { ExpressionModifier = visitor });
-            }
-
-            throw new InvalidOperationException("##");
-        }
-
-        IEnumerable<IViolation> IValidate.FullyValidateEntity(object subject, SwapPropVisitor visitor)
-        {
-            if (subject is TEntity)
-            {
-                List<IViolation> violations = new List<IViolation>();
-                //TODO: change cast to as
-                FullyValidateEntity((TEntity)subject, violations, new ValidationContext { ExpressionModifier = visitor });
-                return violations.ToArray();
-            }
-
-            throw new InvalidOperationException("##");
-        }
 
         #endregion
 

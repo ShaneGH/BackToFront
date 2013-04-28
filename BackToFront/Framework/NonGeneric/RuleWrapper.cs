@@ -49,7 +49,9 @@ namespace BackToFront.Framework.NonGeneric
                     dependencies = new Dependencies(Enumerable.Empty<KeyValuePair<string, object>>());
                 }
 
-                CachedResults[useServiceContainerDI] = Rule.FullyValidateEntity(ValidationSubject, new SwapPropVisitor(new Mocks(), dependencies)).ToArray();
+                var ctxt = new ValidationContextX(false, new object[0], dependencies.ToDictionary());
+                Rule.NewCompile(new SwapPropVisitor(new Mocks(), dependencies))(ValidationSubject, ctxt);
+                CachedResults[useServiceContainerDI] = ctxt.Violations.ToArray();
             }
 
             return CachedResults[useServiceContainerDI];
