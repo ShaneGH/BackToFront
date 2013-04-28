@@ -11,7 +11,7 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
     ///         If, is true, model violation is
     /// </summary>
     [TestFixture]
-    public class TestPass1Test : Base.TestBase
+    public class TestPass1_Simplified_Test : Base.TestBase
     {
         public class TestPass1
         {
@@ -21,10 +21,10 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
             static TestPass1()
             {
                 Rules<TestPass1>.AddRule(rule => rule
-                    .If(a => a.ThrowViolation1).RequirementFailed.WithModelViolation(() => Violation1));
+                    .RequireThat(a => !a.ThrowViolation1).WithModelViolation(() => Violation1));
 
                 Rules<TestPass1>.AddRule(rule => rule
-                    .If(a => a.ThrowViolation2).RequirementFailed.WithModelViolation(() => Violation2));
+                    .RequireThat(a => !a.ThrowViolation2).WithModelViolation(() => Violation2));
             }
 
             public bool ThrowViolation1 { get; set; }
