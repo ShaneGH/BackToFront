@@ -51,6 +51,6 @@ namespace BackToFront.Dependency
 
     public interface IRuleDependencies
     {
-        RuleDependency GetDependency(string dependencyName, Type dependencyType, INonGenericRule rule);
+        KeyValuePair<string, object> GetDependency(string dependencyName, Type dependencyType, INonGenericRule rule);
     }
 }

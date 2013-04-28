@@ -18,7 +18,7 @@ namespace BackToFront.Logic
     public class ValidateResult<TEntity> : IValidateResult<TEntity>
     {
         private readonly TEntity Entity;
-        private readonly IEnumerable<RuleDependency> Dependencies;
+        private readonly IEnumerable<KeyValuePair<string, object>> Dependencies;
         private readonly List<Mock> Mocks = new List<Mock>();
         private readonly List<Func<IValidateResult>> ValidateChildMembers = new List<Func<IValidateResult>>();
         private readonly ValidateOptions Options;
@@ -30,7 +30,7 @@ namespace BackToFront.Logic
 
         public ValidateResult(TEntity entity, ValidateOptions options, object dependencyClasses)
         {
-            Dependencies = dependencyClasses == null ? Enumerable.Empty<RuleDependency>() : ToDependencies(dependencyClasses);
+            Dependencies = dependencyClasses == null ? Enumerable.Empty<KeyValuePair<string, object>>() : ToDependencies(dependencyClasses);
             Entity = entity;
             Options = options ?? new ValidateOptions();
         }
@@ -42,7 +42,7 @@ namespace BackToFront.Logic
         /// <param name="options"></param>
         /// <param name="dependencyClasses"></param>
         /// <param name="mocks"></param>
-        private ValidateResult(TEntity entity, ValidateOptions options, IEnumerable<RuleDependency> dependencyClasses, List<Mock> mocks)
+        private ValidateResult(TEntity entity, ValidateOptions options, IEnumerable<KeyValuePair<string, object>> dependencyClasses, List<Mock> mocks)
         {
             Entity = entity;
             Options = options;
@@ -140,7 +140,7 @@ namespace BackToFront.Logic
 
             // result of all violations. If true, mocks will be persisted
             bool success = true;
-            var dependencies = (IEnumerable<RuleDependency>)Dependencies.ToArray();
+            var dependencies = (IEnumerable<KeyValuePair<string, object>>)Dependencies.ToArray();
 
             // add parent class rules
             IEnumerable<IEnumerable<INonGenericRule>> rulesRepository = new[] { Rules<TEntity>.Repository.Registered };
@@ -158,13 +158,13 @@ namespace BackToFront.Logic
                 setters.Each(a => a.SetValue(Entity));
         }
 
-        internal static void ValidateDependencies(IEnumerable<DependencyWrapper> required, ref IEnumerable<RuleDependency> delivered)
+        internal static void ValidateDependencies(IEnumerable<DependencyWrapper> required, ref IEnumerable<KeyValuePair<string, object>> delivered)
         {
-            List<RuleDependency> requiredByRule = new List<RuleDependency>();
+            List<KeyValuePair<string, object>> requiredByRule = new List<KeyValuePair<string, object>>();
             foreach (var r in required)
             {
-                var match = delivered.FirstOrDefault(a => a.Name == r.DependencyName);
-                if (match != null && match.Value != null)
+                var match = delivered.FirstOrDefault(a => a.Key == r.DependencyName);
+                if (!string.IsNullOrEmpty(match.Key) && match.Value != null)
                 {
                     if (!match.Value.GetType().Is(r.DependencyType))
                         throw new InvalidOperationException("##");
@@ -176,10 +176,10 @@ namespace BackToFront.Logic
             delivered = requiredByRule.ToArray();
         }
 
-        internal static IEnumerable<RuleDependency> ToDependencies(object input)
+        internal static IEnumerable<KeyValuePair<string, object>> ToDependencies(object input)
         {
             var dependencies = input.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            return dependencies.Select(d => new RuleDependency(d.Name, d.GetValue(input)));
+            return dependencies.Select(d => new KeyValuePair<string, object>(d.Name, d.GetValue(input)));
         }
 
         public void ResetResult()
@@ -198,7 +198,7 @@ namespace BackToFront.Logic
             if (member.Body is ParameterExpression)
                 throw new InvalidOperationException("##");
 
-            IEnumerable<RuleDependency> dependencies = dependencyClasses == null ? null : ToDependencies(dependencyClasses);
+            IEnumerable<KeyValuePair<string, object>> dependencies = dependencyClasses == null ? null : ToDependencies(dependencyClasses);
 
             MemberExpression tester = member.Body as MemberExpression;
             while (tester != null)

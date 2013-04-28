@@ -70,10 +70,10 @@ namespace BackToFront.Expressions
         {
             // do not use base methods, they are not valid in this special case
 
-            if (expression is ConstantExpression && 
-                (expression as ConstantExpression).Value is RuleDependency)
+            if (expression is ConstantExpression &&
+                (expression as ConstantExpression).Value is KeyValuePair<string, object>)
             {
-                return ((expression as ConstantExpression).Value as RuleDependency).Name == LinqParamName;
+                return ((KeyValuePair<string, object>)(expression as ConstantExpression).Value).Key == LinqParamName;
             }
 
             return base.IsSameExpression(expression);

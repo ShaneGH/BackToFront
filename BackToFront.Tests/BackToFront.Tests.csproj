@@ -93,7 +93,6 @@
     <Compile Include="CSharp\UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />
     <Compile Include="CSharp\UnitTests\DataAnnotations\BTFValidationContext_Tests.cs" />
     <Compile Include="CSharp\UnitTests\DataAnnotations\ValidateMemberAttribute_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Dependency\RuleDependency.cs" />
     <Compile Include="CSharp\UnitTests\Expressions\ElementAtExpressionWrapper_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs" />

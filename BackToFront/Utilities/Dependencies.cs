@@ -14,7 +14,7 @@ namespace BackToFront.Utilities
         private readonly Dictionary<string, E.UnaryExpression> Params = new Dictionary<string, E.UnaryExpression>();
 
         //TODO delete this constructor
-        public Dependencies(IEnumerable<RuleDependency> d) : this(d.ToDictionary(a => a.Name, a => a.Value)) { }
+        public Dependencies(IEnumerable<KeyValuePair<string, object>> d) : this(d.ToDictionary(a => a.Key, a => a.Value)) { }
 
         public Dependencies() : this(new Dictionary<string, object>()) { }
 

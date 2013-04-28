@@ -44,7 +44,6 @@
     <Compile Include="DataAnnotations\BTFValidationContext.cs" />
     <Compile Include="DataAnnotations\ValidateMemberAttribute.cs" />
     <Compile Include="Dependency\IDependencyResolver.cs" />
-    <Compile Include="Dependency\RuleDependency.cs" />
     <Compile Include="Enum\ExpressionType.cs" />
     <Compile Include="Enum\DependencyBehavior.cs" />
     <Compile Include="Enum\MemberIndexType.cs" />

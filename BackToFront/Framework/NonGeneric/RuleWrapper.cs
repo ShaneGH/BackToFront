@@ -46,7 +46,7 @@ namespace BackToFront.Framework.NonGeneric
                 }
                 else
                 {
-                    dependencies = new Dependencies(Enumerable.Empty<RuleDependency>());
+                    dependencies = new Dependencies(Enumerable.Empty<KeyValuePair<string, object>>());
                 }
 
                 CachedResults[useServiceContainerDI] = Rule.FullyValidateEntity(ValidationSubject, new SwapPropVisitor(new Mocks(), dependencies)).ToArray();

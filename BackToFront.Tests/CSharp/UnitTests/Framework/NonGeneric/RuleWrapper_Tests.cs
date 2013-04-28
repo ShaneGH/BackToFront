@@ -74,7 +74,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.NonGeneric
             // arrange
             var test = new object();
             var violations = new[] { new M.Mock<IViolation>().Object };
-            var injected = new RuleDependency(dependencyName, "sduhfoishdf09u");
+            var injected = new KeyValuePair<string, object>(dependencyName, "sduhfoishdf09u");
 
             var dependency = new M.Mock<DependencyWrapper>(dependencyName);
             dependency.Setup(d => d.DependencyType).Returns(dependencyType);
@@ -113,7 +113,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.NonGeneric
             // arrange
             var test = new object();
             var violations = new[] { new M.Mock<IViolation>().Object };
-            var injected = new RuleDependency(dependencyName, "sduhfoishdf09u");
+            var injected = new KeyValuePair<string, object>(dependencyName, "sduhfoishdf09u");
 
             var dependency = new M.Mock<DependencyWrapper>(dependencyName);
             dependency.Setup(d => d.DependencyType).Returns(dependencyType);
