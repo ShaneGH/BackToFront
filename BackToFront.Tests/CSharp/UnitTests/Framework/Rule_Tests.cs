@@ -15,15 +15,20 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
     [TestFixture]
     public class Rule_Tests : BackToFront.Tests.Base.TestBase
     {
-        public class TestClass<TEntity> : Rule<TEntity>
+        public class Accessor<TEntity> : Rule<TEntity>
             where TEntity : class
         {
-            public TestClass()
+            public Accessor()
                 : base(null) { }
 
             public IEnumerable<PathElement<TEntity>> _NextPathElements()
             {
                 return NextPathElements(null, new U.ValidationContext { ExpressionModifier = new SwapPropVisitor() });
+            }
+
+            public Action<TEntity, ValidationContextX> __NewCompile(SwapPropVisitor visitor)
+            {
+                return _NewCompile(visitor);
             }
         }
 
@@ -54,7 +59,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void RequireThat_Test()
         {
             // arrange
-            var subject = new TestClass<object>();
+            var subject = new Accessor<object>();
 
             // act
             var result = subject.RequireThat(a => true);
@@ -69,7 +74,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void If_Test()
         {
             // arrange
-            var subject = new TestClass<object>();
+            var subject = new Accessor<object>();
 
             // act
             var result = subject.If(a => true);
@@ -84,7 +89,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void Else_Test()
         {
             // arrange
-            var subject = new TestClass<object>();
+            var subject = new Accessor<object>();
 
             // act
             var result = subject.Else;
@@ -100,7 +105,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void ValidateEntity_Test()
         {
             // arrange
-            var subject = new Mock<TestClass<object>>();
+            var subject = new Mock<Accessor<object>>();
             var violation = new TestViolation();
             var input1 = new object();
             var input2 = new SwapPropVisitor();
@@ -117,7 +122,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void FullyValidateEntity_Test()
         {
             // arrange
-            var subject = new Mock<TestClass<object>>();
+            var subject = new Mock<Accessor<object>>();
             var violation = new TestViolation();
             var input1 = new object();
             var input2 = new SwapPropVisitor();
@@ -137,7 +142,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void FullyValidateEntity_Test_InvalidOperation()
         {
             // arrange
-            var subject = new TestClass<string>();
+            var subject = new Accessor<string>();
 
             // act
             var result = ((IValidate)subject).FullyValidateEntity(76, null);
@@ -148,7 +153,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void ValidateEntity_Test_InvalidOperation()
         {
             // arrange
-            var subject = new TestClass<string>();
+            var subject = new Accessor<string>();
 
             // act
             var result = ((IValidate)subject).ValidateEntity(76, null);
@@ -175,6 +180,12 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // assert
             Assert.IsTrue(AreKindOfEqual(new[] { item1, item2 }, actual));
+        }
+
+        [Test]
+        [Ignore]
+        public void _NewCompileTest()
+        {
         }
     }
 }

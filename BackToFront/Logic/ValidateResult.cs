@@ -81,6 +81,23 @@ namespace BackToFront.Logic
 
                         _FirstViolation = child().FirstViolation;
                     }
+
+                    //var ctxt = new ValidationContextX(true);
+                    //RunValidation((rule, mocks, dependencies) =>
+                    //{
+                    //    var rrr = (Rule<TEntity>)rule;
+                    //    rrr.NewCompile(new SwapPropVisitor(mocks, dependencies))(Entity, ctxt);
+                    //    _FirstViolation = ctxt.Violations.FirstOrDefault();
+                    //    return _FirstViolation == null;
+                    //});
+
+                    //foreach (var child in ValidateChildMembers)
+                    //{
+                    //    if (_FirstViolation != null)
+                    //        break;
+
+                    //    _FirstViolation = child().FirstViolation;
+                    //}
                 }
 
                 return _FirstViolation;
@@ -95,7 +112,7 @@ namespace BackToFront.Logic
                 if (_AllViolations == null)
                 {
                     var violations = new List<IViolation>();
-                    RunValidation((rule, mocks, dependencies) => 
+                    RunValidation((rule, mocks, dependencies) =>
                     {
                         var v = rule.FullyValidateEntity(Entity, new SwapPropVisitor(mocks, dependencies));
                         violations.AddRange(v);
@@ -104,6 +121,17 @@ namespace BackToFront.Logic
 
                     ValidateChildMembers.Each(child => violations.AddRange(child().AllViolations));
                     _AllViolations = violations.ToArray();
+
+                    //var ctxt = new ValidationContextX(false);
+                    //RunValidation((rule, mocks, dependencies) =>
+                    //{
+                    //    var rrr = (Rule<TEntity>)rule;
+                    //    rrr.NewCompile(new SwapPropVisitor(mocks, dependencies))(Entity, ctxt);
+                    //    return !ctxt.IsViolated;
+                    //});
+
+                    //ValidateChildMembers.Each(child => ctxt.Violations.AddRange(child().AllViolations));
+                    //_AllViolations = ctxt.Violations.ToArray();
                 }
 
                 return _AllViolations;

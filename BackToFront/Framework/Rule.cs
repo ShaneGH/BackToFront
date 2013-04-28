@@ -34,6 +34,12 @@ namespace BackToFront.Framework
                 ParentRule.SubRules.Add(this);
         }
 
+        protected override Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
+        {
+            var r = _RequireThat.NewCompile(visitor);
+            return (a, b) => r(a, b);
+        }
+
         #region hierarchy
 
         public IEnumerable<Rule<TEntity>> AllAncestorRules

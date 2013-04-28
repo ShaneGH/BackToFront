@@ -67,6 +67,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Framework\DeadEnd.cs" />
+    <Compile Include="Framework\ValidationContextX.cs" />
     <Compile Include="Meta\ExpressionElementMeta.cs" />
     <Compile Include="Meta\PathElementMeta.cs" />
     <Compile Include="Framework\NonGeneric\RuleWrapper.cs" />

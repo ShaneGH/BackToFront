@@ -8,6 +8,7 @@ using BackToFront.Extensions;
 using BackToFront.Meta;
 using BackToFront.Utilities;
 using BackToFront.Validation;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework.Base
 {
@@ -84,6 +85,24 @@ namespace BackToFront.Framework.Base
         }
 
         public abstract PathElementMeta Meta { get; }
-        //public virtual IMetaElement Meta { get { return null; } }
+
+        public virtual Action<TEntity, ValidationContextX> NewCompile(SwapPropVisitor visitor)
+        {
+            var nc = _NewCompile(visitor);
+
+            return (entity, context) =>
+            {
+                if (!context.Break)
+                    nc(entity, context);
+            };
+        }
+
+        // TODO: make abstract
+        protected virtual Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
+        {
+            throw new NotImplementedException();
+        }
+
+        //protected abstract Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor);
     }
 }

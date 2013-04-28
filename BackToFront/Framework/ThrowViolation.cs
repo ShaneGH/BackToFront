@@ -10,6 +10,7 @@ using BackToFront.Framework.Base;
 using BackToFront.Meta;
 using BackToFront.Utilities;
 using System.Runtime.Serialization;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework
 {
@@ -20,10 +21,11 @@ namespace BackToFront.Framework
     public class ThrowViolation<TEntity> : PathElement<TEntity>
     {
         private readonly Func<TEntity, IViolation> _violation;
+        //TODO: pass in affected members and pass to copile method
         public ThrowViolation(Func<TEntity, IViolation> violation, Rule<TEntity> parentRule)
             : base(parentRule)
         {
-            if(violation == null)
+            if (violation == null)
                 throw new ArgumentNullException("##6");
 
             _violation = violation;
@@ -78,5 +80,10 @@ namespace BackToFront.Framework
         }
 
         #endregion
+
+        protected override Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
+        {
+            return (a, b) => b.Violations.Add(_violation(a));
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BackToFront.Framework;
+﻿using BackToFront.Expressions.Visitors;
+using BackToFront.Framework;
 using BackToFront.Framework.Base;
 using BackToFront.Utilities;
 using NUnit.Framework;
@@ -13,6 +14,19 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
     [TestFixture]
     public class RequirementFailed_Tests : BackToFront.Tests.Base.TestBase
     {
+        public class Accessor : RequirementFailed<TestClass>
+        {
+            public Accessor(Expression<Func<TestClass, bool>> property)
+                : base(property, null)
+            {
+            }
+
+            public Action<TestClass, ValidationContextX> __NewCompile(SwapPropVisitor visitor)
+            {
+                return _NewCompile(visitor);
+            }
+        }
+
         public class TestClass
         {
             public bool Success { get; set; }
@@ -101,6 +115,33 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // assert
             Assert.AreEqual(0, violations.Count);
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void _NewCompileTest(bool success)
+        {
+            // arrange
+            var violation = new M.Mock<IViolation>();
+            var subject = new Accessor(a => a.Success);
+            subject.WithModelViolation(a => violation.Object);
+            var item = new TestClass { Success = success };
+            var ctxt = new ValidationContextX(true);
+
+            // act
+            subject.__NewCompile(new SwapPropVisitor())(item, ctxt);
+
+            // assert
+            if (success)
+            {
+                Assert.AreEqual(0, ctxt.Violations.Count());
+            }
+            else
+            {
+                Assert.AreEqual(1, ctxt.Violations.Count());
+                Assert.AreEqual(violation.Object, ctxt.Violations.First());
+            }
         }
     }
 }

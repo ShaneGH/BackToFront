@@ -13,6 +13,7 @@ using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 using BackToFront.Utilities;
 using System.Runtime.Serialization;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework
 {
@@ -82,6 +83,17 @@ namespace BackToFront.Framework
             {
                 return _Meta ?? (_Meta = new PathElementMeta(NextPathElements().Where(a => a != null).Select(a => a.Meta), Descriptor.Meta, PathElementType.RequirementFailed));
             }
+        }
+
+        protected override Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
+        {
+            var t = Compile(visitor);
+            var v = Violation.NewCompile(visitor);
+            return (a, b) =>
+            {
+                if (!t.Invoke(a, visitor.MockValues, visitor.DependencyValues))
+                    v(a, b);
+            };
         }
     }
 }

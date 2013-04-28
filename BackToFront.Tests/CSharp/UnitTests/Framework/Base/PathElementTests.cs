@@ -12,6 +12,7 @@ using BackToFront.Framework.Base;
 using NUnit.Framework;
 
 using M = Moq;
+using Moq.Protected;
 
 using BackToFront.Tests.Utilities;
 using BackToFront.Framework;
@@ -239,6 +240,38 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
 
             // assert
             Assert.Throws<InvalidOperationException>(() => { subject.Object._Do(() => { }); });
+        }
+
+        [Test]
+        public void NewCompileTest()
+        {
+            // arrange
+            var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
+            SwapPropVisitor visitor = new SwapPropVisitor();
+            subject.Protected().Setup<Action<object, ValidationContextX>>("_NewCompile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns((a, b) => Assert.Pass());
+
+            // act
+            subject.Object.NewCompile(visitor)(new object(), new ValidationContextX(false));
+
+            // assert
+            Assert.Fail("Did not hit pass statement");
+        }
+
+        [Test]
+        public void NewCompileTest_Break()
+        {
+            // arrange
+            var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
+            SwapPropVisitor visitor = new SwapPropVisitor();
+            subject.Protected().Setup<Action<object, ValidationContextX>>("_NewCompile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns((a, b) => Assert.Fail());
+            var ctxt = new ValidationContextX(true);
+            ctxt.Violations.Add(null);
+
+            // act
+            subject.Object.NewCompile(visitor)(new object(), ctxt);
+
+            // assert
+            Assert.Pass("Avoid previous fail");
         }
     }
 }
