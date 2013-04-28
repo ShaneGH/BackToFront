@@ -23,14 +23,6 @@ namespace BackToFront.Framework
         public readonly List<DependencyWrapper> _Dependencies = new List<DependencyWrapper>();
         private readonly HashSet<Rule<TEntity>> SubRules = new HashSet<Rule<TEntity>>();
 
-        public IEnumerable<Rule<TEntity>> AllAncestorRules
-        {
-            get
-            {
-                return SubRules.Select(sr => new[] { sr }.Concat(sr.AllAncestorRules)).Aggregate();
-            }
-        }
-
         public Rule()
             : this(null)
         { }
@@ -42,16 +34,14 @@ namespace BackToFront.Framework
                 ParentRule.SubRules.Add(this);
         }
 
-        public override IEnumerable<AffectedMembers> AffectedMembers
-        {
-            // TODO: cache???
-            get { return RegisteredItems.Select(a => a.AffectedMembers).Aggregate(); }
-        }
+        #region hierarchy
 
-        private RequirementFailed<TEntity> _RequireThat;
-        public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)
+        public IEnumerable<Rule<TEntity>> AllAncestorRules
         {
-            return Do(() => _RequireThat = new RequirementFailed<TEntity>(property, this));
+            get
+            {
+                return SubRules.Select(sr => new[] { sr }.Concat(sr.AllAncestorRules)).Aggregate();
+            }
         }
 
         public override IEnumerable<PathElement<TEntity>> NextPathElements(TEntity subject, ValidationContext context)
@@ -63,7 +53,22 @@ namespace BackToFront.Framework
         {
             yield return _Condition;
             yield return _RequireThat;
-        }        
+        }
+
+        public void Register(IValidate<TEntity> element)
+        {
+            RegisteredItems.Add(element);
+        }
+
+        #endregion
+
+        #region ruleElements
+
+        private RequirementFailed<TEntity> _RequireThat;
+        public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)
+        {
+            return Do(() => _RequireThat = new RequirementFailed<TEntity>(property, this));
+        }
 
         MultiCondition<TEntity> _Condition;
         public IConditionSatisfied<TEntity> If(Expression<Func<TEntity, bool>> property)
@@ -90,10 +95,9 @@ namespace BackToFront.Framework
             get { return ElseIf(a => true); }
         }
 
-        public void Register(IValidate<TEntity> element)
-        {
-            RegisteredItems.Add(element);
-        }
+        #endregion 
+
+        #region Validate
 
         IViolation IValidate.ValidateEntity(object subject, SwapPropVisitor visitor)
         {
@@ -119,6 +123,16 @@ namespace BackToFront.Framework
             throw new InvalidOperationException("##");
         }
 
+        #endregion
+
+        #region Meta
+
+        public override IEnumerable<AffectedMembers> AffectedMembers
+        {
+            // TODO: cache???
+            get { return RegisteredItems.Select(a => a.AffectedMembers).Aggregate(); }
+        }
+
         public List<DependencyWrapper> Dependencies
         {
             get { return _Dependencies; }
@@ -137,5 +151,7 @@ namespace BackToFront.Framework
                 return _Meta ?? (_Meta = new PathElementMeta(NextPathElements().Where(a => a != null).Select(a => a.Meta), null, PathElementType.Rule));
             }
         }
+
+        #endregion
     }
 }
