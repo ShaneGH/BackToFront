@@ -36,11 +36,11 @@ namespace BackToFront.Framework
             _Rules.Add(rule);
         }
 
-        public Action<TEntity, ValidationContextX> NewCompile(SwapPropVisitor visitor)
+        public Expression NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
         {
-            var compiled = Rules.Select(r => r.NewCompile(visitor));
+            var compiled = Rules.Select(r => r.NewCompile(visitor, entity, context));
 
-            return (a, b) => compiled.Each(c => c(a, b));
+            return Expression.Block(compiled);
         }
 
         public IEnumerable<AffectedMembers> AffectedMembers

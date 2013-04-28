@@ -13,6 +13,7 @@ using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 using BackToFront.Utilities;
 using System.Runtime.Serialization;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework
 {
@@ -45,9 +46,9 @@ namespace BackToFront.Framework
             return subRule.If(property);
         }
 
-        protected override Action<TEntity, ValidationContextX> _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        protected override Expression _NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
         {
-            return _subRules.NewCompile(visitor);
+            return _subRules.NewCompile(visitor, entity, context);
         }
 
         public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)
@@ -59,7 +60,7 @@ namespace BackToFront.Framework
 
         public override IEnumerable<AffectedMembers> AffectedMembers
         {
-            get 
+            get
             {
                 return _subRules.AffectedMembers;
             }

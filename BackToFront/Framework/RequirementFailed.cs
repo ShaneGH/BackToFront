@@ -18,7 +18,7 @@ using BackToFront.Expressions.Visitors;
 namespace BackToFront.Framework
 {
     public class RequirementFailed<TEntity> : ExpressionElement<TEntity, bool>, IModelViolation<TEntity>
-    {        
+    {
         public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
             get
@@ -63,21 +63,18 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
+        protected override Expression _NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
+            
             if (next != null)
             {
-                var t = Compile(visitor);
-                var v = next.NewCompile(visitor);
-                return (a, b) =>
-                {
-                    if (!t.Invoke(a, b.Mocks, b.Dependencies))
-                        v(a, b);
-                };
+                var des = Descriptor.Compile(visitor);
+                var nxt = next.NewCompile(visitor, entity, context);
+                return Expression.IfThen(Expression.Not(des), nxt);
             }
-            else
-                return DoNothing;
+
+            return Expression.Empty();
         }
     }
 }

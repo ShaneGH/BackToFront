@@ -5,6 +5,8 @@ using BackToFront.Framework.Base;
 using BackToFront.Meta;
 using BackToFront.Utilities;
 using System.Runtime.Serialization;
+using System;
+using System.Linq.Expressions;
 
 namespace BackToFront.Framework
 {
@@ -40,9 +42,9 @@ namespace BackToFront.Framework
             get { yield break; }
         }
 
-        protected override System.Action<TEntity, ValidationContextX> _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        protected override Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
         {
-            return DoNothing;
+            return Expression.Empty();
         }
     }
 }

@@ -63,21 +63,22 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Action<TEntity, ValidationContextX> _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        protected override Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
             if (next != null)
             {
-                var t = Compile(visitor);
-                var v = next.NewCompile(visitor);
-                return (a, b) =>
-                {
-                    if (t.Invoke(a, b.Mocks, b.Dependencies))
-                        v(a, b);
-                };
+                //the error is here, although this is not part of the code, it should be able to compile
+                Expression.Lambda<Action<TEntity, ValidationContextX>>(Descriptor.Compile(visitor), entity, context).Compile();
+
+
+
+                var des = Descriptor.Compile(visitor);
+                var nxt = next.NewCompile(visitor, entity, context);
+                return Expression.IfThen(des, nxt);
             }
             else
-                return DoNothing;
+                return Expression.Empty();
         }
     }
 }

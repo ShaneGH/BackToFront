@@ -39,7 +39,7 @@ namespace BackToFront.Tests.Utilities
             }
         }
 
-        protected override Action<object, Framework.ValidationContextX> _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        protected override System.Linq.Expressions.Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor, System.Linq.Expressions.ParameterExpression entity, System.Linq.Expressions.ParameterExpression context)
         {
             throw new NotImplementedException();
         }

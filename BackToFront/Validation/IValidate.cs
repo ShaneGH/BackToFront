@@ -6,6 +6,7 @@ using BackToFront.Dependency;
 using BackToFront.Expressions.Visitors;
 using System;
 using BackToFront.Framework;
+using System.Linq.Expressions;
 
 namespace BackToFront.Validation
 {
@@ -31,7 +32,6 @@ namespace BackToFront.Validation
         /// </summary>
         PathElementMeta Meta { get; }
 
-
-        Action<TEntity, ValidationContextX> NewCompile(SwapPropVisitor visitor);
+        Expression NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context);
     }
 }

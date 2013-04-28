@@ -68,15 +68,39 @@ namespace BackToFront.Framework
 
         #endregion
 
-        protected override Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
+        protected override Expression _NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
         {
-            return (a, b) => 
+            //var add = typeof(IList<IViolation>).GetMethod("Add", new[] { typeof(IViolation) });
+            //var toArray = typeof(Enumerable).GetMethod("ToArray", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).MakeGenericMethod(typeof(MemberChainItem));
+            
+            //var violation = Expression.Variable(typeof(IViolation));
+            //var getViolation = Expression.Invoke(Expression.Constant(_violation), entity);
+            //var getViolatedEntity = Expression.Property(violation, "ViolatedEntity");
+            //var getViolated = Expression.Property(violation, "Violated");
+            //var enumerateViolatedMembers = Expression.Call(null, toArray, Expression.Constant(_violatedMembers));
+            //var getViolations = Expression.Property(context, "Violations");
+            
+            //var setViolation = Expression.Assign(violation, getViolation);
+            //var setEntity = Expression.Assign(getViolatedEntity, entity);
+            //var setViolated = Expression.Assign(getViolated, enumerateViolatedMembers);
+            //var addViolation = Expression.Call(getViolations, add, violation);
+
+            //return Expression.Block(
+            //    Expression.Assign(violation, getViolation),
+            //    Expression.Assign(getViolatedEntity, entity),
+            //    Expression.Assign(getViolated, enumerateViolatedMembers),
+            //    Expression.Call(getViolations, add, violation));
+
+
+            Action<TEntity, ValidationContextX> block = (a, b) =>
             {
                 var v = _violation(a);
                 v.ViolatedEntity = a;
                 v.Violated = _violatedMembers.ToArray();
-                b.Violations.Add(v); 
+                b.Violations.Add(v);
             };
+            
+            return Expression.Invoke(Expression.Constant(block), entity, context);
         }
     }
 }

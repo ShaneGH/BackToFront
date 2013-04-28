@@ -22,20 +22,20 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
     [TestFixture]
     public class ExpressionElementTests :BackToFront.Tests.Base.TestBase
     {
-        [Test]
-        public void CompileTest()
-        {
-            // arrange
-            var hello = "hello";
-            Expression<Func<object, string>> desc = a => hello;
-            var subject = new M.Mock<ExpressionElement<object, string>>(desc, null) { CallBase = true };
+        //[Test]
+        //public void CompileTest()
+        //{
+        //    // arrange
+        //    var hello = "hello";
+        //    Expression<Func<object, string>> desc = a => hello;
+        //    var subject = new M.Mock<ExpressionElement<object, string>>(desc, null) { CallBase = true };
 
-            // act
-            var actual = subject.Object.Compile();
+        //    // act
+        //    var actual = subject.Object.Compile();
 
-            // assert
-            Assert.AreEqual(hello, actual.Invoke(new object(), null, null));
-        }
+        //    // assert
+        //    Assert.AreEqual(hello, actual.Invoke(new object(), null, null));
+        //}
 
         [Test]
         public void AffectedMembers_Test()

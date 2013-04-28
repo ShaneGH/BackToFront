@@ -17,7 +17,7 @@ using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework
 {
-    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IRuleValidation<TEntity>, INonGenericRule 
+    public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IRuleValidation<TEntity>, INonGenericRule
     {
         private readonly HashSet<IValidate<TEntity>> RegisteredItems = new HashSet<IValidate<TEntity>>();
         public readonly List<DependencyWrapper> _Dependencies = new List<DependencyWrapper>();
@@ -34,28 +34,29 @@ namespace BackToFront.Framework
                 ParentRule.SubRules.Add(this);
         }
 
-        protected override Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
+        protected override Expression _NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
             if (next != null)
             {
-                var r = next.NewCompile(visitor);
-                return (a, b) => r(a, b);
+                return next.NewCompile(visitor, entity, context);
             }
             else
-                return DoNothing;
+                return Expression.Empty();
         }
 
         Action<object, ValidationContextX> INonGenericRule.NewCompile(SwapPropVisitor visitor)
         {
-            var tmp = base.NewCompile(visitor);
-            return (a, b) => 
+            ParameterExpression entity = Expression.Parameter(typeof(TEntity), "IGILGB"), context = Expression.Parameter(typeof(ValidationContextX), "as87tygfsad");
+            var rule = Expression.Lambda<Action<TEntity, ValidationContextX>>(NewCompile(visitor, entity, context), entity, context).Compile();
+
+            return (a, b) =>
             {
                 if (!(a is TEntity))
                     throw new InvalidOperationException("##");
 
                 // TODO: as
-                tmp((TEntity)a, b);
+                rule((TEntity)a, b);
             };
         }
 
@@ -68,7 +69,7 @@ namespace BackToFront.Framework
                 return SubRules.Select(sr => new[] { sr }.Concat(sr.AllAncestorRules)).Aggregate();
             }
         }
-        
+
         public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
             get
@@ -118,7 +119,7 @@ namespace BackToFront.Framework
             get { return ElseIf(a => true); }
         }
 
-        #endregion 
+        #endregion
 
         #region Validate
 

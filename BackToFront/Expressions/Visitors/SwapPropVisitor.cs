@@ -20,6 +20,7 @@ namespace BackToFront.Expressions.Visitors
 
         private readonly Dictionary<MemberExpression, string> DependencyNameCache = new Dictionary<MemberExpression, string>();
 
+        // TODO: delete this constructor
         public SwapPropVisitor()
             : this(new Mocks(), new Dependencies())
         {

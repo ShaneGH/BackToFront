@@ -9,6 +9,7 @@ using BackToFront.Enum;
 using System.Runtime.Serialization;
 using System;
 using BackToFront.Expressions.Visitors;
+using System.Linq.Expressions;
 
 namespace BackToFront.Framework
 {
@@ -50,21 +51,21 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Action<TEntity, ValidationContextX> _NewCompile(SwapPropVisitor visitor)
+        protected override Expression _NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
         {
-            var ifs = If.Select(a => new Tuple<CompiledMockedExpression<TEntity, bool>, Action<TEntity, ValidationContextX>>(a.Compile(visitor), a.NewCompile(visitor))).ToArray();
-
-            return (a, b) =>
+            ConditionalExpression final = null;
+            var possibilities = If.Select(a => new Tuple<Expression, Expression>(a.Descriptor.Compile(visitor), a.NewCompile(visitor, entity, context)));
+            foreach (var possibility in possibilities.Reverse())
             {
-                foreach (var i in ifs)
+                if (final == null)
+                    final = Expression.IfThen(possibility.Item1, possibility.Item2);
+                else
                 {
-                    if (i.Item1.Invoke(a, b.Mocks, b.Dependencies))
-                    {
-                        i.Item2(a, b);
-                        break;
-                    }
+                    final = Expression.IfThenElse(possibility.Item1, possibility.Item2, final);
                 }
-            };
+            }
+
+            return final;
         }
     }
 }
