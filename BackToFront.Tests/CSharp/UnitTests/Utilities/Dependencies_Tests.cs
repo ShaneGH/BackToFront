@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using BackToFront.Utilities;
 
-namespace BackToFront.Tests.CSharp.UnitTests.Utils
+namespace BackToFront.Tests.CSharp.UnitTests.Utilities
 {
     [TestFixture]
     public class Dependencies_Tests : Base.TestBase

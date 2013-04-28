@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using BackToFront.Utilities;
 using NUnit.Framework;
 
-namespace BackToFront.Tests.CSharp.UnitTests.Utils
+namespace BackToFront.Tests.CSharp.UnitTests.Utilities
 {
     [TestFixture]
     public class MemberIndex_Tests

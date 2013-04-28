@@ -15,7 +15,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
     [TestFixture]
     public class ThrowViolationTests : TestBase
     {
-        public class TestClass : Utilities.TestViolation
+        public class TestClass : TestViolation
         {
             public TestClass(string message)
                 : base(message)

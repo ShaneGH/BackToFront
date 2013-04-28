@@ -9,7 +9,7 @@ using NUnit.Framework;
 using BackToFront.Utilities;
 using BackToFront.Expressions;
 
-namespace BackToFront.Tests.CSharp.UnitTests.Utils
+namespace BackToFront.Tests.CSharp.UnitTests.Utilities
 {
     [TestFixture]
     public class Mock_Tests : Base.TestBase
