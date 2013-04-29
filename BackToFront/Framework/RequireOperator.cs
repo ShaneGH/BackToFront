@@ -63,19 +63,20 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
+        protected override Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
             if (next != null)
             {
-                //the error is here, although this is not part of the code, it should be able to compile
-                Expression.Lambda<Action<TEntity, ValidationContextX>>(Descriptor.Compile(visitor), entity, context).Compile();
+                //using (visitor.WithEntityParameter(EntityParameter))
+                //Expression.Lambda<Action<TEntity, ValidationContextX>>(visitor.Visit(Descriptor.WrappedExpression), entity, context).Compile();
 
-
-
-                var des = Descriptor.Compile(visitor);
-                var nxt = next.NewCompile(visitor, entity, context);
-                return Expression.IfThen(des, nxt);
+                using (visitor.WithEntityParameter(EntityParameter))
+                {
+                    var des = visitor.Visit(Descriptor.WrappedExpression);
+                    var nxt = next.NewCompile(visitor);
+                    return Expression.IfThen(des, nxt);
+                }
             }
             else
                 return Expression.Empty();

@@ -65,14 +65,14 @@ namespace BackToFront.Framework.Base
 
         public abstract PathElementMeta Meta { get; }
 
-        public Expression NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
+        public Expression NewCompile(SwapPropVisitor visitor)
         {
-            var nc = _NewCompile(visitor, entity, context);
+            var nc = _NewCompile(visitor);
             var _break = typeof(ValidationContextX).GetProperty("Break");
 
-            return Expression.IfThen(Expression.Not(Expression.Property(context, _break)), nc);
+            return Expression.IfThen(Expression.Not(Expression.Property(visitor.ContextParameter, _break)), nc);
         }
 
-        protected abstract Expression _NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context);
+        protected abstract Expression _NewCompile(SwapPropVisitor visitor);
     }
 }

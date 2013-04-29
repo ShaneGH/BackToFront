@@ -10,17 +10,18 @@ namespace BackToFront.Utilities
 {
     public class Dependencies : ReadonlyDictionary<string, object>
     {
-        public readonly E.ParameterExpression Parameter = E.Expression.Parameter(typeof(IDictionary<string, object>));
+        public readonly E.Expression Parameter;
         private readonly Dictionary<string, E.UnaryExpression> Params = new Dictionary<string, E.UnaryExpression>();
 
         //TODO delete this constructor
-        public Dependencies(IEnumerable<KeyValuePair<string, object>> d) : this(d.ToDictionary(a => a.Key, a => a.Value)) { }
+        public Dependencies(IEnumerable<KeyValuePair<string, object>> d) : this(d.ToDictionary(a => a.Key, a => a.Value), E.Expression.Empty()) { }
 
-        public Dependencies() : this(new Dictionary<string, object>()) { }
+        public Dependencies() : this(new Dictionary<string, object>(), E.Expression.Empty()) { }
 
-        public Dependencies(IDictionary<string, object> dependencies)
+        public Dependencies(IDictionary<string, object> dependencies, E.Expression parameter)
             : base(dependencies.ToDictionary(a => a.Key, a => a.Value))
         {
+            Parameter = parameter;
             foreach (var key in Keys)
             {
                 // TODO: is this correct? Needed to stop exception in ParameterForDependency

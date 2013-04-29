@@ -63,15 +63,17 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Expression _NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
+        protected override Expression _NewCompile(SwapPropVisitor visitor)
         {
-            var next = AllPossiblePaths.SingleOrDefault(a => a != null);
-            
+            var next = AllPossiblePaths.SingleOrDefault(a => a != null);            
             if (next != null)
             {
-                var des = Descriptor.Compile(visitor);
-                var nxt = next.NewCompile(visitor, entity, context);
-                return Expression.IfThen(Expression.Not(des), nxt);
+                using (visitor.WithEntityParameter(EntityParameter))
+                {
+                    var des = visitor.Visit(Descriptor.WrappedExpression);
+                    var nxt = next.NewCompile(visitor);
+                    return Expression.IfThen(Expression.Not(des), nxt);
+                }
             }
 
             return Expression.Empty();

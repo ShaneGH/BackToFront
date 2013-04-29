@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BackToFront.Validation;
 using BackToFront.Expressions.Visitors;
+using System.Linq.Expressions;
 
 namespace BackToFront.Framework.NonGeneric
 {
@@ -50,7 +51,7 @@ namespace BackToFront.Framework.NonGeneric
                 }
 
                 var ctxt = new ValidationContextX(false, new object[0], dependencies.ToDictionary());
-                Rule.NewCompile(new SwapPropVisitor(new Mocks(), dependencies))(ValidationSubject, ctxt);
+                Rule.NewCompile(new SwapPropVisitor(new Mocks(), dependencies, ValidationSubject.GetType()))(ValidationSubject, ctxt);
                 CachedResults[useServiceContainerDI] = ctxt.Violations.ToArray();
             }
 

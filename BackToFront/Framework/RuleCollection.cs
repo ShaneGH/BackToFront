@@ -36,9 +36,9 @@ namespace BackToFront.Framework
             _Rules.Add(rule);
         }
 
-        public Expression NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
+        public Expression NewCompile(SwapPropVisitor visitor)
         {
-            var compiled = Rules.Select(r => r.NewCompile(visitor, entity, context));
+            var compiled = Rules.Select(r => r.NewCompile(visitor));
 
             return Expression.Block(compiled);
         }

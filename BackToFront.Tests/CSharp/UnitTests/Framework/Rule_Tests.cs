@@ -22,9 +22,9 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             public Accessor()
                 : base(null) { }
 
-            public Expression __NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
+            public Expression __NewCompile(SwapPropVisitor visitor)
             {
-                return _NewCompile(visitor, entity, context);
+                return _NewCompile(visitor);
             }
         }
 

@@ -34,12 +34,12 @@ namespace BackToFront.Framework
                 ParentRule.SubRules.Add(this);
         }
 
-        protected override Expression _NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
+        protected override Expression _NewCompile(SwapPropVisitor visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
             if (next != null)
             {
-                return next.NewCompile(visitor, entity, context);
+                return next.NewCompile(visitor);
             }
             else
                 return Expression.Empty();
@@ -47,8 +47,9 @@ namespace BackToFront.Framework
 
         Action<object, ValidationContextX> INonGenericRule.NewCompile(SwapPropVisitor visitor)
         {
-            ParameterExpression entity = Expression.Parameter(typeof(TEntity), "IGILGB"), context = Expression.Parameter(typeof(ValidationContextX), "as87tygfsad");
-            var rule = Expression.Lambda<Action<TEntity, ValidationContextX>>(NewCompile(visitor, entity, context), entity, context).Compile();
+            var tyt = NewCompile(visitor);
+            var xxx = Expression.Lambda<Action<TEntity, ValidationContextX>>(tyt, visitor.EntityParameter, visitor.ContextParameter);
+            var rule = xxx.Compile();
 
             return (a, b) =>
             {

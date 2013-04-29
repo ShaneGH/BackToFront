@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BackToFront.Framework.Base;
+﻿using BackToFront.Framework.Base;
 using BackToFront.Meta;
-using BackToFront.Utilities;
+using System;
+using System.Collections.Generic;
 
 namespace BackToFront.Tests.Utilities
 {
@@ -39,7 +35,7 @@ namespace BackToFront.Tests.Utilities
             }
         }
 
-        protected override System.Linq.Expressions.Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor, System.Linq.Expressions.ParameterExpression entity, System.Linq.Expressions.ParameterExpression context)
+        protected override System.Linq.Expressions.Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
         {
             throw new NotImplementedException();
         }

@@ -12,17 +12,22 @@ namespace BackToFront.Utilities
 {
     public class Mocks : IEnumerable<Mock>
     {
-        public readonly E.ParameterExpression Parameter = E.Expression.Parameter(typeof(object[]));
+        public readonly E.Expression Parameter;
         private readonly Dictionary<Mock, E.UnaryExpression> Params = new Dictionary<Mock, E.UnaryExpression>();
 
         private readonly Mock[] _Mocks;
 
         public Mocks()
-            : this(Enumerable.Empty<Mock>()) { }
+            : this(Enumerable.Empty<Mock>(), E.Expression.Empty()) { }
 
+        //TODO: delete this constructor
         public Mocks(IEnumerable<Mock> mocks)
+            : this(mocks, E.Expression.Empty()) { }
+
+        public Mocks(IEnumerable<Mock> mocks, E.Expression parameter)
         {
             _Mocks = mocks.ToArray();
+            Parameter = parameter;
         }
 
         public IEnumerator<Mock> GetEnumerator()

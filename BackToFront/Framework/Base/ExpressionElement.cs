@@ -17,7 +17,7 @@ namespace BackToFront.Framework.Base
     {
         public readonly ExpressionWrapperBase Descriptor;
         protected readonly ReadOnlyCollection<ParameterExpression> Parameters;
-        protected readonly ParameterExpression EntityParameter;
+        public readonly ParameterExpression EntityParameter;
 
         protected ExpressionElement(Expression<Func<TEntity, TMember>> descriptor, Rule<TEntity> rule)
             : base(rule)

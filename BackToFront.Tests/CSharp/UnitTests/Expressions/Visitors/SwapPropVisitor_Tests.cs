@@ -63,21 +63,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions.Visitors
         }
 
         [Test]
-        public void Parameter_Tests()
-        {
-            // arrange
-            var t1 = new SwapPropVisitor(new Mocks(), new Dependencies());
-
-            // act
-            var p = t1.Parameters;
-
-            // assert
-            Assert.AreEqual(2, p.Count());
-            Assert.AreEqual(t1.Mocks.Parameter, p.ElementAt(0));
-            Assert.AreEqual(t1.Dependences.Parameter, p.ElementAt(1));
-        }
-
-        [Test]
         public void Visit_Tests_IsMocked()
         {
             // arrange

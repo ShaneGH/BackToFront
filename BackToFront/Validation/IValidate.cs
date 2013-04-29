@@ -32,6 +32,6 @@ namespace BackToFront.Validation
         /// </summary>
         PathElementMeta Meta { get; }
 
-        Expression NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context);
+        Expression NewCompile(SwapPropVisitor visitor);
     }
 }

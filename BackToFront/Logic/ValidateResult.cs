@@ -155,7 +155,7 @@ namespace BackToFront.Logic
                 rulesRepository = rulesRepository.Concat(Rules<TEntity>.ParentClassRepositories);
 
             if(init != null)
-                init(new SwapPropVisitor(new Mocks(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet)), new Dependencies(dependencies)));
+                init(new SwapPropVisitor(new Mocks(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet), null), new Dependencies(dependencies), typeof(TEntity)));
 
             rulesRepository.Aggregate().Each(rule =>
             {

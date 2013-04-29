@@ -51,10 +51,17 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Expression _NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
+        protected override Expression _NewCompile(SwapPropVisitor visitor)
         {
             ConditionalExpression final = null;
-            var possibilities = If.Select(a => new Tuple<Expression, Expression>(a.Descriptor.Compile(visitor), a.NewCompile(visitor, entity, context)));
+            var possibilities = If.Select(a => 
+            {
+                using (visitor.WithEntityParameter(a.EntityParameter))
+                {
+                    return new Tuple<Expression, Expression>(visitor.Visit(a.Descriptor.WrappedExpression), a.NewCompile(visitor));
+                }
+            });
+
             foreach (var possibility in possibilities.Reverse())
             {
                 if (final == null)

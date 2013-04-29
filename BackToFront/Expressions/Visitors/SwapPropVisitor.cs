@@ -1,4 +1,5 @@
 ﻿using BackToFront.Dependency;
+using BackToFront.Framework;
 using BackToFront.Utilities;
 using System;
 using System.Collections.Generic;
@@ -17,19 +18,37 @@ namespace BackToFront.Expressions.Visitors
     {
         public readonly Mocks Mocks;
         public readonly Dependencies Dependences;
+        public readonly ParameterExpression EntityParameter;
+        public readonly ParameterExpression ContextParameter = Expression.Parameter(typeof(ValidationContextX), "validationContext");
 
         private readonly Dictionary<MemberExpression, string> DependencyNameCache = new Dictionary<MemberExpression, string>();
 
         // TODO: delete this constructor
         public SwapPropVisitor()
-            : this(new Mocks(), new Dependencies())
+            : this(new Mocks(), new Dependencies(), null)
         {
         }
 
+        // TODO: delete this constructor
         public SwapPropVisitor(Mocks mocks, Dependencies dependences)
+            : this(mocks, dependences, null)
         {
-            Mocks = mocks;
-            Dependences = dependences;
+        }
+
+        //TODO: change mocks and dependencies to IEnumerable and IDictionary respectively
+        public SwapPropVisitor(Mocks mocks, Dependencies dependences, Type entityType)
+        {
+            Mocks = new Utilities.Mocks(mocks, Expression.PropertyOrField(ContextParameter, "Mocks"));
+            Dependences = new Dependencies(dependences.ToDictionary(), Expression.PropertyOrField(ContextParameter, "Dependencies"));
+            EntityParameter = Expression.Parameter(entityType, "entity");
+        }
+
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            if (_EntityParameters.Any(a => a.Parameter == node))
+                return EntityParameter;
+
+            return base.VisitParameter(node);
         }
 
         protected override Expression VisitMember(MemberExpression node)
@@ -53,11 +72,14 @@ namespace BackToFront.Expressions.Visitors
 
         public override Expression Visit(Expression node)
         {
-            foreach (var m in Mocks)
+            if (!ContainsNothing)
             {
-                if (m.Expression.IsSameExpression(node))
+                foreach (var m in Mocks)
                 {
-                    return Mocks.ParameterForMock(m);
+                    if (m.Expression.IsSameExpression(node))
+                    {
+                        return Mocks.ParameterForMock(m);
+                    }
                 }
             }
 
@@ -69,15 +91,6 @@ namespace BackToFront.Expressions.Visitors
             get
             {
                 return Mocks.Count() == 0 && Dependences.Count() == 0;
-            }
-        }
-
-        public IEnumerable<ParameterExpression> Parameters
-        {
-            get
-            {
-                yield return Mocks.Parameter;
-                yield return Dependences.Parameter;
             }
         }
 
@@ -94,6 +107,31 @@ namespace BackToFront.Expressions.Visitors
             get
             {
                 return Dependences.ToDictionary(a => a.Key, a => a.Value);
+            }
+        }
+
+        public IDisposable WithEntityParameter(ParameterExpression parameter)
+        {
+            return new AddEntityParameter(parameter, this);
+        }
+
+        private readonly IList<AddEntityParameter> _EntityParameters = new List<AddEntityParameter>();
+        private class AddEntityParameter : IDisposable
+        {
+            private readonly SwapPropVisitor _Parent;
+            public readonly ParameterExpression Parameter;
+
+            public AddEntityParameter(ParameterExpression entityParameter, SwapPropVisitor parent)
+            {
+                _Parent = parent;
+                Parameter = entityParameter;
+
+                _Parent._EntityParameters.Add(this);
+            }
+
+            public void Dispose()
+            {
+                _Parent._EntityParameters.Remove(this);
             }
         }
     }

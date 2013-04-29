@@ -68,7 +68,7 @@ namespace BackToFront.Framework
 
         #endregion
 
-        protected override Expression _NewCompile(SwapPropVisitor visitor, ParameterExpression entity, ParameterExpression context)
+        protected override Expression _NewCompile(SwapPropVisitor visitor)
         {
             //var add = typeof(IList<IViolation>).GetMethod("Add", new[] { typeof(IViolation) });
             //var toArray = typeof(Enumerable).GetMethod("ToArray", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).MakeGenericMethod(typeof(MemberChainItem));
@@ -92,15 +92,15 @@ namespace BackToFront.Framework
             //    Expression.Call(getViolations, add, violation));
 
 
-            Action<TEntity, ValidationContextX> block = (a, b) =>
+            Action<TEntity, ValidationContextX> block = (entity, context) =>
             {
-                var v = _violation(a);
-                v.ViolatedEntity = a;
-                v.Violated = _violatedMembers.ToArray();
-                b.Violations.Add(v);
+                var violation = _violation(entity);
+                violation.ViolatedEntity = entity;
+                violation.Violated = _violatedMembers.ToArray();
+                context.Violations.Add(violation);
             };
             
-            return Expression.Invoke(Expression.Constant(block), entity, context);
+            return Expression.Invoke(Expression.Constant(block), visitor.EntityParameter, visitor.ContextParameter);
         }
     }
 }
