@@ -17,22 +17,21 @@ namespace BackToFront.Logic
 {
     public class ValidateResult<TEntity> : IValidateResult<TEntity>
     {
+        private readonly Repository _Repository;
         private readonly TEntity Entity;
-        private readonly IEnumerable<KeyValuePair<string, object>> Dependencies;
+        private readonly IDictionary<string, object> Dependencies;
         private readonly List<Mock> Mocks = new List<Mock>();
         private readonly List<Func<IValidateResult>> ValidateChildMembers = new List<Func<IValidateResult>>();
         private readonly ValidateOptions Options;
 
-        public ValidateResult(TEntity entity)
-            : this(entity, new ValidateOptions(), null)
+        public ValidateResult(TEntity entity, Repository repository)
+            : this(entity, repository, new ValidateOptions(), null)
         {
         }
 
-        public ValidateResult(TEntity entity, ValidateOptions options, object dependencyClasses)
+        public ValidateResult(TEntity entity, Repository repository, ValidateOptions options, object dependencyClasses)
+            : this(entity, repository, options, dependencyClasses == null ? Enumerable.Empty<KeyValuePair<string, object>>() : ToDependencies(dependencyClasses), Enumerable.Empty<Mock>())
         {
-            Dependencies = dependencyClasses == null ? Enumerable.Empty<KeyValuePair<string, object>>() : ToDependencies(dependencyClasses);
-            Entity = entity;
-            Options = options ?? new ValidateOptions();
         }
 
         /// <summary>
@@ -42,12 +41,17 @@ namespace BackToFront.Logic
         /// <param name="options"></param>
         /// <param name="dependencyClasses"></param>
         /// <param name="mocks"></param>
-        private ValidateResult(TEntity entity, ValidateOptions options, IEnumerable<KeyValuePair<string, object>> dependencyClasses, List<Mock> mocks)
+        private ValidateResult(TEntity entity, Repository repository, ValidateOptions options, IEnumerable<KeyValuePair<string, object>> dependencyClasses, IEnumerable<Mock> mocks)
         {
+            if (entity == null || repository == null)
+                throw new InvalidOperationException("##");
+
             Entity = entity;
-            Options = options;
-            Dependencies = dependencyClasses;
-            Mocks = mocks;
+            _Repository = repository;
+            Options = options ?? new ValidateOptions();
+            Dependencies = dependencyClasses.ToDictionary(a => a.Key, a => a.Value);
+
+            Mocks.AddRange(mocks);
         }
 
         public IViolation _FirstViolation;
@@ -63,25 +67,17 @@ namespace BackToFront.Logic
                     }
                     else
                     {
-                        ValidationContextX ctxt = null;
-                        SwapPropVisitor visitor = null;
-                        RunValidation(v =>
-                        {
-                            visitor = v;
-                            ctxt = new ValidationContextX(false, visitor.MockValues, visitor.DependencyValues);
-                        }, rule =>
-                        {
-                            rule.NewCompile(visitor)(Entity, ctxt);
-                            _FirstViolation = ctxt.Violations.FirstOrDefault();
-                            return _FirstViolation == null;
-                        });
+                        _FirstViolation = RunValidation(true).FirstOrDefault();
 
-                        foreach (var child in ValidateChildMembers)
+                        if (_FirstViolation == null)
                         {
-                            if (_FirstViolation != null)
-                                break;
+                            foreach (var child in ValidateChildMembers)
+                            {
+                                if (_FirstViolation != null)
+                                    break;
 
-                            _FirstViolation = child().FirstViolation;
+                                _FirstViolation = child().FirstViolation;
+                            }
                         }
                     }
                 }
@@ -97,20 +93,9 @@ namespace BackToFront.Logic
             {
                 if (_AllViolations == null)
                 {
-                    ValidationContextX ctxt = null;
-                    SwapPropVisitor visitor = null;
-                    RunValidation(v => 
-                    {
-                        visitor = v;
-                        ctxt = new ValidationContextX(false, visitor.MockValues, visitor.DependencyValues);
-                    }, rule =>
-                    {
-                        rule.NewCompile(visitor)(Entity, ctxt);
-                        return !ctxt.IsViolated;
-                    });
-
-                    ValidateChildMembers.Each(child => ctxt.Violations.AddRange(child().AllViolations));
-                    _AllViolations = ctxt.Violations.ToArray();
+                    var violations = RunValidation(false);
+                    ValidateChildMembers.Each(child => violations.AddRange(child().AllViolations));
+                    _AllViolations = violations.ToArray();
                 }
 
                 return _AllViolations;
@@ -134,7 +119,7 @@ namespace BackToFront.Logic
         /// Orders rules, mocks and dependencies and delivers them to a function (for vaslidation)
         /// </summary>
         /// <param name="action">Validation function. Returns </param>
-        private void RunValidation(Action<SwapPropVisitor> init, Func<INonGenericRule, bool> action)
+        private IList<IViolation> RunValidation(bool breakOnFirstError)
         {
             // segregate from global object
             var mocks = Mocks.ToArray();
@@ -149,23 +134,29 @@ namespace BackToFront.Logic
             bool success = true;
             var dependencies = (IEnumerable<KeyValuePair<string, object>>)Dependencies.ToArray();
 
-            // add parent class rules
-            IEnumerable<IEnumerable<INonGenericRule>> rulesRepository = new[] { Rules<TEntity>.Repository.Registered };
-            if (Options.ValidateAgainstParentClassRules)
-                rulesRepository = rulesRepository.Concat(Rules<TEntity>.ParentClassRepositories);
-
-            if(init != null)
-                init(new SwapPropVisitor(new Mocks(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet), null), new Dependencies(dependencies), typeof(TEntity)));
-
-            rulesRepository.Aggregate().Each(rule =>
+            var violations = new List<IViolation>();
+            var current = typeof(TEntity);
+            while (current != null)
             {
-                ValidateDependencies(rule.Dependencies, ref dependencies);
-                success &= action(rule);
-            });
+                var visitor = new SwapPropVisitor(new Mocks(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet), null), new Dependencies(dependencies), current);
+                var context = new ValidationContextX(breakOnFirstError, visitor.MockValues, visitor.DependencyValues);
+
+                // compile and run
+                _Repository.Rules(current).Each(rule => rule.NewCompile(visitor)(Entity, context));
+                success &= !context.IsViolated;
+                violations.AddRange(context.Violations);
+
+                if (!success && breakOnFirstError)
+                    break;
+
+                current = current.BaseType;
+            }
 
             // success, persist mock values
             if(success)
                 setters.Each(a => a.SetValue(Entity));
+
+            return violations;
         }
 
         internal static void ValidateDependencies(IEnumerable<DependencyWrapper> required, ref IEnumerable<KeyValuePair<string, object>> delivered)
@@ -216,7 +207,7 @@ namespace BackToFront.Logic
                 if (tester.Expression is ParameterExpression)
                 {
                     var compiled = member.Compile();
-                    ValidateChildMembers.Add(() => new ValidateResult<TParameter>(compiled(Entity), Options, dependencies ?? Dependencies, Mocks.Select(m => 
+                    ValidateChildMembers.Add(() => new ValidateResult<TParameter>(compiled(Entity), _Repository, Options, dependencies ?? Dependencies, Mocks.Select(m => 
                         {
                             Mock output;
                             if (m.TryForChild(member, Expression.Parameter(typeof(TParameter)), out output) && !(output.Expression is ParameterExpressionWrapper))

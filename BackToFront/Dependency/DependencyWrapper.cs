@@ -28,9 +28,9 @@ namespace BackToFront.Dependency
     public sealed class DependencyWrapper<TDependency> : DependencyWrapper
     {
         private static readonly Type _DependencyType = typeof(TDependency);
-        private readonly Func<IDependencyResolver> _Resolver;
+        private readonly IDependencyResolver _Resolver;
 
-        internal DependencyWrapper(string name, Func<IDependencyResolver> resolver)
+        internal DependencyWrapper(string name, IDependencyResolver resolver)
             : base(name) 
         {
             _Resolver = resolver;
@@ -40,7 +40,7 @@ namespace BackToFront.Dependency
         {
             get 
             {
-                var dependency = (TDependency)_Resolver().GetService(typeof(TDependency));
+                var dependency = (TDependency)_Resolver.GetService(typeof(TDependency));
                 if (dependency != null)
                     return dependency;
 

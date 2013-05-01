@@ -115,6 +115,7 @@
     <Compile Include="Validation\IRuleValidation.cs" />
     <Compile Include="Validation\_NewCompile.cs" />
     <Compile Include="_\IRule.cs" />
+    <Compile Include="_\Repository.cs" />
     <Compile Include="_\Rules.cs" />
     <Compile Include="Logic\IBeginSubRule.cs" />
     <Compile Include="Logic\IRequirementFailed2.cs" />
@@ -123,7 +124,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\IValidate.cs" />
     <Compile Include="_\IViolation.cs" />
-    <Compile Include="_\Rules_Static.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

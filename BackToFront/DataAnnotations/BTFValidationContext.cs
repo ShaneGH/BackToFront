@@ -16,12 +16,14 @@ namespace BackToFront.DataAnnotations
         {
             var rules = new List<RuleWrapper>();
 
+            //TODO: where should the repository come from?
+            var repository = validationContext.ServiceContainer.GetService(typeof(Repository)) as Repository;
             Func<IRuleDependencies> di = () => (IRuleDependencies)validationContext.ServiceContainer.GetService(typeof(IRuleDependencies));
 
             Type current = validationContext.ObjectType;
             while (current != null)
             {
-                rules.AddRange(BackToFront.Rules.GetRules(current).Select(r => new RuleWrapper(r, validationContext.ObjectInstance, di)));
+                rules.AddRange(repository.Rules(current).Select(r => new RuleWrapper(r, validationContext.ObjectInstance, di)));
                 current = current.BaseType;
             }
 

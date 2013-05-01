@@ -17,7 +17,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Dependency
             var di = new M.Mock<IDependencyResolver>();
             di.Setup(a => a.GetService(M.It.IsAny<Type>())).Returns(() => null);
 
-            var subject = new DependencyWrapper<string>("Hello", () => di.Object);
+            var subject = new DependencyWrapper<string>("Hello", di.Object);
 
             // act
             // assert
@@ -33,7 +33,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Dependency
             var di = new M.Mock<IDependencyResolver>();
             di.Setup(a => a.GetService(M.It.IsAny<Type>())).Returns(() => expected);
 
-            var subject = new DependencyWrapper<string>("Hello", () => di.Object);
+            var subject = new DependencyWrapper<string>("Hello", di.Object);
 
             // act
             var actual = subject.Val;

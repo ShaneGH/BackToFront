@@ -79,40 +79,121 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\RulesRepositoryTestBase.cs" />
     <Compile Include="Base\TestBase.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CSharp\IntegrationTests\Children.cs" />
     <Compile Include="CSharp\IntegrationTests\TestPass1_Simplified_Test.cs" />
     <Compile Include="CSharp\IntegrationTests\Inheritance.cs" />
-    <Compile Include="CSharp\UnitTests\Expressions\Visitors\SwapPropVisitor_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Utilities\Dependencies_Tests.cs" />
-    <Compile Include="Javascript\JavascriptTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Test.cs" />
     <Compile Include="CSharp\UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\DataAnnotations\BTFValidationContext_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\DataAnnotations\ValidateMemberAttribute_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\DataAnnotations\BTFValidationContext_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\DataAnnotations\ValidateMemberAttribute_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Dependency\DependencyWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Expressions\BinaryExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Expressions\ConstantExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="CSharp\UnitTests\Expressions\ElementAtExpressionWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Extensions\Reflection.cs" />
-    <Compile Include="CSharp\UnitTests\Extensions\IEnumerable.cs" />
-    <Compile Include="CSharp\UnitTests\Framework\Base\ExpressionElementTests.cs" />
+    <Compile Include="CSharp\UnitTests\Expressions\ExpressionWrapperBase_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Expressions\MemberExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Expressions\MethodCallExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Expressions\ParameterExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Expressions\Visitors\SwapPropVisitor_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Extensions\IEnumerable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Extensions\Reflection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Framework\Base\ExpressionElementTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="CSharp\UnitTests\Framework\Base\PathElementTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\NonGeneric\RuleWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Framework\SubRuleCollection_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Framework\Operator_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Framework\RequirementFailed_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Framework\RequireOperator_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Framework\RuleCollection_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Framework\Rule_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Framework\MultiCondition_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Framework\MultiCondition_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Framework\NonGeneric\RuleWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Framework\Operator_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Framework\RequirementFailed_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Framework\RequireOperator_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Framework\RuleCollection_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Framework\Rule_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Framework\SubRuleCollection_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="CSharp\UnitTests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CSharp\UnitTests\Utilities\CompiledMockedExpression_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Utilities\Dependencies_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Utilities\MemberChainItem_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Utilities\MemberIndex_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Utilities\Mocks_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Utilities\Mock_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Utilities\ReflectionWrapper_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\Utilities\Utilities_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\_\Rules_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\_\Repository.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Javascript\JavascriptTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="CSharp\IntegrationTests\TestPass7Test_2.cs" />
     <Compile Include="CSharp\IntegrationTests\TestPass1_1_Test.cs" />
     <Compile Include="CSharp\IntegrationTests\TestPass7Test_1.cs" />
@@ -131,34 +212,6 @@
     <Compile Include="CSharp\IntegrationTests\TestPass3Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\BinaryExpressionWrapper_Tests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\ConstantExpressionWrapper_Tests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\ExpressionWrapperBase_Tests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\MemberExpressionWrapper_Tests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\MethodCallExpressionWrapper_Tests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\ParameterExpressionWrapper_Tests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CSharp\UnitTests\Utilities\CompiledMockedExpression_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Dependency\DependencyWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Utilities\MemberIndex_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Utilities\ReflectionWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Utilities\MemberChainItem_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Utilities\Mocks_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Utilities\Mock_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Utilities\Utilities_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\_\Rules_Static_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\_\Rules.cs" />
     <Compile Include="Utilities\SimpleIValidate.cs">
       <SubType>Code</SubType>
     </Compile>

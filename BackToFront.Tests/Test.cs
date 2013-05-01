@@ -42,15 +42,17 @@ namespace BackToFront.Tests
             }
         }
 
+        public static Repository Repository;
+
         public static void SetupTestpad()
         {
-            Rules<Something>.AddRule(trunk => trunk
+            Repository.AddRule<Something>(trunk => trunk
                 .RequireThat(b => b.Value1 == 0).WithModelViolation(() => new ViolationClass("Invalid")));
 
-            Rules<Something>.AddRule(trunk => trunk
+            Repository.AddRule<Something>(trunk => trunk
                 .If(b => b.Value1 != 0).RequirementFailed.WithModelViolation(() => new ViolationClass("Invalid")));
 
-            Rules<Something>.AddRule(trunk => trunk
+            Repository.AddRule<Something>(trunk => trunk
                 .If(b => b.Value1 == 2 && b.Value2 == 6)
                     .Then(branch1 =>
                     {
@@ -59,26 +61,26 @@ namespace BackToFront.Tests
                         branch1.If(c => c.Value4 == 0).RequireThat(c => c.Value5 == 8).WithModelViolation(() => new ViolationClass("Invalid"));
                     }));
 
-            Rules<Something>.AddRule(trunk => trunk
+            Repository.AddRule<Something>(trunk => trunk
                 .If(b => b.Value4 == 0).RequireThat(b => b.Value5 == 8).WithModelViolation(() => new ViolationClass("Invalid")));
 
-            Rules<Something>.AddRule(trunk => trunk
+            Repository.AddRule<Something>(trunk => trunk
                 .If(b => b.Value4 == 1 && (b.Value5 == 3 && b.Value5 == 7) && b.Value1 == 7));
 
-            var violation = new Something().Validate()
+            var violation = new Something().Validate(Repository)
                 .WithMockedParameter(a => a.Value3, 4)
                 .WithMockedParameter(a => a.Value5, 9).FirstViolation;
         }
 
         public static void SetupTestpadWithRepository()
         {
-            Rules<Something>.AddRule<IRepository>((trunk, repo) => trunk
+            Repository.AddRule<Something, IRepository>((trunk, repo) => trunk
                 .RequireThat(b => repo.Val.GetValues().Contains(b.Value1)).WithModelViolation(() => new ViolationClass("Invalid")));
 
-            Rules<Something>.AddRule(trunk => trunk
+            Repository.AddRule<Something>(trunk => trunk
                 .If(b => b.Value1 != 0).RequirementFailed.WithModelViolation(() => new ViolationClass("Invalid")));
 
-            Rules<Something>.AddRule(trunk => trunk
+            Repository.AddRule<Something>(trunk => trunk
                 .If(b => b.Value1 == 2 && b.Value2 == 6)
                     .Then(branch1 =>
                     {
@@ -87,13 +89,13 @@ namespace BackToFront.Tests
                         branch1.If(c => c.Value4 == 0).RequireThat(c => c.Value5 == 8).WithModelViolation(() => new ViolationClass("Invalid"));
                     }));
 
-            Rules<Something>.AddRule(trunk => trunk
+            Repository.AddRule<Something>(trunk => trunk
                 .If(b => b.Value4 == 0).RequireThat(b => b.Value5 == 8).WithModelViolation(() => new ViolationClass("Invalid")));
 
-            Rules<Something>.AddRule(trunk => trunk
+            Repository.AddRule<Something>(trunk => trunk
                 .If(b => b.Value4 == 1 && (b.Value5 == 3 && b.Value5 == 7) && b.Value1 == 7));
 
-            var violation = new Something().Validate()
+            var violation = new Something().Validate(Repository)
                 .WithMockedParameter(a => a.Value3, 4)
                 .WithMockedParameter(a => a.Value5, 9).FirstViolation;
         }

@@ -17,8 +17,9 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
     ///         Require, is false, AND, is false, model violation is
     /// </summary>
     [TestFixture]
-    public class Children : Base.TestBase
+    public class Children : Base.RulesRepositoryTestBase
     {
+        public static TestViolation Violation = new TestViolation("Violation");
         public class ParentClass
         {
             public TestPass4 Child { get; set; }
@@ -26,12 +27,9 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
 
         public class TestPass4
         {
-            public static TestViolation Violation = new TestViolation("Violation");
 
             static TestPass4()
             {
-                Rules<TestPass4>.AddRule(rule => rule
-                    .RequireThat(a => !a.ThrowViolationSwitch1 && !a.ThrowViolationSwitch2).WithModelViolation(() => Violation));
             }
 
             public bool ThrowViolationSwitch1 { get; set; }
@@ -39,6 +37,14 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
         }
 
         public class TestPass4Child : TestPass4 { }
+
+        public override void TestFixtureSetUp()
+        {
+            base.TestFixtureSetUp();
+            Repository.AddRule<TestPass4>(rule => rule
+                    .RequireThat(a => !a.ThrowViolationSwitch1 && !a.ThrowViolationSwitch2).WithModelViolation(() => Violation));
+
+        }
 
         [Test]
         [TestCase(true, true)]
@@ -48,7 +54,7 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
         public void Require_And(bool switch1, bool switch2)
         {
             // arrange
-            var v = switch1 || switch2 ? TestPass4Child.Violation : null;
+            var v = switch1 || switch2 ? Violation : null;
             var subject = new ParentClass
             {
                 Child = new TestPass4Child
@@ -59,8 +65,8 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
             };
 
             // act
-            var violation1 = subject.Validate().FirstViolation;
-            var violation2 = subject.Validate().ValidateMember(a => a.Child).FirstViolation;
+            var violation1 = subject.Validate(Repository).FirstViolation;
+            var violation2 = subject.Validate(Repository).ValidateMember(a => a.Child).FirstViolation;
 
             // assert
             Assert.IsNull(violation1);
@@ -77,15 +83,15 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
         public void Require_And_WithMocks(bool switch1, bool switch2)
         {
             // arrange
-            var v = switch1 || switch2 ? TestPass4Child.Violation : null;
+            var v = switch1 || switch2 ? Violation : null;
             var subject = new ParentClass
             {
                 Child = new TestPass4Child()
             };
 
             // act
-            var violation1 = subject.Validate().FirstViolation;
-            var violation2 = subject.Validate()
+            var violation1 = subject.Validate(Repository).FirstViolation;
+            var violation2 = subject.Validate(Repository)
                 .WithMockedParameter(a => a.Child.ThrowViolationSwitch1, switch1)
                 .WithMockedParameter(a => a.Child.ThrowViolationSwitch2, switch2)
                 .ValidateMember(a => a.Child).FirstViolation;

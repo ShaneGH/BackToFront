@@ -1,4 +1,13 @@
 ﻿
+Short term:	
+			fix unit tests
+			delete constructors which should be deleted
+			unit test all NewCompiles
+			unit test Visitor
+
+
+
+
 Client side
 Domain Model
 

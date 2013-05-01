@@ -15,23 +15,14 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
     /// ToTest: If, else if, else
     /// </summary>
     [TestFixture]
-    public class TestPass8Test : Base.TestBase
+    public class TestPass8Test : Base.RulesRepositoryTestBase
     {
         public static TestViolation Violation1 = new TestViolation("Violation1");
         public static TestViolation Violation2 = new TestViolation("Violation2");
-        public static TestViolation Violation3= new TestViolation("Violation3");
+        public static TestViolation Violation3 = new TestViolation("Violation3");
 
         public class TestEntity
         {
-
-            static TestEntity()
-            {
-                Rules<TestEntity>.AddRule(rule => rule
-                    .If(a => a.ThrowViolationSwitch1).RequirementFailed.WithModelViolation(() => Violation1)
-                    .ElseIf(a => a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(() => Violation2)
-                    .Else.RequirementFailed.WithModelViolation(() => Violation3));
-            }
-
             public bool ThrowViolationSwitch1 { get; set; }
             public bool ThrowViolationSwitch2 { get; set; } 
         }
@@ -43,6 +34,16 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
                 var bits = new System.Collections.BitArray(new[] { (byte)i });
                 yield return new Tuple<bool, bool>(bits[1], bits[0]);
             }
+        }
+
+        public override void TestFixtureSetUp()
+        {
+            base.TestFixtureSetUp();
+
+            Repository.AddRule<TestEntity>(rule => rule
+                .If(a => a.ThrowViolationSwitch1).RequirementFailed.WithModelViolation(() => Violation1)
+                .ElseIf(a => a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(() => Violation2)
+                .Else.RequirementFailed.WithModelViolation(() => Violation3));
         }
 
         [Test]
@@ -69,7 +70,7 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
             };
 
             // act
-            var violation = subject.Validate().AllViolations;
+            var violation = subject.Validate(Repository).AllViolations;
 
             // assert
             Assert.AreEqual(1, violation.Count());

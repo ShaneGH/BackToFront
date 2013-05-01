@@ -7,113 +7,32 @@ using BackToFront.Dependency;
 using BackToFront.Framework;
 using BackToFront.Utilities;
 using BackToFront.Validation;
+using System.Reflection;
+using System.Collections;
 
 namespace BackToFront
 {
-    //public class RuleRepository
-    //{
-    //    private readonly IDependencyResolver _Resolver;
-    //    private readonly Dictionary<Type, object> _Rules = new Dictionary<Type, object>();
+    public interface IRules : IEnumerable<INonGenericRule> 
+    {
 
-    //    public RuleRepository()
-    //        : this(new DummyDependencyResolver())
-    //    {
-    //    }
-
-    //    public RuleRepository(IDependencyResolver resolver)
-    //    {
-    //        if (resolver == null)
-    //            throw new ArgumentNullException("resolver");
-
-    //        _Resolver = resolver;
-    //    }
-
-    //    public IEnumerable<ParentRuleWrappers<TEntity>> ParentRules<TEntity>()
-    //    {
-    //        var current = typeof(TEntity).BaseType;
-    //        while (current != null)
-    //        {
-    //            yield return new ParentRuleWrappers<TEntity>(current);
-    //            current = current.BaseType;
-    //        }
-    //    }
-
-    //    public Rule<TEntity> Rules<TEntity>()
-    //    {
-    //        var t = typeof(TEntity);
-    //        if (!_Rules.ContainsKey(t))
-    //        {
-    //            _Rules.Add(t, new Rules<TEntity>(_Resolver));
-    //        }
-
-    //        return (Rule<TEntity>)_Rules[t];
-    //    }
-    //}
-
+    }
+    
     /// <summary>
     /// Application business rules
     /// </summary>
-    public class Rules<TEntity>
+    public class Rules<TEntity> : IRules//, IEnumerable<Rule<TEntity>>
     {
-        #region Static
+        public Rules()
+            : this(null) { }
 
-        public static readonly Rules<TEntity> Repository = new Rules<TEntity>(() => BackToFrontDependency.ProtectedResolver);
-
-        /// <summary>
-        /// The rules applied to the ancestor classes of TEntity
-        /// </summary>
-        public static IEnumerable<IEnumerable<INonGenericRule>> ParentClassRepositories
+        public Rules(IDependencyResolver resolver)
         {
-            get
-            {
-                var current = typeof(TEntity).BaseType;
-                while (current != null)
-                {
-                    yield return BackToFront.Rules.GetRules(current);
-                    current = current.BaseType;
-                }
-            }
+            _Resolver = resolver ?? new DummyDependencyResolver();
         }
 
-        /// <summary>
-        /// Add a business rule
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="rule"></param>
-        public static void AddRule(Action<IRule<TEntity>> rule)
-        {
-            Repository.Add(rule);
-        }
-
-        /// <summary>
-        /// Add a business rule
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="rule"></param>
-        public static void AddRule<TDependency>(Action<IRule<TEntity>, DependencyWrapper<TDependency>> rule)
-            where TDependency : class
-        {
-            Repository.Add<TDependency>(rule);
-        }
-
-        #endregion
-
-        public Rules(Func<IDependencyResolver> resolver)
-        {
-            _Rules.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => { _Registered = null; };
-            _Resolver = resolver;
-        }
-
-        private readonly Func<IDependencyResolver> _Resolver;
-        private readonly ObservableCollection<IRuleValidation<TEntity>> _Rules = new ObservableCollection<IRuleValidation<TEntity>>();
-        private IEnumerable<IRuleValidation<TEntity>> _Registered;
-        public IEnumerable<IRuleValidation<TEntity>> Registered
-        {
-            get
-            {
-                return _Registered ?? (_Registered = _Rules.ToArray());
-            }
-        }
+        private static readonly Type _Type = typeof(TEntity);
+        private readonly IDependencyResolver _Resolver;
+        private readonly List<Rule<TEntity>> _Rules = new List<Rule<TEntity>>();
 
         public void Add<TDependency>(Action<IRule<TEntity>, DependencyWrapper<TDependency>> rule)
             where TDependency : class
@@ -136,6 +55,26 @@ namespace BackToFront
             // apply logic to rule
             rule(ruleObject);
             _Rules.Add(ruleObject);
+        }
+
+        public Type EntityType
+        {
+            get { return _Type; }
+        }
+
+        public IEnumerator<Rule<TEntity>> GetEnumerator()
+        {
+            return _Rules.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        IEnumerator<INonGenericRule> IEnumerable<INonGenericRule>.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

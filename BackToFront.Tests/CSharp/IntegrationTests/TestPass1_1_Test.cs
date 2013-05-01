@@ -11,30 +11,33 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
     ///         If, is true, model violation is
     /// </summary>
     [TestFixture]
-    public class TestPass1_1_Test : Base.TestBase
+    public class TestPass1_1_Test : Base.RulesRepositoryTestBase
     {
         public static TestViolation Violation1 = new TestViolation("Violation");
         public class TestClass
         {
-            static TestClass()
-            {
-                Rules<TestClass>.AddRule<Dependency>((rule, hhh) => rule
-                    .RequireThat(a => a.Match == hhh.Val.Match).WithModelViolation(() => Violation1));
-
-                Rules<TestClass>.AddRule<Dependency>((rule, hhh) => rule
-                    .RequireThat(a => a.Match == hhh.Val.MatchMethod()).WithModelViolation(() => Violation1));
-            }
-
             public bool Match { get; set; }
         }
 
         public class Dependency
         {
             public bool Match { get; set; }
-            public bool MatchMethod() 
+            public bool MatchMethod()
             {
                 return Match;
             }
+        }
+
+        public override void TestFixtureSetUp()
+        {
+            base.TestFixtureSetUp();
+
+            Repository.AddRule<TestClass, Dependency>((rule, hhh) => rule
+                    .RequireThat(a => a.Match == hhh.Val.Match).WithModelViolation(() => Violation1));
+
+            Repository.AddRule<TestClass, Dependency>((rule, hhh) => rule
+                    .RequireThat(a => a.Match == hhh.Val.MatchMethod()).WithModelViolation(() => Violation1));
+
         }
 
         [Test]
@@ -50,7 +53,7 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
             var dependency = new Dependency { Match = item2 };
 
             // act
-            var violation = subject.Validate(new { hhh = dependency }).FirstViolation;
+            var violation = subject.Validate(Repository, new { hhh = dependency }).FirstViolation;
 
             // assert
             if (item1 == item2)

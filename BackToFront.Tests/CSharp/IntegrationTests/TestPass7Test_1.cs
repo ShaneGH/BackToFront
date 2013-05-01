@@ -17,25 +17,13 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
     ///         Require, is false, OR, is false, model violation is
     /// </summary>
     [TestFixture]
-    public class TestPass7Test_1 : Base.TestBase
+    public class TestPass7Test_1 : Base.RulesRepositoryTestBase
     {
         public static TestViolation Violation1 = new TestViolation("Violation");
         public static TestViolation Violation2 = new TestViolation("Violation");
 
         public class TestEntity
         {
-
-            static TestEntity()
-            {
-                Rules<TestEntity>.AddRule(rule => rule
-                    // pass through if
-                    .If(a => a.ContinueSwitch).Then(subRule =>
-                    {
-                        subRule.RequireThat(a => a.RequiredSwitch1).WithModelViolation(() => Violation1);
-                        subRule.RequireThat(a => a.RequiredSwitch2).WithModelViolation(() => Violation1);
-                    }));
-            }
-
             public bool ContinueSwitch { get; set; }
             public bool RequiredSwitch1 { get; set; }
             public bool RequiredSwitch2 { get; set; }
@@ -48,6 +36,19 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
                 var bits = new System.Collections.BitArray(new[] { (byte)i });
                 yield return new Tuple<bool, bool, bool>(bits[2], bits[1], bits[0]);
             }
+        }
+
+        public override void TestFixtureSetUp()
+        {
+            base.TestFixtureSetUp();
+
+            Repository.AddRule<TestEntity>(rule => rule
+                // pass through if
+                    .If(a => a.ContinueSwitch).Then(subRule =>
+                    {
+                        subRule.RequireThat(a => a.RequiredSwitch1).WithModelViolation(() => Violation1);
+                        subRule.RequireThat(a => a.RequiredSwitch2).WithModelViolation(() => Violation1);
+                    }));
         }
 
         [Test]
@@ -73,7 +74,7 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
             };
 
             // act
-            var violation = subject.Validate().AllViolations;
+            var violation = subject.Validate(Repository).AllViolations;
 
             // assert
             Assert.AreEqual(v.Count, violation.Count());
@@ -104,7 +105,7 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
             };
 
             // act
-            var violation = subject.Validate().FirstViolation;
+            var violation = subject.Validate(Repository).FirstViolation;
 
             // assert
             Assert.AreEqual(v, violation);

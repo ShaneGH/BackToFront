@@ -24,24 +24,24 @@ namespace BackToFront.Validate
         /// <typeparam name="T">The object type</typeparam>
         /// <param name="test">The object</param>
         /// <returns>The first business rule violation encountered</returns>
-        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test)
+        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Repository repository)
         {
-            return Validate(test, new ValidateOptions(), null);
+            return Validate(test, repository, new ValidateOptions(), null);
         }
 
-        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, object dependencyClasses)
+        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Repository repository, object dependencyClasses)
         {
-            return Validate(test, new ValidateOptions(), dependencyClasses);
+            return Validate(test, repository, new ValidateOptions(), dependencyClasses);
         }
 
-        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, ValidateOptions options)
+        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Repository repository, ValidateOptions options)
         {
-            return Validate(test, options, null);
+            return Validate(test, repository, options, null);
         }
 
-        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, ValidateOptions options, object dependencyClasses)
+        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Repository repository, ValidateOptions options, object dependencyClasses)
         {
-            return new ValidateResult<TEntity>(test, options, dependencyClasses);
+            return new ValidateResult<TEntity>(test, repository, options, dependencyClasses);
         }
     }
 }
