@@ -43,15 +43,6 @@ namespace BackToFront.Expressions
             return ex.Member == Expression.Member && InnerExpression.IsSameExpression(ex.Expression);
         }
 
-        // TODO, what if member is event or other memberinfo
-        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
-        {
-            var eval = InnerExpression.Compile(mocks);
-            return eval == InnerExpression.WrappedExpression ? 
-                Expression :
-                E.Expression.MakeMemberAccess(eval, Expression.Member);
-        }
-
         public bool CanSet
         {
             get 

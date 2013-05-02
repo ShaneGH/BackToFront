@@ -132,13 +132,12 @@ namespace BackToFront.Logic
 
             // result of all violations. If true, mocks will be persisted
             bool success = true;
-            var dependencies = (IEnumerable<KeyValuePair<string, object>>)Dependencies.ToArray();
 
             var violations = new List<IViolation>();
             var current = typeof(TEntity);
             while (current != null)
             {
-                var visitor = new SwapPropVisitor(new Mocks(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet), null), new Dependencies(dependencies), current);
+                var visitor = new SwapPropVisitor(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet), Dependencies, current);
                 var context = new ValidationContextX(breakOnFirstError, visitor.MockValues, visitor.DependencyValues);
 
                 // compile and run

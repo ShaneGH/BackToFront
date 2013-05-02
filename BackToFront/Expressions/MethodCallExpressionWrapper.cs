@@ -56,17 +56,6 @@ namespace BackToFront.Expressions
                 Arguments.All((a, b) => a.IsSameExpression(ex.Arguments.ElementAt(b)));
         }
 
-        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
-        {
-            var arguments = Arguments.Select(a => a.Compile(mocks)).ToArray();
-            var eval = Object.Compile(mocks);
-
-            if (eval == Object.WrappedExpression && arguments.All((a, i) => a == Arguments.ElementAt(i).WrappedExpression))
-                return Expression;
-
-            return E.Expression.Call(eval, Expression.Method, arguments);
-        }
-
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
             return new[] { Object.GetMembersForParameter(parameter).Each(i => i.NextItem = new MemberChainItem(Expression.Method)) }

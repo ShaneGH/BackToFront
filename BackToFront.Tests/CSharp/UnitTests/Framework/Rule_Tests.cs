@@ -86,13 +86,14 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         {
             // arrange
             var subject = new Accessor<object>();
+            var spv = new SwapPropVisitor(typeof(object));
 
             // act
             var result = subject.Else;
             var pe = subject.AllPossiblePaths;
-
+            
             // assert
-            Assert.IsTrue(((Operator<object>)result).ConditionIsTrue(null, new SwapPropVisitor()));
+            Assert.IsTrue(Expression.Lambda<Func<object, ValidationContextX, bool>>(((Operator<object>)result).Descriptor.WrappedExpression, spv.EntityParameter, spv.ContextParameter).Compile()(null, null));
             Assert.AreEqual(1, pe.Count(a => a != null));
             Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last());
         }

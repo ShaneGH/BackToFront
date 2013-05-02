@@ -18,6 +18,9 @@ namespace BackToFront.DataAnnotations
 
             //TODO: where should the repository come from?
             var repository = validationContext.ServiceContainer.GetService(typeof(Repository)) as Repository;
+            if (repository == null)
+                throw new InvalidOperationException("##" + "need a repository");
+
             Func<IRuleDependencies> di = () => (IRuleDependencies)validationContext.ServiceContainer.GetService(typeof(IRuleDependencies));
 
             Type current = validationContext.ObjectType;

@@ -30,7 +30,7 @@ namespace BackToFront
 
         public bool HasRules(Type entityType)
         {
-            return !_Rules.ContainsKey(entityType) || !_Rules[entityType].Any();
+            return _Rules.ContainsKey(entityType) && _Rules[entityType].Any();
         }
 
         public IRules Rules(Type entityType)

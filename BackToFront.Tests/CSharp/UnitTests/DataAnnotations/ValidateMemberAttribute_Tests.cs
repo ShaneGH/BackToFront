@@ -34,6 +34,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
         {
             // arrange
             var ctxt = new DA.ValidationContext(new object());
+            ctxt.ServiceContainer.AddService(typeof(Repository), new Repository());
 
             // act
             var actual = ValidateMemberAttribute.ProcessValidationContext(ctxt);
@@ -45,14 +46,11 @@ namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
         }
 
         [Test]
-        [Ignore]
-        public void IsValidTest() { }
-
-        [Test]
         public void ProcessValidationContext_Test_HasKey()
         {
             // arrange
             var ctxt = new DA.ValidationContext(new object());
+            ctxt.ServiceContainer.AddService(typeof(Repository), new Repository());
             var expected = new BTFValidationContext(ctxt);
             ctxt.Items.Add(ValidateMemberAttribute.BackToFrontValidationContext, expected);
 
@@ -108,9 +106,8 @@ namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
         }
 
         [Test]
-        public void IsValid_Test()
-        {
-        }
+        [Ignore]
+        public void IsValid_Test() { }
 
         /// <summary>
         /// Encompases text from IndexedProperty also

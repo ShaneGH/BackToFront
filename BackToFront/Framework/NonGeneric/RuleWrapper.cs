@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Framework.NonGeneric
 {
+    //TODO: remove this class and call a Repository directly
     public class RuleWrapper
     {
         public readonly INonGenericRule Rule;
@@ -36,21 +37,21 @@ namespace BackToFront.Framework.NonGeneric
         {
             if (!CachedResults.ContainsKey(useServiceContainerDI))
             {
-                Dependencies dependencies = null;
+                IDictionary<string, object> dependencies = null;
                 if (useServiceContainerDI)
                 {
                     var di = ServiceContainer();
                     if (di == null)
                         throw new InvalidOperationException("##");
 
-                    dependencies = new Dependencies(Rule.Dependencies.Select(d => di.GetDependency(d.DependencyName, d.DependencyType, Rule)));
+                    dependencies = Rule.Dependencies.Select(d => di.GetDependency(d.DependencyName, d.DependencyType, Rule)).ToDictionary(a => a.Key, a => a.Value);
                 }
                 else
                 {
-                    dependencies = new Dependencies(Enumerable.Empty<KeyValuePair<string, object>>());
+                    dependencies = new Dictionary<string, object>();
                 }
 
-                var ctxt = new ValidationContextX(false, new object[0], dependencies.ToDictionary());
+                var ctxt = new ValidationContextX(false, new object[0], dependencies);
                 Rule.NewCompile(new SwapPropVisitor(new Mocks(), dependencies, ValidationSubject.GetType()))(ValidationSubject, ctxt);
                 CachedResults[useServiceContainerDI] = ctxt.Violations.ToArray();
             }

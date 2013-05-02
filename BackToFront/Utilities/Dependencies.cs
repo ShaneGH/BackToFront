@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using E = System.Linq.Expressions;
 
+using BackToFront.Extensions.Reflection;
+
 namespace BackToFront.Utilities
 {
     public class Dependencies : ReadonlyDictionary<string, object>
@@ -13,14 +15,14 @@ namespace BackToFront.Utilities
         public readonly E.Expression Parameter;
         private readonly Dictionary<string, E.UnaryExpression> Params = new Dictionary<string, E.UnaryExpression>();
 
-        //TODO delete this constructor
-        public Dependencies(IEnumerable<KeyValuePair<string, object>> d) : this(d.ToDictionary(a => a.Key, a => a.Value), E.Expression.Empty()) { }
-
         public Dependencies() : this(new Dictionary<string, object>(), E.Expression.Empty()) { }
 
         public Dependencies(IDictionary<string, object> dependencies, E.Expression parameter)
             : base(dependencies.ToDictionary(a => a.Key, a => a.Value))
         {
+            if (dependencies.Any() && !parameter.Type.Is(typeof(IDictionary<string,object>)))
+                throw new InvalidOperationException("##");
+
             Parameter = parameter;
             foreach (var key in Keys)
             {

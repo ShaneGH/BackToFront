@@ -41,14 +41,6 @@ namespace BackToFront.Expressions
                 Operand.IsSameExpression(ex.Operand);
         }
 
-        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
-        {
-            var result = Operand.Compile(mocks);
-
-            return result == Operand.WrappedExpression ? WrappedExpression :
-                E.Expression.MakeUnary(Expression.NodeType, result, Expression.Type, Expression.Method);
-        }
-
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
             return Operand.GetMembersForParameter(parameter);

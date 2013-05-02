@@ -23,23 +23,18 @@ namespace BackToFront.Expressions.Visitors
 
         private readonly Dictionary<MemberExpression, string> DependencyNameCache = new Dictionary<MemberExpression, string>();
 
-        // TODO: delete this constructor
-        public SwapPropVisitor()
-            : this(new Mocks(), new Dependencies(), null)
+        public SwapPropVisitor(Type entityType)
+            : this(null, null, entityType)
         {
         }
 
-        // TODO: delete this constructor
-        public SwapPropVisitor(Mocks mocks, Dependencies dependences)
-            : this(mocks, dependences, null)
+        public SwapPropVisitor(IEnumerable<Mock> mocks, IDictionary<string, object> dependences, Type entityType)
         {
-        }
+            if (entityType == null)
+                throw new InvalidOperationException("##");
 
-        //TODO: change mocks and dependencies to IEnumerable and IDictionary respectively
-        public SwapPropVisitor(Mocks mocks, Dependencies dependences, Type entityType)
-        {
-            Mocks = new Utilities.Mocks(mocks, Expression.PropertyOrField(ContextParameter, "Mocks"));
-            Dependences = new Dependencies(dependences.ToDictionary(), Expression.PropertyOrField(ContextParameter, "Dependencies"));
+            Mocks = new Utilities.Mocks(mocks ?? Enumerable.Empty<Mock>(), Expression.PropertyOrField(ContextParameter, "Mocks"));
+            Dependences = new Dependencies(dependences ?? new Dictionary<string, object>(), Expression.PropertyOrField(ContextParameter, "Dependencies"));
             EntityParameter = Expression.Parameter(entityType, "entity");
         }
 
@@ -106,7 +101,7 @@ namespace BackToFront.Expressions.Visitors
         {
             get
             {
-                return Dependences.ToDictionary(a => a.Key, a => a.Value);
+                return Dependences.ToDictionary();
             }
         }
 

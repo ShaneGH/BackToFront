@@ -19,6 +19,13 @@ namespace BackToFront.Tests.CSharp.UnitTests.Utilities
         }
 
         [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestConstructorInvalidParameter()
+        {
+            new Mocks(new[] { Mock.Create<object, int>(a => a.GetHashCode(), 3) }, Expression.Constant(4));
+        }
+
+        [Test]
         public void ParameterForMock_test_creation()
         {
             const int testElementAt = 1;
@@ -26,7 +33,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Utilities
             // arrange
             Type mockType = typeof(object);
             Expression<Func<TestClass, int>> exp = a => a.Prop;
-            var subject = new Mocks(new[] { new Mock(exp.Body, null, mockType), new Mock(exp.Body, null, mockType) });
+            var subject = new Mocks(new[] { new Mock(exp.Body, null, mockType), new Mock(exp.Body, null, mockType) }, Expression.Constant(new object[0]));
 
             // act
             var param = subject.ParameterForMock(subject.ElementAt(testElementAt));
@@ -49,7 +56,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Utilities
         {
             // arrange
             Expression<Func<TestClass, int>> exp = a => a.Prop;
-            var subject = new Mocks(new[] { new Mock(exp.Body, null, typeof(bool)), new Mock(exp.Body, null, typeof(bool)) });
+            var subject = new Mocks(new[] { new Mock(exp.Body, null, typeof(bool)), new Mock(exp.Body, null, typeof(bool)) }, Expression.Constant(new object[0]));
 
             // act
             var param1 = subject.ParameterForMock(subject.ElementAt(0));
@@ -67,7 +74,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Utilities
         {
             // arrange
             Expression<Func<TestClass, int>> exp = a => a.Prop;
-            var subject = new Mocks(new[] { new Mock(exp.Body, null, typeof(bool)), new Mock(exp.Body, null, typeof(bool)) });
+            var subject = new Mocks(new[] { new Mock(exp.Body, null, typeof(bool)), new Mock(exp.Body, null, typeof(bool)) }, Expression.Constant(new object[0]));
 
             // act
             // assert

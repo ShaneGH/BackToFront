@@ -29,13 +29,6 @@ namespace BackToFront.Framework
             }
         }
 
-        public bool ConditionIsTrue(TEntity subject, SwapPropVisitor mocks)
-        {
-            throw new NotImplementedException();
-            // TODO: this is inefficient
-            //return Compile(mocks).Invoke(subject, mocks.MockValues, mocks.DependencyValues);
-        }
-
         RequirementFailed<TEntity> _RequirementFailed;
         public IModelViolation<TEntity> RequirementFailed
         {

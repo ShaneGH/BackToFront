@@ -25,11 +25,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             {
             }
 
-            public Expression _CompileInnerExpression(ISwapPropVisitor mocks)
-            {
-                return CompileInnerExpression(mocks);
-            }
-
             public IEnumerable<MemberChainItem> __GetMembersForParameter(ParameterExpression p)
             {
                 return base._GetMembersForParameter(p);
@@ -61,43 +56,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             Assert.IsTrue(subject.IsSameExpression(func1.Body));
             Assert.IsTrue(subject.IsSameExpression(func2.Body));
             Assert.IsFalse(subject.IsSameExpression(func3.Body));
-        }
-
-        [Test]
-        public void CompileInnerExpression_Test_nothing_mocked()
-        {
-            // arange
-            var member = Expression.Property(Expression.Parameter(typeof(TestClass)), "Member");
-            var subject = new TestSubjectWrapper(member);
-
-            // act
-            var result = subject._CompileInnerExpression(new SwapPropVisitor());
-
-            // assert
-            Assert.AreEqual(subject.Expression, result);
-        }
-
-        [Test]
-        public void CompileInnerExpression_Test_withMocks()
-        {
-            // arange
-            TestClass mockedVal = new TestClass();
-            var mockedExp = Expression.Parameter(typeof(TestClass));
-            var testExp = Expression.Property(mockedExp, "Member");
-            var subject = new TestSubjectWrapper(testExp);
-
-            // act
-            var result = subject._CompileInnerExpression(new SwapPropVisitor(new Mocks(new[] { new Mock(mockedExp, mockedVal, mockedVal.GetType()) }), new Dependencies())) as MemberExpression;
-
-            // assert
-            Assert.IsNotNull(result);
-            Assert.AreNotEqual(subject.Expression, result);
-            Assert.IsInstanceOf<UnaryExpression>(result.Expression);
-            Assert.AreEqual(mockedVal.GetType(), (result.Expression as UnaryExpression).Type);
-            Assert.AreEqual(ExpressionType.Convert, result.Expression.NodeType);
-
-            Assert.AreEqual(testExp.Member, result.Member);
-            Assert.AreEqual(testExp.NodeType, result.NodeType);
         }
 
         [Test]

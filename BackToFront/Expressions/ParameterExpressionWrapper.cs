@@ -33,11 +33,6 @@ namespace BackToFront.Expressions
             return ex.Type.Is(Expression.Type);
         }
 
-        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
-        {
-            return Expression;
-        }
-
         public object Get(object root)
         {
             if (!root.GetType().Is(Expression.Type))

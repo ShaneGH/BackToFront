@@ -39,12 +39,6 @@ namespace BackToFront.Expressions
             };
         }
 
-        /// <summary>
-        /// Evaluate expression assuming correct parameters have been passed in
-        /// </summary>
-        /// <param name="paramaters"></param>
-        /// <returns></returns>
-        protected abstract Expression CompileInnerExpression(ISwapPropVisitor mocks);
         public abstract Expression WrappedExpression { get; }
         protected abstract IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter);
 
@@ -69,20 +63,6 @@ namespace BackToFront.Expressions
         public virtual bool IsSameExpression(Expression expression)
         {
             return expression != null && expression.NodeType == WrappedExpression.NodeType;
-        }
-                
-        public Expression Compile()
-        {
-            return WrappedExpression;
-        }
-
-        public Expression Compile(ISwapPropVisitor mocks)
-        {
-            if (mocks.ContainsNothing)
-                return Compile();
-
-            var val = mocks.Visit(WrappedExpression);
-            return val != WrappedExpression ? val : CompileInnerExpression(mocks);
         }
 
         public static ExpressionWrapperBase CreateChildWrapper(Expression expression)

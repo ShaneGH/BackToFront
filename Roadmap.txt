@@ -6,7 +6,7 @@ Short term:
 			unit test Visitor
 
 
-
+Remove RuleWrapper class
 
 Client side
 Domain Model

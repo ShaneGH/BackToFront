@@ -15,7 +15,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
         private class TestClass2 : TestClass1 { }
 
         [Test]
-        [Ignore("There is something wrong with the service provider")]
         public void Constructor_Test_Multiple_RulesAndClasses()
         {
             // arrange
@@ -24,16 +23,10 @@ namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
             repository.AddRule<TestClass2>(a => { });
             repository.AddRule<TestClass2>(a => { });
 
-            var serviceProvider = new M.Mock<IServiceProvider>();
-            serviceProvider.Setup(a => a.GetService(M.It.Is<Type>(x => 
-                x == typeof(Repository)
-                ))).Returns(repository);
-
-            var item = new TestClass2();
+            var vc = new ValidationContext(new TestClass2());
+            vc.ServiceContainer.AddService(typeof(Repository), repository);
 
             // act
-            var vc = new ValidationContext(item, serviceProvider.Object, new Dictionary<object, object>());
-            Assert.AreEqual(repository, vc.ServiceContainer.GetService(typeof(Repository)));
             var subject = new BTFValidationContext(vc);
             
             // assert

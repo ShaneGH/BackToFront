@@ -17,28 +17,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
     public class Operator_Tests : BackToFront.Tests.Base.TestBase
     {
         [Test]
-        public void ConditionIsTrue_Test1()
-        {
-            // arrange
-            var subject = new Operator<object>(a => true, null);
-
-            // act
-            // assert
-            Assert.IsTrue(subject.ConditionIsTrue(null, new SwapPropVisitor()));
-        }
-
-        [Test]
-        public void ConditionIsTrue_Test2()
-        {
-            // arrange
-            var subject = new Operator<object>(a => false, null);
-
-            // act
-            // assert
-            Assert.IsFalse(subject.ConditionIsTrue(null, new SwapPropVisitor()));
-        }
-
-        [Test]
         public void RequirementFailed_Test()
         {
             // arrange

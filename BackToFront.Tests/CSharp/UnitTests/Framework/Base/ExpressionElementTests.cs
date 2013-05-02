@@ -43,7 +43,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
             // arrange
             Expression<Func<object, string>> desc = a => a.ToString();
             var subject = new M.Mock<ExpressionElement<object, string>>(desc, null) { CallBase = true };
-            var expected = ((MethodCallExpressionWrapper)GetPrivateProperty(subject.Object, "Descriptor")).GetMembersForParameter(desc.Parameters.First());
+            var expected = subject.Object.Descriptor.GetMembersForParameter(desc.Parameters.First());
 
             // act
             var actual = subject.Object.AffectedMembers;

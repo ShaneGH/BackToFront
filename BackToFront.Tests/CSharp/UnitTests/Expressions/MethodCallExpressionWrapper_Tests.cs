@@ -21,11 +21,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             {
             }
 
-            public Expression _CompileInnerExpression(BackToFront.Expressions.Visitors.ISwapPropVisitor mocks)
-            {
-                return CompileInnerExpression(mocks);
-            }
-
             public IEnumerable<MemberChainItem> __GetMembersForParameter(ParameterExpression p)
             {
                 return base._GetMembersForParameter(p);
@@ -62,48 +57,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             Assert.IsTrue(subject.IsSameExpression(func1.Body));
             Assert.IsTrue(subject.IsSameExpression(func2.Body));
             Assert.IsFalse(subject.IsSameExpression(func3.Body));
-        }
-
-        [Test]
-        public void CompileInnerExpression_Test_nothing_mocked()
-        {
-            // arange
-            var member = Expression.Call(Expression.Parameter(typeof(object)), typeof(object).GetMethod("ToString"));
-            var subject = new TestSubjectWrapper(member);
-            var input = new M.Mock<ISwapPropVisitor>();
-            input.Setup(a => a.ContainsNothing).Returns(true);
-            input.Setup(a => a.Visit(M.It.IsAny<Expression>())).Returns<Expression>(a => a);
-
-            // act
-            var result = subject._CompileInnerExpression(input.Object);
-
-            // assert
-            Assert.AreEqual(subject.Expression, result);
-        }
-
-        [Test]
-        public void CompileInnerExpression_Test_withMocks()
-        {
-            // arange
-            var afterMock = Expression.Constant(55);
-            var mockedVal = new object();
-            var beforeMock = Expression.Parameter(typeof(object));
-            var testExp = Expression.Call(beforeMock, typeof(object).GetMethod("ToString"));
-            var subject = new TestSubjectWrapper(testExp);
-            var input = new M.Mock<ISwapPropVisitor>();
-            input.Setup(a => a.ContainsNothing).Returns(false);
-            input.Setup(a => a.Visit(M.It.Is<Expression>(b => b ==beforeMock))).Returns(afterMock);
-
-            // act
-            var result = subject._CompileInnerExpression(input.Object) as MethodCallExpression;
-
-            // assert
-            Assert.IsNotNull(result);
-            Assert.AreNotEqual(subject.Expression, result);
-            Assert.AreEqual(afterMock, result.Object);
-
-            Assert.AreEqual(testExp.Method, result.Method);
-            Assert.AreEqual(testExp.NodeType, result.NodeType);
         }
 
         [Test]

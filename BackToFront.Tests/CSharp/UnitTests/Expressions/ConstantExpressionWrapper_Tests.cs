@@ -20,11 +20,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             {
             }
 
-            public Expression _CompileInnerExpression(ISwapPropVisitor mocks)
-            {
-                return CompileInnerExpression(mocks);
-            }
-
             public IEnumerable<MemberChainItem> __GetMembersForParameter(ParameterExpression p)
             {
                 return base._GetMembersForParameter(p);
@@ -45,19 +40,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             Assert.IsTrue(subject.IsSameExpression(func1.Body));
             Assert.IsTrue(subject.IsSameExpression(func2.Body));
             Assert.IsFalse(subject.IsSameExpression(func3.Body));
-        }
-
-        [Test]
-        public void CompileInnerExpression_Test()
-        {
-            // arange
-            var subject = new TestClass(Expression.Constant(4));
-
-            // act
-            var result = subject._CompileInnerExpression(new M.Mock<ISwapPropVisitor>().Object);
-
-            // assert
-            Assert.AreEqual(subject.Expression, result);
         }
 
         [Test]

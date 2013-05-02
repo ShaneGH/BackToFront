@@ -163,9 +163,6 @@
     <Compile Include="CSharp\UnitTests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Utilities\CompiledMockedExpression_Tests.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="CSharp\UnitTests\Utilities\Dependencies_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -187,8 +184,10 @@
     <Compile Include="CSharp\UnitTests\Utilities\Utilities_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\_\Rules_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\_\Repository.cs">
+    <Compile Include="CSharp\UnitTests\_\Repository_Tests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharp\UnitTests\_\Rules_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Javascript\JavascriptTests.cs" />

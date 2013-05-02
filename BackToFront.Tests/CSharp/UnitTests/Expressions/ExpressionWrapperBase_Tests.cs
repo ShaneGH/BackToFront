@@ -42,11 +42,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 
             public bool IsSame { get; set; }
 
-            protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
-            {
-                return CompileInnerExpressionExpression;
-            }
-
             public override bool IsSameExpression(Expression expression)
             {
                 return IsSame;
@@ -114,68 +109,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
         }
 
         #endregion
-
-        [Test]
-        public void Compile_Test_NoArgs()
-        {
-            // arrange
-            var subject = new AccessorClass();
-
-            // act
-            var result = subject.Compile();
-
-            // assert
-            Assert.AreEqual(AccessorClass.WExpression, result);
-        }
-
-        [Test]
-        public void Compile_Test_Args_NoMocks()
-        {
-            // arrange
-            var subject = new AccessorClass();
-            var input = new M.Mock<ISwapPropVisitor>();
-            input.Setup(a => a.ContainsNothing).Returns(true);
-
-            // act
-            var result = subject.Compile(input.Object);
-
-            // assert
-            Assert.AreEqual(AccessorClass.WExpression, result);
-        }
-
-        [Test]
-        public void Compile_Test_Mocked()
-        {
-            // arrange
-            var subject = new M.Mock<ExpressionWrapperBase> { CallBase = true };
-            var mockVal = Expression.Constant(new object());
-            var input = new M.Mock<ISwapPropVisitor>();
-            input.Setup(a => a.ContainsNothing).Returns(false);
-            input.Setup(a => a.Visit(M.It.IsAny<Expression>())).Returns<Expression>(a => mockVal);
-
-            // act
-            var result = subject.Object.Compile(input.Object);
-
-            // assert
-            Assert.AreEqual(mockVal, result);
-        }
-
-        [Test]
-        public void Compile_Test_With_Mocks_Not_Mocked()
-        {
-            // arrange
-            var exp = Expression.Constant(229);
-            var subject = new M.Mock<ExpressionWrapperBase> { CallBase = true };
-            subject.Setup(a => a.WrappedExpression).Returns(exp);
-            var input = new M.Mock<ISwapPropVisitor>();
-            input.Setup(a => a.ContainsNothing).Returns(true);
-
-            // act
-            var result = subject.Object.Compile(input.Object);
-
-            // assert
-            Assert.AreEqual(exp, result);
-        }
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]

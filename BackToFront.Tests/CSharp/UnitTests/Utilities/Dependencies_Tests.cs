@@ -14,22 +14,32 @@ namespace BackToFront.Tests.CSharp.UnitTests.Utilities
     public class Dependencies_Tests : Base.TestBase
     {
         [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ConstructorTest_Fail_InvalidParameter()
+        {
+            // arrange
+            // act
+            // assert
+            new Dependencies(new Dictionary<string, object> { { "asiugdsa", new object() } }, Expression.Constant(2));
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ConstructorTest_Fail_NullDependency()
+        {
+            // arrange
+            // act
+            // assert
+            new Dependencies(new Dictionary<string, object> { { "asiugdsa", null } }, Expression.Constant(new Dictionary<string, object>()));
+        }
+
+        [Test]
         public void ConstructorTest()
         {
             // arrange
             // act
             // assert
-            new Dependencies(new Dictionary<string, object> { { "asiugdsa", new object() } });
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ConstructorTest_Fail()
-        {
-            // arrange
-            // act
-            // assert
-            new Dependencies(new Dictionary<string, object> { { "asiugdsa", null } });
+            new Dependencies(new Dictionary<string, object> { { "asiugdsa", new object() } }, Expression.Constant(new Dictionary<string, object>()));
         }
 
         [Test]
@@ -39,7 +49,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Utilities
 
             // arrange
             var value = new DateTime();
-            var subject = new Dependencies(new Dictionary<string, object> { { name, value } });
+            var subject = new Dependencies(new Dictionary<string, object> { { name, value } }, Expression.Constant(new Dictionary<string, object>()));
 
             // act
             var param = subject.ParameterForDependency(name);
@@ -64,7 +74,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Utilities
             // arrange
             var name1 = "asdsad";
             var name2 = "safd98gyasd";
-            var subject = new Dependencies(new Dictionary<string, object> { { name1, 6 }, { name2, new object() } });
+            var subject = new Dependencies(new Dictionary<string, object> { { name1, 6 }, { name2, new object() } }, Expression.Constant(new Dictionary<string, object>()));
 
             // act
             var param1 = subject.ParameterForDependency(name1);

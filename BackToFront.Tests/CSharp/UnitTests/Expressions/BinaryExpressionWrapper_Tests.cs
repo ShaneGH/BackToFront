@@ -26,11 +26,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             {
             }
 
-            public Expression _CompileInnerExpression(ISwapPropVisitor mocks)
-            {
-                return CompileInnerExpression(mocks);
-            }
-
             public IEnumerable<MemberChainItem> __GetMembersForParameter(ParameterExpression p)
             {
                 return base._GetMembersForParameter(p);
@@ -53,48 +48,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             Assert.IsTrue(subject.IsSameExpression(func2.Body));
             Assert.IsFalse(subject.IsSameExpression(func3.Body));
             Assert.IsFalse(subject.IsSameExpression(func4.Body));
-        }
-
-        [Test]
-        public void CompileInnerExpression_Test_nothing_mocked()
-        {
-            // arange
-            var subject = new TestClass(
-                Expression.Add(Expression.Constant(2), Expression.Constant(3)));
-            var input = new M.Mock<ISwapPropVisitor>();
-            input.Setup(a => a.ContainsNothing).Returns(true);
-            input.Setup(a => a.Visit(M.It.IsAny<Expression>())).Returns<Expression>(a => a);
-
-            // act
-            var result = subject._CompileInnerExpression(input.Object);
-
-            // assert
-            Assert.AreEqual(subject.Expression, result);
-        }
-
-        [Test]
-        public void CompileInnerExpression_Test_withMocks()
-        {
-            // arange
-            var mockedVal = Expression.Constant(43534);
-            var lhs = Expression.Constant(4);
-            var mockedExp = Expression.Add(lhs, Expression.Constant(2));
-            var subject = new TestClass(mockedExp);
-            var input = new M.Mock<ISwapPropVisitor>();
-            input.Setup(a => a.ContainsNothing).Returns(false);
-            input.Setup(a => a.Visit(M.It.Is<Expression>(x => x == lhs))).Returns<Expression>(a => mockedVal);
-            input.Setup(a => a.Visit(M.It.Is<Expression>(x => x != lhs))).Returns<Expression>(a => a);
-
-            // act
-            var result = subject._CompileInnerExpression(input.Object) as BinaryExpression;
-
-            // assert
-            Assert.IsNotNull(result);
-            Assert.AreNotEqual(subject.Expression, result);
-            Assert.AreEqual(mockedVal, result.Left);
-            Assert.AreEqual(mockedExp.Right, result.Right);
-            Assert.AreEqual(mockedExp.NodeType, result.NodeType);
-            Assert.AreEqual(mockedExp.Method, result.Method);
         }
 
         [Test]

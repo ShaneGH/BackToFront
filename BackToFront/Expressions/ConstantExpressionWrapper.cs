@@ -32,11 +32,6 @@ namespace BackToFront.Expressions
             return Expression.Value.Equals(ex.Value);                
         }
 
-        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
-        {
-            return Expression;
-        }
-
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
             yield break;

@@ -54,17 +54,6 @@ namespace BackToFront.Expressions
                 Right.IsSameExpression(ex.Right);                
         }
 
-        protected override Expression CompileInnerExpression(ISwapPropVisitor mocks)
-        {
-            Expression lhs = Left.Compile(mocks);
-            Expression rhs = Right.Compile(mocks);
-
-            if (lhs == Left.WrappedExpression && rhs == Right.WrappedExpression)
-                return Expression;
-
-            return E.Expression.MakeBinary(Expression.NodeType, lhs, rhs, Expression.IsLiftedToNull, Expression.Method, Expression.Conversion);
-        }
-
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
             foreach (var item in Left.GetMembersForParameter(parameter))

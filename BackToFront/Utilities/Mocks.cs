@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using E = System.Linq.Expressions;
 
 using BackToFront.Extensions.IEnumerable;
+using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Utilities
 {
@@ -20,12 +21,11 @@ namespace BackToFront.Utilities
         public Mocks()
             : this(Enumerable.Empty<Mock>(), E.Expression.Empty()) { }
 
-        //TODO: delete this constructor
-        public Mocks(IEnumerable<Mock> mocks)
-            : this(mocks, E.Expression.Empty()) { }
-
         public Mocks(IEnumerable<Mock> mocks, E.Expression parameter)
         {
+            if (mocks.Any() && !parameter.Type.Is(typeof(Array)))
+                throw new InvalidOperationException("##");
+
             _Mocks = mocks.ToArray();
             Parameter = parameter;
         }
