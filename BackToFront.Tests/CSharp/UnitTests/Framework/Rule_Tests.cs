@@ -93,7 +93,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             var pe = subject.AllPossiblePaths;
             
             // assert
-            Assert.IsTrue(Expression.Lambda<Func<object, ValidationContextX, bool>>(((Operator<object>)result).Descriptor.WrappedExpression, spv.EntityParameter, spv.ContextParameter).Compile()(null, null));
+            Assert.IsTrue(Expression.Lambda<Func<object, ValidationContext, bool>>(((Operator<object>)result).Descriptor.WrappedExpression, spv.EntityParameter, spv.ContextParameter).Compile()(null, null));
             Assert.AreEqual(1, pe.Count(a => a != null));
             Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last());
         }

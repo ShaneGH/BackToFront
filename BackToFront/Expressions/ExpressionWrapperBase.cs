@@ -31,12 +31,7 @@ namespace BackToFront.Expressions
             _Constructors[typeof(MethodCallExpression)] = expression => new MethodCallExpressionWrapper(expression as MethodCallExpression);
             _Constructors[typeof(UnaryExpression)] = expression => new UnaryExpressionWrapper(expression as UnaryExpression);
             _Constructors[typeof(ParameterExpression)] = expression => new ParameterExpressionWrapper(expression as ParameterExpression);
-            _Constructors[typeof(MemberExpression)] = expression =>
-            {
-                DependencyInjectionExpressionWrapper result;
-                return DependencyInjectionExpressionWrapper.TryCreate(expression as MemberExpression, out result) ? result :
-                    (ExpressionWrapperBase)new MemberExpressionWrapper(expression as MemberExpression);
-            };
+            _Constructors[typeof(MemberExpression)] = expression => new MemberExpressionWrapper(expression as MemberExpression);
         }
 
         public abstract Expression WrappedExpression { get; }
@@ -95,7 +90,7 @@ namespace BackToFront.Expressions
 
         /// <summary>
         /// Mocks part of the current expression with the given parameter with a specific set of rules:
-        ///     Both the InnerExpression and input expressions must have one argument ahd it has the same type
+        ///     Both the InnerExpression and input expressions must have one argument and it has the same type
         ///     The input expression must be fully linear (ILinearExpression)
         ///     There is no room for error. If there is no mock, an exception will be thrown
         ///     All instances of the original parameters of InnerExpression must be mocked out

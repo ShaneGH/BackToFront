@@ -138,7 +138,7 @@ namespace BackToFront.Logic
             while (current != null)
             {
                 var visitor = new SwapPropVisitor(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet), Dependencies, current);
-                var context = new ValidationContextX(breakOnFirstError, visitor.MockValues, visitor.DependencyValues);
+                var context = new ValidationContext(breakOnFirstError, visitor.MockValues, visitor.DependencyValues);
 
                 // compile and run
                 _Repository.Rules(current).Each(rule => rule.NewCompile(visitor)(Entity, context));

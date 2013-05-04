@@ -31,9 +31,6 @@ namespace BackToFront.Framework.Base
         public abstract IEnumerable<AffectedMembers> AffectedMembers { get; }
         public abstract bool PropertyRequirement { get; }
 
-        public static Expression<Action<TEntity, ValidationContextX>> DoNothing = 
-            Expression.Lambda<Action<TEntity, ValidationContextX>>(Expression.Empty(), Expression.Parameter(typeof(TEntity)), Expression.Parameter(typeof(ValidationContextX)));
-
         public abstract IEnumerable<PathElement<TEntity>> AllPossiblePaths { get; }
 
         public PathElement(Rule<TEntity> rule)
@@ -68,7 +65,7 @@ namespace BackToFront.Framework.Base
         public Expression NewCompile(SwapPropVisitor visitor)
         {
             var nc = _NewCompile(visitor);
-            var _break = typeof(ValidationContextX).GetProperty("Break");
+            var _break = typeof(ValidationContext).GetProperty("Break");
 
             return Expression.IfThen(Expression.Not(Expression.Property(visitor.ContextParameter, _break)), nc);
         }

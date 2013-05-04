@@ -70,7 +70,7 @@ namespace BackToFront.Framework
 
         protected override Expression _NewCompile(SwapPropVisitor visitor)
         {
-            Action<TEntity, ValidationContextX> block = (entity, context) =>
+            Action<TEntity, ValidationContext> block = (entity, context) =>
             {
                 var violation = _violation(entity);
                 violation.ViolatedEntity = entity;

@@ -67,7 +67,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Framework\DeadEnd.cs" />
-    <Compile Include="Framework\ValidationContextX.cs" />
+    <Compile Include="Framework\ValidationContext.cs" />
     <Compile Include="Meta\ExpressionElementMeta.cs" />
     <Compile Include="Meta\PathElementMeta.cs" />
     <Compile Include="Framework\NonGeneric\RuleWrapper.cs" />
@@ -100,7 +100,6 @@
     <Compile Include="Expressions\InvocationExpressionWrapper.cs" />
     <Compile Include="Expressions\ExpressionWrapperBase.cs" />
     <Compile Include="Expressions\ISettableExpression.cs" />
-    <Compile Include="Expressions\DependencyInjectionExpressionWrapper.cs" />
     <Compile Include="Expressions\MemberExpressionWrapper.cs" />
     <Compile Include="Expressions\MethodCallExpressionWrapper.cs" />
     <Compile Include="Expressions\UnaryExpressionWrapper.cs" />

@@ -45,11 +45,10 @@ namespace BackToFront.Framework
                 return Expression.Empty();
         }
 
-        Action<object, ValidationContextX> INonGenericRule.NewCompile(SwapPropVisitor visitor)
+        Action<object, ValidationContext> INonGenericRule.NewCompile(SwapPropVisitor visitor)
         {
             var tyt = NewCompile(visitor);
-            var xxx = Expression.Lambda<Action<TEntity, ValidationContextX>>(tyt, visitor.EntityParameter, visitor.ContextParameter);
-            var rule = xxx.Compile();
+            var rule = Expression.Lambda<Action<TEntity, ValidationContext>>(tyt, visitor.EntityParameter, visitor.ContextParameter).Compile();
 
             return (a, b) =>
             {

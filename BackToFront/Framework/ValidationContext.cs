@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Framework
 {
-    public class ValidationContextX
+    public class ValidationContext
     {
         public readonly bool BreakOnFirstError;
         public readonly IList<IViolation> Violations = new List<IViolation>();
         public readonly object[] Mocks;
         public readonly IDictionary<string, object> Dependencies;
 
-        public ValidationContextX(bool breakOnFirstError, object[] mocks, IDictionary<string, object> dependencies)
+        public ValidationContext(bool breakOnFirstError, object[] mocks, IDictionary<string, object> dependencies)
         {
             BreakOnFirstError = breakOnFirstError;
             Mocks = mocks;

@@ -17,6 +17,7 @@ using Moq.Protected;
 using BackToFront.Tests.Utilities;
 using BackToFront.Framework;
 using BackToFront.Expressions.Visitors;
+using System.Linq.Expressions;
 
 namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
 {
@@ -82,36 +83,40 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
             Assert.Throws<InvalidOperationException>(() => { subject.Object._Do(() => { }); });
         }
 
-        //[Test]
-        //public void NewCompileTest()
-        //{
-        //    // arrange
-        //    var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
-        //    SwapPropVisitor visitor = new SwapPropVisitor();
-        //    subject.Protected().Setup<Action<object, ValidationContextX>>("_NewCompile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns((a, b) => Assert.Pass());
+        [Test]
+        public void NewCompileTest()
+        {
+            // arrange
+            Expression<Action> pass = () => Assert.Pass();
+            var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
+            SwapPropVisitor visitor = new SwapPropVisitor(typeof(object));
+            subject.Protected().Setup<Expression>("_NewCompile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns(pass.Body);
 
-        //    // act
-        //    subject.Object.NewCompile(visitor).Compile()(new object(), new ValidationContextX(false, null, null));
+            // act
+            var compiled = subject.Object.NewCompile(visitor);
+            Expression.Lambda<Action<object, ValidationContext>>(compiled, visitor.EntityParameter, visitor.ContextParameter).Compile()(new object(), new ValidationContext(false, null, null));
 
-        //    // assert
-        //    Assert.Fail("Did not hit pass statement");
-        //}
+            // assert
+            Assert.Fail("Did not hit pass statement");
+        }
 
-        //[Test]
-        //public void NewCompileTest_Break()
-        //{
-        //    // arrange
-        //    var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
-        //    SwapPropVisitor visitor = new SwapPropVisitor();
-        //    subject.Protected().Setup<Action<object, ValidationContextX>>("_NewCompile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns((a, b) => Assert.Fail());
-        //    var ctxt = new ValidationContextX(true, null, null);
-        //    ctxt.Violations.Add(null);
+        [Test]
+        public void NewCompileTest_Break()
+        {
+            // arrange
+            Expression<Action> fail = () => Assert.Fail();
+            var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
+            SwapPropVisitor visitor = new SwapPropVisitor(typeof(object));
+            subject.Protected().Setup<Expression>("_NewCompile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns(fail);
+            var ctxt = new ValidationContext(true, null, null);
+            ctxt.Violations.Add(null);
 
-        //    // act
-        //    subject.Object.NewCompile(visitor).Compile()(new object(), ctxt);
+            // act
+            var compiled = subject.Object.NewCompile(visitor);
+            Expression.Lambda<Action<object, ValidationContext>>(compiled, visitor.EntityParameter, visitor.ContextParameter).Compile()(new object(), new ValidationContext(false, null, null));
 
-        //    // assert
-        //    Assert.Pass("Avoid previous fail");
-        //}
+            // assert
+            Assert.Pass("Avoid previous fail");
+        }
     }
 }

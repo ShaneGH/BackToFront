@@ -51,7 +51,7 @@ namespace BackToFront.Framework.NonGeneric
                     dependencies = new Dictionary<string, object>();
                 }
 
-                var ctxt = new ValidationContextX(false, new object[0], dependencies);
+                var ctxt = new ValidationContext(false, new object[0], dependencies);
                 Rule.NewCompile(new SwapPropVisitor(new Mocks(), dependencies, ValidationSubject.GetType()))(ValidationSubject, ctxt);
                 CachedResults[useServiceContainerDI] = ctxt.Violations.ToArray();
             }

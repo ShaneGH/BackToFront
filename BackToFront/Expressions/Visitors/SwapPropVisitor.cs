@@ -19,7 +19,7 @@ namespace BackToFront.Expressions.Visitors
         public readonly Mocks Mocks;
         public readonly Dependencies Dependences;
         public readonly ParameterExpression EntityParameter;
-        public readonly ParameterExpression ContextParameter = Expression.Parameter(typeof(ValidationContextX), "validationContext");
+        public readonly ParameterExpression ContextParameter = Expression.Parameter(typeof(ValidationContext), "validationContext");
 
         private readonly Dictionary<MemberExpression, string> DependencyNameCache = new Dictionary<MemberExpression, string>();
 

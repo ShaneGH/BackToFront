@@ -1,9 +1,7 @@
 ﻿
 Short term:	
-			fix unit tests
-			delete constructors which should be deleted
 			unit test all NewCompiles
-			unit test Visitor
+			Unit test all Meta Properties, framework and expression
 
 
 Remove RuleWrapper class
@@ -16,8 +14,6 @@ unit test BackToFront.Logic.ValidateResult<TEntity>
 Duplicate everything in BacktoFront.Framework namespace into BacktoFront.Builder namespace and split rule building and rule execution logic
 Compile pre-mocked rules, can already comile pre mocked expressions
 
-Hole in dependencies. What if user gets hold of an instance of DependencyWrapper
-
 Define rule: must have same dependencies as parent class rule
 
 If validating children, ensure child object is not mocked out
@@ -29,7 +25,6 @@ Lambdas within rule definition, e.g. If(a => a.Any(b => b.Selected)).Then.....
 
 More Expression types
 
-Unit test all Meta Properties, framework and expression
 
 
 Mapping

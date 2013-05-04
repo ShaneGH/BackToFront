@@ -17,6 +17,6 @@ namespace BackToFront.Validation
 
         Meta.PathElementMeta Meta { get; }
         
-        Action<object, ValidationContextX> NewCompile(SwapPropVisitor visitor);
+        Action<object, ValidationContext> NewCompile(SwapPropVisitor visitor);
     }
 }

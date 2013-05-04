@@ -20,7 +20,7 @@ namespace BackToFront
     /// <summary>
     /// Application business rules
     /// </summary>
-    public class Rules<TEntity> : IRules//, IEnumerable<Rule<TEntity>>
+    public class Rules<TEntity> : IRules
     {
         public Rules()
             : this(null) { }
