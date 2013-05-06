@@ -12,13 +12,14 @@ using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
 using BackToFront.Utilities;
 using System.Runtime.Serialization;
+using BackToFront.Extensions.IEnumerable;
 
 namespace BackToFront.Framework
 {
-    public class RequireOperator<TEntity> : ExpressionElement<TEntity, bool>, IConditionSatisfied<TEntity>
+    public class RequireOperator<TEntity> : PathElement<TEntity>, IConditionSatisfied<TEntity>
     {
-        public RequireOperator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
-            : base(descriptor, rule)
+        public RequireOperator(Rule<TEntity> rule)
+            : base(rule)
         {
         }
         
@@ -69,24 +70,19 @@ namespace BackToFront.Framework
         {
             get
             {
-                return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(a => a.Meta), Descriptor.Meta, PathElementType.RequireOperator));
+                return _Meta;// ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(a => a.Meta), Descriptor.Meta, PathElementType.RequireOperator));
             }
         }
 
         protected override Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
-            if (next != null)
-            {
-                using (visitor.WithEntityParameter(EntityParameter))
-                {
-                    var des = visitor.Visit(Descriptor.WrappedExpression);
-                    var nxt = next.NewCompile(visitor);
-                    return Expression.IfThen(des, nxt);
-                }
-            }
-            else
-                return Expression.Empty();
+            return next != null ? next.NewCompile(visitor) : Expression.Empty();
+        }
+
+        public override IEnumerable<AffectedMembers> AffectedMembers
+        {
+            get { yield break; }
         }
     }
 }

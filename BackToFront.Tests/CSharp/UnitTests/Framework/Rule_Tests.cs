@@ -70,7 +70,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void If_Test()
         {
             // arrange
-            var subject = new Accessor<object>();
+            var subject = new Rule<object>();
 
             // act
             var result = subject.If(a => true);
@@ -78,14 +78,14 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // assert
             Assert.AreEqual(1, pe.Count(a => a != null));
-            Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last());
+            Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last().Item3);
         }
 
         [Test]
         public void Else_Test()
         {
             // arrange
-            var subject = new Accessor<object>();
+            var subject = new Rule<object>();
             var spv = new SwapPropVisitor(typeof(object));
 
             // act
@@ -93,9 +93,11 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             var pe = subject.AllPossiblePaths;
             
             // assert
-            Assert.IsTrue(Expression.Lambda<Func<object, ValidationContext, bool>>(((RequireOperator<object>)result).Descriptor.WrappedExpression, spv.EntityParameter, spv.ContextParameter).Compile()(null, null));
             Assert.AreEqual(1, pe.Count(a => a != null));
-            Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last());
+            Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last().Item3);
+
+            var compiled = Expression.Lambda<Func<object, ValidationContext, bool>>(((MultiCondition<object>)pe.First(a => a != null)).If.Last().Item1.WrappedExpression, spv.EntityParameter, spv.ContextParameter);
+            Assert.IsTrue(compiled.Compile()(null, null));
         }
 
         [Test]

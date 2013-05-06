@@ -34,21 +34,47 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             // arrange
             var subject = new MultiCondition<object>(null);
 
-            var conditions = new[]
-            {
-                new BackToFront.Framework.RequireOperator<object>(a => a.GetHashCode() == 6, null),
-                new BackToFront.Framework.RequireOperator<object>(a => a.GetHashCode() == 6, null),
-                new BackToFront.Framework.RequireOperator<object>(a => a.GetHashCode() == 6, null)
-            };
+            subject.Add(a => a.GetHashCode() == 6);
+            subject.Add(a => a.GetHashCode() == 6);
+            subject.Add(a => a.GetHashCode() == 6);
 
-            subject.If.AddRange(conditions);
-            var expected = subject.If.Select(i => i.AffectedMembers).Aggregate();
-            
             // act
             var actual = subject.AffectedMembers;
 
             // assert
-            Assert.IsTrue(AreKindOfEqual(expected, actual, (a, b) => a.Requirement == b.Requirement && a.Member.Equals(b.Member)));
+            Assert.AreEqual(3, actual.Count());
+            Assert.IsTrue(actual.All(a => a.Member.UltimateMember == typeof(object).GetMethod("GetHashCode")));
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Add_Test_No_Input()
+        {
+            // arrange
+            var subject = new MultiCondition<object>(null);
+
+            // act
+            // assert
+            subject.Add(null);
+        }
+
+        [Test]
+        public void Add_Test_Ok()
+        {
+            // arrange
+            var subject = new MultiCondition<object>(null);
+
+            Expression<Func<object, bool>> exp = a => a.GetHashCode() == 6;
+
+            // act
+            var result = subject.Add(exp);
+            var actual = subject.If;
+
+            // assert
+            Assert.AreEqual(1, actual.Count());
+            Assert.AreEqual(actual.First().Item1.WrappedExpression, exp.Body);
+            Assert.AreEqual(actual.First().Item2, exp.Parameters.First());
+            Assert.AreEqual(actual.First().Item3, result);
         }
     }
 }

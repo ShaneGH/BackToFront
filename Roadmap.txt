@@ -6,6 +6,8 @@ Short term:
 			
 BUG: MultiCondition _NewCompile will run the if logic twice if if is true. Once from the MultiCondition, once from the Operator
 
+BUG: Affected members needs an overhaul. Should element at start of chain contain affected members for later elements?
+
 Client side
 Domain Model
 

@@ -19,7 +19,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void RequireThat_Test()
         {
             // arrange
-            var subject = new RequireOperator<object>(a => true, null);
+            var subject = new RequireOperator<object>(null);
 
             // act
             var result = subject.RequireThat(a => true);
@@ -35,7 +35,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             // arrange
             bool passed = false;
             var rule = new Rule<object>();
-            var subject = new RequireOperator<object>(a => true, rule);
+            var subject = new RequireOperator<object>(rule);
 
             // act
             var result = subject.Then((a) => 

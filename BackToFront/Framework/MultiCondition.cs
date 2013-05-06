@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System;
 using BackToFront.Expressions.Visitors;
 using System.Linq.Expressions;
+using System.Collections.ObjectModel;
 
 namespace BackToFront.Framework
 {
@@ -19,22 +20,47 @@ namespace BackToFront.Framework
     /// <typeparam name="TEntity"></typeparam>
     public class MultiCondition<TEntity> : PathElement<TEntity>
     {
-        public readonly IList<RequireOperator<TEntity>> If = new List<RequireOperator<TEntity>>();
+        private readonly IList<Tuple<ExpressionWrapperBase, ParameterExpression, RequireOperator<TEntity>>> _If = new List<Tuple<ExpressionWrapperBase, ParameterExpression, RequireOperator<TEntity>>>();
+        public IEnumerable<Tuple<ExpressionWrapperBase, ParameterExpression, RequireOperator<TEntity>>> If
+        {
+            get
+            {
+                return _If.ToArray();
+            }
+        }
 
         public MultiCondition(Rule<TEntity> rule)
             : base(rule) { }
 
         public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
-            get { return If.ToArray(); }
+            get { return _If.Select(a => a.Item3).ToArray(); }
         }
 
         public override IEnumerable<AffectedMembers> AffectedMembers
         {
             get
             {
-                return If.Select(i => i.AffectedMembers).Aggregate();
+                // TODO: cache???
+                return _If.Select(a => a.Item1.GetMembersForParameter(a.Item2).Select(m => new AffectedMembers { Member = m, Requirement = PropertyRequirement })).Aggregate();
             }
+        }
+
+        public RequireOperator<TEntity> Add(Expression<Func<TEntity, bool>> condition)
+        {
+            var success = new RequireOperator<TEntity>(ParentRule);
+
+            //TODO: copy pasted from ExpressionElement, duplication of logic.
+
+            if (condition == null)
+                throw new ArgumentNullException("##");
+
+            ReadOnlyCollection<ParameterExpression> paramaters;
+            var wrapper = ExpressionWrapperBase.ToWrapper(condition, out paramaters);
+            var param = paramaters.SingleOrDefault();
+            _If.Add(new Tuple<ExpressionWrapperBase, ParameterExpression, RequireOperator<TEntity>>(wrapper, param, success));
+
+            return success;
         }
 
         public override bool PropertyRequirement
@@ -47,17 +73,17 @@ namespace BackToFront.Framework
         {
             get
             {
-                return _Meta ?? (_Meta = new PathElementMeta(If.Select(i => i.Meta), null, PathElementType.MultiCondition));
+                return _Meta;// ?? (_Meta = new PathElementMeta(If.Select(i => i.Meta), null, PathElementType.MultiCondition));
             }
         }
 
         protected override Expression _NewCompile(SwapPropVisitor visitor)
         {
             Expression final = null;
-            var possibilities = If.Select(a => 
+            var possibilities = _If.Select(a => 
             {
-                using (visitor.WithEntityParameter(a.EntityParameter))
-                    return new Tuple<Expression, Expression>(visitor.Visit(a.Descriptor.WrappedExpression), a.NewCompile(visitor));
+                using (visitor.WithEntityParameter(a.Item2))
+                    return new Tuple<Expression, Expression>(visitor.Visit(a.Item1.WrappedExpression), a.Item3.NewCompile(visitor));
             });
 
             if (possibilities.Any())

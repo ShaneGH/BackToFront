@@ -67,7 +67,7 @@ namespace BackToFront.Framework.Base
             var nc = _NewCompile(visitor);
             var _break = typeof(ValidationContext).GetProperty("Break");
 
-            return Expression.IfThen(Expression.Not(Expression.Property(visitor.ContextParameter, _break)), nc);
+            return Expression.IfThen(Expression.Not(Expression.Property(visitor.ContextParameter, _break)), nc ?? Expression.Empty());
         }
 
         protected abstract Expression _NewCompile(SwapPropVisitor visitor);

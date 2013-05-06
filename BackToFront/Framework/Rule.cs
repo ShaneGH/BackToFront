@@ -110,10 +110,9 @@ namespace BackToFront.Framework
             if (_Condition == null)
                 return If(property);
 
-            var @if = new RequireOperator<TEntity>(property, this);
-            _Condition.If.Add(@if);
-            return @if;
+            return _Condition.Add(property);
         }
+
 
         public IConditionSatisfied<TEntity> Else
         {
