@@ -15,7 +15,7 @@ using System.Runtime.Serialization;
 
 namespace BackToFront.Framework
 {
-    public class RequireOperator<TEntity> : ExpressionElement<TEntity, bool>, IRequirementFailed<TEntity>
+    public class RequireOperator<TEntity> : ExpressionElement<TEntity, bool>, IConditionSatisfied<TEntity>
     {
         public RequireOperator(Expression<Func<TEntity, bool>> descriptor, Rule<TEntity> rule)
             : base(descriptor, rule)
@@ -28,6 +28,16 @@ namespace BackToFront.Framework
             {
                 yield return _Then;
                 yield return _RequireThat;
+                yield return _RequirementFailed;
+            }
+        }
+
+        private RequirementFailed<TEntity> _RequirementFailed;
+        public IModelViolation<TEntity> RequirementFailed
+        {
+            get
+            {
+                return Do(() => _RequirementFailed = new RequirementFailed<TEntity>(a => false, ParentRule));
             }
         }
 
@@ -68,9 +78,6 @@ namespace BackToFront.Framework
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
             if (next != null)
             {
-                //using (visitor.WithEntityParameter(EntityParameter))
-                //Expression.Lambda<Action<TEntity, ValidationContextX>>(visitor.Visit(Descriptor.WrappedExpression), entity, context).Compile();
-
                 using (visitor.WithEntityParameter(EntityParameter))
                 {
                     var des = visitor.Visit(Descriptor.WrappedExpression);

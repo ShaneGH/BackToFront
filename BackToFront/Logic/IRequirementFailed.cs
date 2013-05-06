@@ -5,9 +5,10 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackToFront.Logic.Compilations
+namespace BackToFront.Logic
 {
-    public interface IRequirementFailed<TEntity> : IRequires<TEntity>, IBeginSubRule<TEntity>
+    public interface IRequirementFailed<TEntity>
     {
+        IModelViolation<TEntity> RequirementFailed { get; }
     }
 }

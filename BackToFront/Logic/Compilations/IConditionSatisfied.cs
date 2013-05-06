@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackToFront.Logic.Compilations
 {
-    public interface IConditionSatisfied<TEntity> : IRequirementFailed2<TEntity>, IRequires<TEntity>, IBeginSubRule<TEntity>
+    public interface IConditionSatisfied<TEntity> : IRequirementFailed<TEntity>, IRequires<TEntity>, IBeginSubRule<TEntity>
     {
     }
 }

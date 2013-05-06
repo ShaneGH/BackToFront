@@ -71,7 +71,6 @@
     <Compile Include="Meta\ExpressionElementMeta.cs" />
     <Compile Include="Meta\PathElementMeta.cs" />
     <Compile Include="Framework\NonGeneric\RuleWrapper.cs" />
-    <Compile Include="Framework\Operator.cs" />
     <Compile Include="Framework\MultiCondition.cs" />
     <Compile Include="Framework\RequirementFailed.cs" />
     <Compile Include="Framework\RequireOperator.cs" />
@@ -83,7 +82,6 @@
     <Compile Include="Framework\ThrowViolation.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Logic\Compilations\IRequirementFailed.cs" />
     <Compile Include="Logic\Compilations\IConditionSatisfied.cs" />
     <Compile Include="Logic\ValidateResult.cs" />
     <Compile Include="Utilities\Dependencies.cs" />
@@ -115,7 +113,7 @@
     <Compile Include="_\Repository.cs" />
     <Compile Include="_\Rules.cs" />
     <Compile Include="Logic\IBeginSubRule.cs" />
-    <Compile Include="Logic\IRequirementFailed2.cs" />
+    <Compile Include="Logic\IRequirementFailed.cs" />
     <Compile Include="Logic\IModelViolation.cs" />
     <Compile Include="Logic\IRequires.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

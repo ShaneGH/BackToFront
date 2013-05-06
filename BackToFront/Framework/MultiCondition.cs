@@ -19,7 +19,7 @@ namespace BackToFront.Framework
     /// <typeparam name="TEntity"></typeparam>
     public class MultiCondition<TEntity> : PathElement<TEntity>
     {
-        public readonly IList<Operator<TEntity>> If = new List<Operator<TEntity>>();
+        public readonly IList<RequireOperator<TEntity>> If = new List<RequireOperator<TEntity>>();
 
         public MultiCondition(Rule<TEntity> rule)
             : base(rule) { }
@@ -72,7 +72,7 @@ namespace BackToFront.Framework
                 }
             }
 
-            return final;
+            return (Expression)final ?? Expression.Empty();
         }
     }
 }

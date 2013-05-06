@@ -142,9 +142,6 @@
     <Compile Include="CSharp\UnitTests\Framework\NonGeneric\RuleWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\Operator_Tests.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="CSharp\UnitTests\Framework\RequirementFailed_Tests.cs">
       <SubType>Code</SubType>
     </Compile>

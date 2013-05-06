@@ -30,9 +30,9 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             var conditions = new[]
             {
-                new BackToFront.Framework.Operator<object>(a => a.GetHashCode() == 6, null),
-                new BackToFront.Framework.Operator<object>(a => a.GetHashCode() == 6, null),
-                new BackToFront.Framework.Operator<object>(a => a.GetHashCode() == 6, null)
+                new BackToFront.Framework.RequireOperator<object>(a => a.GetHashCode() == 6, null),
+                new BackToFront.Framework.RequireOperator<object>(a => a.GetHashCode() == 6, null),
+                new BackToFront.Framework.RequireOperator<object>(a => a.GetHashCode() == 6, null)
             };
 
             subject.If.AddRange(conditions);
