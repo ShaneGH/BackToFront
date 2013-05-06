@@ -11,11 +11,6 @@ Domain Model
 
 unit test BackToFront.Logic.ValidateResult<TEntity>
 
-Duplicate everything in BacktoFront.Framework namespace into BacktoFront.Builder namespace and split rule building and rule execution logic
-Compile pre-mocked rules, can already comile pre mocked expressions
-
-Define rule: must have same dependencies as parent class rule
-
 If validating children, ensure child object is not mocked out
 
 Special case for IEnumerables

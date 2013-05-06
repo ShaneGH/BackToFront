@@ -76,22 +76,22 @@ namespace BackToFront.DataAnnotations
                 (DependencyBehavior != Enum.DependencyBehavior.IgnoreRulesWithDependencies || !rule.Dependencies.Any()));
 
             // add violations to cache
-            rulesForMember.Where(r => !ctxt.ResultCache.ContainsKey(r)).Each(r => 
+            rulesForMember.Where(r => !ctxt.ResultCache.ContainsKey(r)).Each(r =>
             {
-                Dictionary<string, object> dependencies = new Dictionary<string,object>();
-                if(DependencyBehavior == Enum.DependencyBehavior.UseServiceContainerAndInbuiltDI)
+                Dictionary<string, object> dependencies = new Dictionary<string, object>();
+                if (DependencyBehavior == Enum.DependencyBehavior.UseServiceContainerAndInbuiltDI)
                 {
-                    foreach(var dep in r.Dependencies)
+                    foreach (var dep in r.Dependencies)
                     {
-                    var result = ctxt.DI.GetDependency(dep.DependencyName, dep.DependencyType, r);
-                        if(result.Value != null)
+                        var result = ctxt.DI.GetDependency(dep.DependencyName, dep.DependencyType, r);
+                        if (result.Value != null)
                             dependencies.Add(dep.DependencyName, result.Value);
                     }
                 }
-                
+
                 var vc = new ValidationContext(false, null, dependencies);
                 r.NewCompile(new Expressions.Visitors.SwapPropVisitor(null, dependencies, r.RuleType))(ctxt.ObjectInstance, vc);
-                
+
                 ctxt.ResultCache.Add(r, vc.Violations.ToArray());
             });
 

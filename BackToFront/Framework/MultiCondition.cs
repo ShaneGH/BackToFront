@@ -53,26 +53,20 @@ namespace BackToFront.Framework
 
         protected override Expression _NewCompile(SwapPropVisitor visitor)
         {
-            ConditionalExpression final = null;
+            Expression final = null;
             var possibilities = If.Select(a => 
             {
                 using (visitor.WithEntityParameter(a.EntityParameter))
-                {
                     return new Tuple<Expression, Expression>(visitor.Visit(a.Descriptor.WrappedExpression), a.NewCompile(visitor));
-                }
             });
 
-            foreach (var possibility in possibilities.Reverse())
+            if (possibilities.Any())
             {
-                if (final == null)
-                    final = Expression.IfThen(possibility.Item1, possibility.Item2);
-                else
-                {
-                    final = Expression.IfThenElse(possibility.Item1, possibility.Item2, final);
-                }
+                final = Expression.IfThen(possibilities.Last().Item1, possibilities.Last().Item2);
+                possibilities.Reverse().Skip(1).Each(a => final = Expression.IfThenElse(a.Item1, a.Item2, final));
             }
 
-            return (Expression)final ?? Expression.Empty();
+            return final ?? Expression.Empty();
         }
     }
 }
