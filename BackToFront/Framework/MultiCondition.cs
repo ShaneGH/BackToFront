@@ -14,14 +14,28 @@ using System.Collections.ObjectModel;
 
 namespace BackToFront.Framework
 {
+    public class IfDescriptor<TEntity>
+    {
+        public readonly ExpressionWrapperBase If;
+        public readonly ParameterExpression EntityParameter;
+        public readonly RequireOperator<TEntity> Action;
+
+        public IfDescriptor(ExpressionWrapperBase @if, ParameterExpression entityParameter, RequireOperator<TEntity> action)
+        {
+            If = @if;
+            EntityParameter = entityParameter;
+            Action = action;
+        }
+    }
+
     /// <summary>
     /// Describes if, else if, else logic
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class MultiCondition<TEntity> : PathElement<TEntity>
     {
-        private readonly IList<Tuple<ExpressionWrapperBase, ParameterExpression, RequireOperator<TEntity>>> _If = new List<Tuple<ExpressionWrapperBase, ParameterExpression, RequireOperator<TEntity>>>();
-        public IEnumerable<Tuple<ExpressionWrapperBase, ParameterExpression, RequireOperator<TEntity>>> If
+        private readonly IList<IfDescriptor<TEntity>> _If = new List<IfDescriptor<TEntity>>();
+        public IEnumerable<IfDescriptor<TEntity>> If
         {
             get
             {
@@ -34,7 +48,7 @@ namespace BackToFront.Framework
 
         public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
-            get { return _If.Select(a => a.Item3).ToArray(); }
+            get { return _If.Select(a => a.Action).ToArray(); }
         }
 
         public override IEnumerable<AffectedMembers> AffectedMembers
@@ -42,7 +56,7 @@ namespace BackToFront.Framework
             get
             {
                 // TODO: cache???
-                return _If.Select(a => a.Item1.GetMembersForParameter(a.Item2).Select(m => new AffectedMembers { Member = m, Requirement = PropertyRequirement })).Aggregate();
+                return _If.Select(a => a.If.GetMembersForParameter(a.EntityParameter).Select(m => new AffectedMembers { Member = m, Requirement = PropertyRequirement })).Aggregate();
             }
         }
 
@@ -58,7 +72,7 @@ namespace BackToFront.Framework
             ReadOnlyCollection<ParameterExpression> paramaters;
             var wrapper = ExpressionWrapperBase.ToWrapper(condition, out paramaters);
             var param = paramaters.SingleOrDefault();
-            _If.Add(new Tuple<ExpressionWrapperBase, ParameterExpression, RequireOperator<TEntity>>(wrapper, param, success));
+            _If.Add(new IfDescriptor<TEntity>(wrapper, param, success));
 
             return success;
         }
@@ -73,7 +87,7 @@ namespace BackToFront.Framework
         {
             get
             {
-                return _Meta;// ?? (_Meta = new PathElementMeta(If.Select(i => i.Meta), null, PathElementType.MultiCondition));
+                return _Meta;// (_Meta = new PathElementMeta(If.Select(i => i.Meta), null, PathElementType.MultiCondition));
             }
         }
 
@@ -82,8 +96,8 @@ namespace BackToFront.Framework
             Expression final = null;
             var possibilities = _If.Select(a => 
             {
-                using (visitor.WithEntityParameter(a.Item2))
-                    return new Tuple<Expression, Expression>(visitor.Visit(a.Item1.WrappedExpression), a.Item3.Compile(visitor));
+                using (visitor.WithEntityParameter(a.EntityParameter))
+                    return new Tuple<Expression, Expression>(visitor.Visit(a.If.WrappedExpression), a.Action.Compile(visitor));
             });
 
             if (possibilities.Any())

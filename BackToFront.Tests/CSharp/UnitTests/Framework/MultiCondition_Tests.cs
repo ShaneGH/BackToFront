@@ -11,11 +11,12 @@ using BackToFront.Extensions.IEnumerable;
 using BackToFront.Utilities;
 using BackToFront.Expressions.Visitors;
 using System.Linq.Expressions;
+using BackToFront.Tests.Base;
 
 namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
     [TestFixture]
-    public class MultiCondition_Tests : BackToFront.Tests.Base.TestBase
+    public class MultiCondition_Tests : TestBase
     {
         class TestClass<TEntity> : MultiCondition<TEntity>
         {
@@ -72,9 +73,9 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // assert
             Assert.AreEqual(1, actual.Count());
-            Assert.AreEqual(actual.First().Item1.WrappedExpression, exp.Body);
-            Assert.AreEqual(actual.First().Item2, exp.Parameters.First());
-            Assert.AreEqual(actual.First().Item3, result);
+            Assert.AreEqual(actual.First().If.WrappedExpression, exp.Body);
+            Assert.AreEqual(actual.First().EntityParameter, exp.Parameters.First());
+            Assert.AreEqual(actual.First().Action, result);
         }
 
         [Test]
@@ -102,6 +103,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             Func<ConditionalExpression, Expression, bool, RequireOperator<object>, ConditionalExpression> assert = (ex, currentIf, isLast, result) =>
                 {
                     Assert.AreEqual(currentIf, ex.Test);
+
                     // compensate for NewCompile (not _NewCompile)
                     Assert.IsInstanceOf<DefaultExpression>(((ConditionalExpression)ex.IfTrue).IfTrue);
                     if (isLast)

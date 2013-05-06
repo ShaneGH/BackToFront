@@ -78,7 +78,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // assert
             Assert.AreEqual(1, pe.Count(a => a != null));
-            Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last().Item3);
+            Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last().Action);
         }
 
         [Test]
@@ -94,9 +94,9 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             
             // assert
             Assert.AreEqual(1, pe.Count(a => a != null));
-            Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last().Item3);
+            Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last().Action);
 
-            var compiled = Expression.Lambda<Func<object, ValidationContext, bool>>(((MultiCondition<object>)pe.First(a => a != null)).If.Last().Item1.WrappedExpression, spv.EntityParameter, spv.ContextParameter);
+            var compiled = Expression.Lambda<Func<object, ValidationContext, bool>>(((MultiCondition<object>)pe.First(a => a != null)).If.Last().If.WrappedExpression, spv.EntityParameter, spv.ContextParameter);
             Assert.IsTrue(compiled.Compile()(null, null));
         }
 
