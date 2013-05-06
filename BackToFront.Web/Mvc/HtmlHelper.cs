@@ -20,23 +20,23 @@ namespace BackToFront.Web.Mvc
         public string Entity { get; set; }
 
         [DataMember]
-        public PathElementMeta[] Rules { get; set; }
+        public List<PathElementMeta> Rules { get; set; }
     }
 
     public static class HtmlHelper
     {
         private static readonly DataContractJsonSerializer Serializer = new DataContractJsonSerializer(typeof(RuleCollection));
 
-        public static void RulesForModel<TModel>(this HtmlHelper<TModel> helper)
+        public static void RulesForModel<TModel>(this HtmlHelper<TModel> helper, Repository repository, bool includeScriptTags = true)
         {
-            WriteRulesToStream<TModel>(helper.ViewContext.HttpContext.Response.OutputStream);
+            WriteRulesToStream<TModel>(repository, helper.ViewContext.HttpContext.Response.OutputStream, includeScriptTags);
         }
 
-        public static MvcHtmlString RenderRulesForModel<TModel>(this HtmlHelper<TModel> helper, bool includeScriptTags = true)
+        public static MvcHtmlString RenderRulesForModel<TModel>(this HtmlHelper<TModel> helper, Repository repository, bool includeScriptTags = true)
         {
             using (var stream = new MemoryStream())
             {
-                WriteRulesToStream<TModel>(stream);
+                WriteRulesToStream<TModel>(repository, stream, includeScriptTags);
                 stream.Position = 0;
                 using (var r = new StreamReader(stream))
                 {
@@ -50,23 +50,37 @@ namespace BackToFront.Web.Mvc
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="stream"></param>
-        private static void WriteRulesToStream<TEntity>(Stream stream)
+        private static void WriteRulesToStream<TEntity>(Repository repository, Stream stream, bool includeScriptTags)
         {
-            Rules<TEntity>.ParentClassRepositories.Aggregate();
+            WriteRulesToStream<TEntity>(new[] { repository }, stream, includeScriptTags);
+        }
+
+        private static void WriteRulesToStream<TEntity>(IEnumerable<Repository> repositories, Stream stream, bool includeScriptTags)
+        {
+            var type = typeof(TEntity);
             var rules = new RuleCollection
             {
-                Entity = typeof(TEntity).FullName,
-                Rules = Rules<TEntity>.Repository.Registered.Concat(Rules<TEntity>.ParentClassRepositories.Aggregate()).Select(r => r.Meta).ToArray()
+                Entity = type.FullName,
+                Rules = new List<PathElementMeta>()
             };
+
+            while (type != null)
+            {
+                rules.Rules.AddRange(repositories.Select(r => r.Rules(type).Select(a => a.Meta)).Aggregate());
+                type = type.BaseType;
+            }
 
             using (var writer = new StreamWriter(stream))
             {
-                writer.WriteLine("<script type=\"text/javascript\">");
+                if (includeScriptTags)
+                    writer.WriteLine("<script type=\"text/javascript\">");
                 writer.WriteLine("if(!__BTF || !__BTF.RegisterRule || __BTF.RegisterRule.constructor !== Function) throw 'BackToFront has not been initialised';");
                 writer.Write("__BTF.RegisterRule(");
                 Serializer.WriteObject(stream, rules);
                 writer.WriteLine(");");
-                writer.WriteLine("</script>");
+
+                if (includeScriptTags)
+                    writer.WriteLine("</script>");
 
                 writer.Flush();
             }

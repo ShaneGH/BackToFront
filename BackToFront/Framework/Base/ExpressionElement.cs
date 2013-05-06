@@ -32,19 +32,6 @@ namespace BackToFront.Framework.Base
             EntityParameter = Parameters.First();
         }
 
-        //public CompiledMockedExpression<TEntity, TMember> Compile()
-        //{
-        //    return Compile(new SwapPropVisitor());
-        //}
-
-        //public CompiledMockedExpression<TEntity, TMember> Compile(SwapPropVisitor mocks)
-        //{
-        //    // add extra parameter for mock values
-        //    var parameters = Parameters.Concat(mocks.Parameters);
-        //    var compiled = Expression.Lambda<Func<TEntity, object[], IDictionary<string, object>, TMember>>(Descriptor.Compile(mocks), parameters).Compile();
-        //    return new CompiledMockedExpression<TEntity, TMember>(compiled, mocks.Mocks);
-        //}
-
         public override IEnumerable<AffectedMembers> AffectedMembers
         {
             get 
