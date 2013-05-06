@@ -14,14 +14,14 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
     [TestFixture]
     public class RequirementFailed_Tests : BackToFront.Tests.Base.TestBase
     {
-        public class Accessor : RequirementFailed<TestClass>
+        public class Accessor : RequirementFailed<object>
         {
-            public Accessor(Expression<Func<TestClass, bool>> property)
+            public Accessor(Expression<Func<object, bool>> property)
                 : base(property, null)
             {
             }
 
-            public Expression __NewCompile(SwapPropVisitor visitor)
+            public Expression __Compile(SwapPropVisitor visitor)
             {
                 return _Compile(visitor);
             }
@@ -50,45 +50,39 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             Assert.IsInstanceOf<ThrowViolation<object>>(npe.ElementAt(0));
         }
 
-        //[Test]
-        //[TestCase(true)]
-        //[TestCase(false)]
-        //public void _NewCompileTest(bool success)
-        //{
-        //    // arrange
-        //    var violation = new M.Mock<IViolation>();
-        //    var subject = new Accessor(a => a.Success);
-        //    subject.WithModelViolation(a => violation.Object);
-        //    var item = new TestClass { Success = success };
-        //    var ctxt = new ValidationContextX(true, null, null);
+        [Test]
+        public void _CompileTest()
+        {
+            // arrange
+            var violation = new M.Mock<IViolation>();
+            var subject = new Accessor(a => true);
+            subject.WithModelViolation(a => violation.Object);
 
-        //    // act
-        //    subject.__NewCompile(new SwapPropVisitor())(item, ctxt);
+            // act
+            var actual = subject.__Compile(new SwapPropVisitor(typeof(object)));
 
-        //    // assert
-        //    if (success)
-        //    {
-        //        Assert.AreEqual(0, ctxt.Violations.Count());
-        //    }
-        //    else
-        //    {
-        //        Assert.AreEqual(1, ctxt.Violations.Count());
-        //        Assert.AreEqual(violation.Object, ctxt.Violations.First());
-        //    }
-        //}
+            // assert
+            Assert.IsInstanceOf<ConditionalExpression>(actual);
+            Assert.AreEqual(ExpressionType.Not, (((ConditionalExpression)actual).Test as UnaryExpression).NodeType);
+            Assert.AreEqual(subject.Descriptor.WrappedExpression, (((ConditionalExpression)actual).Test as UnaryExpression).Operand);
 
-        //[Test]
-        //public void _NewCompileTest_NoNextElement()
-        //{
-        //    // arrange
-        //    var violation = new M.Mock<IViolation>();
-        //    var subject = new Accessor(a => a.Success);
+            //TODO: cannot test this one with any accuracy
+            //Assert.IsInstanceOf<DefaultExpression>(((ConditionalExpression)actual).IfTrue);
+            Assert.IsInstanceOf<DefaultExpression>(((ConditionalExpression)actual).IfFalse);
+        }
 
-        //    // act
-        //    var result = subject.__NewCompile(new SwapPropVisitor());
+        [Test]
+        public void _CompileTest_NoNextElement()
+        {
+            // arrange
+            var violation = new M.Mock<IViolation>();
+            var subject = new Accessor(a => true);
 
-        //    // assert
-        //    Assert.AreEqual(PathElement<TestClass>.DoNothing, result);
-        //}
+            // act
+            var result = subject.__Compile(new SwapPropVisitor(typeof(object)));
+
+            // assert
+            Assert.IsInstanceOf<DefaultExpression>(result);
+        }
     }
 }

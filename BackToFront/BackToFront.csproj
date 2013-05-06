@@ -49,6 +49,9 @@
     <Compile Include="Enum\MemberIndexType.cs" />
     <Compile Include="Enum\MockBehavior.cs" />
     <Compile Include="Enum\PathElementType.cs" />
+    <Compile Include="Expressions\BlockExpressionWrapper.cs" />
+    <Compile Include="Expressions\ConditionalExpressionWrapper.cs" />
+    <Compile Include="Expressions\DefaultExpressionWrapper.cs" />
     <Compile Include="Expressions\ElementAtExpressionWrapper.cs" />
     <Compile Include="Expressions\Visitors\SwapPropVisitor.cs" />
     <Compile Include="Extensions\BusinessLogic.cs">

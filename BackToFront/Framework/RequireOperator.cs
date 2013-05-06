@@ -13,6 +13,7 @@ using BackToFront.Logic.Compilations;
 using BackToFront.Utilities;
 using System.Runtime.Serialization;
 using BackToFront.Extensions.IEnumerable;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework
 {
@@ -74,7 +75,7 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Expression _Compile(Expressions.Visitors.SwapPropVisitor visitor)
+        protected override Expression _Compile(SwapPropVisitor visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
             return next != null ? next.Compile(visitor) : Expression.Empty();

@@ -34,7 +34,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             public Accessor(Func<object, IViolation> violation, IEnumerable<MemberChainItem> items)
                 : base(violation, null, items) { }
 
-            public Expression __NewCompile(SwapPropVisitor visitor)
+            public Expression __Compile(SwapPropVisitor visitor)
             {
                 return _Compile(visitor);
             }
@@ -49,28 +49,29 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             public object Property { get; set; }
         }
 
-        //[Test]
-        //public void _NewCompileTest()
-        //{
-        //    // arrange
-        //    var item = new object();
-        //    var violation = new Violation();
+        [Test]
+        public void _CompileTest()
+        {
+            // arrange
+            var item = new object();
+            var violation = new Violation();
 
-        //    MemberChainItem mci = new MemberChainItem(typeof(int));
-        //    var subject = new Accessor(a => violation, new []{ mci });
-        //    SwapPropVisitor visitor = new SwapPropVisitor();
-        //    var ctxt = new ValidationContextX(true, null, null);
+            MemberChainItem mci = new MemberChainItem(typeof(int));
+            var subject = new Accessor(a => violation, new[] { mci });
+            SwapPropVisitor visitor = new SwapPropVisitor(typeof(object));
+            var ctxt = new ValidationContext(true, null, null);
 
-        //    // act
-        //    subject.__NewCompile(new SwapPropVisitor())(item, ctxt);
+            // act
+            var compiled = subject.__Compile(visitor);
+            CompileAndCall(compiled, visitor, item, ctxt);
 
-        //    // assert
-        //    Assert.AreEqual(1, ctxt.Violations.Count());
-        //    Assert.AreEqual(violation, ctxt.Violations.First());
+            // assert
+            Assert.AreEqual(1, ctxt.Violations.Count());
+            Assert.AreEqual(violation, ctxt.Violations.First());
 
-        //    Assert.AreEqual(item, violation.ViolatedEntity);
-        //    Assert.AreEqual(1, violation.Violated.Count());
-        //    Assert.AreEqual(mci, violation.Violated.First());
-        //}
+            Assert.AreEqual(item, violation.ViolatedEntity);
+            Assert.AreEqual(1, violation.Violated.Count());
+            Assert.AreEqual(mci, violation.Violated.First());
+        }
     }
 }

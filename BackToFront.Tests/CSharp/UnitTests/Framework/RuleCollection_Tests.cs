@@ -10,6 +10,8 @@ using U = BackToFront.Utilities;
 using BackToFront.Validation;
 using BackToFront.Expressions.Visitors;
 using BackToFront.Dependency;
+using System.Linq.Expressions;
+using BackToFront.Expressions;
 
 namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
@@ -21,6 +23,11 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         {
             public TestClass()
                 : base(null) { }
+
+            public Expression __Compile(SwapPropVisitor v)
+            {
+                return _Compile(v);
+            }
         }
 
         [Test]
@@ -44,6 +51,25 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // assert
             Assert.IsTrue(AreKindOfEqual(new[] { item1, item2 }, actual));
+        }
+
+        [Test]
+        public void _Compile_Test()
+        {
+            // arrange
+            var subject = new RuleCollection<object>();
+            subject.AddRule(new Rule<object>());
+            subject.AddRule(new Rule<object>());
+
+            var v = new SwapPropVisitor(typeof(object));
+
+            // act
+            var actual = ExpressionWrapperBase.CreateChildWrapper(subject.Compile(v)) as BlockExpressionWrapper;
+            var expected = Expression.Block(subject.Rules.Select(r => r.Compile(v)));
+
+            // act
+            Assert.AreEqual(2, actual.Expression.Expressions.Count);
+            Assert.IsTrue(actual.IsSameExpression(expected));
         }
     }
 }

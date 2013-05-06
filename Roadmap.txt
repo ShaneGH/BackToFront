@@ -1,12 +1,13 @@
 ﻿
-Short term:	
-			unit test all NewCompiles
-			Unit test all Meta Properties, framework and expression
+Unit test all Meta Properties, framework and expression
+using test ConditionalExpressionWrapper, BlockExpressionWrapper, DefaultExpressionWrapper
 
 Client side
 Domain Model
 
 unit test BackToFront.Logic.ValidateResult<TEntity>
+
+look at GetMembersForParameter. Not sure if caching should be used
 
 If validating children, ensure child object is not mocked out
 

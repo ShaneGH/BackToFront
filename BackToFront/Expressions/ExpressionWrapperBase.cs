@@ -32,8 +32,11 @@ namespace BackToFront.Expressions
             _Constructors[typeof(UnaryExpression)] = expression => new UnaryExpressionWrapper(expression as UnaryExpression);
             _Constructors[typeof(ParameterExpression)] = expression => new ParameterExpressionWrapper(expression as ParameterExpression);
             _Constructors[typeof(MemberExpression)] = expression => new MemberExpressionWrapper(expression as MemberExpression);
+            _Constructors[typeof(BlockExpression)] = expression => new BlockExpressionWrapper(expression as BlockExpression);
+            _Constructors[typeof(ConditionalExpression)] = expression => new ConditionalExpressionWrapper(expression as ConditionalExpression);
+            _Constructors[typeof(DefaultExpression)] = expression => new DefaultExpressionWrapper(expression as DefaultExpression);
         }
-
+        
         public abstract Expression WrappedExpression { get; }
         protected abstract IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter);
 

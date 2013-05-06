@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 
 using NUnit.Framework;
+using BackToFront.Framework;
+using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Tests.Base
 {
@@ -45,7 +47,12 @@ namespace BackToFront.Tests.Base
 
         public static object GetPrivateProperty(object item, string name)
         {
-            var members = PrivateMembers(item.GetType(), name).Where(m => m is FieldInfo || m is PropertyInfo);
+            return GetPrivateProperty(item, name);
+        }
+
+        public static object GetPrivateProperty(object item, Type itemType, string name)
+        {
+            var members = PrivateMembers(itemType, name).Where(m => m is FieldInfo || m is PropertyInfo);
 
             if (members.Count() != 1)
                 throw new InvalidOperationException("Invalid Property of field name: " + name);
@@ -94,6 +101,11 @@ namespace BackToFront.Tests.Base
         public static bool AreKindOfEqual<T>(IEnumerable<T> item1, IEnumerable<T> item2)
         {
             return AreKindOfEqual(item1, item2, (a, b) => a.Equals(b));
+        }
+
+        public static void CompileAndCall<TEntity>(Expression logic, SwapPropVisitor visitor, TEntity entity, ValidationContext ctxt)
+        {
+            Expression.Lambda<Action<TEntity, ValidationContext>>(logic, visitor.EntityParameter, visitor.ContextParameter).Compile()(entity, ctxt);
         }
     }
 }
