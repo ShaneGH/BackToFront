@@ -3,8 +3,8 @@ Short term:
 			unit test all NewCompiles
 			Unit test all Meta Properties, framework and expression
 
-
-Remove RuleWrapper class
+			
+BUG: MultiCondition _NewCompile will run the if logic twice if if is true. Once from the MultiCondition, once from the Operator
 
 Client side
 Domain Model

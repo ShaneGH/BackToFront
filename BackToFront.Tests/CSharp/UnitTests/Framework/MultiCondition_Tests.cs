@@ -10,6 +10,7 @@ using BackToFront.Framework.Base;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Utilities;
 using BackToFront.Expressions.Visitors;
+using System.Linq.Expressions;
 
 namespace BackToFront.Tests.CSharp.UnitTests.Framework
 {
@@ -20,6 +21,11 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         {
             public TestClass()
                 : base(null) { }
+
+            public Expression __NewCompile(SwapPropVisitor visitor)
+            {
+                return _NewCompile(visitor);
+            }
         }
 
         [Test]

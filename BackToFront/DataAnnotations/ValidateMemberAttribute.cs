@@ -1,7 +1,6 @@
 ﻿using BackToFront.Enum;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Extensions.Reflection;
-using BackToFront.Framework.NonGeneric;
 using BackToFront.Utilities;
 using System;
 using System.Text.RegularExpressions;
@@ -9,12 +8,15 @@ using System.Collections.Generic;
 using System.Linq;
 using DA = System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using BackToFront.Validation;
+using BackToFront.Framework;
 
 namespace BackToFront.DataAnnotations
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class ValidateMemberAttribute : DA.ValidationAttribute
     {
+        public const string BackToFrontValidationContext = "BackToFront.DataAnnotations.BTFValidationContext";
         public static readonly Regex PropertyChain;
         public static readonly Regex IndexedProperty;
         static ValidateMemberAttribute()
@@ -26,9 +28,7 @@ namespace BackToFront.DataAnnotations
             IndexedProperty = new Regex(index + "$");
             PropertyChain = new Regex(@"^" + indexedProperty + @"(" + dotIndexedProperty + @")*$");
         }
-
-        public const string BackToFrontValidationContext = "BackToFront.DataAnnotations.BTFValidationContext";
-
+        
         public override bool RequiresValidationContext
         {
             get
@@ -36,7 +36,7 @@ namespace BackToFront.DataAnnotations
                 return true;
             }
         }
-
+        
         /// <summary>
         /// Default IgnoreRulesWithDependencies
         /// </summary>
@@ -52,12 +52,12 @@ namespace BackToFront.DataAnnotations
             return string.Join("\n", errors.ToArray());
         }
 
-        private bool DependencyBehaviorChooser(RuleWrapper a)
+        private bool DependencyBehaviorChooser(INonGenericRule rule)
         {
             switch (DependencyBehavior)
             {
                 case DependencyBehavior.IgnoreRulesWithDependencies:
-                    return a.Rule.Dependencies.Count == 0;
+                    return rule.Dependencies.Count == 0;
                 case DependencyBehavior.UseInbuiltDI:
                 case DependencyBehavior.UseServiceContainerAndInbuiltDI:
                     return true;
@@ -71,12 +71,32 @@ namespace BackToFront.DataAnnotations
             var ctxt = ProcessValidationContext(validationContext);
 
             var member = Create(validationContext.ObjectType, validationContext.MemberName);
-
-            var useDependencies = DependencyBehavior == DependencyBehavior.UseServiceContainerAndInbuiltDI;
             
-            var violations =
-                ctxt.Rules.Where(rule => DependencyBehaviorChooser(rule) && rule.RequireThatMembers.Contains(member))
-                .Select(rule => rule.Result(useDependencies).Where(result => result.Violated.Contains(member))).Aggregate();
+            var rulesForMember = ctxt.Rules.Where(rule => rule.AffectedMembers.Any(am => am.Requirement && am.Member == member) &&
+                (DependencyBehavior != Enum.DependencyBehavior.IgnoreRulesWithDependencies || !rule.Dependencies.Any()));
+
+            // add violations to cache
+            rulesForMember.Where(r => !ctxt.ResultCache.ContainsKey(r)).Each(r => 
+            {
+                Dictionary<string, object> dependencies = new Dictionary<string,object>();
+                if(DependencyBehavior == Enum.DependencyBehavior.UseServiceContainerAndInbuiltDI)
+                {
+                    foreach(var dep in r.Dependencies)
+                    {
+                    var result = ctxt.DI.GetDependency(dep.DependencyName, dep.DependencyType, r);
+                        if(result.Value != null)
+                            dependencies.Add(dep.DependencyName, result.Value);
+                    }
+                }
+                
+                var vc = new ValidationContext(false, null, dependencies);
+                r.NewCompile(new Expressions.Visitors.SwapPropVisitor(null, dependencies, r.RuleType))(ctxt.ObjectInstance, vc);
+                
+                ctxt.ResultCache.Add(r, vc.Violations.ToArray());
+            });
+
+            // get violations for each rule
+            var violations = rulesForMember.Select(r => ctxt.ResultCache[r]).Aggregate();
 
             if (!violations.Any())
                 return DA.ValidationResult.Success;

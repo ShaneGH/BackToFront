@@ -17,8 +17,8 @@ namespace BackToFront.Framework
         public ValidationContext(bool breakOnFirstError, object[] mocks, IDictionary<string, object> dependencies)
         {
             BreakOnFirstError = breakOnFirstError;
-            Mocks = mocks;
-            Dependencies = dependencies;
+            Mocks = mocks ?? new object[0];
+            Dependencies = dependencies ?? new Dictionary<string, object>();
         }
 
         public bool IsViolated

@@ -9,6 +9,8 @@ namespace BackToFront.Validation
 {
     public interface INonGenericRule
     {
+        Type RuleType { get; }
+
         IEnumerable<AffectedMembers> AffectedMembers { get; }
 
         List<DependencyWrapper> Dependencies { get; }

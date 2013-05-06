@@ -19,6 +19,7 @@ namespace BackToFront.Framework
 {
     public class Rule<TEntity> : PathElement<TEntity>, IAdditionalRuleCondition<TEntity>, IRule<TEntity>, IRuleValidation<TEntity>, INonGenericRule
     {
+        private static readonly Type _Type = typeof(TEntity);
         private readonly HashSet<IValidate<TEntity>> RegisteredItems = new HashSet<IValidate<TEntity>>();
         public readonly List<DependencyWrapper> _Dependencies = new List<DependencyWrapper>();
         private readonly HashSet<Rule<TEntity>> SubRules = new HashSet<Rule<TEntity>>();
@@ -153,5 +154,10 @@ namespace BackToFront.Framework
         }
 
         #endregion
+
+        public Type RuleType
+        {
+            get { return _Type; }
+        }
     }
 }

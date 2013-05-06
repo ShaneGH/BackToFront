@@ -70,7 +70,6 @@
     <Compile Include="Framework\ValidationContext.cs" />
     <Compile Include="Meta\ExpressionElementMeta.cs" />
     <Compile Include="Meta\PathElementMeta.cs" />
-    <Compile Include="Framework\NonGeneric\RuleWrapper.cs" />
     <Compile Include="Framework\MultiCondition.cs" />
     <Compile Include="Framework\RequirementFailed.cs" />
     <Compile Include="Framework\RequireOperator.cs" />
