@@ -24,7 +24,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             public Expression __NewCompile(SwapPropVisitor visitor)
             {
-                return _NewCompile(visitor);
+                return _Compile(visitor);
             }
         }
 
@@ -75,6 +75,49 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             Assert.AreEqual(actual.First().Item1.WrappedExpression, exp.Body);
             Assert.AreEqual(actual.First().Item2, exp.Parameters.First());
             Assert.AreEqual(actual.First().Item3, result);
+        }
+
+        [Test]
+        public void _NewCompile_Test()
+        {
+            // arrange
+            var subject = new TestClass<object>();
+            Expression<Func<object, bool>> e1 = a => true;
+            Expression<Func<object, bool>> e2 = a => true;
+            Expression<Func<object, bool>> e3 = a => true;
+            RequireOperator<object> r1 = subject.Add(e1);
+            RequireOperator<object> r2 = subject.Add(e2);
+            RequireOperator<object> r3 = subject.Add(e3);
+            var asArray = new []
+            {
+                new Tuple<Expression, RequireOperator<object>>(e1.Body, r1),
+                new Tuple<Expression, RequireOperator<object>>(e2.Body, r2),
+                new Tuple<Expression, RequireOperator<object>>(e3.Body, r3)
+            };
+
+            // act
+            ConditionalExpression actual = subject.__NewCompile(new SwapPropVisitor(typeof(object))) as ConditionalExpression;
+
+            // assert
+            Func<ConditionalExpression, Expression, bool, RequireOperator<object>, ConditionalExpression> assert = (ex, currentIf, isLast, result) =>
+                {
+                    Assert.AreEqual(currentIf, ex.Test);
+                    // compensate for NewCompile (not _NewCompile)
+                    Assert.IsInstanceOf<DefaultExpression>(((ConditionalExpression)ex.IfTrue).IfTrue);
+                    if (isLast)
+                    {
+                        Assert.IsInstanceOf<DefaultExpression>(ex.IfFalse);
+                        return null;
+                    }
+                    else
+                    {
+                        Assert.IsInstanceOf<ConditionalExpression>(ex.IfFalse);
+                        return (ConditionalExpression)ex.IfFalse;
+                    }
+                };
+            
+            for (var i = 0; i < 3; i++)
+                actual = assert(actual, asArray[i].Item1, i + 1 >= asArray.Length, asArray[i].Item2);
         }
     }
 }

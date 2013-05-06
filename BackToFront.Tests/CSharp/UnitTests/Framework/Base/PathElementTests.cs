@@ -90,10 +90,10 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
             Expression<Action> pass = () => Assert.Pass();
             var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
             SwapPropVisitor visitor = new SwapPropVisitor(typeof(object));
-            subject.Protected().Setup<Expression>("_NewCompile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns(pass.Body);
+            subject.Protected().Setup<Expression>("_Compile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns(pass.Body);
 
             // act
-            var compiled = subject.Object.NewCompile(visitor);
+            var compiled = subject.Object.Compile(visitor);
             Expression.Lambda<Action<object, ValidationContext>>(compiled, visitor.EntityParameter, visitor.ContextParameter).Compile()(new object(), new ValidationContext(false, null, null));
 
             // assert
@@ -107,12 +107,12 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
             Expression<Action> fail = () => Assert.Fail();
             var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
             SwapPropVisitor visitor = new SwapPropVisitor(typeof(object));
-            subject.Protected().Setup<Expression>("_NewCompile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns(fail);
+            subject.Protected().Setup<Expression>("_Compile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns(fail);
             var ctxt = new ValidationContext(true, null, null);
             ctxt.Violations.Add(null);
 
             // act
-            var compiled = subject.Object.NewCompile(visitor);
+            var compiled = subject.Object.Compile(visitor);
             Expression.Lambda<Action<object, ValidationContext>>(compiled, visitor.EntityParameter, visitor.ContextParameter).Compile()(new object(), new ValidationContext(false, null, null));
 
             // assert

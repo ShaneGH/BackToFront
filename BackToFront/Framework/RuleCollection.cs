@@ -36,9 +36,9 @@ namespace BackToFront.Framework
             _Rules.Add(rule);
         }
 
-        public Expression NewCompile(SwapPropVisitor visitor)
+        public Expression Compile(SwapPropVisitor visitor)
         {
-            var compiled = Rules.Select(r => r.NewCompile(visitor));
+            var compiled = Rules.Select(r => r.Compile(visitor));
 
             return Expression.Block(compiled);
         }

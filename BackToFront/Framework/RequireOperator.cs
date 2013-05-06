@@ -74,10 +74,10 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        protected override Expression _Compile(Expressions.Visitors.SwapPropVisitor visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
-            return next != null ? next.NewCompile(visitor) : Expression.Empty();
+            return next != null ? next.Compile(visitor) : Expression.Empty();
         }
 
         public override IEnumerable<AffectedMembers> AffectedMembers

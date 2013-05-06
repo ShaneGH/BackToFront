@@ -46,9 +46,9 @@ namespace BackToFront.Framework
             return subRule.If(property);
         }
 
-        protected override Expression _NewCompile(SwapPropVisitor visitor)
+        protected override Expression _Compile(SwapPropVisitor visitor)
         {
-            return _subRules.NewCompile(visitor);
+            return _subRules.Compile(visitor);
         }
 
         public IModelViolation<TEntity> RequireThat(Expression<Func<TEntity, bool>> property)

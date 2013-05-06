@@ -62,14 +62,14 @@ namespace BackToFront.Framework.Base
 
         public abstract PathElementMeta Meta { get; }
 
-        public Expression NewCompile(SwapPropVisitor visitor)
+        public Expression Compile(SwapPropVisitor visitor)
         {
-            var nc = _NewCompile(visitor);
+            var nc = _Compile(visitor);
             var _break = typeof(ValidationContext).GetProperty("Break");
 
             return Expression.IfThen(Expression.Not(Expression.Property(visitor.ContextParameter, _break)), nc ?? Expression.Empty());
         }
 
-        protected abstract Expression _NewCompile(SwapPropVisitor visitor);
+        protected abstract Expression _Compile(SwapPropVisitor visitor);
     }
 }

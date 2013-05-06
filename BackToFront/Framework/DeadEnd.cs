@@ -42,7 +42,7 @@ namespace BackToFront.Framework
             get { yield break; }
         }
 
-        protected override Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        protected override Expression _Compile(Expressions.Visitors.SwapPropVisitor visitor)
         {
             return Expression.Empty();
         }

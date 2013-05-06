@@ -68,7 +68,7 @@ namespace BackToFront.Framework
 
         #endregion
 
-        protected override Expression _NewCompile(SwapPropVisitor visitor)
+        protected override Expression _Compile(SwapPropVisitor visitor)
         {
             Action<TEntity, ValidationContext> block = (entity, context) =>
             {

@@ -35,7 +35,7 @@ namespace BackToFront.Tests.Utilities
             }
         }
 
-        protected override System.Linq.Expressions.Expression _NewCompile(Expressions.Visitors.SwapPropVisitor visitor)
+        protected override System.Linq.Expressions.Expression _Compile(Expressions.Visitors.SwapPropVisitor visitor)
         {
             throw new NotImplementedException();
         }

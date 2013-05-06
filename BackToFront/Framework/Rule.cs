@@ -35,12 +35,12 @@ namespace BackToFront.Framework
                 ParentRule.SubRules.Add(this);
         }
 
-        protected override Expression _NewCompile(SwapPropVisitor visitor)
+        protected override Expression _Compile(SwapPropVisitor visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
             if (next != null)
             {
-                return next.NewCompile(visitor);
+                return next.Compile(visitor);
             }
             else
                 return Expression.Empty();
@@ -48,7 +48,7 @@ namespace BackToFront.Framework
 
         Action<object, ValidationContext> INonGenericRule.NewCompile(SwapPropVisitor visitor)
         {
-            var tyt = NewCompile(visitor);
+            var tyt = Compile(visitor);
             var rule = Expression.Lambda<Action<TEntity, ValidationContext>>(tyt, visitor.EntityParameter, visitor.ContextParameter).Compile();
 
             return (a, b) =>
@@ -152,11 +152,11 @@ namespace BackToFront.Framework
             }
         }
 
-        #endregion
-
         public Type RuleType
         {
             get { return _Type; }
         }
+
+        #endregion
     }
 }

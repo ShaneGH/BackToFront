@@ -23,7 +23,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             public Expression __NewCompile(SwapPropVisitor visitor)
             {
-                return _NewCompile(visitor);
+                return _Compile(visitor);
             }
         }
 

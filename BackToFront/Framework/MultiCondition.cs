@@ -77,13 +77,13 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Expression _NewCompile(SwapPropVisitor visitor)
+        protected override Expression _Compile(SwapPropVisitor visitor)
         {
             Expression final = null;
             var possibilities = _If.Select(a => 
             {
                 using (visitor.WithEntityParameter(a.Item2))
-                    return new Tuple<Expression, Expression>(visitor.Visit(a.Item1.WrappedExpression), a.Item3.NewCompile(visitor));
+                    return new Tuple<Expression, Expression>(visitor.Visit(a.Item1.WrappedExpression), a.Item3.Compile(visitor));
             });
 
             if (possibilities.Any())

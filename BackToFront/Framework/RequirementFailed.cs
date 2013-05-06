@@ -63,7 +63,7 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Expression _NewCompile(SwapPropVisitor visitor)
+        protected override Expression _Compile(SwapPropVisitor visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);            
             if (next != null)
@@ -71,7 +71,7 @@ namespace BackToFront.Framework
                 using (visitor.WithEntityParameter(EntityParameter))
                 {
                     var des = visitor.Visit(Descriptor.WrappedExpression);
-                    var nxt = next.NewCompile(visitor);
+                    var nxt = next.Compile(visitor);
                     return Expression.IfThen(Expression.Not(des), nxt);
                 }
             }
