@@ -27,11 +27,10 @@ namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
             repository.AddRule<TestClass2>(a => { });
 
             var vc = new ValidationContext(objectInstance);
-            vc.ServiceContainer.AddService(typeof(Repository), repository);
             vc.ServiceContainer.AddService(typeof(IRuleDependencies), di.Object);
 
             // act
-            var subject = new BTFValidationContext(vc);
+            var subject = new BTFValidationContext(vc, repository);
             
             // assert
             Assert.AreEqual(3, subject.Rules.Length);

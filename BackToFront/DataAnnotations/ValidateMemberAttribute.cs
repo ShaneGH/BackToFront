@@ -106,11 +106,16 @@ namespace BackToFront.DataAnnotations
                 violations.Select(v => v.Violated.Select(m => m.UltimateMember.Name)).Aggregate());
         }
 
-        internal static BTFValidationContext ProcessValidationContext(DA.ValidationContext validationContext)
+        protected virtual Repository GetRepository(DA.ValidationContext validationContext)
+        {
+            return validationContext.ServiceContainer.GetService(typeof(Repository)) as Repository;
+        }
+
+        internal BTFValidationContext ProcessValidationContext(DA.ValidationContext validationContext)
         {
             if (!validationContext.Items.ContainsKey(BackToFrontValidationContext))
             {
-                var ctxt = new BTFValidationContext(validationContext);
+                var ctxt = new BTFValidationContext(validationContext, GetRepository(validationContext));
                 validationContext.Items.Add(BackToFrontValidationContext, ctxt);
             }
 

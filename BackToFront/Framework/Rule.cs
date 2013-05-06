@@ -1,19 +1,16 @@
 ﻿using BackToFront.Dependency;
+using BackToFront.Enum;
+using BackToFront.Expressions.Visitors;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Framework.Base;
 using BackToFront.Logic;
 using BackToFront.Logic.Compilations;
-using BackToFront.Utilities;
+using BackToFront.Meta;
+using BackToFront.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using BackToFront.Validation;
-using BackToFront.Meta;
-using BackToFront.Expressions;
-using BackToFront.Enum;
-using System.Runtime.Serialization;
-using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework
 {
@@ -37,11 +34,9 @@ namespace BackToFront.Framework
 
         protected override Expression _Compile(SwapPropVisitor visitor)
         {
-            var next = AllPossiblePaths.SingleOrDefault(a => a != null);
-            if (next != null)
-            {
+            PathElement<TEntity> next;
+            if ((next = AllPossiblePaths.SingleOrDefault(a => a != null)) != null)
                 return next.Compile(visitor);
-            }
             else
                 return Expression.Empty();
         }

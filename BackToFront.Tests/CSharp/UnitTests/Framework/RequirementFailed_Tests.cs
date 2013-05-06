@@ -65,10 +65,10 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             Assert.IsInstanceOf<ConditionalExpression>(actual);
             Assert.AreEqual(ExpressionType.Not, (((ConditionalExpression)actual).Test as UnaryExpression).NodeType);
             Assert.AreEqual(subject.Descriptor.WrappedExpression, (((ConditionalExpression)actual).Test as UnaryExpression).Operand);
+            Assert.IsInstanceOf<DefaultExpression>(((ConditionalExpression)actual).IfFalse);
 
             //TODO: cannot test this one with any accuracy
             //Assert.IsInstanceOf<DefaultExpression>(((ConditionalExpression)actual).IfTrue);
-            Assert.IsInstanceOf<DefaultExpression>(((ConditionalExpression)actual).IfFalse);
         }
 
         [Test]

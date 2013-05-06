@@ -15,12 +15,11 @@ namespace BackToFront.DataAnnotations
         public readonly IRuleDependencies DI;
         public readonly object ObjectInstance;
 
-        public BTFValidationContext(DA.ValidationContext validationContext)
+        public BTFValidationContext(DA.ValidationContext validationContext, Repository repository)
         {
             var rules = new List<INonGenericRule>();
 
             //TODO: where should the repository come from?
-            var repository = validationContext.ServiceContainer.GetService(typeof(Repository)) as Repository;
             if (repository == null)
                 throw new InvalidOperationException("##" + "need a repository");
 
