@@ -28,17 +28,10 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(Expression expression)
+        public override bool IsSameExpression(UnaryExpression expression)
         {
-            if (!base.IsSameExpression(expression))
-                return false;
-
-            var ex = expression as UnaryExpression;
-            if (ex == null)
-                return false;
-
-            return ex.Method == Expression.Method &&
-                Operand.IsSameExpression(ex.Operand);
+            return expression.Method == Expression.Method &&
+                Operand.IsSameExpression(expression.Operand);
         }
 
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)

@@ -41,19 +41,12 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(Expression expression)
+        public override bool IsSameExpression(MethodCallExpression expression)
         {
-            if (!base.IsSameExpression(expression))
-                return false;
-
-            var ex = expression as MethodCallExpression;
-            if (ex == null)
-                return false;
-
-            return Expression.Method.GetBaseDefinition() == ex.Method.GetBaseDefinition() &&
-                Object.IsSameExpression(ex.Object) &&                
-                Arguments.Count() == ex.Arguments.Count() &&
-                Arguments.All((a, b) => a.IsSameExpression(ex.Arguments.ElementAt(b)));
+            return Expression.Method.GetBaseDefinition() == expression.Method.GetBaseDefinition() &&
+                Object.IsSameExpression(expression.Object) &&                
+                Arguments.Count() == expression.Arguments.Count() &&
+                Arguments.All((a, b) => a.IsSameExpression(expression.Arguments.ElementAt(b)));
         }
 
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)

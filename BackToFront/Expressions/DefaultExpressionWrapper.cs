@@ -36,12 +36,9 @@ namespace BackToFront.Expressions
             }
         }
 
-        public override bool IsSameExpression(Expression expression)
+        public override bool IsSameExpression(DefaultExpression expression)
         {
-            if (!base.IsSameExpression(expression))
-                return false;
-
-            return expression is DefaultExpression;
+            return true;
         }
     }
 }

@@ -19,18 +19,10 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(Expression expression)
+        public override bool IsSameExpression(ParameterExpression expression)
         {
-            if (!base.IsSameExpression(expression))
-                return false;
-
             // TODO: is this correct?
-
-            var ex = expression as ParameterExpression;
-            if (ex == null)
-                return false;
-
-            return ex.Type.Is(Expression.Type);
+            return expression.Type.Is(Expression.Type);
         }
 
         public object Get(object root)

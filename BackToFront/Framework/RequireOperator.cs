@@ -71,7 +71,7 @@ namespace BackToFront.Framework
         {
             get
             {
-                return _Meta;// ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(a => a.Meta), Descriptor.Meta, PathElementType.RequireOperator));
+                return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(a => a.Meta), null, PathElementType.RequireOperator));
             }
         }
 

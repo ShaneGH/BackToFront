@@ -63,7 +63,7 @@ namespace BackToFront.Framework
         {
             get
             {
-                return _Meta;// (_Meta = new PathElementMeta(If.Select(i => i.Meta), null, PathElementType.MultiCondition));
+                return _Meta ?? (_Meta = new PathElementMeta(If.Select(i => i.Meta), null, PathElementType.MultiCondition));
             }
         }
 

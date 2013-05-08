@@ -42,9 +42,9 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
         public void IsSameExpression_Test()
         {
             // arrange
-            var exp1 = Expression.Not(Expression.Parameter(typeof(bool)));
-            var exp2 = Expression.Not(Expression.Parameter(typeof(bool)));
-            var exp3 = Expression.Convert(Expression.Parameter(typeof(bool)), typeof(object));
+            var exp1 = Expression.Convert(Expression.Parameter(typeof(bool)), typeof(object));
+            var exp2 = Expression.Convert(Expression.Parameter(typeof(bool)), typeof(object));
+            var exp3 = Expression.Convert(Expression.Parameter(typeof(int)), typeof(object));
 
             Expression<Func<TestClass, object>> func2 = a => a.ToString();
             Expression<Func<TestClass, object>> func3 = a => a.GetType();

@@ -19,17 +19,9 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(Expression expression)
+        public override bool IsSameExpression(ConstantExpression expression)
         {
-            if (!base.IsSameExpression(expression))
-                return false;
-
-
-            var ex = expression as ConstantExpression;
-            if (ex == null)
-                return false;
-
-            return Expression.Value.Equals(ex.Value);                
+            return Expression.Value.Equals(expression.Value);                
         }
 
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)

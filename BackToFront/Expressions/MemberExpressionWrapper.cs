@@ -31,16 +31,9 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(Expression expression)
+        public override bool IsSameExpression(MemberExpression expression)
         {
-            if (!base.IsSameExpression(expression))
-                return false;
-
-            var ex = expression as MemberExpression;
-            if (ex == null)
-                return false;
-
-            return ex.Member == Expression.Member && InnerExpression.IsSameExpression(ex.Expression);
+            return expression.Member == Expression.Member && InnerExpression.IsSameExpression(expression.Expression);
         }
 
         public bool CanSet

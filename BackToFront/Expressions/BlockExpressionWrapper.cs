@@ -48,17 +48,10 @@ namespace BackToFront.Expressions
             }
         }
 
-        public override bool IsSameExpression(Expression expression)
+        public override bool IsSameExpression(BlockExpression expression)
         {
-            if (!base.IsSameExpression(expression))
-                return false;
-
-            var ex = expression as BlockExpression;
-            if (ex == null)
-                return false;
-
-            return ex.Expressions.Count == ChildExpressions.Count() && 
-                ChildExpressions.All((e, i) => e.IsSameExpression(ex.Expressions[i]));;
+            return expression.Expressions.Count == ChildExpressions.Count() && 
+                ChildExpressions.All((e, i) => e.IsSameExpression(expression.Expressions[i]));;
         }
     }
 }

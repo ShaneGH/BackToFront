@@ -66,18 +66,11 @@ namespace BackToFront.Expressions
             }
         }
 
-        public override bool IsSameExpression(Expression expression)
+        public override bool IsSameExpression(ConditionalExpression expression)
         {
-            if (!base.IsSameExpression(expression))
-                return false;
-
-            var ex = expression as ConditionalExpression;
-            if (ex == null)
-                return false;
-
-            return Test.IsSameExpression(ex.Test) &&
-                IfTrue.IsSameExpression(ex.IfTrue) && 
-                IfFalse.IsSameExpression(ex.IfFalse);
+            return Test.IsSameExpression(expression.Test) &&
+                IfTrue.IsSameExpression(expression.IfTrue) && 
+                IfFalse.IsSameExpression(expression.IfFalse);
         }
     }
 }

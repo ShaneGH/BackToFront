@@ -39,15 +39,8 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(Expression expression)
+        public override bool IsSameExpression(BinaryExpression ex)
         {
-            if (!base.IsSameExpression(expression))
-                return false;
-
-            var ex = expression as BinaryExpression;
-            if (ex == null)
-                return false;
-
             return Expression.NodeType == ex.NodeType &&
                 Expression.Method == ex.Method &&
                 Left.IsSameExpression(ex.Left) &&
@@ -56,11 +49,7 @@ namespace BackToFront.Expressions
 
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
-            foreach (var item in Left.GetMembersForParameter(parameter))
-                yield return item;
-
-            foreach (var item in Right.GetMembersForParameter(parameter))
-                yield return item;
+            return Left.GetMembersForParameter(parameter).Union(Right.GetMembersForParameter(parameter));
         }
 
         protected override IEnumerable<ParameterExpression> _UnorderedParameters
