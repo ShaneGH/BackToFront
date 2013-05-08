@@ -2,6 +2,9 @@
 Unit test all Meta Properties, framework and expression
 using test ConditionalExpressionWrapper, BlockExpressionWrapper, DefaultExpressionWrapper
 
+Do I need to look at multiple require thats in one block again? I don't remember wrapping it up
+(RequireThat(X).WithModelViolation(V).RequireThat(Y).WithModelViolation(V))
+
 Client side
 Domain Model
 
