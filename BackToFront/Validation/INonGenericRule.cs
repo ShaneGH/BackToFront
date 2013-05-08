@@ -2,6 +2,7 @@
 using BackToFront.Expressions.Visitors;
 using BackToFront.Framework;
 using BackToFront.Framework.Base;
+using BackToFront.Meta;
 using System;
 using System.Collections.Generic;
 
@@ -17,8 +18,8 @@ namespace BackToFront.Validation
 
         bool PropertyRequirement { get; }
 
-        Meta.PathElementMeta Meta { get; }
+        PathElementMeta Meta { get; }
         
-        Action<object, ValidationContext> NewCompile(SwapPropVisitor visitor);
+        Action<object, ValidationContext> Compile(SwapPropVisitor visitor);
     }
 }

@@ -90,7 +90,7 @@ namespace BackToFront.DataAnnotations
                 }
 
                 var vc = new ValidationContext(false, null, dependencies);
-                r.NewCompile(new Expressions.Visitors.SwapPropVisitor(null, dependencies, r.RuleType))(ctxt.ObjectInstance, vc);
+                r.Compile(new Expressions.Visitors.SwapPropVisitor(null, dependencies, r.RuleType))(ctxt.ObjectInstance, vc);
 
                 ctxt.ResultCache.Add(r, vc.Violations.ToArray());
             });

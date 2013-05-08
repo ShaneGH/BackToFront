@@ -14,28 +14,14 @@ using System.Collections.ObjectModel;
 
 namespace BackToFront.Framework
 {
-    public class IfDescriptor<TEntity>
-    {
-        public readonly ExpressionWrapperBase If;
-        public readonly ParameterExpression EntityParameter;
-        public readonly RequireOperator<TEntity> Action;
-
-        public IfDescriptor(ExpressionWrapperBase @if, ParameterExpression entityParameter, RequireOperator<TEntity> action)
-        {
-            If = @if;
-            EntityParameter = entityParameter;
-            Action = action;
-        }
-    }
-
     /// <summary>
     /// Describes if, else if, else logic
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class MultiCondition<TEntity> : PathElement<TEntity>
+    public partial class MultiCondition<TEntity> : PathElement<TEntity>
     {
-        private readonly IList<IfDescriptor<TEntity>> _If = new List<IfDescriptor<TEntity>>();
-        public IEnumerable<IfDescriptor<TEntity>> If
+        private readonly IList<Condition> _If = new List<Condition>();
+        public IEnumerable<Condition> If
         {
             get
             {
@@ -56,25 +42,15 @@ namespace BackToFront.Framework
             get
             {
                 // TODO: cache???
-                return _If.Select(a => a.If.GetMembersForParameter(a.EntityParameter).Select(m => new AffectedMembers { Member = m, Requirement = PropertyRequirement })).Aggregate();
+                return _If.Select(a => a.Descriptor.GetMembersForParameter(a.EntityParameter).Select(m => new AffectedMembers { Member = m, Requirement = PropertyRequirement })).Aggregate();
             }
         }
 
         public RequireOperator<TEntity> Add(Expression<Func<TEntity, bool>> condition)
         {
-            var success = new RequireOperator<TEntity>(ParentRule);
-
-            //TODO: copy pasted from ExpressionElement, duplication of logic.
-
-            if (condition == null)
-                throw new ArgumentNullException("##");
-
-            ReadOnlyCollection<ParameterExpression> paramaters;
-            var wrapper = ExpressionWrapperBase.ToWrapper(condition, out paramaters);
-            var param = paramaters.SingleOrDefault();
-            _If.Add(new IfDescriptor<TEntity>(wrapper, param, success));
-
-            return success;
+            var _if = new Condition(condition, ParentRule);
+            _If.Add(_if);
+            return _if.Action;
         }
 
         public override bool PropertyRequirement
@@ -97,7 +73,7 @@ namespace BackToFront.Framework
             var possibilities = _If.Select(a => 
             {
                 using (visitor.WithEntityParameter(a.EntityParameter))
-                    return new Tuple<Expression, Expression>(visitor.Visit(a.If.WrappedExpression), a.Action.Compile(visitor));
+                    return new Tuple<Expression, Expression>(visitor.Visit(a.Descriptor.WrappedExpression), a.Action.Compile(visitor));
             });
 
             if (possibilities.Any())

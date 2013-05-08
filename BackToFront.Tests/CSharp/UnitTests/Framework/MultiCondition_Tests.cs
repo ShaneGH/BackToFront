@@ -73,7 +73,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             // assert
             Assert.AreEqual(1, actual.Count());
-            Assert.AreEqual(actual.First().If.WrappedExpression, exp.Body);
+            Assert.AreEqual(actual.First().Descriptor.WrappedExpression, exp.Body);
             Assert.AreEqual(actual.First().EntityParameter, exp.Parameters.First());
             Assert.AreEqual(actual.First().Action, result);
         }

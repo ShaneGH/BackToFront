@@ -41,10 +41,9 @@ namespace BackToFront.Framework
                 return Expression.Empty();
         }
 
-        Action<object, ValidationContext> INonGenericRule.NewCompile(SwapPropVisitor visitor)
+        Action<object, ValidationContext> INonGenericRule.Compile(SwapPropVisitor visitor)
         {
-            var tyt = Compile(visitor);
-            var rule = Expression.Lambda<Action<TEntity, ValidationContext>>(tyt, visitor.EntityParameter, visitor.ContextParameter).Compile();
+            var rule = Expression.Lambda<Action<TEntity, ValidationContext>>(Compile(visitor), visitor.EntityParameter, visitor.ContextParameter).Compile();
 
             return (a, b) =>
             {
@@ -107,7 +106,6 @@ namespace BackToFront.Framework
 
             return _Condition.Add(property);
         }
-
 
         public IConditionSatisfied<TEntity> Else
         {

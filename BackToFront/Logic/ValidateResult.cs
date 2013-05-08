@@ -141,7 +141,7 @@ namespace BackToFront.Logic
                 var context = new ValidationContext(breakOnFirstError, visitor.MockValues, visitor.DependencyValues);
 
                 // compile and run
-                _Repository.Rules(current).Each(rule => rule.NewCompile(visitor)(Entity, context));
+                _Repository.Rules(current).Each(rule => rule.Compile(visitor)(Entity, context));
                 success &= !context.IsViolated;
                 violations.AddRange(context.Violations);
 
