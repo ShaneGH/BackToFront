@@ -228,6 +228,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CSharp\UnitTests\Logic\" />
+    <Folder Include="CSharp\UnitTests\Web\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Javascript\Scripts\qUnit.d.ts" />

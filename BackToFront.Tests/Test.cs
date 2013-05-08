@@ -11,6 +11,9 @@ using BackToFront.Validate;
 using NUnit.Framework;
 
 using BackToFront.Utilities;
+using System.Runtime.Serialization;
+using BackToFront.Meta;
+using System.IO;
 
 namespace BackToFront.Tests
 {
@@ -41,6 +44,33 @@ namespace BackToFront.Tests
                 set;
             }
         }
+
+        public void Test()
+        {
+            var repository = new Repository();
+
+            repository.AddRule<Something>(trunk => trunk
+                .If(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
+                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
+                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
+                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
+                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
+                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
+                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello"));
+
+            var dcs = new DataContractSerializer(typeof(PathElementMeta));
+
+            using (Stream str = new MemoryStream())
+            {
+                dcs.WriteObject(str, repository.Rules<Something>().First().Meta);
+                str.Position = 0;
+                using (StreamReader r = new StreamReader(str)) 
+                {
+                    var outx = r.ReadToEnd();
+                }
+            }
+        }
+
 
         public static Repository Repository;
 

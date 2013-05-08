@@ -12,7 +12,10 @@ using M = Moq;
 
 namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 {
-    class ExpressionWrapperBase_Tests : Base.TestBase
+    /// <summary>
+    /// Test for ExpressionWrapperBase and ExpressionWrapperBase&lt;T>
+    /// </summary>
+    public class ExpressionWrapperBase_Tests : Base.TestBase
     {
         public class TestClass1
         {
@@ -43,7 +46,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             public bool IsSame { get; set; }
 
             public override bool IsSameExpression(Expression expression)
-            {
+            {                
                 return IsSame;
             }
 
@@ -300,5 +303,41 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
         [Ignore]
         public void TestLinqConstructors()
         { }
+
+        [Test]
+        public void IsSameExpression_Test_invalidBase()
+        {
+            //arrange
+            var subject = new M.Mock<ExpressionWrapperBase<ConstantExpression>>(Expression.Constant(4)) { CallBase = true };
+
+            // act
+            // assert
+            Assert.IsFalse(subject.Object.IsSameExpression(null));
+        }
+
+        [Test]
+        public void IsSameExpression_Test_invalidType()
+        {
+            //arrange
+            var subject = new M.Mock<ExpressionWrapperBase<ConstantExpression>>(Expression.Constant(4)) { CallBase = true };
+
+            // act
+            // assert
+            Assert.IsFalse(subject.Object.IsSameExpression(Expression.Empty()));
+        }
+
+        [Test]
+        public void IsSameExpression_Test_True()
+        {
+            //arrange
+            Expression<Func<int>> input = () => 4;
+            var subject = new M.Mock<ExpressionWrapperBase<ConstantExpression>>(Expression.Constant(4)) { CallBase = true };
+            subject.Setup(a => a.IsSameExpression(M.It.Is<ConstantExpression>(b => b == input.Body))).Returns(true);
+
+            // act
+            // assert
+            Assert.IsTrue(subject.Object.IsSameExpression(input.Body));
+            subject.VerifyAll();
+        }
     }
 }

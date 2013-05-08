@@ -42,9 +42,13 @@ namespace BackToFront.Framework
                 get { yield return Action; }
             }
 
+            public PathElementMeta _Meta;
             public override PathElementMeta Meta
             {
-                get { throw new NotImplementedException(); }
+                get 
+                { 
+                    return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(p => p.Meta), Descriptor.Meta, PathElementType.Condition));
+                }
             }
 
             /// <summary>

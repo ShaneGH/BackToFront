@@ -11,6 +11,7 @@ namespace BackToFront.Enum
         Rule,
         DeadEnd,
         MultiCondition,
+        Condition,
         RequireOperator,
         ThrowViolation,
         RuleCollection,
