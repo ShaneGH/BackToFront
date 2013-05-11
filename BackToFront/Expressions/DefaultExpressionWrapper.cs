@@ -23,9 +23,13 @@ namespace BackToFront.Expressions
             yield break;
         }
 
-        public override ExpressionElementMeta Meta
+        private ExpressionMeta _Meta;
+        public override ExpressionMeta Meta
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return _Meta ?? (_Meta = new ExpressionMeta(this));
+            }
         }
 
         protected override IEnumerable<ParameterExpression> _UnorderedParameters

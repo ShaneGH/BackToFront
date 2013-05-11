@@ -47,7 +47,7 @@ namespace BackToFront.Framework
             {
                 get 
                 { 
-                    return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(p => p.Meta), Descriptor.Meta, PathElementType.Condition));
+                    return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(p => p.Meta), null, PathElementType.Condition));
                 }
             }
 

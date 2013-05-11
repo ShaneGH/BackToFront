@@ -17,7 +17,7 @@ namespace BackToFront.Expressions
     public class BinaryExpressionWrapper : ExpressionWrapperBase<BinaryExpression>
     {
         private ExpressionWrapperBase _Left;
-        private ExpressionWrapperBase Left
+        public ExpressionWrapperBase Left
         {
             get
             {
@@ -26,7 +26,7 @@ namespace BackToFront.Expressions
         }
 
         private ExpressionWrapperBase _Right;
-        private ExpressionWrapperBase Right
+        public ExpressionWrapperBase Right
         {
             get
             {
@@ -60,12 +60,12 @@ namespace BackToFront.Expressions
             }
         }
 
-        private ExpressionElementMeta _Meta;
-        public override ExpressionElementMeta Meta
+        private BinaryExpressionMeta _Meta;
+        public override ExpressionMeta Meta
         {
             get
             {
-                return _Meta ?? (_Meta = new ExpressionElementMeta(Expression.NodeType.ToString(), new[] { Left.Meta, Right.Meta }, ExpressionWrapperType.Binary, Expression.Type, null));
+                return _Meta ?? (_Meta = new BinaryExpressionMeta(this));
             }
         }
     }

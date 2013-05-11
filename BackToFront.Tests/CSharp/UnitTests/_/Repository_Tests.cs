@@ -1,6 +1,7 @@
 ﻿using BackToFront.Dependency;
 using BackToFront.Framework;
 using NUnit.Framework;
+using System;
 using System.Linq;
 using M = Moq;
 
@@ -70,6 +71,21 @@ namespace BackToFront.Tests.CSharp.UnitTests
 
             Assert.IsTrue(r.HasRules(typeof(object)));
             Assert.IsTrue(r.HasRules<object>());
+        }
+
+        [Test]
+        public void IdentifierFor_Generic_NonGeneric_Cache()
+        {
+            // arrange
+            Repository r = new Repository();
+
+            // act
+            var id1 = r.IdentifierFor(typeof(int));
+            var id2 = r.IdentifierFor(typeof(int));
+
+            // assert
+            Assert.AreNotEqual(Guid.Empty, id1);
+            Assert.AreEqual(id1, id2);
         }
     }
 }

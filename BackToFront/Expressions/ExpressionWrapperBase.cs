@@ -40,7 +40,7 @@ namespace BackToFront.Expressions
         public abstract Expression WrappedExpression { get; }
         protected abstract IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter);
 
-        public abstract ExpressionElementMeta Meta { get; }
+        public abstract ExpressionMeta Meta { get; }
 
         private IEnumerable<ParameterExpression> CachedUnorderedParameters;
         public IEnumerable<ParameterExpression> UnorderedParameters

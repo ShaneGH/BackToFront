@@ -33,7 +33,7 @@ namespace BackToFront.Meta
     {
         public PathElementMeta() { }
 
-        public PathElementMeta(IEnumerable<PathElementMeta> children, ExpressionElementMeta code, PathElementType type)
+        public PathElementMeta(IEnumerable<PathElementMeta> children, object code, PathElementType type)
             : this()
         {
             Children = children.ToArray();
@@ -45,7 +45,7 @@ namespace BackToFront.Meta
         public IEnumerable<PathElementMeta> Children { get; private set; }
 
         [DataMember]
-        public ExpressionElementMeta Code { get; private set; }
+        public object Code { get; private set; }
 
         [DataMember]
         public PathElementType Type { get; private set; }

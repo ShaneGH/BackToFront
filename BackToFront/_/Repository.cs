@@ -7,6 +7,7 @@ namespace BackToFront
 {
     public class Repository
     {
+        private readonly Dictionary<Type, Guid> _Identifiers = new Dictionary<Type, Guid>();
         private readonly Dictionary<Type, IRules> _Rules = new Dictionary<Type, IRules>();
         private readonly IDependencyResolver _Di;
 
@@ -31,6 +32,19 @@ namespace BackToFront
         public bool HasRules(Type entityType)
         {
             return _Rules.ContainsKey(entityType) && _Rules[entityType].Any();
+        }
+
+        public Guid IdentifierFor<TEntity>()
+        {
+            return IdentifierFor(typeof(TEntity));
+        }
+
+        public Guid IdentifierFor(Type entityType)
+        {
+            if (!_Identifiers.ContainsKey(entityType))
+                _Identifiers.Add(entityType, Guid.NewGuid());
+
+            return _Identifiers[entityType];
         }
 
         public IRules Rules(Type entityType)

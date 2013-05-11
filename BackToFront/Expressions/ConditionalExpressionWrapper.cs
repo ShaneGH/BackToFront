@@ -17,7 +17,7 @@ namespace BackToFront.Expressions
     public class ConditionalExpressionWrapper : ExpressionWrapperBase<ConditionalExpression>
     {
         private ExpressionWrapperBase _Test;
-        private ExpressionWrapperBase Test
+        public ExpressionWrapperBase Test
         {
             get
             {
@@ -26,7 +26,7 @@ namespace BackToFront.Expressions
         }
 
         private ExpressionWrapperBase _IfTrue;
-        private ExpressionWrapperBase IfTrue
+        public ExpressionWrapperBase IfTrue
         {
             get
             {
@@ -35,7 +35,7 @@ namespace BackToFront.Expressions
         }
 
         private ExpressionWrapperBase _IfFalse;
-        private ExpressionWrapperBase IfFalse
+        public ExpressionWrapperBase IfFalse
         {
             get
             {
@@ -53,9 +53,13 @@ namespace BackToFront.Expressions
             return Test.GetMembersForParameter(parameter).Union(IfTrue.GetMembersForParameter(parameter)).Union(IfFalse.GetMembersForParameter(parameter));
         }
 
-        public override ExpressionElementMeta Meta
+        private ConditionalExpressionMeta _Meta;
+        public override ExpressionMeta Meta
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return _Meta ?? (_Meta = new ConditionalExpressionMeta(this));
+            }
         }
 
         protected override IEnumerable<ParameterExpression> _UnorderedParameters

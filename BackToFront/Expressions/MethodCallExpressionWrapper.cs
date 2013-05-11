@@ -80,12 +80,12 @@ namespace BackToFront.Expressions
             })));
         }
 
-        private ExpressionElementMeta _Meta;
-        public override ExpressionElementMeta Meta
+        private MethodCallExpressionMeta _Meta;
+        public override ExpressionMeta Meta
         {
             get
             {
-                return _Meta ?? (_Meta = new ExpressionElementMeta(Expression.Method.Name, Arguments.Select(a => a.Meta).ToArray(), ExpressionWrapperType.MethodCall, Expression.Type, Object.Meta));                
+                return _Meta ?? (_Meta = new MethodCallExpressionMeta(this));
             }
         }
     }

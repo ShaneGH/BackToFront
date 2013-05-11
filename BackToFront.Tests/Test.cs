@@ -58,17 +58,28 @@ namespace BackToFront.Tests
                 .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
                 .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello"));
 
-            var dcs = new DataContractSerializer(typeof(PathElementMeta));
+            /*var dcs = ExpressionMeta.MetaSerializer;
 
             using (Stream str = new MemoryStream())
             {
-                dcs.WriteObject(str, repository.Rules<Something>().First().Meta);
+                dcs.WriteObject(str, new XXXXX( ExpressionType.ArrayIndex, "HGVLJHKBV"));
                 str.Position = 0;
-                using (StreamReader r = new StreamReader(str)) 
+                using (StreamReader r = new StreamReader(str))
                 {
                     var outx = r.ReadToEnd();
+
+                    using (Stream str2 = new MemoryStream())
+                    {
+                        using (StreamWriter w = new StreamWriter(str2))
+                        {
+                            w.Write(outx);
+                            w.Flush();
+                            str2.Position = 0;
+                            var val = dcs.ReadObject(str2);
+                        }
+                    }
                 }
-            }
+            }*/
         }
 
 

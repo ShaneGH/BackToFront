@@ -57,12 +57,12 @@ namespace BackToFront.Expressions
             return new UnaryExpressionWrapper(E.Expression.MakeUnary(Expression.NodeType, root, Expression.Type, Expression.Method));
         }
 
-        private ExpressionElementMeta _Meta;
-        public override ExpressionElementMeta Meta
+        private UnaryExpressionMeta _Meta;
+        public override ExpressionMeta Meta
         {
             get
             {
-                return _Meta ?? (_Meta = new ExpressionElementMeta(Expression.NodeType.ToString(), new ExpressionElementMeta[0], ExpressionWrapperType.Unary, Expression.Type, Operand.Meta));
+                return _Meta ?? (_Meta = new UnaryExpressionMeta(this));
             }
         }
     }

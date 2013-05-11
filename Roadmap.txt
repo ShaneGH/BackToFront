@@ -1,6 +1,7 @@
 ﻿
-Unit test all Meta Properties, framework and expression
+Unit test all Meta classes and Properties, framework and expression
 using test ConditionalExpressionWrapper, BlockExpressionWrapper, DefaultExpressionWrapper
+unit test BackToFront.Logic.ValidateResult<TEntity>
 
 Do I need to look at multiple require thats in one block again? I don't remember wrapping it up
 (RequireThat(X).WithModelViolation(V).RequireThat(Y).WithModelViolation(V))
@@ -8,7 +9,7 @@ Do I need to look at multiple require thats in one block again? I don't remember
 Client side
 Domain Model
 
-unit test BackToFront.Logic.ValidateResult<TEntity>
+ConstantExpressionMeta. Need to serialize the Value
 
 look at GetMembersForParameter. Not sure if caching should be used
 

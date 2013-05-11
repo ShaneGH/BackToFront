@@ -56,12 +56,12 @@ namespace BackToFront.Expressions
             get { yield return Expression; }
         }
 
-        private ExpressionElementMeta _Meta;
-        public override ExpressionElementMeta Meta
+        private ParameterExpressionMeta _Meta;
+        public override ExpressionMeta Meta
         {
             get
             {
-                return _Meta ?? (_Meta = new ExpressionElementMeta(Expression.Name, new ExpressionElementMeta[0], ExpressionWrapperType.Parameter, Expression.Type, null));
+                return _Meta ?? (_Meta = new ParameterExpressionMeta(this));
             }
         }
     }

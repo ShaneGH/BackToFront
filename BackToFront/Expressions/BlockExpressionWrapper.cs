@@ -17,7 +17,7 @@ namespace BackToFront.Expressions
     public class BlockExpressionWrapper : ExpressionWrapperBase<BlockExpression>
     {
         private ExpressionWrapperBase[] _ChildExpressions;
-        private ExpressionWrapperBase[] ChildExpressions
+        public ExpressionWrapperBase[] ChildExpressions
         {
             get
             {
@@ -35,9 +35,13 @@ namespace BackToFront.Expressions
             return ChildExpressions.Select(ex => ex.GetMembersForParameter(parameter)).Aggregate();
         }
 
-        public override ExpressionElementMeta Meta
+        private BlockExpressionMeta _Meta;
+        public override ExpressionMeta Meta
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return _Meta ?? (_Meta = new BlockExpressionMeta(this));
+            }
         }
 
         protected override IEnumerable<ParameterExpression> _UnorderedParameters

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq.Expressions;
-using BackToFront.Enum;
+﻿using BackToFront.Enum;
 using BackToFront.Meta;
 using BackToFront.Utilities;
-using System.Runtime.Serialization;
-using BackToFront.Dependency;
-using BackToFront.Expressions.Visitors;
-
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace BackToFront.Expressions
 {
@@ -34,12 +28,12 @@ namespace BackToFront.Expressions
             get { yield break; }
         }
 
-        private ExpressionElementMeta _Meta;
-        public override ExpressionElementMeta Meta
+        private ConstantExpressionMeta _Meta;
+        public override ExpressionMeta Meta
         {
             get
             {
-                return _Meta ?? (_Meta = new ExpressionElementMeta(null, new ExpressionElementMeta[0], ExpressionWrapperType.Constant, Expression.Type, null));
+                return _Meta ?? (_Meta = new ConstantExpressionMeta(this));
             }
         }
     }

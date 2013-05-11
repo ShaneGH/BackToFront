@@ -2,37 +2,49 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using BackToFront.Enum;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using BackToFront.Expressions;
 
 namespace BackToFront.Meta
 {
     [DataContract]
-    public class ExpressionElementMeta
+    public class ExpressionMeta
     {
-        public ExpressionElementMeta() { }
+        private static DataContractSerializer _MetaSerializer;
 
-        public ExpressionElementMeta(object descriptor, IEnumerable<ExpressionElementMeta> elements, ExpressionWrapperType expressionType, Type type, ExpressionElementMeta _base)
+        /// <summary>
+        /// A serializer for all Expression meta types in this assembly
+        /// </summary>
+        public static DataContractSerializer MetaSerializer
         {
-            Descriptor = descriptor;
-            Elements = elements ?? new ExpressionElementMeta[0];
-            ExpressionType = expressionType;
-            Type = type;
-            Base = _base;
+            get
+            {
+                if (_MetaSerializer == null)
+                {
+                    var type = typeof(ExpressionMeta);
+                    var types = type.Assembly.GetTypes().Where(t => t != type && type.IsAssignableFrom(t));
+                    _MetaSerializer = new DataContractSerializer(type, types);
+                }
+
+                return _MetaSerializer;
+            }
         }
 
         [DataMember]
-        public object Descriptor { get; private set; }
+        public ExpressionType NodeType { get; private set; }
 
-        [DataMember]
-        public IEnumerable<ExpressionElementMeta> Elements { get; private set; }
+        public ExpressionMeta()
+            : this(null) { }
 
-        [DataMember]
-        public ExpressionWrapperType ExpressionType { get; private set; }
+        public ExpressionMeta(ExpressionWrapperBase expression)
+            : this(expression != null ? expression.WrappedExpression.NodeType : default(ExpressionType))
+        { }
 
-        //TODO: this
-        //[DataMember]
-        public Type Type { get; private set; }
-
-        [DataMember]
-        public ExpressionElementMeta Base { get; private set; }
+        public ExpressionMeta(ExpressionType nodeType)
+        {
+            NodeType = nodeType;
+        }
     }
 }

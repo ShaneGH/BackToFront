@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Linq.Expressions;
-using E = System.Linq.Expressions;
-using BackToFront.Utilities;
-
+﻿using BackToFront.Enum;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Extensions.Reflection;
 using BackToFront.Meta;
-using BackToFront.Enum;
-using System.Runtime.Serialization;
-using BackToFront.Expressions.Visitors;
+using BackToFront.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using E = System.Linq.Expressions;
 
 namespace BackToFront.Expressions
 {
     public class MemberExpressionWrapper : ExpressionWrapperBase<MemberExpression>, IPropertyChain
     {
         private ExpressionWrapperBase _InnerExpression;
-        private ExpressionWrapperBase InnerExpression
+        public ExpressionWrapperBase InnerExpression
         {
             get            
             {
@@ -97,12 +92,12 @@ namespace BackToFront.Expressions
             }
         }
 
-        private ExpressionElementMeta _Meta;
-        public override ExpressionElementMeta Meta
+        private MemberExpressionMeta _Meta;
+        public override ExpressionMeta Meta
         {
             get
             {
-                return _Meta ?? (_Meta = new ExpressionElementMeta(Expression.Member.Name, new ExpressionElementMeta[0], ExpressionWrapperType.Member, Expression.Type, InnerExpression.Meta));
+                return _Meta ?? (_Meta = new MemberExpressionMeta(this));
             }
         }
     }
