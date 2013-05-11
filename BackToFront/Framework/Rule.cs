@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using BackToFront.Expressions;
 
 namespace BackToFront.Framework
 {
@@ -120,6 +121,15 @@ namespace BackToFront.Framework
 
         #region Meta
 
+        public ExpressionMeta _Meta;
+        public ExpressionMeta Meta
+        {
+            get 
+            { 
+                return _Meta ??(_Meta = ExpressionWrapperBase.CreateChildWrapper(Compile(new SwapPropVisitor(typeof(TEntity)))).Meta);
+            }
+        }
+
         public override IEnumerable<AffectedMembers> AffectedMembers
         {
             // TODO: cache???
@@ -134,15 +144,6 @@ namespace BackToFront.Framework
         public override bool PropertyRequirement
         {
             get { return false; }
-        }
-
-        private PathElementMeta _Meta;
-        public override PathElementMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(a => a.Meta), null, PathElementType.Rule));
-            }
         }
 
         public Type RuleType

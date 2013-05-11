@@ -66,15 +66,6 @@ namespace BackToFront.Framework
             get { return true; }
         }
 
-        private PathElementMeta _Meta;
-        public override PathElementMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(a => a.Meta), null, PathElementType.RequireOperator));
-            }
-        }
-
         protected override Expression _Compile(SwapPropVisitor visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);

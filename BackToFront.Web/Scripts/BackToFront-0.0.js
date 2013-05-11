@@ -6,7 +6,6 @@ var __extends = this.__extends || function (d, b) {
 if(window["__BTF"] != null) {
     throw "BackToFront is defined already";
 }
-var M = __BTF.Meta;
 var __BTF;
 (function (__BTF) {
     __BTF.Initialize = function (data) {
@@ -60,23 +59,23 @@ var __BTF;
             };
             Expression.CreateExpression = function CreateExpression(meta) {
                 switch(meta.ExpressionType) {
-                    case M.ExpressionWrapperType.Binary:
+                    case __BTF.Meta.ExpressionWrapperType.Binary:
                         return new BinaryExpression(meta);
-                    case M.ExpressionWrapperType.Block:
+                    case __BTF.Meta.ExpressionWrapperType.Block:
                         return new BlockExpression(meta);
-                    case M.ExpressionWrapperType.Conditional:
+                    case __BTF.Meta.ExpressionWrapperType.Conditional:
                         return new ConditionalExpression(meta);
-                    case M.ExpressionWrapperType.Constant:
+                    case __BTF.Meta.ExpressionWrapperType.Constant:
                         return new ConstantExpression(meta);
-                    case M.ExpressionWrapperType.Default:
+                    case __BTF.Meta.ExpressionWrapperType.Default:
                         return new DefaultExpression(meta);
-                    case M.ExpressionWrapperType.Member:
+                    case __BTF.Meta.ExpressionWrapperType.Member:
                         return new MemberExpression(meta);
-                    case M.ExpressionWrapperType.MethodCall:
+                    case __BTF.Meta.ExpressionWrapperType.MethodCall:
                         return new MethodCallExpression(meta);
-                    case M.ExpressionWrapperType.Parameter:
+                    case __BTF.Meta.ExpressionWrapperType.Parameter:
                         return new ParameterExpression(meta);
-                    case M.ExpressionWrapperType.Unary:
+                    case __BTF.Meta.ExpressionWrapperType.Unary:
                         return new UnaryExpression(meta);
                 }
                 throw "Invalid expression type";

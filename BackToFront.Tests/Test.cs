@@ -14,9 +14,11 @@ using BackToFront.Utilities;
 using System.Runtime.Serialization;
 using BackToFront.Meta;
 using System.IO;
+using BackToFront.Framework;
 
 namespace BackToFront.Tests
 {
+    //[TestFixture]
     public class Testpad
     {
         public class ViolationClass : IViolation
@@ -45,6 +47,7 @@ namespace BackToFront.Tests
             }
         }
 
+        //[Test]
         public void Test()
         {
             var repository = new Repository();
@@ -58,11 +61,16 @@ namespace BackToFront.Tests
                 .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
                 .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello"));
 
-            /*var dcs = ExpressionMeta.MetaSerializer;
+            var dcs = ExpressionMeta.JsonMetaSerializer;
+
+            var subject = new Rule<object>();
+            subject.If(a => a.Equals(true)).RequireThat(a => !a.Equals(4)).WithModelViolation("Hello")
+                .ElseIf(a => a.Equals(false)).RequireThat(a => !a.Equals(3)).WithModelViolation("Hello")
+                .Else.RequireThat(a => !a.Equals(3)).WithModelViolation("Hello");
 
             using (Stream str = new MemoryStream())
             {
-                dcs.WriteObject(str, new XXXXX( ExpressionType.ArrayIndex, "HGVLJHKBV"));
+                dcs.WriteObject(str, subject.Meta);
                 str.Position = 0;
                 using (StreamReader r = new StreamReader(str))
                 {
@@ -79,7 +87,7 @@ namespace BackToFront.Tests
                         }
                     }
                 }
-            }*/
+            }
         }
 
 

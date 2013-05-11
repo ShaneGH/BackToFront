@@ -60,8 +60,6 @@ namespace BackToFront.Framework.Base
                 _locked = true;
         }
 
-        public abstract PathElementMeta Meta { get; }
-
         public Expression Compile(SwapPropVisitor visitor)
         {
             var nc = _Compile(visitor);

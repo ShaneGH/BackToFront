@@ -84,8 +84,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
                 typeof(DynamicExpression),                
                 typeof(GotoExpression),                
                 typeof(IndexExpression),     
-                // important: invocation of lambda
-                typeof(InvocationExpression),  
                 typeof(LambdaExpression),              
                 typeof(LabelExpression),                
                 typeof(ListInitExpression),                

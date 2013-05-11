@@ -17,9 +17,9 @@ namespace BackToFront.Validation
         List<DependencyWrapper> Dependencies { get; }
 
         bool PropertyRequirement { get; }
-
-        PathElementMeta Meta { get; }
         
         Action<object, ValidationContext> Compile(SwapPropVisitor visitor);
+
+        ExpressionMeta Meta { get; }
     }
 }

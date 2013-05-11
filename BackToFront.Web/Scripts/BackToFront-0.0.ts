@@ -5,8 +5,6 @@
 
 if (window["__BTF"] != null) throw "BackToFront is defined already";
 
-import M = __BTF.Meta;
-
 module __BTF {
     export var Initialize = function (data) { };
 
@@ -18,10 +16,10 @@ module __BTF {
 
     export module Expressions {
         export class Expression {
-            NodeType: M.ExpressionType;
-            ExpressionType: M.ExpressionWrapperType;
+            NodeType: __BTF.Meta.ExpressionType;
+            ExpressionType: __BTF.Meta.ExpressionWrapperType;
 
-            constructor(meta: M.ExpressionMeta) {
+            constructor(meta: __BTF.Meta.ExpressionMeta) {
                 this.Required(meta, "NodeType", "ExpressionType");
 
                 this.NodeType = meta.NodeType;
@@ -59,26 +57,26 @@ module __BTF {
 
             GetAffectedProperties(): string[] { return []; }
 
-            static CreateExpression(meta: M.ExpressionMeta): Expression {
+            static CreateExpression(meta: __BTF.Meta.ExpressionMeta): Expression {
                 switch (meta.ExpressionType) {
-                    case M.ExpressionWrapperType.Binary:
-                        return new BinaryExpression(<M.BinaryExpressionMeta>meta);
-                    case M.ExpressionWrapperType.Block:
-                        return new BlockExpression(<M.BlockExpressionMeta>meta);
-                    case M.ExpressionWrapperType.Conditional:
-                        return new ConditionalExpression(<M.ConditionalExpressionMeta>meta);
-                    case M.ExpressionWrapperType.Constant:
-                        return new ConstantExpression(<M.ConstantExpressionMeta>meta);
-                    case M.ExpressionWrapperType.Default:
-                        return new DefaultExpression(<M.ExpressionMeta>meta);
-                    case M.ExpressionWrapperType.Member:
-                        return new MemberExpression(<M.MemberExpressionMeta>meta);
-                    case M.ExpressionWrapperType.MethodCall:
-                        return new MethodCallExpression(<M.MethodCallExpressionMeta>meta);
-                    case M.ExpressionWrapperType.Parameter:
-                        return new ParameterExpression(<M.ParameterExpressionMeta>meta);
-                    case M.ExpressionWrapperType.Unary:
-                        return new UnaryExpression(<M.UnaryExpressionMeta>meta);
+                    case __BTF.Meta.ExpressionWrapperType.Binary:
+                        return new BinaryExpression(<__BTF.Meta.BinaryExpressionMeta>meta);
+                    case __BTF.Meta.ExpressionWrapperType.Block:
+                        return new BlockExpression(<__BTF.Meta.BlockExpressionMeta>meta);
+                    case __BTF.Meta.ExpressionWrapperType.Conditional:
+                        return new ConditionalExpression(<__BTF.Meta.ConditionalExpressionMeta>meta);
+                    case __BTF.Meta.ExpressionWrapperType.Constant:
+                        return new ConstantExpression(<__BTF.Meta.ConstantExpressionMeta>meta);
+                    case __BTF.Meta.ExpressionWrapperType.Default:
+                        return new DefaultExpression(<__BTF.Meta.ExpressionMeta>meta);
+                    case __BTF.Meta.ExpressionWrapperType.Member:
+                        return new MemberExpression(<__BTF.Meta.MemberExpressionMeta>meta);
+                    case __BTF.Meta.ExpressionWrapperType.MethodCall:
+                        return new MethodCallExpression(<__BTF.Meta.MethodCallExpressionMeta>meta);
+                    case __BTF.Meta.ExpressionWrapperType.Parameter:
+                        return new ParameterExpression(<__BTF.Meta.ParameterExpressionMeta>meta);
+                    case __BTF.Meta.ExpressionWrapperType.Unary:
+                        return new UnaryExpression(<__BTF.Meta.UnaryExpressionMeta>meta);
                 }
 
                 throw "Invalid expression type";
@@ -91,7 +89,7 @@ module __BTF {
 
             private static OperatorDictionary: { (left, right): any; }[] = [];
 
-            constructor(meta: M.BinaryExpressionMeta) {
+            constructor(meta: __BTF.Meta.BinaryExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Left", "Right");
@@ -112,7 +110,7 @@ module __BTF {
         export class BlockExpression extends Expression {
             Expressions: Expression[];
 
-            constructor(meta: M.BlockExpressionMeta) {
+            constructor(meta: __BTF.Meta.BlockExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Expressions");
@@ -130,7 +128,7 @@ module __BTF {
             IfFalse: Expression;
             Test: Expression;
 
-            constructor(meta: M.ConditionalExpressionMeta) {
+            constructor(meta: __BTF.Meta.ConditionalExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "IfTrue", "IfFalse", "Test");
@@ -149,7 +147,7 @@ module __BTF {
         }
 
         export class ConstantExpression extends Expression {
-            constructor(meta: M.ConstantExpressionMeta) {
+            constructor(meta: __BTF.Meta.ConstantExpressionMeta) {
                 super(meta);
             }
 
@@ -160,7 +158,7 @@ module __BTF {
         }
 
         export class DefaultExpression extends Expression {
-            constructor(meta: M.ExpressionMeta) {
+            constructor(meta: __BTF.Meta.ExpressionMeta) {
                 super(meta);
             }
 
@@ -189,7 +187,7 @@ module __BTF {
             Expression: Expression;
             MemberName: string;
             
-            constructor(meta: M.MemberExpressionMeta) {
+            constructor(meta: __BTF.Meta.MemberExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Expression", "MemberName", "Test");
@@ -230,7 +228,7 @@ module __BTF {
             MethodName: string;
             MethodFullName: string;
 
-            constructor(meta: M.MethodCallExpressionMeta) {
+            constructor(meta: __BTF.Meta.MethodCallExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Object", "Arguments", "MethodName", "MethodFullName");
@@ -250,7 +248,7 @@ module __BTF {
         export class ParameterExpression extends Expression {
             Name: string;
 
-            constructor(meta: M.ParameterExpressionMeta) {
+            constructor(meta: __BTF.Meta.ParameterExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Name");
@@ -268,7 +266,7 @@ module __BTF {
 
             Operand: Expression;
 
-            constructor(meta: M.UnaryExpressionMeta) {
+            constructor(meta: __BTF.Meta.UnaryExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Operand");

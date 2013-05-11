@@ -58,15 +58,6 @@ namespace BackToFront.Framework
             get { return false; }
         }
 
-        private PathElementMeta _Meta;
-        public override PathElementMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new PathElementMeta(If.Select(i => i.Meta), null, PathElementType.MultiCondition));
-            }
-        }
-
         protected override Expression _Compile(SwapPropVisitor visitor)
         {
             Expression final = null;

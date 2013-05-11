@@ -55,19 +55,6 @@ namespace BackToFront.Framework
             get { return false; }
         }
 
-        #region Meta
-
-        private PathElementMeta _Meta;
-        public override PathElementMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(a => a.Meta), null, PathElementType.ThrowViolation));
-            }
-        }
-
-        #endregion
-
         protected override Expression _Compile(SwapPropVisitor visitor)
         {
             Action<TEntity, ValidationContext> block = (entity, context) =>

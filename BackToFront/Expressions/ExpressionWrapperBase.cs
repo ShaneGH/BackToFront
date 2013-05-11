@@ -35,6 +35,7 @@ namespace BackToFront.Expressions
             _Constructors[typeof(BlockExpression)] = expression => new BlockExpressionWrapper(expression as BlockExpression);
             _Constructors[typeof(ConditionalExpression)] = expression => new ConditionalExpressionWrapper(expression as ConditionalExpression);
             _Constructors[typeof(DefaultExpression)] = expression => new DefaultExpressionWrapper(expression as DefaultExpression);
+            _Constructors[typeof(InvocationExpression)] = expression => new InvocationExpressionWrapper(expression as InvocationExpression);
         }
         
         public abstract Expression WrappedExpression { get; }

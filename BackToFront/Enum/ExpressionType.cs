@@ -16,6 +16,7 @@ namespace BackToFront.Enum
         Unary = 6,
         Default = 7,
         Block = 8,
-        Conditional = 19
+        Conditional = 9,
+        Invocation = 10
     }
 }

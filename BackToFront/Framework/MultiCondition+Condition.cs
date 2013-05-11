@@ -42,15 +42,6 @@ namespace BackToFront.Framework
                 get { yield return Action; }
             }
 
-            public PathElementMeta _Meta;
-            public override PathElementMeta Meta
-            {
-                get 
-                { 
-                    return _Meta ?? (_Meta = new PathElementMeta(AllPossiblePaths.Where(a => a != null).Select(p => p.Meta), null, PathElementType.Condition));
-                }
-            }
-
             /// <summary>
             /// Is not meant to be compiled
             /// </summary>

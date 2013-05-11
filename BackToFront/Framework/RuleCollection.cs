@@ -52,14 +52,5 @@ namespace BackToFront.Framework
         {
             get { return false; }
         }
-
-        private PathElementMeta _Meta;
-        public PathElementMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new PathElementMeta(Rules.Select(a => a.Meta), null, PathElementType.RuleCollection));
-            }
-        }
     }
 }

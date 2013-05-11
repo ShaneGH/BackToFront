@@ -81,7 +81,6 @@
     <Compile Include="Meta\ParameterExpressionMeta.cs" />
     <Compile Include="Meta\UnaryExpressionMeta.cs" />
     <Compile Include="Meta\ExpressionMeta.cs" />
-    <Compile Include="Meta\PathElementMeta.cs" />
     <Compile Include="Framework\MultiCondition.cs" />
     <Compile Include="Framework\RequirementFailed.cs" />
     <Compile Include="Framework\RequireOperator.cs" />

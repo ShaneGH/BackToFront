@@ -91,7 +91,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             // act
             var result = subject.Else;
             var pe = subject.AllPossiblePaths;
-            
+
             // assert
             Assert.AreEqual(1, pe.Count(a => a != null));
             Assert.AreEqual(result, ((MultiCondition<object>)pe.First(a => a != null)).If.Last().Action);
@@ -106,7 +106,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             // arrange
             var subject = new Rule<object>();
 
-            var item1 = new AffectedMembers { Member = new U.MemberChainItem(typeof(string))};
+            var item1 = new AffectedMembers { Member = new U.MemberChainItem(typeof(string)) };
             var v1 = new Mock<IValidate<object>>();
             v1.Setup(a => a.AffectedMembers).Returns(new[] { item1 });
             subject.Register(v1.Object);
@@ -123,31 +123,18 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             Assert.IsTrue(AreKindOfEqual(new[] { item1, item2 }, actual));
         }
 
-        //[Test]
-        //public void _NewCompileTest()
-        //{
-        //    // arrange
-        //    var subject = new Accessor<object>();
-        //    subject.RequireThat(a => true);
+        [Test]
+        public void Meta_SmokeTest()
+        {
+            // arrange
+            var subject = new Rule<object>();
+            subject.If(a => a.Equals(true)).RequireThat(a => !a.Equals(4)).WithModelViolation("Hello")
+                .ElseIf(a => a.Equals(false)).RequireThat(a => !a.Equals(3)).WithModelViolation("Hello")
+                .Else.RequireThat(a => !a.Equals(3)).WithModelViolation("Hello");
 
-        //    // act
-        //    var result = subject.__NewCompile(new SwapPropVisitor());
-
-        //    // assert
-        //    Assert.AreNotEqual(PathElement<object>.DoNothing, result);
-        //}
-
-        //[Test]
-        //public void _NewCompileTest_NoNextElement()
-        //{
-        //    // arrange
-        //    var subject = new Accessor<object>();
-
-        //    // act
-        //    var result = subject.__NewCompile(new SwapPropVisitor());
-
-        //    // assert
-        //    Assert.AreEqual(PathElement<object>.DoNothing, result);
-        //}
+            // act
+            // assert
+            var result = subject.Meta;
+        }
     }
 }

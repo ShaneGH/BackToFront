@@ -22,11 +22,6 @@ namespace BackToFront.Tests.Utilities
             get { throw new NotImplementedException(); }
         }
 
-        public override PathElementMeta Meta
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         public override IEnumerable<PathElement<object>> AllPossiblePaths
         {
             get

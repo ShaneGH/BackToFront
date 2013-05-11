@@ -27,11 +27,6 @@ namespace BackToFront.Validation
         /// </summary>
         bool PropertyRequirement { get; }
 
-        /// <summary>
-        /// Metadata on the element to validate
-        /// </summary>
-        PathElementMeta Meta { get; }
-
         Expression Compile(SwapPropVisitor visitor);
     }
 }
