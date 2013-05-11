@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Mvc\HtmlHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="T4Helpers\MetaGeneratorHelper.cs" />
     <Compile Include="ValidateAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +85,11 @@
     <TypeScriptCompile Include="Scripts\BackToFront-0.0.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\AutoGen\MetaClasses.d.ts">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MetaClasses.tt</DependentUpon>
+    </Content>
     <Content Include="Scripts\BackToFront-0.0.js">
       <DependentUpon>BackToFront-0.0.ts</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -92,7 +98,14 @@
     <Content Include="Scripts\jquery.validation.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Scripts\AutoGen\MetaClasses.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MetaClasses.d.ts</LastGenOutput>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

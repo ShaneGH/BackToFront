@@ -19,7 +19,7 @@ namespace BackToFront.Meta
             : this(null) { }
 
         public UnaryExpressionMeta(UnaryExpressionWrapper expression)
-            : base(expression)
+            : base(expression, ExpressionWrapperType.Member)
         {
             if (expression == null)
                 return;

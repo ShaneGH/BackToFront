@@ -10,12 +10,12 @@ namespace BackToFront.Enum
     {
         Binary = 1,
         Constant = 2,
-        DependencyInjection = 3,
-        //ElementAt,
-        //Invocation,
-        Member = 4,
-        MethodCall = 5,
-        Parameter = 6,
-        Unary = 7
+        Member = 3,
+        MethodCall = 4,
+        Parameter = 5,
+        Unary = 6,
+        Default = 7,
+        Block = 8,
+        Conditional = 19
     }
 }

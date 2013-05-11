@@ -13,7 +13,7 @@ namespace BackToFront.Meta
             : this(null) { }
 
         public ParameterExpressionMeta(ParameterExpressionWrapper expression)
-            : base(expression)
+            : base(expression, Enum.ExpressionWrapperType.Parameter)
         {
             if (expression == null)
                 return;

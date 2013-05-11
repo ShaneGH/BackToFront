@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using BackToFront.Enum;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using BackToFront.Expressions;
 
 namespace BackToFront.Meta
@@ -35,16 +32,19 @@ namespace BackToFront.Meta
         [DataMember]
         public ExpressionType NodeType { get; private set; }
 
-        public ExpressionMeta()
-            : this(null) { }
+        [DataMember]
+        public ExpressionWrapperType ExpressionType { get; private set; }
 
-        public ExpressionMeta(ExpressionWrapperBase expression)
-            : this(expression != null ? expression.WrappedExpression.NodeType : default(ExpressionType))
-        { }
+        public ExpressionMeta() { }
 
-        public ExpressionMeta(ExpressionType nodeType)
+        public ExpressionMeta(ExpressionWrapperBase expression, ExpressionWrapperType expressionType)
+            : this()
         {
-            NodeType = nodeType;
+            if (expression == null)
+                return;
+
+            NodeType = expression.WrappedExpression.NodeType;
+            ExpressionType = expressionType;
         }
     }
 }

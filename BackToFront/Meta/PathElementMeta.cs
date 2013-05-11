@@ -10,25 +10,6 @@ using BackToFront.Expressions;
 namespace BackToFront.Meta
 {
     [DataContract]
-    public class Lockable
-    {
-        private bool _Locked = false;
-
-        public void Lock()
-        {
-            _Locked = true;
-        }
-
-        protected void Set<T>(ref T property, T value)
-        {
-            if(_Locked)
-                throw new InvalidOperationException("##");
-
-            property = value;
-        }
-    }
-
-    [DataContract]
     public sealed class PathElementMeta
     {
         public PathElementMeta() { }

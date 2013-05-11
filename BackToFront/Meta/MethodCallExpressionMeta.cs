@@ -23,7 +23,7 @@ namespace BackToFront.Meta
             : this(null) { }
 
         public MethodCallExpressionMeta(MethodCallExpressionWrapper expression)
-            : base(expression)
+            : base(expression, Enum.ExpressionWrapperType.MethodCall)
         {
             if (expression == null)
                 return;

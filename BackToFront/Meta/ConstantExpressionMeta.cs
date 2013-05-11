@@ -15,7 +15,7 @@ namespace BackToFront.Meta
             : this(null) { }
 
         public ConstantExpressionMeta(ConstantExpressionWrapper expression)
-            : base(expression)
+            : base(expression, Enum.ExpressionWrapperType.Constant)
         {
             if (expression == null)
                 return;

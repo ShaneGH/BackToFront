@@ -25,7 +25,7 @@ namespace BackToFront.Meta
             : this(null) { }
 
         public ConditionalExpressionMeta(ConditionalExpressionWrapper expression)
-            : base(expression)
+            : base(expression, ExpressionWrapperType.Conditional)
         {
             if (expression == null)
                 return;

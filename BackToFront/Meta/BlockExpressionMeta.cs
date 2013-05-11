@@ -19,7 +19,7 @@ namespace BackToFront.Meta
             : this(null) { }
 
         public BlockExpressionMeta(BlockExpressionWrapper expression)
-            : base(expression)
+            : base(expression, ExpressionWrapperType.Block)
         {
             if (expression == null)
                 return;

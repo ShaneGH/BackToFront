@@ -28,7 +28,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _Meta ?? (_Meta = new ExpressionMeta(this));
+                return _Meta ?? (_Meta = new ExpressionMeta(this, Enum.ExpressionWrapperType.Default));
             }
         }
 

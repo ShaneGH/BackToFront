@@ -22,7 +22,7 @@ namespace BackToFront.Meta
             : this(null) { }
 
         public BinaryExpressionMeta(BinaryExpressionWrapper expression)
-            : base(expression)
+            : base(expression, ExpressionWrapperType.Binary)
         {
             if (expression == null)
                 return;
