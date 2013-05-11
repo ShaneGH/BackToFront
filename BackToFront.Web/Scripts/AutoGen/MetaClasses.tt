@@ -32,7 +32,7 @@
 module __BTF {
 	export module Meta {
 <#foreach(var type in types) {
-var members = type.GetMembers().Where(m => m.GetCustomAttribute<DataMemberAttribute>() != null);
+var members = type.GetMembers(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly).Where(m => m.GetCustomAttribute<DataMemberAttribute>() != null);
 var implements = types.Contains(type.BaseType) ? " extends " + type.BaseType.Name : "";#>
 		export interface <#=type.Name + implements#> {
 <#foreach(var member in members) {#>

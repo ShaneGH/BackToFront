@@ -12,34 +12,24 @@ module __BTF {
 		export interface BinaryExpressionMeta extends ExpressionMeta {
 			Left: ExpressionMeta;
 			Right: ExpressionMeta;
-			NodeType: ExpressionType;
-			ExpressionType: ExpressionWrapperType;
 		}
 
 		export interface BlockExpressionMeta extends ExpressionMeta {
 			Expressions: ExpressionMeta[];
-			NodeType: ExpressionType;
-			ExpressionType: ExpressionWrapperType;
 		}
 
 		export interface ConditionalExpressionMeta extends ExpressionMeta {
 			IfTrue: ExpressionMeta;
 			IfFalse: ExpressionMeta;
 			Test: ExpressionMeta;
-			NodeType: ExpressionType;
-			ExpressionType: ExpressionWrapperType;
 		}
 
 		export interface ConstantExpressionMeta extends ExpressionMeta {
-			NodeType: ExpressionType;
-			ExpressionType: ExpressionWrapperType;
 		}
 
 		export interface MemberExpressionMeta extends ExpressionMeta {
 			Expression: ExpressionMeta;
 			MemberName: string;
-			NodeType: ExpressionType;
-			ExpressionType: ExpressionWrapperType;
 		}
 
 		export interface MethodCallExpressionMeta extends ExpressionMeta {
@@ -47,20 +37,14 @@ module __BTF {
 			Arguments: ExpressionMeta[];
 			MethodName: string;
 			MethodFullName: string;
-			NodeType: ExpressionType;
-			ExpressionType: ExpressionWrapperType;
 		}
 
 		export interface ParameterExpressionMeta extends ExpressionMeta {
 			Name: string;
-			NodeType: ExpressionType;
-			ExpressionType: ExpressionWrapperType;
 		}
 
 		export interface UnaryExpressionMeta extends ExpressionMeta {
 			Operand: ExpressionMeta;
-			NodeType: ExpressionType;
-			ExpressionType: ExpressionWrapperType;
 		}
 
 		export enum ExpressionWrapperType {
@@ -72,7 +56,7 @@ module __BTF {
 			Unary = 6,
 			Default = 7,
 			Block = 8,
-			Conditional = 9,
+			Conditional = 19,
 		}
 
 		export enum ExpressionType {

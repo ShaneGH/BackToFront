@@ -96,6 +96,8 @@
     </Content>
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\jquery.validation.d.ts" />
+    <Content Include="Scripts\linq-0.0.js" />
+    <Content Include="Scripts\linq.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\AutoGen\MetaClasses.tt">
