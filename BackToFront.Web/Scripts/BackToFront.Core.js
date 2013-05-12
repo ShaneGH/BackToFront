@@ -1,6 +1,3 @@
-if(window["__BTF"] != null) {
-    throw "BackToFront is defined already";
-}
 var __BTF;
 (function (__BTF) {
     __BTF.Initialize = function (data) {

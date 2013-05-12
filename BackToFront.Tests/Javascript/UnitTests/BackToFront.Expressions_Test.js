@@ -1,6 +1,6 @@
 ﻿
 // Chutzpah
-/// <reference path="../../Scripts/BackToFront.debug.js" />
+/// <reference path="../../Scripts/build/BackToFront.debug.js" />
 
 //// My Module
 //(function (moduleName) {

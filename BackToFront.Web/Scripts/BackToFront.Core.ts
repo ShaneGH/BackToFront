@@ -3,8 +3,6 @@
 /// <reference path="jquery.validation.d.ts" />
 /// <reference path="MetaClasses.ts" />
 
-if (window["__BTF"] != null) throw "BackToFront is defined already";
-
 module __BTF {
     export var Initialize = function (data) { };
 
