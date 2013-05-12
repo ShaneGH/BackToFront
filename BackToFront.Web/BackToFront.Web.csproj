@@ -85,26 +85,35 @@
     <TypeScriptCompile Include="Scripts\BackToFront-0.0.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\AutoGen\MetaClasses.d.ts">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MetaClasses.tt</DependentUpon>
-    </Content>
+    <TypeScriptCompile Include="Scripts\MetaClasses.ts" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Scripts\BackToFront-0.0.js">
       <DependentUpon>BackToFront-0.0.ts</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\jquery.validation.d.ts" />
-    <Content Include="Scripts\linq-0.0.js" />
+    <Content Include="Scripts\linq-0.0.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\linq.d.ts" />
+    <Content Include="Scripts\MetaClasses.js">
+      <DependentUpon>MetaClasses.ts</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\MetaClasses.ts">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MetaClasses.tt</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\AutoGen\MetaClasses.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MetaClasses.d.ts</LastGenOutput>
-    </None>
     <None Include="packages.config" />
+    <None Include="Scripts\MetaClasses.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MetaClasses.ts</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -118,6 +127,15 @@
     <!--Use this line when AppHarbour supports typescript. Also delete "BackToFront\Tools\Typescript" <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />-->
     <Exec Command="..\Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+      $(TargetDir)Yui\YuiBuildProcess "Scripts\BackToFront-0.0.js" "Scripts\linq-0.0.js" "Scripts\MetaClasses.js" -out Scripts\XXX.js
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>del "$(TargetDir)Yui"
+xcopy "$(SolutionDir)Tools\Yui" "$(TargetDir)Yui" /E /i /y</PreBuildEvent>
+  </PropertyGroup>
   <!-- <Target Name="AfterBuild">
   </Target>-->
 </Project>

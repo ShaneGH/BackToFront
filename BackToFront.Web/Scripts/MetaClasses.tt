@@ -13,7 +13,7 @@
 <#@ import namespace="BackToFront.Web.T4Helpers" #>
 <#@ import namespace="BackToFront.Extensions.IEnumerable" #>
 
-<#@ output extension=".d.ts" #>
+<#@ output extension=".ts" #>
 
 <# 
 	var baseClass = typeof(ExpressionMeta);
