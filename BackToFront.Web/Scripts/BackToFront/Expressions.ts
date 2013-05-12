@@ -1,9 +1,9 @@
-/// <reference path="linq.d.ts" />
-/// <reference path="jquery.d.ts" />
-/// <reference path="jquery.validation.d.ts" />
+/// <reference path="../ref/linq.d.ts" />
+/// <reference path="../ref/jquery.d.ts" />
+/// <reference path="../ref/jquery.validation.d.ts" />
 /// <reference path="MetaClasses.ts" />
-/// <reference path="BackToFront.Core.ts" />
-/// <reference path="BackToFront.Validation.ts" />
+/// <reference path="Core.ts" />
+/// <reference path="Validation.ts" />
 
 
 module __BTF {

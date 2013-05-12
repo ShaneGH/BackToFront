@@ -82,34 +82,38 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\MetaClasses.ts" />
+    <TypeScriptCompile Include="Scripts\BackToFront\MetaClasses.ts">
+      <DependentUpon>MetaClasses.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </TypeScriptCompile>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\BackToFront.Core.ts" />
-    <Content Include="Scripts\BackToFront.Core.js">
-      <DependentUpon>BackToFront.Core.ts</DependentUpon>
+    <TypeScriptCompile Include="Scripts\BackToFront\Core.ts" />
+    <Content Include="Scripts\BackToFront\BackToFront.Core.js">
+      <DependentUpon>Core.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\build\BackToFront.debug.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <TypeScriptCompile Include="Scripts\BackToFront.Expressions.ts" />
-    <Content Include="Scripts\BackToFront.Expressions.js">
-      <DependentUpon>BackToFront.Expressions.ts</DependentUpon>
+    <TypeScriptCompile Include="Scripts\BackToFront\Expressions.ts" />
+    <Content Include="Scripts\BackToFront\BackToFront.Expressions.js">
+      <DependentUpon>Expressions.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\build\BackToFront.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <TypeScriptCompile Include="Scripts\BackToFront.Validation.ts" />
-    <Content Include="Scripts\BackToFront.Validation.js">
-      <DependentUpon>BackToFront.Validation.ts</DependentUpon>
+    <TypeScriptCompile Include="Scripts\BackToFront\Validation.ts" />
+    <Content Include="Scripts\BackToFront\BackToFront.Validation.js">
+      <DependentUpon>Validation.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\jquery.d.ts" />
-    <Content Include="Scripts\jquery.validation.d.ts" />
+    <Content Include="Scripts\ref\jquery.d.ts" />
+    <Content Include="Scripts\ref\jquery.validation.d.ts" />
     <Content Include="Scripts\linq-0.0.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\linq.d.ts" />
-    <Content Include="Scripts\MetaClasses.js">
+    <Content Include="Scripts\ref\linq.d.ts" />
+    <Content Include="Scripts\BackToFront\MetaClasses.js">
       <DependentUpon>MetaClasses.ts</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -121,7 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Scripts\MetaClasses.tt">
+    <None Include="Scripts\BackToFront\MetaClasses.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MetaClasses.ts</LastGenOutput>
     </None>
@@ -141,8 +145,8 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
-      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts" -out $(ProjectDir)Scripts\build\BackToFront.min.js
-      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts" -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false
+      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\BackToFront" "$(ProjectDir)Scripts\linq-0.0.js" -out $(ProjectDir)Scripts\build\BackToFront.min.js
+      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\BackToFront" "$(ProjectDir)Scripts\linq-0.0.js" -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
