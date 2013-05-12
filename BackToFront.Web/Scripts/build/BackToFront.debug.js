@@ -1,966 +1,3 @@
-var __BTF;
-(function (__BTF) {
-    __BTF.Initialize = function (data) {
-    };
-    var Sanitizer = (function () {
-        function Sanitizer() { }
-        Sanitizer.Require = function Require(item) {
-            var properties = [];
-            for (var _i = 0; _i < (arguments.length - 1); _i++) {
-                properties[_i] = arguments[_i + 1];
-            }
-            if(item == null) {
-                throw "Item must have a value";
-            }
-            for(var i = 0, ii = properties.length; i < ii; i++) {
-                var prop = properties[i];
-                if(!prop.allowNull && item[prop.inputName] == null) {
-                    throw "Property " + prop.inputName + " cannot be null";
-                }
-                if(prop.inputType && typeof item[prop.inputName] !== prop.inputType) {
-                    throw "Property " + prop.inputName + " must be of type " + prop.inputType;
-                }
-                if(prop.inputConstructor && item[prop.inputName].constructor !== prop.inputConstructor) {
-                    throw {
-                        message: "Property " + prop.inputName + " must be of a give type",
-                        type: prop.inputConstructor
-                    };
-                }
-            }
-        };
-        return Sanitizer;
-    })();
-    __BTF.Sanitizer = Sanitizer;    
-})(__BTF || (__BTF = {}));
-
-
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __BTF;
-(function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
-    (function (Expressions) {
-        var Expression = (function () {
-            function Expression(meta) {
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "NodeType",
-                    inputConstructor: Number
-                }, {
-                    inputName: "ExpressionType",
-                    inputConstructor: Number
-                });
-                this.NodeType = meta.NodeType;
-                this.ExpressionType = meta.ExpressionType;
-            }
-            Expression.prototype.Compile = function () {
-                if(!this._Compiled) {
-                    var compiled = this._Compile();
-                    this._Compiled = function (item, context) {
-                        if(!context.Break()) {
-                            compiled(item, context);
-                        }
-                    };
-                }
-                return this._Compiled;
-            };
-            Expression.prototype._Compile = function () {
-                throw "Invalid operation";
-            };
-            Expression.prototype.GetAffectedProperties = function () {
-                return [];
-            };
-            Expression.CreateExpression = function CreateExpression(meta) {
-                switch(meta.ExpressionType) {
-                    case __BTF.Meta.ExpressionWrapperType.Binary:
-                        return new BinaryExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Block:
-                        return new BlockExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Conditional:
-                        return new ConditionalExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Constant:
-                        return new ConstantExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Default:
-                        return new DefaultExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Member:
-                        return new MemberExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.MethodCall:
-                        return new MethodCallExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Parameter:
-                        return new ParameterExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Unary:
-                        return new UnaryExpression(meta);
-                }
-                throw "Invalid expression type";
-            };
-            return Expression;
-        })();
-        Expressions.Expression = Expression;        
-        var BinaryExpression = (function (_super) {
-            __extends(BinaryExpression, _super);
-            function BinaryExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Left",
-                    inputType: "object"
-                }, {
-                    inputName: "Right",
-                    inputType: "object"
-                });
-                if(!BinaryExpression.OperatorDictionary[this.NodeType]) {
-                    throw "Invalid Operator";
-                }
-                this.Left = Expression.CreateExpression(meta.Left);
-                this.Right = Expression.CreateExpression(meta.Right);
-            }
-            BinaryExpression.OperatorDictionary = [];
-            BinaryExpression.prototype._Compile = function () {
-                var _this = this;
-                var left = this.Left.Compile();
-                var right = this.Right.Compile();
-                return function (namedArguments, context) {
-                    return BinaryExpression.OperatorDictionary[_this.NodeType](left(namedArguments, context), right(namedArguments, context));
-                };
-            };
-            return BinaryExpression;
-        })(Expression);
-        Expressions.BinaryExpression = BinaryExpression;        
-        var BlockExpression = (function (_super) {
-            __extends(BlockExpression, _super);
-            function BlockExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Expressions",
-                    inputConstructor: Array
-                });
-                this.Expressions = linq(meta.Expressions).Select(function (a) {
-                    return Expression.CreateExpression(a);
-                }).Result;
-            }
-            BlockExpression.prototype._Compile = function () {
-                var children = linq(this.Expressions).Select(function (a) {
-                    return a.Compile();
-                }).Result;
-                return function (namedArguments, context) {
-                    return linq(children).Each(function (a) {
-                        return a(namedArguments, context);
-                    });
-                };
-            };
-            return BlockExpression;
-        })(Expression);
-        Expressions.BlockExpression = BlockExpression;        
-        var ConditionalExpression = (function (_super) {
-            __extends(ConditionalExpression, _super);
-            function ConditionalExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "IfTrue",
-                    inputType: "object"
-                }, {
-                    inputName: "IfFalse",
-                    inputType: "object"
-                }, {
-                    inputName: "Test",
-                    inputType: "object"
-                });
-                this.IfTrue = Expression.CreateExpression(meta.IfTrue);
-                this.IfFalse = Expression.CreateExpression(meta.IfFalse);
-                this.Test = Expression.CreateExpression(meta.Test);
-            }
-            ConditionalExpression.prototype._Compile = function () {
-                var test = this.Test.Compile();
-                var ifTrue = this.IfTrue.Compile();
-                var ifFalse = this.IfFalse.Compile();
-                return function (namedArguments, context) {
-                    return test(namedArguments, context) ? ifTrue(namedArguments, context) : ifFalse(namedArguments, context);
-                };
-            };
-            return ConditionalExpression;
-        })(Expression);
-        Expressions.ConditionalExpression = ConditionalExpression;        
-        var ConstantExpression = (function (_super) {
-            __extends(ConstantExpression, _super);
-            function ConstantExpression(meta) {
-                        _super.call(this, meta);
-            }
-            ConstantExpression.prototype._Compile = function () {
-                return function (namedArguments, context) {
-                    return null;
-                };
-            };
-            return ConstantExpression;
-        })(Expression);
-        Expressions.ConstantExpression = ConstantExpression;        
-        var DefaultExpression = (function (_super) {
-            __extends(DefaultExpression, _super);
-            function DefaultExpression(meta) {
-                        _super.call(this, meta);
-            }
-            DefaultExpression.prototype._Compile = function () {
-                return function (namedArguments, context) {
-                    return null;
-                };
-            };
-            return DefaultExpression;
-        })(Expression);
-        Expressions.DefaultExpression = DefaultExpression;        
-        var MemberExpression = (function (_super) {
-            __extends(MemberExpression, _super);
-            function MemberExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Expression",
-                    inputType: "object"
-                }, {
-                    inputName: "MemberName",
-                    inputConstructor: String
-                });
-                this.Expression = Expression.CreateExpression(meta.Expression);
-                this.MemberName = meta.MemberName;
-            }
-            MemberExpression.RegexValues = (function () {
-                var index = "\\[[0-9]+\\]";
-                var indexedProperty = "[_a-zA-Z][_a-zA-Z0-9]*(" + index + ")?";
-                return {
-                    IndexedProperty: new RegExp(index + "$"),
-                    Property: new RegExp("^" + indexedProperty + "$")
-                };
-            })();
-            MemberExpression.prototype._Compile = function () {
-                var _this = this;
-                var expression = this.Expression.Compile();
-                return function (namedArguments, context) {
-                    if(!MemberExpression.RegexValues.Property.test(_this.MemberName)) {
-                        throw "Invalid property name: " + _this.MemberName;
-                    }
-                    var base = expression(namedArguments, context);
-                    if(MemberExpression.RegexValues.IndexedProperty.test(_this.MemberName)) {
-                        var property = _this.MemberName.substr(0, _this.MemberName.indexOf("[") - 1);
-                        var index = MemberExpression.RegexValues.Property.exec(_this.MemberName)[0];
-                        index = parseInt(index.substring(1, index.length - 1));
-                        base = base[property];
-                        if(base == null) {
-                            return null;
-                        }
-                        return base[index];
-                    }
-                    return base[_this.MemberName];
-                };
-            };
-            return MemberExpression;
-        })(Expression);
-        Expressions.MemberExpression = MemberExpression;        
-        var MethodCallExpression = (function (_super) {
-            __extends(MethodCallExpression, _super);
-            function MethodCallExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Object",
-                    inputType: "object"
-                }, {
-                    inputName: "Arguments",
-                    inputConstructor: Array
-                }, {
-                    inputName: "MethodName",
-                    inputConstructor: String
-                }, {
-                    inputName: "MethodFullName",
-                    inputConstructor: String
-                });
-                this.Object = Expression.CreateExpression(meta.Object);
-                this.Arguments = linq(meta.Arguments).Select(function (a) {
-                    return Expression.CreateExpression(a);
-                }).Result;
-                this.MethodName = meta.MethodName;
-                this.MethodFullName = meta.MethodFullName;
-            }
-            MethodCallExpression.prototype._Compile = function () {
-                throw "Not implemented";
-            };
-            return MethodCallExpression;
-        })(Expression);
-        Expressions.MethodCallExpression = MethodCallExpression;        
-        var ParameterExpression = (function (_super) {
-            __extends(ParameterExpression, _super);
-            function ParameterExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Name",
-                    inputConstructor: String
-                });
-                this.Name = meta.Name;
-            }
-            ParameterExpression.prototype._Compile = function () {
-                var _this = this;
-                return function (namedArguments, context) {
-                    return namedArguments[_this.Name];
-                };
-            };
-            return ParameterExpression;
-        })(Expression);
-        Expressions.ParameterExpression = ParameterExpression;        
-        var UnaryExpression = (function (_super) {
-            __extends(UnaryExpression, _super);
-            function UnaryExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Operand",
-                    inputType: "object"
-                });
-                this.Operand = Expression.CreateExpression(meta.Operand);
-            }
-            UnaryExpression.OperatorDictionary = [];
-            UnaryExpression.prototype._Compile = function () {
-                var _this = this;
-                var operand = this.Operand.Compile();
-                return function (namedArguments, context) {
-                    return UnaryExpression.OperatorDictionary[_this.NodeType](operand(namedArguments, context));
-                };
-            };
-            return UnaryExpression;
-        })(Expression);
-        Expressions.UnaryExpression = UnaryExpression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __BTF;
-(function (__BTF) {
-    (function (Meta) {
-        (function (ExpressionWrapperType) {
-            ExpressionWrapperType._map = [];
-            ExpressionWrapperType.Binary = 1;
-            ExpressionWrapperType.Constant = 2;
-            ExpressionWrapperType.Member = 3;
-            ExpressionWrapperType.MethodCall = 4;
-            ExpressionWrapperType.Parameter = 5;
-            ExpressionWrapperType.Unary = 6;
-            ExpressionWrapperType.Default = 7;
-            ExpressionWrapperType.Block = 8;
-            ExpressionWrapperType.Conditional = 9;
-            ExpressionWrapperType.Invocation = 10;
-        })(Meta.ExpressionWrapperType || (Meta.ExpressionWrapperType = {}));
-        var ExpressionWrapperType = Meta.ExpressionWrapperType;
-        (function (ExpressionType) {
-            ExpressionType._map = [];
-            ExpressionType.Add = 0;
-            ExpressionType.AddChecked = 1;
-            ExpressionType.And = 2;
-            ExpressionType.AndAlso = 3;
-            ExpressionType.ArrayLength = 4;
-            ExpressionType.ArrayIndex = 5;
-            ExpressionType.Call = 6;
-            ExpressionType.Coalesce = 7;
-            ExpressionType.Conditional = 8;
-            ExpressionType.Constant = 9;
-            ExpressionType.Convert = 10;
-            ExpressionType.ConvertChecked = 11;
-            ExpressionType.Divide = 12;
-            ExpressionType.Equal = 13;
-            ExpressionType.ExclusiveOr = 14;
-            ExpressionType.GreaterThan = 15;
-            ExpressionType.GreaterThanOrEqual = 16;
-            ExpressionType.Invoke = 17;
-            ExpressionType.Lambda = 18;
-            ExpressionType.LeftShift = 19;
-            ExpressionType.LessThan = 20;
-            ExpressionType.LessThanOrEqual = 21;
-            ExpressionType.ListInit = 22;
-            ExpressionType.MemberAccess = 23;
-            ExpressionType.MemberInit = 24;
-            ExpressionType.Modulo = 25;
-            ExpressionType.Multiply = 26;
-            ExpressionType.MultiplyChecked = 27;
-            ExpressionType.Negate = 28;
-            ExpressionType.UnaryPlus = 29;
-            ExpressionType.NegateChecked = 30;
-            ExpressionType.New = 31;
-            ExpressionType.NewArrayInit = 32;
-            ExpressionType.NewArrayBounds = 33;
-            ExpressionType.Not = 34;
-            ExpressionType.NotEqual = 35;
-            ExpressionType.Or = 36;
-            ExpressionType.OrElse = 37;
-            ExpressionType.Parameter = 38;
-            ExpressionType.Power = 39;
-            ExpressionType.Quote = 40;
-            ExpressionType.RightShift = 41;
-            ExpressionType.Subtract = 42;
-            ExpressionType.SubtractChecked = 43;
-            ExpressionType.TypeAs = 44;
-            ExpressionType.TypeIs = 45;
-            ExpressionType.Assign = 46;
-            ExpressionType.Block = 47;
-            ExpressionType.DebugInfo = 48;
-            ExpressionType.Decrement = 49;
-            ExpressionType.Dynamic = 50;
-            ExpressionType.Default = 51;
-            ExpressionType.Extension = 52;
-            ExpressionType.Goto = 53;
-            ExpressionType.Increment = 54;
-            ExpressionType.Index = 55;
-            ExpressionType.Label = 56;
-            ExpressionType.RuntimeVariables = 57;
-            ExpressionType.Loop = 58;
-            ExpressionType.Switch = 59;
-            ExpressionType.Throw = 60;
-            ExpressionType.Try = 61;
-            ExpressionType.Unbox = 62;
-            ExpressionType.AddAssign = 63;
-            ExpressionType.AndAssign = 64;
-            ExpressionType.DivideAssign = 65;
-            ExpressionType.ExclusiveOrAssign = 66;
-            ExpressionType.LeftShiftAssign = 67;
-            ExpressionType.ModuloAssign = 68;
-            ExpressionType.MultiplyAssign = 69;
-            ExpressionType.OrAssign = 70;
-            ExpressionType.PowerAssign = 71;
-            ExpressionType.RightShiftAssign = 72;
-            ExpressionType.SubtractAssign = 73;
-            ExpressionType.AddAssignChecked = 74;
-            ExpressionType.MultiplyAssignChecked = 75;
-            ExpressionType.SubtractAssignChecked = 76;
-            ExpressionType.PreIncrementAssign = 77;
-            ExpressionType.PreDecrementAssign = 78;
-            ExpressionType.PostIncrementAssign = 79;
-            ExpressionType.PostDecrementAssign = 80;
-            ExpressionType.TypeEqual = 81;
-            ExpressionType.OnesComplement = 82;
-            ExpressionType.IsTrue = 83;
-            ExpressionType.IsFalse = 84;
-        })(Meta.ExpressionType || (Meta.ExpressionType = {}));
-        var ExpressionType = Meta.ExpressionType;
-    })(__BTF.Meta || (__BTF.Meta = {}));
-    var Meta = __BTF.Meta;
-})(__BTF || (__BTF = {}));
-
-
-var __BTF;
-(function (__BTF) {
-    __BTF.Initialize = function (data) {
-    };
-    var Sanitizer = (function () {
-        function Sanitizer() { }
-        Sanitizer.Require = function Require(item) {
-            var properties = [];
-            for (var _i = 0; _i < (arguments.length - 1); _i++) {
-                properties[_i] = arguments[_i + 1];
-            }
-            if(item == null) {
-                throw "Item must have a value";
-            }
-            for(var i = 0, ii = properties.length; i < ii; i++) {
-                var prop = properties[i];
-                if(prop.allowNull && item[prop.inputName] == null) {
-                    return;
-                }
-                if(!prop.allowNull && item[prop.inputName] == null) {
-                    throw "Property " + prop.inputName + " cannot be null";
-                }
-                if(prop.inputType && typeof item[prop.inputName] !== prop.inputType) {
-                    throw "Property " + prop.inputName + " must be of type " + prop.inputType;
-                }
-                if(prop.inputConstructor && item[prop.inputName].constructor !== prop.inputConstructor) {
-                    throw {
-                        message: "Property " + prop.inputName + " must be of a give type",
-                        type: prop.inputConstructor
-                    };
-                }
-            }
-        };
-        return Sanitizer;
-    })();
-    __BTF.Sanitizer = Sanitizer;    
-})(__BTF || (__BTF = {}));
-
-
-var __BTF;
-(function (__BTF) {
-    (function (Validation) {
-        var ExpressionInvoker = (function () {
-            function ExpressionInvoker(Logic, AffectedProperties) {
-                this.Logic = Logic;
-                this.AffectedProperties = AffectedProperties;
-            }
-            return ExpressionInvoker;
-        })();
-        Validation.ExpressionInvoker = ExpressionInvoker;        
-        var ValidationContext = (function () {
-            function ValidationContext() { }
-            ValidationContext.prototype.Break = function () {
-                return false;
-            };
-            return ValidationContext;
-        })();
-        Validation.ValidationContext = ValidationContext;        
-    })(__BTF.Validation || (__BTF.Validation = {}));
-    var Validation = __BTF.Validation;
-})(__BTF || (__BTF = {}));
-
-
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __BTF;
-(function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
-    (function (Expressions) {
-        var BinaryExpression = (function (_super) {
-            __extends(BinaryExpression, _super);
-            function BinaryExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Left",
-                    inputType: "object"
-                }, {
-                    inputName: "Right",
-                    inputType: "object"
-                });
-                if(!BinaryExpression.OperatorDictionary[this.NodeType]) {
-                    throw "Invalid Operator";
-                }
-                this.Left = Expressions.Expression.CreateExpression(meta.Left);
-                this.Right = Expressions.Expression.CreateExpression(meta.Right);
-            }
-            BinaryExpression.OperatorDictionary = [];
-            BinaryExpression.prototype._Compile = function () {
-                var _this = this;
-                var left = this.Left.Compile();
-                var right = this.Right.Compile();
-                return function (namedArguments, context) {
-                    return BinaryExpression.OperatorDictionary[_this.NodeType](left(namedArguments, context), right(namedArguments, context));
-                };
-            };
-            return BinaryExpression;
-        })(Expressions.Expression);
-        Expressions.BinaryExpression = BinaryExpression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __BTF;
-(function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
-    (function (Expressions) {
-        var BlockExpression = (function (_super) {
-            __extends(BlockExpression, _super);
-            function BlockExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Expressions",
-                    inputConstructor: Array
-                });
-                this.Expressions = linq(meta.Expressions).Select(function (a) {
-                    return Expressions.Expression.CreateExpression(a);
-                }).Result;
-            }
-            BlockExpression.prototype._Compile = function () {
-                var children = linq(this.Expressions).Select(function (a) {
-                    return a.Compile();
-                }).Result;
-                return function (namedArguments, context) {
-                    return linq(children).Each(function (a) {
-                        return a(namedArguments, context);
-                    });
-                };
-            };
-            return BlockExpression;
-        })(Expressions.Expression);
-        Expressions.BlockExpression = BlockExpression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __BTF;
-(function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
-    (function (Expressions) {
-        var ConditionalExpression = (function (_super) {
-            __extends(ConditionalExpression, _super);
-            function ConditionalExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "IfTrue",
-                    inputType: "object"
-                }, {
-                    inputName: "IfFalse",
-                    inputType: "object"
-                }, {
-                    inputName: "Test",
-                    inputType: "object"
-                });
-                this.IfTrue = Expressions.Expression.CreateExpression(meta.IfTrue);
-                this.IfFalse = Expressions.Expression.CreateExpression(meta.IfFalse);
-                this.Test = Expressions.Expression.CreateExpression(meta.Test);
-            }
-            ConditionalExpression.prototype._Compile = function () {
-                var test = this.Test.Compile();
-                var ifTrue = this.IfTrue.Compile();
-                var ifFalse = this.IfFalse.Compile();
-                return function (namedArguments, context) {
-                    return test(namedArguments, context) ? ifTrue(namedArguments, context) : ifFalse(namedArguments, context);
-                };
-            };
-            return ConditionalExpression;
-        })(Expressions.Expression);
-        Expressions.ConditionalExpression = ConditionalExpression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __BTF;
-(function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
-    (function (Expressions) {
-        var ConstantExpression = (function (_super) {
-            __extends(ConstantExpression, _super);
-            function ConstantExpression(meta) {
-                        _super.call(this, meta);
-            }
-            ConstantExpression.prototype._Compile = function () {
-                return function (namedArguments, context) {
-                    return null;
-                };
-            };
-            return ConstantExpression;
-        })(Expressions.Expression);
-        Expressions.ConstantExpression = ConstantExpression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __BTF;
-(function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
-    (function (Expressions) {
-        var DefaultExpression = (function (_super) {
-            __extends(DefaultExpression, _super);
-            function DefaultExpression(meta) {
-                        _super.call(this, meta);
-            }
-            DefaultExpression.prototype._Compile = function () {
-                return function (namedArguments, context) {
-                    return null;
-                };
-            };
-            return DefaultExpression;
-        })(Expressions.Expression);
-        Expressions.DefaultExpression = DefaultExpression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __BTF;
-(function (__BTF) {
-    (function (Expressions) {
-        var E = __BTF.Expressions;
-        var Validation = __BTF.Validation;
-        var Meta = __BTF.Meta;
-        var Expression = (function () {
-            function Expression(meta) {
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "NodeType",
-                    inputConstructor: Number
-                }, {
-                    inputName: "ExpressionType",
-                    inputConstructor: Number
-                });
-                this.NodeType = meta.NodeType;
-                this.ExpressionType = meta.ExpressionType;
-            }
-            Expression.prototype.Compile = function () {
-                if(!this._Compiled) {
-                    var compiled = this._Compile();
-                    this._Compiled = function (item, context) {
-                        if(!context.Break()) {
-                            compiled(item, context);
-                        }
-                    };
-                }
-                return this._Compiled;
-            };
-            Expression.prototype._Compile = function () {
-                throw "Invalid operation";
-            };
-            Expression.prototype.GetAffectedProperties = function () {
-                return [];
-            };
-            Expression.CreateExpression = function CreateExpression(meta) {
-                switch(meta.ExpressionType) {
-                    case Meta.ExpressionWrapperType.Binary:
-                        return new E.BinaryExpression(meta);
-                    case Meta.ExpressionWrapperType.Block:
-                        return new E.BlockExpression(meta);
-                    case Meta.ExpressionWrapperType.Conditional:
-                        return new E.ConditionalExpression(meta);
-                    case Meta.ExpressionWrapperType.Constant:
-                        return new E.ConstantExpression(meta);
-                    case Meta.ExpressionWrapperType.Default:
-                        return new E.DefaultExpression(meta);
-                    case Meta.ExpressionWrapperType.Member:
-                        return new E.MemberExpression(meta);
-                    case Meta.ExpressionWrapperType.MethodCall:
-                        return new E.MethodCallExpression(meta);
-                    case Meta.ExpressionWrapperType.Parameter:
-                        return new E.ParameterExpression(meta);
-                    case Meta.ExpressionWrapperType.Unary:
-                        return new E.UnaryExpression(meta);
-                }
-                throw "Invalid expression type";
-            };
-            return Expression;
-        })();
-        Expressions.Expression = Expression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __BTF;
-(function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
-    (function (Expressions) {
-        var MemberExpression = (function (_super) {
-            __extends(MemberExpression, _super);
-            function MemberExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Expression",
-                    inputType: "object"
-                }, {
-                    inputName: "MemberName",
-                    inputConstructor: String
-                });
-                this.Expression = Expressions.Expression.CreateExpression(meta.Expression);
-                this.MemberName = meta.MemberName;
-            }
-            MemberExpression.RegexValues = (function () {
-                var index = "\\[[0-9]+\\]";
-                var indexedProperty = "[_a-zA-Z][_a-zA-Z0-9]*(" + index + ")?";
-                return {
-                    IndexedProperty: new RegExp(index + "$"),
-                    Property: new RegExp("^" + indexedProperty + "$")
-                };
-            })();
-            MemberExpression.prototype._Compile = function () {
-                var _this = this;
-                var expression = this.Expression.Compile();
-                return function (namedArguments, context) {
-                    if(!MemberExpression.RegexValues.Property.test(_this.MemberName)) {
-                        throw "Invalid property name: " + _this.MemberName;
-                    }
-                    var base = expression(namedArguments, context);
-                    if(MemberExpression.RegexValues.IndexedProperty.test(_this.MemberName)) {
-                        var property = _this.MemberName.substr(0, _this.MemberName.indexOf("[") - 1);
-                        var index = MemberExpression.RegexValues.Property.exec(_this.MemberName)[0];
-                        index = parseInt(index.substring(1, index.length - 1));
-                        base = base[property];
-                        if(base == null) {
-                            return null;
-                        }
-                        return base[index];
-                    }
-                    return base[_this.MemberName];
-                };
-            };
-            return MemberExpression;
-        })(Expressions.Expression);
-        Expressions.MemberExpression = MemberExpression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __BTF;
-(function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
-    (function (Expressions) {
-        var MethodCallExpression = (function (_super) {
-            __extends(MethodCallExpression, _super);
-            function MethodCallExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Object",
-                    inputType: "object"
-                }, {
-                    inputName: "Arguments",
-                    inputConstructor: Array
-                }, {
-                    inputName: "MethodName",
-                    inputConstructor: String
-                }, {
-                    inputName: "MethodFullName",
-                    inputConstructor: String
-                });
-                this.Object = Expressions.Expression.CreateExpression(meta.Object);
-                this.Arguments = linq(meta.Arguments).Select(function (a) {
-                    return Expressions.Expression.CreateExpression(a);
-                }).Result;
-                this.MethodName = meta.MethodName;
-                this.MethodFullName = meta.MethodFullName;
-            }
-            MethodCallExpression.prototype._Compile = function () {
-                throw "Not implemented";
-            };
-            return MethodCallExpression;
-        })(Expressions.Expression);
-        Expressions.MethodCallExpression = MethodCallExpression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __BTF;
-(function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
-    (function (Expressions) {
-        var ParameterExpression = (function (_super) {
-            __extends(ParameterExpression, _super);
-            function ParameterExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Name",
-                    inputConstructor: String
-                });
-                this.Name = meta.Name;
-            }
-            ParameterExpression.prototype._Compile = function () {
-                var _this = this;
-                return function (namedArguments, context) {
-                    return namedArguments[_this.Name];
-                };
-            };
-            return ParameterExpression;
-        })(Expressions.Expression);
-        Expressions.ParameterExpression = ParameterExpression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __BTF;
-(function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
-    (function (Expressions) {
-        var UnaryExpression = (function (_super) {
-            __extends(UnaryExpression, _super);
-            function UnaryExpression(meta) {
-                        _super.call(this, meta);
-                __BTF.Sanitizer.Require(meta, {
-                    inputName: "Operand",
-                    inputType: "object"
-                });
-                this.Operand = Expressions.Expression.CreateExpression(meta.Operand);
-            }
-            UnaryExpression.OperatorDictionary = [];
-            UnaryExpression.prototype._Compile = function () {
-                var _this = this;
-                var operand = this.Operand.Compile();
-                return function (namedArguments, context) {
-                    return UnaryExpression.OperatorDictionary[_this.NodeType](operand(namedArguments, context));
-                };
-            };
-            return UnaryExpression;
-        })(Expressions.Expression);
-        Expressions.UnaryExpression = UnaryExpression;        
-    })(__BTF.Expressions || (__BTF.Expressions = {}));
-    var Expressions = __BTF.Expressions;
-})(__BTF || (__BTF = {}));
-
-
-var __BTF;
-(function (__BTF) {
-    (function (Validation) {
-        var ExpressionInvoker = (function () {
-            function ExpressionInvoker(Logic, AffectedProperties) {
-                this.Logic = Logic;
-                this.AffectedProperties = AffectedProperties;
-            }
-            return ExpressionInvoker;
-        })();
-        Validation.ExpressionInvoker = ExpressionInvoker;        
-    })(__BTF.Validation || (__BTF.Validation = {}));
-    var Validation = __BTF.Validation;
-})(__BTF || (__BTF = {}));
-
-
-var __BTF;
-(function (__BTF) {
-    (function (Validation) {
-        var ValidationContext = (function () {
-            function ValidationContext() { }
-            ValidationContext.prototype.Break = function () {
-                return false;
-            };
-            return ValidationContext;
-        })();
-        Validation.ValidationContext = ValidationContext;        
-    })(__BTF.Validation || (__BTF.Validation = {}));
-    var Validation = __BTF.Validation;
-})(__BTF || (__BTF = {}));
-
-
 
 /*
     Basics:
@@ -1376,4 +413,637 @@ var __BTF;
         return this;
     };
 })(window);
+
+var __BTF;
+(function (__BTF) {
+    (function (Meta) {
+        (function (ExpressionWrapperType) {
+            ExpressionWrapperType._map = [];
+            ExpressionWrapperType.Binary = 1;
+            ExpressionWrapperType.Constant = 2;
+            ExpressionWrapperType.Member = 3;
+            ExpressionWrapperType.MethodCall = 4;
+            ExpressionWrapperType.Parameter = 5;
+            ExpressionWrapperType.Unary = 6;
+            ExpressionWrapperType.Default = 7;
+            ExpressionWrapperType.Block = 8;
+            ExpressionWrapperType.Conditional = 9;
+            ExpressionWrapperType.Invocation = 10;
+        })(Meta.ExpressionWrapperType || (Meta.ExpressionWrapperType = {}));
+        var ExpressionWrapperType = Meta.ExpressionWrapperType;
+        (function (ExpressionType) {
+            ExpressionType._map = [];
+            ExpressionType.Add = 0;
+            ExpressionType.AddChecked = 1;
+            ExpressionType.And = 2;
+            ExpressionType.AndAlso = 3;
+            ExpressionType.ArrayLength = 4;
+            ExpressionType.ArrayIndex = 5;
+            ExpressionType.Call = 6;
+            ExpressionType.Coalesce = 7;
+            ExpressionType.Conditional = 8;
+            ExpressionType.Constant = 9;
+            ExpressionType.Convert = 10;
+            ExpressionType.ConvertChecked = 11;
+            ExpressionType.Divide = 12;
+            ExpressionType.Equal = 13;
+            ExpressionType.ExclusiveOr = 14;
+            ExpressionType.GreaterThan = 15;
+            ExpressionType.GreaterThanOrEqual = 16;
+            ExpressionType.Invoke = 17;
+            ExpressionType.Lambda = 18;
+            ExpressionType.LeftShift = 19;
+            ExpressionType.LessThan = 20;
+            ExpressionType.LessThanOrEqual = 21;
+            ExpressionType.ListInit = 22;
+            ExpressionType.MemberAccess = 23;
+            ExpressionType.MemberInit = 24;
+            ExpressionType.Modulo = 25;
+            ExpressionType.Multiply = 26;
+            ExpressionType.MultiplyChecked = 27;
+            ExpressionType.Negate = 28;
+            ExpressionType.UnaryPlus = 29;
+            ExpressionType.NegateChecked = 30;
+            ExpressionType.New = 31;
+            ExpressionType.NewArrayInit = 32;
+            ExpressionType.NewArrayBounds = 33;
+            ExpressionType.Not = 34;
+            ExpressionType.NotEqual = 35;
+            ExpressionType.Or = 36;
+            ExpressionType.OrElse = 37;
+            ExpressionType.Parameter = 38;
+            ExpressionType.Power = 39;
+            ExpressionType.Quote = 40;
+            ExpressionType.RightShift = 41;
+            ExpressionType.Subtract = 42;
+            ExpressionType.SubtractChecked = 43;
+            ExpressionType.TypeAs = 44;
+            ExpressionType.TypeIs = 45;
+            ExpressionType.Assign = 46;
+            ExpressionType.Block = 47;
+            ExpressionType.DebugInfo = 48;
+            ExpressionType.Decrement = 49;
+            ExpressionType.Dynamic = 50;
+            ExpressionType.Default = 51;
+            ExpressionType.Extension = 52;
+            ExpressionType.Goto = 53;
+            ExpressionType.Increment = 54;
+            ExpressionType.Index = 55;
+            ExpressionType.Label = 56;
+            ExpressionType.RuntimeVariables = 57;
+            ExpressionType.Loop = 58;
+            ExpressionType.Switch = 59;
+            ExpressionType.Throw = 60;
+            ExpressionType.Try = 61;
+            ExpressionType.Unbox = 62;
+            ExpressionType.AddAssign = 63;
+            ExpressionType.AndAssign = 64;
+            ExpressionType.DivideAssign = 65;
+            ExpressionType.ExclusiveOrAssign = 66;
+            ExpressionType.LeftShiftAssign = 67;
+            ExpressionType.ModuloAssign = 68;
+            ExpressionType.MultiplyAssign = 69;
+            ExpressionType.OrAssign = 70;
+            ExpressionType.PowerAssign = 71;
+            ExpressionType.RightShiftAssign = 72;
+            ExpressionType.SubtractAssign = 73;
+            ExpressionType.AddAssignChecked = 74;
+            ExpressionType.MultiplyAssignChecked = 75;
+            ExpressionType.SubtractAssignChecked = 76;
+            ExpressionType.PreIncrementAssign = 77;
+            ExpressionType.PreDecrementAssign = 78;
+            ExpressionType.PostIncrementAssign = 79;
+            ExpressionType.PostDecrementAssign = 80;
+            ExpressionType.TypeEqual = 81;
+            ExpressionType.OnesComplement = 82;
+            ExpressionType.IsTrue = 83;
+            ExpressionType.IsFalse = 84;
+        })(Meta.ExpressionType || (Meta.ExpressionType = {}));
+        var ExpressionType = Meta.ExpressionType;
+    })(__BTF.Meta || (__BTF.Meta = {}));
+    var Meta = __BTF.Meta;
+})(__BTF || (__BTF = {}));
+
+
+var __BTF;
+(function (__BTF) {
+    (function (Expressions) {
+        var Expression = (function () {
+            function Expression(meta) {
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "NodeType",
+                    inputConstructor: Number
+                }, {
+                    inputName: "ExpressionType",
+                    inputConstructor: Number
+                });
+                this.NodeType = meta.NodeType;
+                this.ExpressionType = meta.ExpressionType;
+            }
+            Expression.prototype.Compile = function () {
+                if(!this._Compiled) {
+                    var compiled = this._Compile();
+                    this._Compiled = function (item, context) {
+                        if(!context.Break()) {
+                            compiled(item, context);
+                        }
+                    };
+                }
+                return this._Compiled;
+            };
+            Expression.prototype._Compile = function () {
+                throw "Invalid operation";
+            };
+            Expression.prototype.GetAffectedProperties = function () {
+                return [];
+            };
+            Expression.ExpressionConstructorDictionary = (function () {
+                var dictionary = {
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Binary] = function (meta) {
+                    return new __BTF.Expressions.BinaryExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Block] = function (meta) {
+                    return new __BTF.Expressions.BlockExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Conditional] = function (meta) {
+                    return new __BTF.Expressions.ConditionalExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Constant] = function (meta) {
+                    return new __BTF.Expressions.ConstantExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Default] = function (meta) {
+                    return new __BTF.Expressions.DefaultExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Member] = function (meta) {
+                    return new __BTF.Expressions.MemberExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.MethodCall] = function (meta) {
+                    return new __BTF.Expressions.MethodCallExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Parameter] = function (meta) {
+                    return new __BTF.Expressions.ParameterExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Unary] = function (meta) {
+                    return new __BTF.Expressions.UnaryExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Invocation] = function (meta) {
+                    return new __BTF.Expressions.InvocationExpression(meta);
+                };
+                return dictionary;
+            })();
+            Expression.CreateExpression = function CreateExpression(meta) {
+                if(Expression.ExpressionConstructorDictionary[meta.ExpressionType]) {
+                    return Expression.ExpressionConstructorDictionary[meta.ExpressionType](meta);
+                }
+                throw "Invalid expression type";
+            };
+            return Expression;
+        })();
+        Expressions.Expression = Expression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __BTF;
+(function (__BTF) {
+    __BTF.Initialize = function (data) {
+    };
+    var Sanitizer = (function () {
+        function Sanitizer() { }
+        Sanitizer.Require = function Require(item) {
+            var properties = [];
+            for (var _i = 0; _i < (arguments.length - 1); _i++) {
+                properties[_i] = arguments[_i + 1];
+            }
+            if(item == null) {
+                throw "Item must have a value";
+            }
+            for(var i = 0, ii = properties.length; i < ii; i++) {
+                var prop = properties[i];
+                if(prop.allowNull && item[prop.inputName] == null) {
+                    return;
+                }
+                if(!prop.allowNull && item[prop.inputName] == null) {
+                    throw "Property " + prop.inputName + " cannot be null";
+                }
+                if(prop.inputType && typeof item[prop.inputName] !== prop.inputType) {
+                    throw "Property " + prop.inputName + " must be of type " + prop.inputType;
+                }
+                if(prop.inputConstructor && item[prop.inputName].constructor !== prop.inputConstructor) {
+                    throw {
+                        message: "Property " + prop.inputName + " must be of a give type",
+                        type: prop.inputConstructor
+                    };
+                }
+            }
+        };
+        return Sanitizer;
+    })();
+    __BTF.Sanitizer = Sanitizer;    
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    var Validation = __BTF.Validation;
+    var Meta = __BTF.Meta;
+    (function (Expressions) {
+        var BinaryExpression = (function (_super) {
+            __extends(BinaryExpression, _super);
+            function BinaryExpression(meta) {
+                        _super.call(this, meta);
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Left",
+                    inputType: "object"
+                }, {
+                    inputName: "Right",
+                    inputType: "object"
+                });
+                if(!BinaryExpression.OperatorDictionary[this.NodeType]) {
+                    throw "Invalid Operator";
+                }
+                this.Left = Expressions.Expression.CreateExpression(meta.Left);
+                this.Right = Expressions.Expression.CreateExpression(meta.Right);
+            }
+            BinaryExpression.OperatorDictionary = [];
+            BinaryExpression.prototype._Compile = function () {
+                var _this = this;
+                var left = this.Left.Compile();
+                var right = this.Right.Compile();
+                return function (namedArguments, context) {
+                    return BinaryExpression.OperatorDictionary[_this.NodeType](left(namedArguments, context), right(namedArguments, context));
+                };
+            };
+            return BinaryExpression;
+        })(Expressions.Expression);
+        Expressions.BinaryExpression = BinaryExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    (function (Expressions) {
+        var BlockExpression = (function (_super) {
+            __extends(BlockExpression, _super);
+            function BlockExpression(meta) {
+                        _super.call(this, meta);
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Expressions",
+                    inputConstructor: Array
+                });
+                this.Expressions = linq(meta.Expressions).Select(function (a) {
+                    return Expressions.Expression.CreateExpression(a);
+                }).Result;
+            }
+            BlockExpression.prototype._Compile = function () {
+                var children = linq(this.Expressions).Select(function (a) {
+                    return a.Compile();
+                }).Result;
+                return function (namedArguments, context) {
+                    return linq(children).Each(function (a) {
+                        return a(namedArguments, context);
+                    });
+                };
+            };
+            return BlockExpression;
+        })(Expressions.Expression);
+        Expressions.BlockExpression = BlockExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    (function (Expressions) {
+        var ConditionalExpression = (function (_super) {
+            __extends(ConditionalExpression, _super);
+            function ConditionalExpression(meta) {
+                        _super.call(this, meta);
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "IfTrue",
+                    inputType: "object"
+                }, {
+                    inputName: "IfFalse",
+                    inputType: "object"
+                }, {
+                    inputName: "Test",
+                    inputType: "object"
+                });
+                this.IfTrue = Expressions.Expression.CreateExpression(meta.IfTrue);
+                this.IfFalse = Expressions.Expression.CreateExpression(meta.IfFalse);
+                this.Test = Expressions.Expression.CreateExpression(meta.Test);
+            }
+            ConditionalExpression.prototype._Compile = function () {
+                var test = this.Test.Compile();
+                var ifTrue = this.IfTrue.Compile();
+                var ifFalse = this.IfFalse.Compile();
+                return function (namedArguments, context) {
+                    return test(namedArguments, context) ? ifTrue(namedArguments, context) : ifFalse(namedArguments, context);
+                };
+            };
+            return ConditionalExpression;
+        })(Expressions.Expression);
+        Expressions.ConditionalExpression = ConditionalExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    (function (Expressions) {
+        var ConstantExpression = (function (_super) {
+            __extends(ConstantExpression, _super);
+            function ConstantExpression(meta) {
+                        _super.call(this, meta);
+            }
+            ConstantExpression.prototype._Compile = function () {
+                return function (namedArguments, context) {
+                    return null;
+                };
+            };
+            return ConstantExpression;
+        })(Expressions.Expression);
+        Expressions.ConstantExpression = ConstantExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    (function (Expressions) {
+        var DefaultExpression = (function (_super) {
+            __extends(DefaultExpression, _super);
+            function DefaultExpression(meta) {
+                        _super.call(this, meta);
+            }
+            DefaultExpression.prototype._Compile = function () {
+                return function (namedArguments, context) {
+                    return null;
+                };
+            };
+            return DefaultExpression;
+        })(Expressions.Expression);
+        Expressions.DefaultExpression = DefaultExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    (function (Expressions) {
+        var InvocationExpression = (function (_super) {
+            __extends(InvocationExpression, _super);
+            function InvocationExpression(meta) {
+                        _super.call(this, meta);
+            }
+            InvocationExpression.prototype._Compile = function () {
+                return function (namedArguments, context) {
+                    return null;
+                };
+            };
+            return InvocationExpression;
+        })(Expressions.Expression);
+        Expressions.InvocationExpression = InvocationExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    (function (Expressions) {
+        var MemberExpression = (function (_super) {
+            __extends(MemberExpression, _super);
+            function MemberExpression(meta) {
+                        _super.call(this, meta);
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Expression",
+                    inputType: "object"
+                }, {
+                    inputName: "MemberName",
+                    inputConstructor: String
+                });
+                this.Expression = Expressions.Expression.CreateExpression(meta.Expression);
+                this.MemberName = meta.MemberName;
+            }
+            MemberExpression.RegexValues = (function () {
+                var index = "\\[[0-9]+\\]";
+                var indexedProperty = "[_a-zA-Z][_a-zA-Z0-9]*(" + index + ")?";
+                return {
+                    IndexedProperty: new RegExp(index + "$"),
+                    Property: new RegExp("^" + indexedProperty + "$")
+                };
+            })();
+            MemberExpression.prototype._Compile = function () {
+                var _this = this;
+                var expression = this.Expression.Compile();
+                return function (namedArguments, context) {
+                    if(!MemberExpression.RegexValues.Property.test(_this.MemberName)) {
+                        throw "Invalid property name: " + _this.MemberName;
+                    }
+                    var base = expression(namedArguments, context);
+                    if(MemberExpression.RegexValues.IndexedProperty.test(_this.MemberName)) {
+                        var property = _this.MemberName.substr(0, _this.MemberName.indexOf("[") - 1);
+                        var index = MemberExpression.RegexValues.Property.exec(_this.MemberName)[0];
+                        index = parseInt(index.substring(1, index.length - 1));
+                        base = base[property];
+                        if(base == null) {
+                            return null;
+                        }
+                        return base[index];
+                    }
+                    return base[_this.MemberName];
+                };
+            };
+            return MemberExpression;
+        })(Expressions.Expression);
+        Expressions.MemberExpression = MemberExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    (function (Expressions) {
+        var MethodCallExpression = (function (_super) {
+            __extends(MethodCallExpression, _super);
+            function MethodCallExpression(meta) {
+                        _super.call(this, meta);
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Object",
+                    inputType: "object"
+                }, {
+                    inputName: "Arguments",
+                    inputConstructor: Array
+                }, {
+                    inputName: "MethodName",
+                    inputConstructor: String
+                }, {
+                    inputName: "MethodFullName",
+                    inputConstructor: String
+                });
+                this.Object = Expressions.Expression.CreateExpression(meta.Object);
+                this.Arguments = linq(meta.Arguments).Select(function (a) {
+                    return Expressions.Expression.CreateExpression(a);
+                }).Result;
+                this.MethodName = meta.MethodName;
+                this.MethodFullName = meta.MethodFullName;
+            }
+            MethodCallExpression.prototype._Compile = function () {
+                throw "Not implemented";
+            };
+            return MethodCallExpression;
+        })(Expressions.Expression);
+        Expressions.MethodCallExpression = MethodCallExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    (function (Expressions) {
+        var ParameterExpression = (function (_super) {
+            __extends(ParameterExpression, _super);
+            function ParameterExpression(meta) {
+                        _super.call(this, meta);
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Name",
+                    inputConstructor: String
+                });
+                this.Name = meta.Name;
+            }
+            ParameterExpression.prototype._Compile = function () {
+                var _this = this;
+                return function (namedArguments, context) {
+                    return namedArguments[_this.Name];
+                };
+            };
+            return ParameterExpression;
+        })(Expressions.Expression);
+        Expressions.ParameterExpression = ParameterExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    (function (Expressions) {
+        var UnaryExpression = (function (_super) {
+            __extends(UnaryExpression, _super);
+            function UnaryExpression(meta) {
+                        _super.call(this, meta);
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Operand",
+                    inputType: "object"
+                });
+                this.Operand = Expressions.Expression.CreateExpression(meta.Operand);
+            }
+            UnaryExpression.OperatorDictionary = [];
+            UnaryExpression.prototype._Compile = function () {
+                var _this = this;
+                var operand = this.Operand.Compile();
+                return function (namedArguments, context) {
+                    return UnaryExpression.OperatorDictionary[_this.NodeType](operand(namedArguments, context));
+                };
+            };
+            return UnaryExpression;
+        })(Expressions.Expression);
+        Expressions.UnaryExpression = UnaryExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __BTF;
+(function (__BTF) {
+    (function (Validation) {
+        var ExpressionInvoker = (function () {
+            function ExpressionInvoker(Logic, AffectedProperties) {
+                this.Logic = Logic;
+                this.AffectedProperties = AffectedProperties;
+            }
+            return ExpressionInvoker;
+        })();
+        Validation.ExpressionInvoker = ExpressionInvoker;        
+    })(__BTF.Validation || (__BTF.Validation = {}));
+    var Validation = __BTF.Validation;
+})(__BTF || (__BTF = {}));
+
+
+var __BTF;
+(function (__BTF) {
+    (function (Validation) {
+        var ValidationContext = (function () {
+            function ValidationContext() { }
+            ValidationContext.prototype.Break = function () {
+                return false;
+            };
+            return ValidationContext;
+        })();
+        Validation.ValidationContext = ValidationContext;        
+    })(__BTF.Validation || (__BTF.Validation = {}));
+    var Validation = __BTF.Validation;
+})(__BTF || (__BTF = {}));
+
 

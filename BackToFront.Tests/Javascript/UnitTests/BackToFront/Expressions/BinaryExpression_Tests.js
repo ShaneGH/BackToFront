@@ -168,4 +168,4 @@ test("Warmup", function () { expect(0); });
             }
         });
     })("CreateExpression, inalid");
-})("__BTF.Expressions.Expression");
+})("__BTF.Expressions.BinaryExpression");

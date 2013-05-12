@@ -1,9 +1,6 @@
 var __BTF;
 (function (__BTF) {
     (function (Expressions) {
-        var E = __BTF.Expressions;
-        var Validation = __BTF.Validation;
-        var Meta = __BTF.Meta;
         var Expression = (function () {
             function Expression(meta) {
                 __BTF.Sanitizer.Require(meta, {
@@ -33,26 +30,44 @@ var __BTF;
             Expression.prototype.GetAffectedProperties = function () {
                 return [];
             };
+            Expression.ExpressionConstructorDictionary = (function () {
+                var dictionary = {
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Binary] = function (meta) {
+                    return new __BTF.Expressions.BinaryExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Block] = function (meta) {
+                    return new __BTF.Expressions.BlockExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Conditional] = function (meta) {
+                    return new __BTF.Expressions.ConditionalExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Constant] = function (meta) {
+                    return new __BTF.Expressions.ConstantExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Default] = function (meta) {
+                    return new __BTF.Expressions.DefaultExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Member] = function (meta) {
+                    return new __BTF.Expressions.MemberExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.MethodCall] = function (meta) {
+                    return new __BTF.Expressions.MethodCallExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Parameter] = function (meta) {
+                    return new __BTF.Expressions.ParameterExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Unary] = function (meta) {
+                    return new __BTF.Expressions.UnaryExpression(meta);
+                };
+                dictionary[__BTF.Meta.ExpressionWrapperType.Invocation] = function (meta) {
+                    return new __BTF.Expressions.InvocationExpression(meta);
+                };
+                return dictionary;
+            })();
             Expression.CreateExpression = function CreateExpression(meta) {
-                switch(meta.ExpressionType) {
-                    case Meta.ExpressionWrapperType.Binary:
-                        return new E.BinaryExpression(meta);
-                    case Meta.ExpressionWrapperType.Block:
-                        return new E.BlockExpression(meta);
-                    case Meta.ExpressionWrapperType.Conditional:
-                        return new E.ConditionalExpression(meta);
-                    case Meta.ExpressionWrapperType.Constant:
-                        return new E.ConstantExpression(meta);
-                    case Meta.ExpressionWrapperType.Default:
-                        return new E.DefaultExpression(meta);
-                    case Meta.ExpressionWrapperType.Member:
-                        return new E.MemberExpression(meta);
-                    case Meta.ExpressionWrapperType.MethodCall:
-                        return new E.MethodCallExpression(meta);
-                    case Meta.ExpressionWrapperType.Parameter:
-                        return new E.ParameterExpression(meta);
-                    case Meta.ExpressionWrapperType.Unary:
-                        return new E.UnaryExpression(meta);
+                if(Expression.ExpressionConstructorDictionary[meta.ExpressionType]) {
+                    return Expression.ExpressionConstructorDictionary[meta.ExpressionType](meta);
                 }
                 throw "Invalid expression type";
             };

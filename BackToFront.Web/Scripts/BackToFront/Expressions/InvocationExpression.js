@@ -6,19 +6,19 @@ var __extends = this.__extends || function (d, b) {
 var __BTF;
 (function (__BTF) {
     (function (Expressions) {
-        var DefaultExpression = (function (_super) {
-            __extends(DefaultExpression, _super);
-            function DefaultExpression(meta) {
+        var InvocationExpression = (function (_super) {
+            __extends(InvocationExpression, _super);
+            function InvocationExpression(meta) {
                         _super.call(this, meta);
             }
-            DefaultExpression.prototype._Compile = function () {
+            InvocationExpression.prototype._Compile = function () {
                 return function (namedArguments, context) {
                     return null;
                 };
             };
-            return DefaultExpression;
+            return InvocationExpression;
         })(Expressions.Expression);
-        Expressions.DefaultExpression = DefaultExpression;        
+        Expressions.InvocationExpression = InvocationExpression;        
     })(__BTF.Expressions || (__BTF.Expressions = {}));
     var Expressions = __BTF.Expressions;
 })(__BTF || (__BTF = {}));

@@ -22,16 +22,11 @@
 module __BTF {
 
     export module Expressions {
-
-        import E = __BTF.Expressions;
-        import Validation = __BTF.Validation;
-        import Meta = __BTF.Meta;
-
         export class Expression {
-            NodeType: Meta.ExpressionType;
-            ExpressionType: Meta.ExpressionWrapperType;
+            NodeType: __BTF.Meta.ExpressionType;
+            ExpressionType: __BTF.Meta.ExpressionWrapperType;
 
-            constructor(meta: Meta.ExpressionMeta) {
+            constructor(meta: __BTF.Meta.ExpressionMeta) {
                 __BTF.Sanitizer.Require(meta, {
                     inputName: "NodeType",
                     inputConstructor: Number
@@ -44,8 +39,8 @@ module __BTF {
                 this.ExpressionType = meta.ExpressionType;
             }
 
-            private _Compiled: Validation.ExpressionInvokerAction;
-            Compile(): Validation.ExpressionInvokerAction {
+            private _Compiled: __BTF.Validation.ExpressionInvokerAction;
+            Compile(): __BTF.Validation.ExpressionInvokerAction {
                 if (!this._Compiled) {
                     var compiled = this._Compile();
                     this._Compiled = (item, context) => {
@@ -57,34 +52,32 @@ module __BTF {
                 return this._Compiled;
             }
 
-            _Compile(): Validation.ExpressionInvokerAction {
-                // child classes must override this
+            // abstract
+            _Compile(): __BTF.Validation.ExpressionInvokerAction {
                 throw "Invalid operation";
             }
 
-            GetAffectedProperties(): string[] { return []; }
+            GetAffectedProperties(): string[]{ return []; }
 
-            static CreateExpression(meta: Meta.ExpressionMeta): Expression {
-                switch (meta.ExpressionType) {
-                    case Meta.ExpressionWrapperType.Binary:
-                        return new E.BinaryExpression(<Meta.BinaryExpressionMeta>meta);
-                    case Meta.ExpressionWrapperType.Block:
-                        return new E.BlockExpression(<Meta.BlockExpressionMeta>meta);
-                    case Meta.ExpressionWrapperType.Conditional:
-                        return new E.ConditionalExpression(<Meta.ConditionalExpressionMeta>meta);
-                    case Meta.ExpressionWrapperType.Constant:
-                        return new E.ConstantExpression(<Meta.ConstantExpressionMeta>meta);
-                    case Meta.ExpressionWrapperType.Default:
-                        return new E.DefaultExpression(<Meta.ExpressionMeta>meta);
-                    case Meta.ExpressionWrapperType.Member:
-                        return new E.MemberExpression(<Meta.MemberExpressionMeta>meta);
-                    case Meta.ExpressionWrapperType.MethodCall:
-                        return new E.MethodCallExpression(<Meta.MethodCallExpressionMeta>meta);
-                    case Meta.ExpressionWrapperType.Parameter:
-                        return new E.ParameterExpression(<Meta.ParameterExpressionMeta>meta);
-                    case Meta.ExpressionWrapperType.Unary:
-                        return new E.UnaryExpression(<Meta.UnaryExpressionMeta>meta);
-                }
+            static ExpressionConstructorDictionary = (function () {
+                var dictionary = {};
+                dictionary[__BTF.Meta.ExpressionWrapperType.Binary] = meta => new __BTF.Expressions.BinaryExpression(meta);
+                dictionary[__BTF.Meta.ExpressionWrapperType.Block] = meta => new __BTF.Expressions.BlockExpression(meta);
+                dictionary[__BTF.Meta.ExpressionWrapperType.Conditional] = meta => new __BTF.Expressions.ConditionalExpression(meta);
+                dictionary[__BTF.Meta.ExpressionWrapperType.Constant] = meta => new __BTF.Expressions.ConstantExpression(meta);
+                dictionary[__BTF.Meta.ExpressionWrapperType.Default] = meta => new __BTF.Expressions.DefaultExpression(meta);
+                dictionary[__BTF.Meta.ExpressionWrapperType.Member] = meta => new __BTF.Expressions.MemberExpression(meta);
+                dictionary[__BTF.Meta.ExpressionWrapperType.MethodCall] = meta => new __BTF.Expressions.MethodCallExpression(meta);
+                dictionary[__BTF.Meta.ExpressionWrapperType.Parameter] = meta => new __BTF.Expressions.ParameterExpression(meta);
+                dictionary[__BTF.Meta.ExpressionWrapperType.Unary] = meta => new __BTF.Expressions.UnaryExpression(meta);
+                dictionary[__BTF.Meta.ExpressionWrapperType.Invocation] = meta => new __BTF.Expressions.InvocationExpression(meta);
+
+                return dictionary;                
+            })();
+
+            static CreateExpression(meta: __BTF.Meta.ExpressionMeta): Expression {
+                if (Expression.ExpressionConstructorDictionary[meta.ExpressionType])
+                    return Expression.ExpressionConstructorDictionary[meta.ExpressionType](meta);
 
                 throw "Invalid expression type";
             }

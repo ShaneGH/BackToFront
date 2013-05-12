@@ -3,9 +3,6 @@
 /// <reference path="Expression.ts" />
 
 module __BTF {
-    import Validation = __BTF.Validation;
-    import Meta = __BTF.Meta;
-
     export module Expressions {
 
         export class UnaryExpression extends Expression {

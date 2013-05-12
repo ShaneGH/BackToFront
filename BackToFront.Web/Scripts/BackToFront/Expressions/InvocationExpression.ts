@@ -1,16 +1,18 @@
+
 /// <reference path="../Sanitizer.ts" />
 /// <reference path="Expression.ts" />
 
 module __BTF {
     export module Expressions {
 
-        export class ConstantExpression extends Expression {
-            constructor(meta: Meta.ConstantExpressionMeta) {
+        //TODO
+        export class InvocationExpression extends Expression {
+            constructor(meta: Meta.ConditionalExpressionMeta) {
                 super(meta);
             }
 
-            //TODO
             _Compile(): Validation.ExpressionInvokerAction {
+
                 return (namedArguments, context) => null;
             }
         }
