@@ -5,14 +5,35 @@ var __BTF;
 (function (__BTF) {
     __BTF.Initialize = function (data) {
     };
-    var TestClass = (function () {
-        function TestClass() { }
-        TestClass.prototype.Test = function () {
-            return true;
+    var Sanitizer = (function () {
+        function Sanitizer() { }
+        Sanitizer.Require = function Require(item) {
+            var properties = [];
+            for (var _i = 0; _i < (arguments.length - 1); _i++) {
+                properties[_i] = arguments[_i + 1];
+            }
+            if(item == null) {
+                throw "Item must have a value";
+            }
+            for(var i = 0, ii = properties.length; i < ii; i++) {
+                var prop = properties[i];
+                if(!prop.allowNull && item[prop.inputName] == null) {
+                    throw "Property " + prop.inputName + " cannot be null";
+                }
+                if(prop.inputType && typeof item[prop.inputName] !== prop.inputType) {
+                    throw "Property " + prop.inputName + " must be of type " + prop.inputType;
+                }
+                if(prop.inputConstructor && item[prop.inputName].constructor !== prop.inputConstructor) {
+                    throw {
+                        message: "Property " + prop.inputName + " must be of a give type",
+                        type: prop.inputConstructor
+                    };
+                }
+            }
         };
-        return TestClass;
+        return Sanitizer;
     })();
-    __BTF.TestClass = TestClass;    
+    __BTF.Sanitizer = Sanitizer;    
 })(__BTF || (__BTF = {}));
 
 
@@ -28,25 +49,16 @@ var __BTF;
     (function (Expressions) {
         var Expression = (function () {
             function Expression(meta) {
-                this.Required(meta, "NodeType", "ExpressionType");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "NodeType",
+                    inputConstructor: Number
+                }, {
+                    inputName: "ExpressionType",
+                    inputConstructor: Number
+                });
                 this.NodeType = meta.NodeType;
                 this.ExpressionType = meta.ExpressionType;
             }
-            Expression.prototype.Required = function (item) {
-                var properties = [];
-                for (var _i = 0; _i < (arguments.length - 1); _i++) {
-                    properties[_i] = arguments[_i + 1];
-                }
-                if(item == null) {
-                    throw "Item must have a value";
-                }
-                var failure = linq(properties).First(function (a) {
-                    return item[a] == null;
-                });
-                if(failure == null) {
-                    throw failure + " cannot be null";
-                }
-            };
             Expression.prototype.Compile = function () {
                 if(!this._Compiled) {
                     var compiled = this._Compile();
@@ -94,7 +106,13 @@ var __BTF;
             __extends(BinaryExpression, _super);
             function BinaryExpression(meta) {
                         _super.call(this, meta);
-                this.Required(meta, "Left", "Right");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Left",
+                    inputType: "object"
+                }, {
+                    inputName: "Right",
+                    inputType: "object"
+                });
                 if(!BinaryExpression.OperatorDictionary[this.NodeType]) {
                     throw "Invalid Operator";
                 }
@@ -117,7 +135,10 @@ var __BTF;
             __extends(BlockExpression, _super);
             function BlockExpression(meta) {
                         _super.call(this, meta);
-                this.Required(meta, "Expressions");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Expressions",
+                    inputConstructor: Array
+                });
                 this.Expressions = linq(meta.Expressions).Select(function (a) {
                     return Expression.CreateExpression(a);
                 }).Result;
@@ -139,7 +160,16 @@ var __BTF;
             __extends(ConditionalExpression, _super);
             function ConditionalExpression(meta) {
                         _super.call(this, meta);
-                this.Required(meta, "IfTrue", "IfFalse", "Test");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "IfTrue",
+                    inputType: "object"
+                }, {
+                    inputName: "IfFalse",
+                    inputType: "object"
+                }, {
+                    inputName: "Test",
+                    inputType: "object"
+                });
                 this.IfTrue = Expression.CreateExpression(meta.IfTrue);
                 this.IfFalse = Expression.CreateExpression(meta.IfFalse);
                 this.Test = Expression.CreateExpression(meta.Test);
@@ -185,7 +215,13 @@ var __BTF;
             __extends(MemberExpression, _super);
             function MemberExpression(meta) {
                         _super.call(this, meta);
-                this.Required(meta, "Expression", "MemberName", "Test");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Expression",
+                    inputType: "object"
+                }, {
+                    inputName: "MemberName",
+                    inputConstructor: String
+                });
                 this.Expression = Expression.CreateExpression(meta.Expression);
                 this.MemberName = meta.MemberName;
             }
@@ -225,7 +261,19 @@ var __BTF;
             __extends(MethodCallExpression, _super);
             function MethodCallExpression(meta) {
                         _super.call(this, meta);
-                this.Required(meta, "Object", "Arguments", "MethodName", "MethodFullName");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Object",
+                    inputType: "object"
+                }, {
+                    inputName: "Arguments",
+                    inputConstructor: Array
+                }, {
+                    inputName: "MethodName",
+                    inputConstructor: String
+                }, {
+                    inputName: "MethodFullName",
+                    inputConstructor: String
+                });
                 this.Object = Expression.CreateExpression(meta.Object);
                 this.Arguments = linq(meta.Arguments).Select(function (a) {
                     return Expression.CreateExpression(a);
@@ -243,7 +291,10 @@ var __BTF;
             __extends(ParameterExpression, _super);
             function ParameterExpression(meta) {
                         _super.call(this, meta);
-                this.Required(meta, "Name");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Name",
+                    inputConstructor: String
+                });
                 this.Name = meta.Name;
             }
             ParameterExpression.prototype._Compile = function () {
@@ -259,7 +310,10 @@ var __BTF;
             __extends(UnaryExpression, _super);
             function UnaryExpression(meta) {
                         _super.call(this, meta);
-                this.Required(meta, "Operand");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Operand",
+                    inputType: "object"
+                });
                 this.Operand = Expression.CreateExpression(meta.Operand);
             }
             UnaryExpression.OperatorDictionary = [];

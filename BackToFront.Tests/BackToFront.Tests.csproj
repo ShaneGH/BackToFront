@@ -234,7 +234,8 @@
     <TypeScriptCompile Include="Javascript\Scripts\qUnit.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Javascript\UnitTests\BackToFront.js" />
+    <Content Include="Javascript\UnitTests\BackToFront.Core_Test.js" />
+    <Content Include="Javascript\UnitTests\BackToFront.Expressions_Test.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -17,21 +17,16 @@ module __BTF {
             ExpressionType: Meta.ExpressionWrapperType;
 
             constructor(meta: Meta.ExpressionMeta) {
-                this.Required(meta, "NodeType", "ExpressionType");
+                __BTF.Sanitizer.Require(meta, {
+                        inputName: "NodeType",
+                        inputConstructor: Number
+                    }, {
+                        inputName: "ExpressionType",
+                        inputConstructor: Number
+                    });
 
                 this.NodeType = meta.NodeType;
                 this.ExpressionType = meta.ExpressionType;
-            }
-
-            Required(item: any, ...properties: string[]) {
-                if (item == null) {
-                    throw "Item must have a value";
-                }
-
-                var failure = linq(properties).First(a => item[a] == null);
-                if (failure == null) {
-                    throw failure + " cannot be null";
-                }
             }
 
             private _Compiled: Validation.ExpressionInvokerAction;
@@ -48,7 +43,7 @@ module __BTF {
             }
 
             _Compile(): Validation.ExpressionInvokerAction {
-                // child classes must implement this
+                // child classes must override this
                 throw "Invalid operation";
             }
 
@@ -89,7 +84,14 @@ module __BTF {
             constructor(meta: Meta.BinaryExpressionMeta) {
                 super(meta);
 
-                this.Required(meta, "Left", "Right");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Left",
+                    inputType: "object"
+                }, {
+                    inputName: "Right",
+                    inputType: "object"
+                });
+
                 if (!BinaryExpression.OperatorDictionary[this.NodeType])
                     throw "Invalid Operator";
 
@@ -110,7 +112,11 @@ module __BTF {
             constructor(meta: Meta.BlockExpressionMeta) {
                 super(meta);
 
-                this.Required(meta, "Expressions");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Expressions",
+                    inputConstructor: Array
+                });
+
                 this.Expressions = linq(meta.Expressions).Select(a => Expression.CreateExpression(a)).Result;
             }
 
@@ -128,7 +134,17 @@ module __BTF {
             constructor(meta: Meta.ConditionalExpressionMeta) {
                 super(meta);
 
-                this.Required(meta, "IfTrue", "IfFalse", "Test");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "IfTrue",
+                    inputType: "object"
+                }, {
+                    inputName: "IfFalse",
+                    inputType: "object"
+                }, {
+                    inputName: "Test",
+                    inputType: "object"
+                });
+
                 this.IfTrue = Expression.CreateExpression(meta.IfTrue);
                 this.IfFalse = Expression.CreateExpression(meta.IfFalse);
                 this.Test = Expression.CreateExpression(meta.Test);
@@ -187,7 +203,14 @@ module __BTF {
             constructor(meta: Meta.MemberExpressionMeta) {
                 super(meta);
 
-                this.Required(meta, "Expression", "MemberName", "Test");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Expression",
+                    inputType: "object"
+                }, {
+                    inputName: "MemberName",
+                    inputConstructor: String
+                });
+
                 this.Expression = Expression.CreateExpression(meta.Expression);
                 this.MemberName = meta.MemberName;
             }
@@ -228,7 +251,20 @@ module __BTF {
             constructor(meta: Meta.MethodCallExpressionMeta) {
                 super(meta);
 
-                this.Required(meta, "Object", "Arguments", "MethodName", "MethodFullName");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Object",
+                    inputType: "object"
+                }, {
+                    inputName: "Arguments",
+                    inputConstructor: Array
+                }, {
+                    inputName: "MethodName",
+                    inputConstructor: String
+                }, {
+                    inputName: "MethodFullName",
+                    inputConstructor: String
+                });
+
                 this.Object = Expression.CreateExpression(meta.Object);
                 this.Arguments = linq(meta.Arguments).Select(a => Expression.CreateExpression(a)).Result;
                 this.MethodName = meta.MethodName;
@@ -247,7 +283,11 @@ module __BTF {
             constructor(meta: Meta.ParameterExpressionMeta) {
                 super(meta);
 
-                this.Required(meta, "Name");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Name",
+                    inputConstructor: String
+                });
+
                 this.Name = meta.Name;
             }
 
@@ -265,7 +305,11 @@ module __BTF {
             constructor(meta: Meta.UnaryExpressionMeta) {
                 super(meta);
 
-                this.Required(meta, "Operand");
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Operand",
+                    inputType: "object"
+                });
+
                 this.Operand = Expression.CreateExpression(meta.Operand);
             }
 
