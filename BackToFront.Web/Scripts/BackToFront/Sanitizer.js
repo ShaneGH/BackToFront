@@ -14,6 +14,9 @@ var __BTF;
             }
             for(var i = 0, ii = properties.length; i < ii; i++) {
                 var prop = properties[i];
+                if(prop.allowNull && item[prop.inputName] == null) {
+                    return;
+                }
                 if(!prop.allowNull && item[prop.inputName] == null) {
                     throw "Property " + prop.inputName + " cannot be null";
                 }

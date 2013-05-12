@@ -234,7 +234,7 @@
     <TypeScriptCompile Include="Javascript\Scripts\qUnit.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Javascript\UnitTests\Sanitizer_Tests.js" />
+    <Content Include="Javascript\UnitTests\BackToFront\Sanitizer_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\Expression_Tests.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
