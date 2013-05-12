@@ -1,8 +1,9 @@
 var __BTF;
 (function (__BTF) {
-    var Validation = __BTF.Validation;
-    var Meta = __BTF.Meta;
     (function (Expressions) {
+        var E = __BTF.Expressions;
+        var Validation = __BTF.Validation;
+        var Meta = __BTF.Meta;
         var Expression = (function () {
             function Expression(meta) {
                 __BTF.Sanitizer.Require(meta, {
@@ -34,24 +35,24 @@ var __BTF;
             };
             Expression.CreateExpression = function CreateExpression(meta) {
                 switch(meta.ExpressionType) {
-                    case __BTF.Meta.ExpressionWrapperType.Binary:
-                        return new Expressions.BinaryExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Block:
-                        return new Expressions.BlockExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Conditional:
-                        return new Expressions.ConditionalExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Constant:
-                        return new Expressions.ConstantExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Default:
-                        return new Expressions.DefaultExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Member:
-                        return new Expressions.MemberExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.MethodCall:
-                        return new Expressions.MethodCallExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Parameter:
-                        return new Expressions.ParameterExpression(meta);
-                    case __BTF.Meta.ExpressionWrapperType.Unary:
-                        return new Expressions.UnaryExpression(meta);
+                    case Meta.ExpressionWrapperType.Binary:
+                        return new E.BinaryExpression(meta);
+                    case Meta.ExpressionWrapperType.Block:
+                        return new E.BlockExpression(meta);
+                    case Meta.ExpressionWrapperType.Conditional:
+                        return new E.ConditionalExpression(meta);
+                    case Meta.ExpressionWrapperType.Constant:
+                        return new E.ConstantExpression(meta);
+                    case Meta.ExpressionWrapperType.Default:
+                        return new E.DefaultExpression(meta);
+                    case Meta.ExpressionWrapperType.Member:
+                        return new E.MemberExpression(meta);
+                    case Meta.ExpressionWrapperType.MethodCall:
+                        return new E.MethodCallExpression(meta);
+                    case Meta.ExpressionWrapperType.Parameter:
+                        return new E.ParameterExpression(meta);
+                    case Meta.ExpressionWrapperType.Unary:
+                        return new E.UnaryExpression(meta);
                 }
                 throw "Invalid expression type";
             };

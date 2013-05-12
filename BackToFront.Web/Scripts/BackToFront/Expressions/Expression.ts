@@ -20,10 +20,12 @@
 
 
 module __BTF {
-    import Validation = __BTF.Validation;
-    import Meta = __BTF.Meta;
 
     export module Expressions {
+
+        import E = __BTF.Expressions;
+        import Validation = __BTF.Validation;
+        import Meta = __BTF.Meta;
 
         export class Expression {
             NodeType: Meta.ExpressionType;
@@ -65,23 +67,23 @@ module __BTF {
             static CreateExpression(meta: Meta.ExpressionMeta): Expression {
                 switch (meta.ExpressionType) {
                     case Meta.ExpressionWrapperType.Binary:
-                        return new BinaryExpression(<Meta.BinaryExpressionMeta>meta);
+                        return new E.BinaryExpression(<Meta.BinaryExpressionMeta>meta);
                     case Meta.ExpressionWrapperType.Block:
-                        return new BlockExpression(<Meta.BlockExpressionMeta>meta);
+                        return new E.BlockExpression(<Meta.BlockExpressionMeta>meta);
                     case Meta.ExpressionWrapperType.Conditional:
-                        return new ConditionalExpression(<Meta.ConditionalExpressionMeta>meta);
+                        return new E.ConditionalExpression(<Meta.ConditionalExpressionMeta>meta);
                     case Meta.ExpressionWrapperType.Constant:
-                        return new ConstantExpression(<Meta.ConstantExpressionMeta>meta);
+                        return new E.ConstantExpression(<Meta.ConstantExpressionMeta>meta);
                     case Meta.ExpressionWrapperType.Default:
-                        return new DefaultExpression(<Meta.ExpressionMeta>meta);
+                        return new E.DefaultExpression(<Meta.ExpressionMeta>meta);
                     case Meta.ExpressionWrapperType.Member:
-                        return new MemberExpression(<Meta.MemberExpressionMeta>meta);
+                        return new E.MemberExpression(<Meta.MemberExpressionMeta>meta);
                     case Meta.ExpressionWrapperType.MethodCall:
-                        return new MethodCallExpression(<Meta.MethodCallExpressionMeta>meta);
+                        return new E.MethodCallExpression(<Meta.MethodCallExpressionMeta>meta);
                     case Meta.ExpressionWrapperType.Parameter:
-                        return new ParameterExpression(<Meta.ParameterExpressionMeta>meta);
+                        return new E.ParameterExpression(<Meta.ParameterExpressionMeta>meta);
                     case Meta.ExpressionWrapperType.Unary:
-                        return new UnaryExpression(<Meta.UnaryExpressionMeta>meta);
+                        return new E.UnaryExpression(<Meta.UnaryExpressionMeta>meta);
                 }
 
                 throw "Invalid expression type";

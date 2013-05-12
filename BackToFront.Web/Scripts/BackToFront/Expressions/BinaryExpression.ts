@@ -35,13 +35,13 @@ module __BTF {
 
                 this.Left = Expression.CreateExpression(meta.Left);
                 this.Right = Expression.CreateExpression(meta.Right);
-            }
+            };
 
             _Compile(): Validation.ExpressionInvokerAction {
                 var left = this.Left.Compile();
                 var right = this.Right.Compile();
                 return (namedArguments, context) => BinaryExpression.OperatorDictionary[this.NodeType](left(namedArguments, context), right(namedArguments, context))
-            }
+            };
         }
     }
 }
