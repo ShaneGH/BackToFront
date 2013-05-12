@@ -157,11 +157,6 @@
       <DependentUpon>MetaClasses.ts</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\MetaClasses.ts">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MetaClasses.tt</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
