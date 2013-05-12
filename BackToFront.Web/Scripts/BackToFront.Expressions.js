@@ -3,21 +3,10 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-if(window["__BTF"] != null) {
-    throw "BackToFront is defined already";
-}
 var __BTF;
 (function (__BTF) {
-    __BTF.Initialize = function (data) {
-    };
-    var TestClass = (function () {
-        function TestClass() { }
-        TestClass.prototype.Test = function () {
-            return true;
-        };
-        return TestClass;
-    })();
-    __BTF.TestClass = TestClass;    
+    var Validation = __BTF.Validation;
+    var Meta = __BTF.Meta;
     (function (Expressions) {
         var Expression = (function () {
             function Expression(meta) {
@@ -268,23 +257,4 @@ var __BTF;
         Expressions.UnaryExpression = UnaryExpression;        
     })(__BTF.Expressions || (__BTF.Expressions = {}));
     var Expressions = __BTF.Expressions;
-    (function (Validation) {
-        var ExpressionInvoker = (function () {
-            function ExpressionInvoker(Logic, AffectedProperties) {
-                this.Logic = Logic;
-                this.AffectedProperties = AffectedProperties;
-            }
-            return ExpressionInvoker;
-        })();
-        Validation.ExpressionInvoker = ExpressionInvoker;        
-        var ValidationContext = (function () {
-            function ValidationContext() { }
-            ValidationContext.prototype.Break = function () {
-                return false;
-            };
-            return ValidationContext;
-        })();
-        Validation.ValidationContext = ValidationContext;        
-    })(__BTF.Validation || (__BTF.Validation = {}));
-    var Validation = __BTF.Validation;
 })(__BTF || (__BTF = {}));

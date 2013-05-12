@@ -82,15 +82,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\BackToFront-0.0.ts" />
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="Scripts\MetaClasses.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\BackToFront-0.0.js">
-      <DependentUpon>BackToFront-0.0.ts</DependentUpon>
+    <TypeScriptCompile Include="Scripts\BackToFront.Core.ts" />
+    <Content Include="Scripts\BackToFront.Core.js">
+      <DependentUpon>BackToFront.Core.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\BackToFront.debug.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <TypeScriptCompile Include="Scripts\BackToFront.Expressions.ts" />
+    <Content Include="Scripts\BackToFront.Expressions.js">
+      <DependentUpon>BackToFront.Expressions.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\BackToFront.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <TypeScriptCompile Include="Scripts\BackToFront.Validation.ts" />
+    <Content Include="Scripts\BackToFront.Validation.js">
+      <DependentUpon>BackToFront.Validation.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\jquery.validation.d.ts" />
@@ -129,7 +140,8 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
-      $(TargetDir)Yui\YuiBuildProcess "Scripts\BackToFront-0.0.js" "Scripts\linq-0.0.js" "Scripts\MetaClasses.js" -out Scripts\XXX.js
+      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\BackToFront.Core.js" "$(ProjectDir)Scripts\BackToFront.Expressions.js" "$(ProjectDir)Scripts\BackToFront.Validation.js" "$(ProjectDir)Scripts\linq-0.0.js"  -out $(ProjectDir)Scripts\BackToFront.min.js
+      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\BackToFront.Core.js" "$(ProjectDir)Scripts\BackToFront.Expressions.js" "$(ProjectDir)Scripts\BackToFront.Validation.js" "$(ProjectDir)Scripts\linq-0.0.js"  -out $(ProjectDir)Scripts\BackToFront.debug.js -compress false
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

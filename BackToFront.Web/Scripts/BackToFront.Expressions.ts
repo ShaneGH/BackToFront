@@ -2,24 +2,21 @@
 /// <reference path="jquery.d.ts" />
 /// <reference path="jquery.validation.d.ts" />
 /// <reference path="MetaClasses.ts" />
+/// <reference path="BackToFront.Core.ts" />
+/// <reference path="BackToFront.Validation.ts" />
 
-if (window["__BTF"] != null) throw "BackToFront is defined already";
 
 module __BTF {
-    export var Initialize = function (data) { };
-
-    export class TestClass {
-        Test() {
-            return true;
-        }
-    }
+    import Validation = __BTF.Validation;
+    import Meta = __BTF.Meta;
 
     export module Expressions {
-        export class Expression {
-            NodeType: __BTF.Meta.ExpressionType;
-            ExpressionType: __BTF.Meta.ExpressionWrapperType;
 
-            constructor(meta: __BTF.Meta.ExpressionMeta) {
+        export class Expression {
+            NodeType: Meta.ExpressionType;
+            ExpressionType: Meta.ExpressionWrapperType;
+
+            constructor(meta: Meta.ExpressionMeta) {
                 this.Required(meta, "NodeType", "ExpressionType");
 
                 this.NodeType = meta.NodeType;
@@ -57,26 +54,26 @@ module __BTF {
 
             GetAffectedProperties(): string[] { return []; }
 
-            static CreateExpression(meta: __BTF.Meta.ExpressionMeta): Expression {
+            static CreateExpression(meta: Meta.ExpressionMeta): Expression {
                 switch (meta.ExpressionType) {
-                    case __BTF.Meta.ExpressionWrapperType.Binary:
-                        return new BinaryExpression(<__BTF.Meta.BinaryExpressionMeta>meta);
-                    case __BTF.Meta.ExpressionWrapperType.Block:
-                        return new BlockExpression(<__BTF.Meta.BlockExpressionMeta>meta);
-                    case __BTF.Meta.ExpressionWrapperType.Conditional:
-                        return new ConditionalExpression(<__BTF.Meta.ConditionalExpressionMeta>meta);
-                    case __BTF.Meta.ExpressionWrapperType.Constant:
-                        return new ConstantExpression(<__BTF.Meta.ConstantExpressionMeta>meta);
-                    case __BTF.Meta.ExpressionWrapperType.Default:
-                        return new DefaultExpression(<__BTF.Meta.ExpressionMeta>meta);
-                    case __BTF.Meta.ExpressionWrapperType.Member:
-                        return new MemberExpression(<__BTF.Meta.MemberExpressionMeta>meta);
-                    case __BTF.Meta.ExpressionWrapperType.MethodCall:
-                        return new MethodCallExpression(<__BTF.Meta.MethodCallExpressionMeta>meta);
-                    case __BTF.Meta.ExpressionWrapperType.Parameter:
-                        return new ParameterExpression(<__BTF.Meta.ParameterExpressionMeta>meta);
-                    case __BTF.Meta.ExpressionWrapperType.Unary:
-                        return new UnaryExpression(<__BTF.Meta.UnaryExpressionMeta>meta);
+                    case Meta.ExpressionWrapperType.Binary:
+                        return new BinaryExpression(<Meta.BinaryExpressionMeta>meta);
+                    case Meta.ExpressionWrapperType.Block:
+                        return new BlockExpression(<Meta.BlockExpressionMeta>meta);
+                    case Meta.ExpressionWrapperType.Conditional:
+                        return new ConditionalExpression(<Meta.ConditionalExpressionMeta>meta);
+                    case Meta.ExpressionWrapperType.Constant:
+                        return new ConstantExpression(<Meta.ConstantExpressionMeta>meta);
+                    case Meta.ExpressionWrapperType.Default:
+                        return new DefaultExpression(<Meta.ExpressionMeta>meta);
+                    case Meta.ExpressionWrapperType.Member:
+                        return new MemberExpression(<Meta.MemberExpressionMeta>meta);
+                    case Meta.ExpressionWrapperType.MethodCall:
+                        return new MethodCallExpression(<Meta.MethodCallExpressionMeta>meta);
+                    case Meta.ExpressionWrapperType.Parameter:
+                        return new ParameterExpression(<Meta.ParameterExpressionMeta>meta);
+                    case Meta.ExpressionWrapperType.Unary:
+                        return new UnaryExpression(<Meta.UnaryExpressionMeta>meta);
                 }
 
                 throw "Invalid expression type";
@@ -89,7 +86,7 @@ module __BTF {
 
             private static OperatorDictionary: { (left, right): any; }[] = [];
 
-            constructor(meta: __BTF.Meta.BinaryExpressionMeta) {
+            constructor(meta: Meta.BinaryExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Left", "Right");
@@ -110,7 +107,7 @@ module __BTF {
         export class BlockExpression extends Expression {
             Expressions: Expression[];
 
-            constructor(meta: __BTF.Meta.BlockExpressionMeta) {
+            constructor(meta: Meta.BlockExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Expressions");
@@ -128,7 +125,7 @@ module __BTF {
             IfFalse: Expression;
             Test: Expression;
 
-            constructor(meta: __BTF.Meta.ConditionalExpressionMeta) {
+            constructor(meta: Meta.ConditionalExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "IfTrue", "IfFalse", "Test");
@@ -147,7 +144,7 @@ module __BTF {
         }
 
         export class ConstantExpression extends Expression {
-            constructor(meta: __BTF.Meta.ConstantExpressionMeta) {
+            constructor(meta: Meta.ConstantExpressionMeta) {
                 super(meta);
             }
 
@@ -158,7 +155,7 @@ module __BTF {
         }
 
         export class DefaultExpression extends Expression {
-            constructor(meta: __BTF.Meta.ExpressionMeta) {
+            constructor(meta: Meta.ExpressionMeta) {
                 super(meta);
             }
 
@@ -186,8 +183,8 @@ module __BTF {
 
             Expression: Expression;
             MemberName: string;
-            
-            constructor(meta: __BTF.Meta.MemberExpressionMeta) {
+
+            constructor(meta: Meta.MemberExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Expression", "MemberName", "Test");
@@ -200,7 +197,7 @@ module __BTF {
             // TODO: not validating at compile time, but at run time
             _Compile(): Validation.ExpressionInvokerAction {
                 var expression = this.Expression.Compile();
-                
+
                 return (namedArguments, context) => {
                     if (!MemberExpression.RegexValues.Property.test(this.MemberName)) {
                         throw "Invalid property name: " + this.MemberName;
@@ -228,7 +225,7 @@ module __BTF {
             MethodName: string;
             MethodFullName: string;
 
-            constructor(meta: __BTF.Meta.MethodCallExpressionMeta) {
+            constructor(meta: Meta.MethodCallExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Object", "Arguments", "MethodName", "MethodFullName");
@@ -242,13 +239,12 @@ module __BTF {
             _Compile(): Validation.ExpressionInvokerAction {
                 throw "Not implemented";
             }
-
         }
 
         export class ParameterExpression extends Expression {
             Name: string;
 
-            constructor(meta: __BTF.Meta.ParameterExpressionMeta) {
+            constructor(meta: Meta.ParameterExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Name");
@@ -266,7 +262,7 @@ module __BTF {
 
             Operand: Expression;
 
-            constructor(meta: __BTF.Meta.UnaryExpressionMeta) {
+            constructor(meta: Meta.UnaryExpressionMeta) {
                 super(meta);
 
                 this.Required(meta, "Operand");
@@ -277,22 +273,6 @@ module __BTF {
                 var operand = this.Operand.Compile();
                 return (namedArguments, context) => UnaryExpression.OperatorDictionary[this.NodeType](operand(namedArguments, context))
             }
-        }
-    }
-
-    export module Validation {
-
-        export interface ExpressionInvokerAction {
-            (namedArguments: any, context: ValidationContext): any;
-        }
-
-        export class ExpressionInvoker {
-            constructor(public Logic: ExpressionInvokerAction, public AffectedProperties: string[]) { }
-        }
-
-        export class ValidationContext {
-            // TODO
-            Break(): bool { return false; }
         }
     }
 }

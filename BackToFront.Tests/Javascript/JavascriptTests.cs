@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace BackToFront.Tests.Javascript
 {
     [TestFixture]
-    public class JavascriptTests
+    public class JavascriptTests : Base.TestBase
     {
         /*<?xml version="1.0" encoding="UTF-8" ?>
 <testsuites>
@@ -27,7 +27,6 @@ namespace BackToFront.Tests.Javascript
         [Test]
         public void Run()
         {
-            //$(TargetDir)Chutzpah\chutzpah.console.exe /path "$(ProjectDir)Javascript\UnitTests" /testMode TypeScript /junit "$(TargetDir)JSTestResults.xml"
             using (var process = new Process { StartInfo = new ProcessStartInfo() })
             {
                 process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
@@ -54,6 +53,11 @@ namespace BackToFront.Tests.Javascript
                     }
                 }
             }
+        }
+
+        public override void TestFixtureSetUp()
+        {
+            base.TestFixtureSetUp();
         }
     }
 }
