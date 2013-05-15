@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using M = Moq;
+using BackToFront.Meta;
 
 namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 {
@@ -65,7 +66,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
                 get { return new ParameterExpression[20]; }
             }
 
-            public override Meta.ExpressionMeta Meta
+            public override ExpressionMeta Meta
             {
                 get { throw new NotImplementedException(); }
             }

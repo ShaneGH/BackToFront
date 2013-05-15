@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\MetaTestBase.cs" />
     <Compile Include="Base\RulesRepositoryTestBase.cs" />
     <Compile Include="Base\TestBase.cs">
       <SubType>Code</SubType>
@@ -157,6 +158,8 @@
     <Compile Include="CSharp\UnitTests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CSharp\UnitTests\Meta\BinaryExpressionMeta_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Meta\ExpressionMeta_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Utilities\Dependencies_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
