@@ -54,7 +54,7 @@ namespace BackToFront.Expressions
         {
             get 
             {
-                return _Meta ?? (_Meta = new ExpressionMeta(this, ExpressionWrapperType.Invocation));
+                return _Meta ?? (_Meta = new InvocationExpressionMeta(this));
             }
         }
 

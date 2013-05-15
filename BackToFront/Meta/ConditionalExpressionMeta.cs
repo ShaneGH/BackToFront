@@ -25,7 +25,7 @@ namespace BackToFront.Meta
             : this(null) { }
 
         public ConditionalExpressionMeta(ConditionalExpressionWrapper expression)
-            : base(expression, ExpressionWrapperType.Conditional)
+            : base(expression)
         {
             if (expression == null)
                 return;
@@ -33,6 +33,11 @@ namespace BackToFront.Meta
             IfTrue = expression.IfTrue.Meta;
             IfFalse = expression.IfFalse.Meta;
             Test = expression.Test.Meta;
+        }
+
+        public override ExpressionWrapperType ExpressionType
+        {
+            get { return ExpressionWrapperType.Conditional; }
         }
     }
 }

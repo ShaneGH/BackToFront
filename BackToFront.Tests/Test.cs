@@ -18,7 +18,7 @@ using BackToFront.Framework;
 
 namespace BackToFront.Tests
 {
-    //[TestFixture]
+    [TestFixture]
     public class Testpad
     {
         public class ViolationClass : IViolation
@@ -47,7 +47,7 @@ namespace BackToFront.Tests
             }
         }
 
-        //[Test]
+        [Test]
         public void Test()
         {
             var repository = new Repository();

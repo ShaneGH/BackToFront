@@ -27,6 +27,14 @@ module __BTF {
 		export interface ConstantExpressionMeta extends ExpressionMeta {
 		}
 
+		export interface InvocationExpressionMeta extends ExpressionMeta {
+			Expression: ExpressionMeta;
+			Arguments: ExpressionMeta[];
+		}
+
+		export interface DefaultExpressionMeta extends ExpressionMeta {
+		}
+
 		export interface MemberExpressionMeta extends ExpressionMeta {
 			Expression: ExpressionMeta;
 			MemberName: string;

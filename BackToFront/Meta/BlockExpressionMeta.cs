@@ -19,12 +19,17 @@ namespace BackToFront.Meta
             : this(null) { }
 
         public BlockExpressionMeta(BlockExpressionWrapper expression)
-            : base(expression, ExpressionWrapperType.Block)
+            : base(expression)
         {
             if (expression == null)
                 return;
 
             Expressions = expression.ChildExpressions.Select(ce => ce.Meta).ToArray();
+        }
+
+        public override ExpressionWrapperType ExpressionType
+        {
+            get { return ExpressionWrapperType.Block; }
         }
     }
 }

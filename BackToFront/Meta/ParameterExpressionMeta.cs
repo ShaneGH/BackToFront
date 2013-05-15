@@ -1,4 +1,5 @@
-﻿using BackToFront.Expressions;
+﻿using BackToFront.Enum;
+using BackToFront.Expressions;
 using System.Runtime.Serialization;
 
 namespace BackToFront.Meta
@@ -13,12 +14,17 @@ namespace BackToFront.Meta
             : this(null) { }
 
         public ParameterExpressionMeta(ParameterExpressionWrapper expression)
-            : base(expression, Enum.ExpressionWrapperType.Parameter)
+            : base(expression)
         {
             if (expression == null)
                 return;
 
             Name = expression.Expression.Name;
+        }
+
+        public override ExpressionWrapperType ExpressionType
+        {
+            get { return ExpressionWrapperType.Parameter; }
         }
     }
 }

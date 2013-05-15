@@ -6,30 +6,30 @@ using BackToFront.Enum;
 namespace BackToFront.Meta
 {
     [DataContract]
-    public class MemberExpressionMeta : ExpressionMeta
+    public class InvocationExpressionMeta : ExpressionMeta
     {
         [DataMember]
         public ExpressionMeta Expression { get; private set; }
 
         [DataMember]
-        public string MemberName { get; private set; }
+        public ExpressionMeta[] Arguments { get; private set; }
 
-        public MemberExpressionMeta()
+        public InvocationExpressionMeta()
             : this(null) { }
 
-        public MemberExpressionMeta(MemberExpressionWrapper expression)
+        public InvocationExpressionMeta(InvocationExpressionWrapper expression)
             : base(expression)
         {
             if (expression == null)
                 return;
 
             Expression = expression.InnerExpression.Meta;
-            MemberName = expression.Expression.Member.Name;
+            Arguments = expression.Arguments.Select(a => a.Meta).ToArray();
         }
 
         public override ExpressionWrapperType ExpressionType
         {
-            get { return ExpressionWrapperType.Member; }
+            get { return ExpressionWrapperType.Invocation; }
         }
     }
 }
