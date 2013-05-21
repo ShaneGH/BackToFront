@@ -1,6 +1,7 @@
 ﻿
-Unit test all Meta classes and Properties
-using test ConditionalExpressionWrapper, BlockExpressionWrapper, DefaultExpressionWrapper
+Unit test all Meta classes and Properties, framework and expression
+using test ConditionalExpressionWrapper, BlockExpressionWrapper, DefaultExpressionWrapper, InvocationExpressionWrapper
+
 unit test BackToFront.Logic.ValidateResult<TEntity>
 
 Do I need to look at multiple require thats in one block again? I don't remember wrapping it up
