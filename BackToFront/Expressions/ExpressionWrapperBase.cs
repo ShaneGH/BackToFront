@@ -86,9 +86,15 @@ namespace BackToFront.Expressions
         {
             if (!_MembersCache.ContainsKey(parameter))
             {
+                // only cache members from UnorderedParameters
+                if (!UnorderedParameters.Contains(parameter))
+                {
+                    return _GetMembersForParameter(parameter);
+                }
+
                 _MembersCache.Add(parameter, _GetMembersForParameter(parameter).ToArray());
             }
-
+            
             return _MembersCache[parameter];
         }
 

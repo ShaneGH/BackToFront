@@ -1,6 +1,6 @@
 ﻿
-Unit test all Meta classes and Properties, framework and expression
-using test ConditionalExpressionWrapper, BlockExpressionWrapper, DefaultExpressionWrapper, InvocationExpressionWrapper
+Unit test all Meta classes and Properties
+Unit test ConditionalExpressionWrapper, BlockExpressionWrapper, DefaultExpressionWrapper, InvocationExpressionWrapper
 
 unit test BackToFront.Logic.ValidateResult<TEntity>
 
@@ -12,8 +12,6 @@ Domain Model
 
 ConstantExpressionMeta. Need to serialize the Value
 
-look at GetMembersForParameter. Not sure if caching should be used
-
 If validating children, ensure child object is not mocked out
 
 Special case for IEnumerables
@@ -22,7 +20,6 @@ IEnumerables: IfAll, IfAny, RequireThatAll, RequreThatAny, ElseIfAll, ElseIfAny 
 Lambdas within rule definition, e.g. If(a => a.Any(b => b.Selected)).Then.....
 
 More Expression types
-
 
 
 Mapping

@@ -157,14 +157,20 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
         }
 
         [Test]
-        public void GetMembersForParameter_Test_WithCache()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void GetMembersForParameter_Test_WithCache(bool parameterIsInUnorderedParams)
         {
             // arrange
-            var expected1 = new MemberChainItem[0];
-            var expected2 = new MemberChainItem[0];
+            var expected1 = new[] { new MemberChainItem(typeof(string)) };
+            var expected2 = new[] { new MemberChainItem(typeof(int)) };
             var param = Expression.Parameter(typeof(object));
             var subject = new M.Mock<ExpressionWrapperBase> { CallBase = true };
             subject.Protected().Setup<IEnumerable<MemberChainItem>>("_GetMembersForParameter", ItExpr.Is<ParameterExpression>(a => a == param)).Returns(expected1);
+            if (parameterIsInUnorderedParams)
+            {
+                subject.Protected().Setup<IEnumerable<ParameterExpression>>("_UnorderedParameters").Returns(new[] { param });
+            }
 
             // act
             var actual1 = subject.Object.GetMembersForParameter(param);
@@ -173,7 +179,10 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 
             // assert
             Assert.AreEqual(expected1, actual1);
-            Assert.AreEqual(actual1, actual2);
+            if (parameterIsInUnorderedParams)
+                Assert.AreEqual(actual1, actual2);
+            else
+                Assert.AreEqual(expected2, actual2);
         }
 
         [Test]

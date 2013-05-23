@@ -43,5 +43,10 @@ namespace BackToFront.Expressions
 
             return false;
         }
+
+        protected static ExpressionWrapperBase CreateOrReference(Expression expression, ref ExpressionWrapperBase wrapper)
+        {
+            return wrapper ?? (wrapper = ExpressionWrapperBase.CreateChildWrapper(expression));
+        }
     }
 }

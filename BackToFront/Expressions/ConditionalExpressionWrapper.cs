@@ -21,7 +21,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _Test ?? (_Test = ExpressionWrapperBase.CreateChildWrapper(Expression.Test));
+                return CreateOrReference(Expression.Test, ref _Test);
             }
         }
 
@@ -30,7 +30,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _IfTrue ?? (_IfTrue = ExpressionWrapperBase.CreateChildWrapper(Expression.IfTrue));
+                return CreateOrReference(Expression.IfTrue, ref _IfTrue);
             }
         }
 
@@ -39,7 +39,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _IfFalse ?? (_IfFalse = ExpressionWrapperBase.CreateChildWrapper(Expression.IfFalse));
+                return CreateOrReference(Expression.IfFalse, ref _IfFalse);
             }
         }
 
@@ -50,7 +50,9 @@ namespace BackToFront.Expressions
 
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
-            return Test.GetMembersForParameter(parameter).Union(IfTrue.GetMembersForParameter(parameter)).Union(IfFalse.GetMembersForParameter(parameter));
+            return Test.GetMembersForParameter(parameter)
+                .Union(IfTrue.GetMembersForParameter(parameter))
+                .Union(IfFalse.GetMembersForParameter(parameter));
         }
 
         private ConditionalExpressionMeta _Meta;
@@ -66,7 +68,9 @@ namespace BackToFront.Expressions
         {
             get 
             {
-                return Test.UnorderedParameters.Union(IfTrue.UnorderedParameters).Union(IfFalse.UnorderedParameters);
+                return Test.UnorderedParameters
+                    .Union(IfTrue.UnorderedParameters)
+                    .Union(IfFalse.UnorderedParameters);
             }
         }
 
