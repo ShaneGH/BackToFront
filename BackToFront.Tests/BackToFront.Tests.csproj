@@ -242,6 +242,9 @@
   <ItemGroup>
     <Content Include="Javascript\Base\testUtils.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\BinaryExpression_Tests.js" />
+    <Content Include="Javascript\UnitTests\BackToFront\Expressions\BinaryExpressionOperators_Tests.js" />
+    <Content Include="Javascript\UnitTests\BackToFront\Expressions\BlockExpression_Tests.js" />
+    <Content Include="Javascript\UnitTests\BackToFront\Expressions\ConditionalExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Sanitizer_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\Expression_Tests.js" />
   </ItemGroup>
