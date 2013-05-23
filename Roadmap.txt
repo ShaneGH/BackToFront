@@ -1,6 +1,6 @@
 ﻿
 Unit test all Meta classes and Properties
-Unit test ConditionalExpressionWrapper, BlockExpressionWrapper, DefaultExpressionWrapper, InvocationExpressionWrapper
+Unit test ConditionalExpressionWrapper, InvocationExpressionWrapper
 
 unit test BackToFront.Logic.ValidateResult<TEntity>
 
