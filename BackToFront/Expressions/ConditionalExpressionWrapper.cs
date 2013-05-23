@@ -74,7 +74,7 @@ namespace BackToFront.Expressions
             }
         }
 
-        public override bool IsSameExpression(ConditionalExpression expression)
+        protected override bool IsSameExpression(ConditionalExpression expression)
         {
             return Test.IsSameExpression(expression.Test) &&
                 IfTrue.IsSameExpression(expression.IfTrue) && 

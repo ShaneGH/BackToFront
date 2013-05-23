@@ -35,7 +35,7 @@ namespace BackToFront.Expressions
 
         }
 
-        public override bool IsSameExpression(InvocationExpression expression)
+        protected override bool IsSameExpression(InvocationExpression expression)
         {
             return Arguments.Length == expression.Arguments.Count &&
                 Arguments.All((a, i) => a.IsSameExpression(expression.Arguments[i])) &&

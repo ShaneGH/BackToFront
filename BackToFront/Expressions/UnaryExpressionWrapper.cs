@@ -28,7 +28,7 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(UnaryExpression expression)
+        protected override bool IsSameExpression(UnaryExpression expression)
         {
             return expression.Method == Expression.Method &&
                 Operand.IsSameExpression(expression.Operand);

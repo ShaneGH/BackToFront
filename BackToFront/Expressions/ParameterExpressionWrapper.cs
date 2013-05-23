@@ -19,7 +19,7 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(ParameterExpression expression)
+        protected override bool IsSameExpression(ParameterExpression expression)
         {
             // TODO: is this correct?
             return expression.Type.Is(Expression.Type);

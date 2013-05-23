@@ -30,8 +30,7 @@ namespace BackToFront.Expressions
             }
         }
 
-        // TODO: Make protected (this is a big job for unit testing)
-        public abstract bool IsSameExpression(TExpression expression);
+        protected abstract bool IsSameExpression(TExpression expression);
 
         public override bool IsSameExpression(Expression expression)
         {

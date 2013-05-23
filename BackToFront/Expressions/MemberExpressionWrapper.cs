@@ -26,7 +26,7 @@ namespace BackToFront.Expressions
         {
         }
 
-        public override bool IsSameExpression(MemberExpression expression)
+        protected override bool IsSameExpression(MemberExpression expression)
         {
             return expression.Member == Expression.Member && InnerExpression.IsSameExpression(expression.Expression);
         }

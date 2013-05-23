@@ -40,7 +40,7 @@ namespace BackToFront.Expressions
             }
         }
 
-        public override bool IsSameExpression(DefaultExpression expression)
+        protected override bool IsSameExpression(DefaultExpression expression)
         {
             return true;
         }
