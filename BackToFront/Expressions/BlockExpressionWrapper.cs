@@ -21,7 +21,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _ChildExpressions ?? (_ChildExpressions = Expression.Expressions.Select(a => ExpressionWrapperBase.CreateChildWrapper(a)).ToArray());
+                return CreateOrReference(Expression.Expressions, ref _ChildExpressions);
             }
         }
 

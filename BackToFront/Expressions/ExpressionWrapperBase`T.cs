@@ -47,5 +47,10 @@ namespace BackToFront.Expressions
         {
             return wrapper ?? (wrapper = ExpressionWrapperBase.CreateChildWrapper(expression));
         }
+
+        protected static ExpressionWrapperBase[] CreateOrReference(IEnumerable<Expression> expression, ref ExpressionWrapperBase[] wrapper)
+        {
+            return wrapper ?? (wrapper = expression.Select(a => ExpressionWrapperBase.CreateChildWrapper(a)).ToArray());
+        }
     }
 }

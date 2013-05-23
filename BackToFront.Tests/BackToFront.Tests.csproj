@@ -103,6 +103,7 @@
     <Compile Include="CSharp\UnitTests\Expressions\ConstantExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CSharp\UnitTests\Expressions\BlockExpressionWrapper_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
