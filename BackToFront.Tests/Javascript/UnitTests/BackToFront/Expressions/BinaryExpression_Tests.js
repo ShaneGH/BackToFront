@@ -1,171 +1,230 @@
 ﻿
 // Chutzpah
 /// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
-
-//// My Module
-//(function (moduleName) {
-//    module(moduleName, {
-//        setup: function () {
-//        },
-//        teardown: function () {
-//        }
-//    });
-
-//    // My Test
-//    (function (testName) {
-//        test(testName, function () {
-//            // arrange
-
-//            // act
-
-//            // assert
-//        });
-//    })("My Test");
-//})("My Module");
+/// <reference path="../../../Base/testUtils.js" />
 
 test("Warmup", function () { expect(0); });
 
 (function (moduleName) {
+
+    var createExpression = __BTF.Expressions.Expression.CreateExpression;
+    var require = __BTF.Sanitizer.Require;
+    var operators = __BTF.Expressions.BinaryExpression.OperatorDictionary;
+
     module(moduleName, {
         setup: function () {
+            __BTF.Expressions.Expression.CreateExpression = createExpression;
+            __BTF.Sanitizer.Require = require;
+            __BTF.Expressions.BinaryExpression.OperatorDictionary = operators;
         },
         teardown: function () {
+            __BTF.Expressions.Expression.CreateExpression = createExpression;
+            __BTF.Sanitizer.Require = require;
+            __BTF.Expressions.BinaryExpression.OperatorDictionary = operators;
         }
     });
 
     // Constructor test OK
     (function (testName) {
         test(testName, function () {
+            var ex = new tUtil.Expect("require", "left", "right");
+
             // arrange
-            var expected = { NodeType: 22, ExpressionType: 55 };
+            var meta = { Left: {}, Right: {}, NodeType: __BTF.Meta.ExpressionType.Add };
 
-            // act
-            var actual = new __BTF.Expressions.Expression(expected);
+            // first Sanitizer is in parent class
+            var skip = true;
+            __BTF.Sanitizer.Require = function (input1, input2, input3) {
+                if (skip) {
+                    skip = false;
+                    return;
+                }
 
-            // assert
-            assert.strictEqual(expected.NodeType, actual.NodeType);
-            assert.strictEqual(expected.ExpressionType, actual.ExpressionType);
-        });
-    })("Constructor test OK");
+                ex.ExpectationReached.push("require");
 
-    // Constructor test Bad node type
-    (function (testName) {
-        test(testName, function () {
-            // arrange
-            var expected = { NodeType: "22", ExpressionType: 55 };
+                assert.strictEqual(input1, meta);
 
-            // act
-            // assert
-            assert.throws(function () {
-                var actual = new __BTF.Expressions.Expression(expected);
-            });
-        });
-    })("Constructor test Bad node type");
+                assert.deepEqual(input2.inputName, "Left");
+                assert.deepEqual(input2.inputType, "object");
 
-    // Constructor test Bad node type
-    (function (testName) {
-        test(testName, function () {
-            // arrange
-            var expected = { NodeType: 22 };
+                assert.deepEqual(input3.inputName, "Right");
+                assert.deepEqual(input3.inputType, "object");
+            };
 
-            // act
-            // assert
-            assert.throws(function () {
-                var actual = new __BTF.Expressions.Expression(expected);
-            });
-        });
-    })("Constructor test null expression type type");
+            var time = 0;
+            __BTF.Expressions.Expression.CreateExpression = function (input) {
+                assert.deepEqual(true, time < 2);
+                time++;
 
-    // Compile test and cache
-    var compileTest = function (_break) {
-        return function () {
-            // arrange
-            var item = {};
-            var subject = new __BTF.Expressions.Expression({ NodeType: 22, ExpressionType: 55 });
-            subject._Compile = function () {
-                return function (i, c) {
-                    assert.strictEqual(item, i);
-                };
+                if (time === 1) {
+                    ex.ExpectationReached.push("left");
+                    strictEqual(input, meta.Left);
+                    return "left";
+                }
+                else {
+                    ex.ExpectationReached.push("right");
+                    strictEqual(input, meta.Right);
+                    return "right";
+                }
             };
 
             // act
-            var actual1 = subject.Compile();
-            var actual2 = subject.Compile();
+            var actual = new __BTF.Expressions.BinaryExpression(meta);
 
             // assert
-            assert.strictEqual(actual1, actual2);
-            actual1(item, {
-                Break: function () {
-                    return _break;
-                }
-            });
+            ex.VerifyOrderedExpectations();
+            assert.deepEqual("left", actual.Left);
+            assert.deepEqual("right", actual.Right);
+        });
+    })("Constructor test OK");
 
-            expect(1 + (_break ? 0 : 1));
-        };
-    };
-
-    // Compile test and cache, Break == true
-    (function (testName) {
-        test(testName, compileTest(true));
-    })("Compile test and cache, Break == true");
-
-    // Compile test and cache, Break == false
-    (function (testName) {
-        test(testName, compileTest(true));
-    })("Compile test and cache, Break == false");
-
-    // GetAffectedProperties
+    // Constructor test Invalid node type
     (function (testName) {
         test(testName, function () {
             // arrange
-            var subject = new __BTF.Expressions.Expression({ NodeType: 22, ExpressionType: 55 });
+            var meta = { Left: {}, Right: {}, NodeType: -7654 };
 
             // act
             // assert
-            assert.deepEqual(subject.GetAffectedProperties(), []);
+            throws(function () { new __BTF.Expressions.BinaryExpression(meta); });
         });
-    })("GetAffectedProperties");
+    })("Constructor test Invalid node type");
 
-    // CreateExpression - Valid
+    // _Compile test
+    (function (testName) {
+        test(testName, function () {
+            var ex = new tUtil.Expect("left", "right", "exp");
+
+            var namedArguments = {};
+            var context = {};
+
+            // arrange
+            var _this = {
+                Left: {
+                    Compile: function () {
+                        return function (na, ctxt) {
+                            ex.ExpectationReached.push("left");
+                            assert.strictEqual(na, namedArguments);
+                            assert.strictEqual(ctxt, context);
+                            return "left";
+                        }
+                    }
+                },
+                Right: {
+                    Compile: function () {
+                        return function (na, ctxt) {
+                            ex.ExpectationReached.push("right");
+                            assert.strictEqual(na, namedArguments);
+                            assert.strictEqual(ctxt, context);
+                            return "right";
+                        }
+                    }
+                },
+                NodeType: 0
+            };
+
+            __BTF.Expressions.BinaryExpression.OperatorDictionary = [function (arg1, arg2) {
+                ex.ExpectationReached.push("exp");
+                assert.strictEqual(arg1, "left");
+                assert.strictEqual(arg2, "right");
+                return "exp";
+            }];
+
+            // act
+            var result = __BTF.Expressions.BinaryExpression.prototype._Compile.call(_this);
+
+            // assert
+            assert.deepEqual(result(namedArguments, context), "exp");
+            ex.VerifyOrderedExpectations();
+        });
+    })("_Compile test");
+
+    // OperatorDictionary test
     (function (testName) {
         test(testName, function () {
             // arrange
-            // act
-            var result = __BTF.Expressions.Expression.CreateExpression({ NodeType: 22, ExpressionType: __BTF.Meta.ExpressionWrapperType.Parameter, Name: "KJGKJ" });
+            var ignored = {};
+            ignored.AddChecked = true;
+			ignored.And = true;
+			ignored.ArrayLength = true;
+			ignored.ArrayIndex = true;
+			ignored.Call = true;
+			ignored.Coalesce = true;
+			ignored.Conditional = true;
+			ignored.Constant = true;
+			ignored.Convert = true;
+			ignored.ConvertChecked = true;
+			ignored.Equal = true;
+			ignored.ExclusiveOr = true;
+			ignored.Invoke = true;
+			ignored.Lambda = true;
+			ignored.LeftShift = true;
+			ignored.ListInit = true;
+			ignored.MemberAccess = true;
+			ignored.MemberInit = true;
+			ignored.Modulo = true;
+			ignored.MultiplyChecked = true;
+			ignored.Negate = true;
+			ignored.UnaryPlus = true;
+			ignored.NegateChecked = true;
+			ignored.New = true;
+			ignored.NewArrayInit = true;
+			ignored.NewArrayBounds = true;
+			ignored.Not = true;
+			ignored.NotEqual = true;
+			ignored.Or = true;
+			ignored.Parameter = true;
+			ignored.Power = true;
+			ignored.Quote = true;
+			ignored.RightShift = true;
+			ignored.SubtractChecked = true;
+			ignored.TypeAs = true;
+			ignored.TypeIs = true;
+			ignored.Assign = true;
+			ignored.Block = true;
+			ignored.DebugInfo = true;
+			ignored.Decrement = true;
+			ignored.Dynamic = true;
+			ignored.Default = true;
+			ignored.Extension = true;
+			ignored.Goto = true;
+			ignored.Increment = true;
+			ignored.Index = true;
+			ignored.Label = true;
+			ignored.RuntimeVariables = true;
+			ignored.Loop = true;
+			ignored.Switch = true;
+			ignored.Throw = true;
+			ignored.Try = true;
+			ignored.Unbox = true;
+			ignored.AddAssign = true;
+			ignored.AndAssign = true;
+			ignored.DivideAssign = true;
+			ignored.ExclusiveOrAssign = true;
+			ignored.LeftShiftAssign = true;
+			ignored.ModuloAssign = true;
+			ignored.MultiplyAssign = true;
+			ignored.OrAssign = true;
+			ignored.PowerAssign = true;
+			ignored.RightShiftAssign = true;
+			ignored.SubtractAssign = true;
+			ignored.AddAssignChecked = true;
+			ignored.MultiplyAssignChecked = true;
+			ignored.SubtractAssignChecked = true;
+			ignored.PreIncrementAssign = true;
+			ignored.PreDecrementAssign = true;
+			ignored.PostIncrementAssign = true;
+			ignored.PostDecrementAssign = true;
+			ignored.TypeEqual = true;
+			ignored.OnesComplement = true;
+			ignored.IsTrue = true;
+			ignored.IsFalse = true;
 
-            // assert
-            assert.notEqual(result, null);
-            assert.strictEqual(result.constructor, __BTF.Expressions.ParameterExpression);
+			for (var i in __BTF.Meta.ExpressionType) {
+			    if (__BTF.Meta.ExpressionType[i].constructor === Number && !ignored[i]) {
+			        ok(__BTF.Expressions.BinaryExpression.OperatorDictionary[__BTF.Meta.ExpressionType[i]]);
+			    }
+			}
         });
-    })("CreateExpression, valid");
-
-    // CreateExpression - Invalid
-    (function (testName) {
-        test(testName, function () {
-            // arrange
-            // act
-            // assert
-            throws(function () {
-                var result = __BTF.Expressions.Expression.CreateExpression({ NodeType: 22, ExpressionType: 9875, Name: "KJGKJ" });
-            });
-        });
-    })("CreateExpression, inalid");
-
-    // ExpressionConstructorDictionary test
-    (function (testName) {
-        test(testName, function () {
-            // arrange
-            // act
-            // assert
-            for (var i in __BTF.Meta.ExpressionWrapperType) {
-                // typescript puts in some crap
-                if (__BTF.Meta.ExpressionWrapperType[i].constructor !== Number)
-                    continue;
-
-                i = __BTF.Meta.ExpressionWrapperType[i];
-                assert.notEqual(__BTF.Expressions.Expression.ExpressionConstructorDictionary[i], null, i);
-                assert.strictEqual(__BTF.Expressions.Expression.ExpressionConstructorDictionary[i].constructor, Function);
-            }
-        });
-    })("CreateExpression, inalid");
+    })("OperatorDictionary");
 })("__BTF.Expressions.BinaryExpression");

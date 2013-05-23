@@ -12,6 +12,9 @@ var __BTF;
             __extends(BinaryExpression, _super);
             function BinaryExpression(meta) {
                         _super.call(this, meta);
+                if(!BinaryExpression.OperatorDictionary[this.NodeType]) {
+                    throw "##" + "Invalid Operator";
+                }
                 __BTF.Sanitizer.Require(meta, {
                     inputName: "Left",
                     inputType: "object"
@@ -19,13 +22,43 @@ var __BTF;
                     inputName: "Right",
                     inputType: "object"
                 });
-                if(!BinaryExpression.OperatorDictionary[this.NodeType]) {
-                    throw "Invalid Operator";
-                }
                 this.Left = Expressions.Expression.CreateExpression(meta.Left);
                 this.Right = Expressions.Expression.CreateExpression(meta.Right);
             }
-            BinaryExpression.OperatorDictionary = [];
+            BinaryExpression.OperatorDictionary = (function () {
+                var output = [];
+                output[__BTF.Meta.ExpressionType.Add] = function (left, right) {
+                    return left + right;
+                };
+                output[__BTF.Meta.ExpressionType.AndAlso] = function (left, right) {
+                    return left && right;
+                };
+                output[__BTF.Meta.ExpressionType.Divide] = function (left, right) {
+                    return left / right;
+                };
+                output[__BTF.Meta.ExpressionType.GreaterThan] = function (left, right) {
+                    return left > right;
+                };
+                output[__BTF.Meta.ExpressionType.GreaterThanOrEqual] = function (left, right) {
+                    return left >= right;
+                };
+                output[__BTF.Meta.ExpressionType.LessThan] = function (left, right) {
+                    return left < right;
+                };
+                output[__BTF.Meta.ExpressionType.LessThanOrEqual] = function (left, right) {
+                    return left <= right;
+                };
+                output[__BTF.Meta.ExpressionType.Multiply] = function (left, right) {
+                    return left * right;
+                };
+                output[__BTF.Meta.ExpressionType.OrElse] = function (left, right) {
+                    return left || right;
+                };
+                output[__BTF.Meta.ExpressionType.Subtract] = function (left, right) {
+                    return left - right;
+                };
+                return output;
+            })();
             BinaryExpression.prototype._Compile = function () {
                 var _this = this;
                 var left = this.Left.Compile();

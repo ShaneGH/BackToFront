@@ -240,6 +240,7 @@
     <TypeScriptCompile Include="Javascript\Scripts\qUnit.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Javascript\Base\testUtils.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\BinaryExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Sanitizer_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\Expression_Tests.js" />
@@ -253,8 +254,10 @@
     <PostBuildEvent>del "$(TargetDir)JSTestResults.xml"
 del "$(TargetDir)Chutzpah"
 del "$(TargetDir)Javascript\UnitTests"
+del "$(TargetDir)Javascript\Base"
 xcopy "$(SolutionDir)Tools\Chutzpah" "$(TargetDir)Chutzpah" /E /i /y
 xcopy "$(ProjectDir)Javascript\UnitTests" "$(TargetDir)Javascript\UnitTests" /E /i /y
+xcopy "$(ProjectDir)Javascript\Base" "$(TargetDir)Javascript\Base" /E /i /y
 	</PostBuildEvent>
   </PropertyGroup>
   <!--<Target Name="AfterBuild">

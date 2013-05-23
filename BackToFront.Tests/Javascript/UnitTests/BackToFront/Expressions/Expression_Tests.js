@@ -167,5 +167,5 @@ test("Warmup", function () { expect(0); });
                 assert.strictEqual(__BTF.Expressions.Expression.ExpressionConstructorDictionary[i].constructor, Function);
             }
         });
-    })("CreateExpression, inalid");
+    })("ExpressionConstructorDictionary");
 })("__BTF.Expressions.Expression");
