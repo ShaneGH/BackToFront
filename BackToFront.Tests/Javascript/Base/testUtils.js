@@ -15,7 +15,7 @@
     tUtil.Expect.prototype.VerifyOrderedExpectations = function () {
 
         for (var i = 0, ii = this.Expectations.length; i < ii; i++) {
-            assert.deepEqual(this.ExpectationReached[i], this.Expectations[i], "Incorrect expectation reached");
+            assert.strictEqual(this.ExpectationReached[i], this.Expectations[i], "Incorrect expectation reached");
         }
 
         assert.ok(this.Expectations.length >= this.ExpectationReached.length, this.ExpectationReached.length + " expectatations were reached, however only " + this.Expectations.length + " were defined.");
