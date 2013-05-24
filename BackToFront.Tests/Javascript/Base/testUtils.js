@@ -12,6 +12,10 @@
         }
     };
 
+    tUtil.Expect.prototype.At = function (currentPoint) {
+        this.ExpectationReached.push(currentPoint);
+    };
+
     tUtil.Expect.prototype.VerifyOrderedExpectations = function () {
 
         for (var i = 0, ii = this.Expectations.length; i < ii; i++) {

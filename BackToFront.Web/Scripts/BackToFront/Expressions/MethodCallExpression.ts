@@ -34,9 +34,21 @@ module __BTF {
                 this.MethodFullName = meta.MethodFullName;
             }
 
-            // TODO
+            // TODO: register methods
             _Compile(): Validation.ExpressionInvokerAction {
-                throw "Not implemented";
+                var name = this.MethodName;
+                if (!__BTF.Expressions.MemberExpression.PropertyRegex.test(name)) {
+                    throw "Invalid method name: " + name;
+                }
+
+                var object = this.Object.Compile();
+                var args = linq(this.Arguments).Select(a => a.Compile()).Result;
+                return (namedParameters, context) => {
+                    var o = object(namedParameters, context);
+                    var params = linq(args).Select(a => a(namedParameters, context)).Result;
+
+                    return o[name].apply(o, params);
+                };
             }
         }
     }

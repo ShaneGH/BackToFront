@@ -902,33 +902,15 @@ var __BTF;
                 this.Expression = Expressions.Expression.CreateExpression(meta.Expression);
                 this.MemberName = meta.MemberName;
             }
-            MemberExpression.RegexValues = (function () {
-                var index = "\\[[0-9]+\\]";
-                var indexedProperty = "[_a-zA-Z][_a-zA-Z0-9]*(" + index + ")?";
-                return {
-                    IndexedProperty: new RegExp(index + "$"),
-                    Property: new RegExp("^" + indexedProperty + "$")
-                };
-            })();
+            MemberExpression.PropertyRegex = new RegExp("^[a-zA-Z][a-zA-Z0-9]*$");
             MemberExpression.prototype._Compile = function () {
-                var _this = this;
+                if(!MemberExpression.PropertyRegex.test(this.MemberName)) {
+                    throw "Invalid property name: " + this.MemberName;
+                }
+                var name = this.MemberName;
                 var expression = this.Expression.Compile();
                 return function (namedArguments, context) {
-                    if(!MemberExpression.RegexValues.Property.test(_this.MemberName)) {
-                        throw "Invalid property name: " + _this.MemberName;
-                    }
-                    var base = expression(namedArguments, context);
-                    if(MemberExpression.RegexValues.IndexedProperty.test(_this.MemberName)) {
-                        var property = _this.MemberName.substr(0, _this.MemberName.indexOf("[") - 1);
-                        var index = MemberExpression.RegexValues.Property.exec(_this.MemberName)[0];
-                        index = parseInt(index.substring(1, index.length - 1));
-                        base = base[property];
-                        if(base == null) {
-                            return null;
-                        }
-                        return base[index];
-                    }
-                    return base[_this.MemberName];
+                    return expression(namedArguments, context)[name];
                 };
             };
             return MemberExpression;
@@ -972,7 +954,21 @@ var __BTF;
                 this.MethodFullName = meta.MethodFullName;
             }
             MethodCallExpression.prototype._Compile = function () {
-                throw "Not implemented";
+                var name = this.MethodName;
+                if(!__BTF.Expressions.MemberExpression.PropertyRegex.test(name)) {
+                    throw "Invalid method name: " + name;
+                }
+                var object = this.Object.Compile();
+                var args = linq(this.Arguments).Select(function (a) {
+                    return a.Compile();
+                }).Result;
+                return function (namedParameters, context) {
+                    var o = object(namedParameters, context);
+                    var params = linq(args).Select(function (a) {
+                        return a(namedParameters, context);
+                    }).Result;
+                    return o[name].apply(o, params);
+                };
             };
             return MethodCallExpression;
         })(Expressions.Expression);

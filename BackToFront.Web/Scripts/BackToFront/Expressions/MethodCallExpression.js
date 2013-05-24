@@ -31,7 +31,21 @@ var __BTF;
                 this.MethodFullName = meta.MethodFullName;
             }
             MethodCallExpression.prototype._Compile = function () {
-                throw "Not implemented";
+                var name = this.MethodName;
+                if(!__BTF.Expressions.MemberExpression.PropertyRegex.test(name)) {
+                    throw "Invalid method name: " + name;
+                }
+                var object = this.Object.Compile();
+                var args = linq(this.Arguments).Select(function (a) {
+                    return a.Compile();
+                }).Result;
+                return function (namedParameters, context) {
+                    var o = object(namedParameters, context);
+                    var params = linq(args).Select(function (a) {
+                        return a(namedParameters, context);
+                    }).Result;
+                    return o[name].apply(o, params);
+                };
             };
             return MethodCallExpression;
         })(Expressions.Expression);
