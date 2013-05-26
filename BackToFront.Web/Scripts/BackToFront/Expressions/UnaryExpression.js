@@ -16,7 +16,16 @@ var __BTF;
                 });
                 this.Operand = Expressions.Expression.CreateExpression(meta.Operand);
             }
-            UnaryExpression.OperatorDictionary = [];
+            UnaryExpression.OperatorDictionary = (function () {
+                var output = [];
+                output[__BTF.Meta.ExpressionType.Convert] = function (operand) {
+                    return operand;
+                };
+                output[__BTF.Meta.ExpressionType.Not] = function (operand) {
+                    return !operand;
+                };
+                return output;
+            })();
             UnaryExpression.prototype._Compile = function () {
                 var _this = this;
                 var operand = this.Operand.Compile();

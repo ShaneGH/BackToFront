@@ -6,8 +6,16 @@ module __BTF {
     export module Expressions {
 
         export class UnaryExpression extends Expression {
+            
+            private static OperatorDictionary: { (operand): any; }[] = (() => {
+                var output: { (operand): any; }[] = [];
 
-            private static OperatorDictionary: { (operand): any; }[] = [];
+                // TODO: more (all) operators
+                output[__BTF.Meta.ExpressionType.Convert] = (operand) => operand;
+                output[__BTF.Meta.ExpressionType.Not] = (operand) => !operand;
+
+                return output;
+            })();
 
             Operand: Expression;
 
