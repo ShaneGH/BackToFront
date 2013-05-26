@@ -37,7 +37,7 @@ namespace BackToFront.Framework
             get { return _If.Select(a => a.Action).ToArray(); }
         }
 
-        public override IEnumerable<MemberChainItem> ValidatableMembers
+        public override IEnumerable<MemberChainItem> ValidationSubjects
         {
             get
             {
@@ -45,7 +45,7 @@ namespace BackToFront.Framework
             }
         }
 
-        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
+        public override IEnumerable<MemberChainItem> RequiredForValidation
         {
             get
             {

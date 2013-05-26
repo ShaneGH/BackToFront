@@ -22,8 +22,8 @@ namespace BackToFront.Framework.Base
         protected readonly Rule<TEntity> ParentRule;
         private static readonly DeadEnd<TEntity> _DeadEnd = new DeadEnd<TEntity>();
 
-        public abstract IEnumerable<MemberChainItem> ValidatableMembers { get; }
-        public abstract IEnumerable<MemberChainItem> RequiredForValidationMembers { get; }
+        public abstract IEnumerable<MemberChainItem> ValidationSubjects { get; }
+        public abstract IEnumerable<MemberChainItem> RequiredForValidation { get; }
 
         public abstract bool PropertyRequirement { get; }
 

@@ -56,6 +56,27 @@ module __BTF {
 			Operand: ExpressionMeta;
 		}
 
+		export interface RuleMeta {
+			Expression: ExpressionMeta;
+			EntityParameter: string;
+			ContextParameter: string;
+			ValidationSubjectNames: string[];
+			RequiredForValidationNames: string[];
+		}
+
+		export interface IValidationContext {
+			BreakOnFirstError: Boolean;
+			Violations: IViolation;
+			Mocks: any[];
+			Dependencies: any;
+		}
+
+		export interface IViolation {
+			UserMessage: string;
+			ViolatedEntity: any;
+			Violated: any[];
+		}
+
 		export enum ExpressionWrapperType {
 			Binary = 1,
 			Constant = 2,

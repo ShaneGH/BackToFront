@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAnnotations\BTFValidationContext.cs" />
+    <Compile Include="DataAnnotations\ClientSideMemberAttribute.cs" />
     <Compile Include="DataAnnotations\ValidateMemberAttribute.cs" />
     <Compile Include="Dependency\IDependencyResolver.cs" />
     <Compile Include="Enum\ExpressionType.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Meta\BlockExpressionMeta.cs" />
     <Compile Include="Meta\ConditionalExpressionMeta.cs" />
     <Compile Include="Meta\ConstantExpressionMeta.cs" />
+    <Compile Include="Meta\IMeta.cs" />
     <Compile Include="Meta\InvocationExpressionMeta.cs" />
     <Compile Include="Meta\DefaultExpressionMeta.cs" />
     <Compile Include="Meta\MemberExpressionMeta.cs" />

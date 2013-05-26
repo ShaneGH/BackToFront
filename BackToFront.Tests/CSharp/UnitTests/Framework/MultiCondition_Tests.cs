@@ -40,7 +40,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             subject.Add(a => a.GetHashCode() == 6);
 
             // act
-            var actual = subject.ValidatableMembers;
+            var actual = subject.ValidationSubjects;
 
             // assert
             Assert.AreEqual(2, actual.Count());

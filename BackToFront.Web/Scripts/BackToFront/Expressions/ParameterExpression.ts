@@ -20,7 +20,7 @@ module __BTF {
             }
 
             _Compile(): Validation.ExpressionInvokerAction {
-                return (ambientContext) => ambientContext[this.Name];
+                return ambientContext => ambientContext[this.Name];
             }
         }
     }

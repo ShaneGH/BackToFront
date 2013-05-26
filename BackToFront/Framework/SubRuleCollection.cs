@@ -58,19 +58,19 @@ namespace BackToFront.Framework
             return subRule.RequireThat(property);
         }
 
-        public override IEnumerable<MemberChainItem> ValidatableMembers
+        public override IEnumerable<MemberChainItem> ValidationSubjects
         {
             get
             {
-                return _subRules.ValidatableMembers;
+                return _subRules.ValidationSubjects;
             }
         }
 
-        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
+        public override IEnumerable<MemberChainItem> RequiredForValidation
         {
             get
             {
-                return _subRules.RequiredForValidationMembers;
+                return _subRules.RequiredForValidation;
             }
         }
 

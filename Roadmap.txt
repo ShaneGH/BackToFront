@@ -17,4 +17,4 @@ Special case for IEnumerables: create custom linq methods which accept expressio
 More Expression types
 
 
-Mapping
+UnitTest PreCompiledRule, RuleMeta, Validator.ts

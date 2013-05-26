@@ -17,7 +17,12 @@
 
 <# 
 	var baseClass = typeof(ExpressionMeta);
-	var types = baseClass.Assembly.GetTypes().Where(t => baseClass.IsAssignableFrom(t));
+	var types = baseClass.Assembly.GetTypes().Where(t => baseClass.IsAssignableFrom(t)).Union(new[] 
+	{ 
+		typeof(BackToFront.Meta.RuleMeta), 
+		typeof(BackToFront.Framework.IValidationContext) , 
+		typeof(BackToFront.IViolation) 
+	});
 
 	var registeredTypes = new Dictionary<Type, string>();
 	types.Each(t => registeredTypes.Add(t, t.Name));
@@ -26,14 +31,25 @@
 	registeredTypes.Add(typeof(BackToFront.Enum.ExpressionWrapperType), typeof(BackToFront.Enum.ExpressionWrapperType).Name);
 	registeredTypes.Add(typeof(ExpressionType), typeof(ExpressionType).Name);
 	registeredTypes.Add(typeof(ExpressionMeta[]), typeof(ExpressionMeta[]).Name);
+
 	registeredTypes.Add(typeof(string), "string");
+	registeredTypes.Add(typeof(bool), "Boolean");
 	registeredTypes.Add(typeof(object), "any");
+	
+	registeredTypes.Add(typeof(string[]), "string[]");
+	registeredTypes.Add(typeof(object[]), "any[]");
+	
+	registeredTypes.Add(typeof(System.Collections.Generic.IList<BackToFront.IViolation>), typeof(BackToFront.IViolation).Name);
+	registeredTypes.Add(typeof(System.Collections.Generic.IDictionary<string, object>), "any");
+	
+	registeredTypes.Add(typeof(System.Collections.Generic.IEnumerable<BackToFront.Utilities.MemberChainItem>), "any[]");
 #>
 
 module __BTF {
 	export module Meta {
 <#foreach(var type in types) {
-var members = type.GetMembers(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly).Where(m => m.GetCustomAttribute<DataMemberAttribute>() != null);
+var members = type.GetMembers(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly)
+	.Where(m => m.GetCustomAttribute<DataMemberAttribute>() != null);
 var implements = types.Contains(type.BaseType) ? " extends " + type.BaseType.Name : "";#>
 		export interface <#=type.Name + implements#> {
 <#foreach(var member in members) {#>

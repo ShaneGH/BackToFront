@@ -32,7 +32,7 @@ namespace BackToFront.Framework.Base
             EntityParameter = Parameters.First();
         }
 
-        public override IEnumerable<MemberChainItem> ValidatableMembers
+        public override IEnumerable<MemberChainItem> ValidationSubjects
         {
             get
             {
@@ -42,7 +42,7 @@ namespace BackToFront.Framework.Base
             }
         }
 
-        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
+        public override IEnumerable<MemberChainItem> RequiredForValidation
         {
             get
             {

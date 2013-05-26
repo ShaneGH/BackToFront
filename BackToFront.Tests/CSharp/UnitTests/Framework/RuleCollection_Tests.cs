@@ -38,16 +38,16 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             var item1 = new  MemberChainItem(typeof(string));
             var rule1 = new M.Mock<IValidate<object>>();
-            rule1.Setup(a => a.ValidatableMembers).Returns(new[] { item1 });
+            rule1.Setup(a => a.ValidationSubjects).Returns(new[] { item1 });
             subject.AddRule(rule1.Object);
 
             var item2 = new MemberChainItem(typeof(int));
             var rule2 = new M.Mock<IValidate<object>>();
-            rule2.Setup(a => a.ValidatableMembers).Returns(new[] { item2 });
+            rule2.Setup(a => a.ValidationSubjects).Returns(new[] { item2 });
             subject.AddRule(rule2.Object);
 
             // act
-            var actual = subject.ValidatableMembers;
+            var actual = subject.ValidationSubjects;
 
             // assert
             Assert.IsTrue(AreKindOfEqual(new[] { item1, item2 }, actual));

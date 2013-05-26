@@ -16,10 +16,13 @@ namespace BackToFront.Expressions.Visitors
 
     public class SwapPropVisitor : ExpressionVisitor, ISwapPropVisitor
     {
+        public const string EntityParameterName = "entity";
+        public const string ValidationContextParameterName = "validationContext";
+
         public readonly Mocks Mocks;
         public readonly Dependencies Dependences;
         public readonly ParameterExpression EntityParameter;
-        public readonly ParameterExpression ContextParameter = Expression.Parameter(typeof(ValidationContext), "validationContext");
+        public readonly ParameterExpression ContextParameter = Expression.Parameter(typeof(ValidationContext), ValidationContextParameterName);
 
         private readonly Dictionary<MemberExpression, string> DependencyNameCache = new Dictionary<MemberExpression, string>();
 
@@ -35,7 +38,7 @@ namespace BackToFront.Expressions.Visitors
 
             Mocks = new Utilities.Mocks(mocks ?? Enumerable.Empty<Mock>(), Expression.PropertyOrField(ContextParameter, "Mocks"));
             Dependences = new Dependencies(dependences ?? new Dictionary<string, object>(), Expression.PropertyOrField(ContextParameter, "Dependencies"));
-            EntityParameter = Expression.Parameter(entityType, "entity");
+            EntityParameter = Expression.Parameter(entityType, EntityParameterName);
         }
 
         protected override Expression VisitParameter(ParameterExpression node)

@@ -66,7 +66,7 @@ namespace BackToFront.Web.Mvc
 
             while (type != null)
             {
-                rules.Rules.AddRange(repositories.Select(r => r.Rules(type).Select(a => a.Meta)).Aggregate());
+                rules.Rules.AddRange(repositories.Select(r => r.Rules(type).Select(a => a.Meta.Meta)).Aggregate());
                 type = type.BaseType;
             }
 

@@ -15,7 +15,7 @@ namespace BackToFront.Framework
         public DeadEnd()
             : base(null) { }
 
-        public override IEnumerable<MemberChainItem> ValidatableMembers
+        public override IEnumerable<MemberChainItem> ValidationSubjects
         {
             get
             {
@@ -23,7 +23,7 @@ namespace BackToFront.Framework
             }
         }
 
-        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
+        public override IEnumerable<MemberChainItem> RequiredForValidation
         {
             get
             {

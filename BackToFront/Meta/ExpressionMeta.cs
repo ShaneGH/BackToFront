@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace BackToFront.Meta
 {
     [DataContract]
-    public abstract class ExpressionMeta
+    public abstract class ExpressionMeta : IMeta
     {
         public static readonly ReadOnlyDictionary<Type, Func<Expression, ExpressionMeta>> Constructors;
 

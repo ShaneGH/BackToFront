@@ -3,6 +3,7 @@ using BackToFront.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 
 namespace BackToFront
 {
@@ -41,19 +42,24 @@ namespace BackToFront
     /// </summary>
     public interface IViolation
     {
+        // TODO: DataMember probably isn't the best attribute to use here (is a flag for the t4 template)
+
         /// <summary>
         /// The message to display to a user
         /// </summary>
+        [DataMember]
         string UserMessage { get; }
 
         /// <summary>
         /// The object which is in a violated state
         /// </summary>
+        [DataMember]
         object ViolatedEntity { get; set; }
 
         /// <summary>
         /// The properties which have been violated
         /// </summary>
+        [DataMember]
         IEnumerable<MemberChainItem> Violated { get; set; }
     }
 }

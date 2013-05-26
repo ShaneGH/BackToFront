@@ -10,12 +10,21 @@ using BackToFront.Utilities;
 
 namespace BackToFront.Validation
 {
+    public interface IPreCompiledRule
+    {
+        RuleMeta Meta { get; }
+        Expression Descriptor { get; }
+        Action<object, ValidationContext> Worker { get; }
+        ParameterExpression Entity { get; }
+        ParameterExpression Context { get; }
+    }
+
     public interface INonGenericRule
     {
         Type RuleType { get; }
 
-        IEnumerable<MemberChainItem> ValidatableMembers { get; }
-        IEnumerable<MemberChainItem> RequiredForValidationMembers { get; }
+        IEnumerable<MemberChainItem> ValidationSubjects { get; }
+        IEnumerable<MemberChainItem> RequiredForValidation { get; }
 
         List<DependencyWrapper> Dependencies { get; }
 
@@ -23,8 +32,6 @@ namespace BackToFront.Validation
         
         Action<object, ValidationContext> Compile(SwapPropVisitor visitor);
 
-        RuleMeta Meta { get; }
-
-        Expression PreCompiled { get; }
+        IPreCompiledRule Meta { get; }
     }
 }

@@ -45,15 +45,20 @@ namespace BackToFront.Framework
 
         Action<object, ValidationContext> INonGenericRule.Compile(SwapPropVisitor visitor)
         {
-            var rule = Expression.Lambda<Action<TEntity, ValidationContext>>(Compile(visitor), visitor.EntityParameter, visitor.ContextParameter).Compile();
-            
-            return (a, b) =>
+            return Compile(visitor, Compile(visitor));
+        }
+
+        private Action<object, ValidationContext> Compile(SwapPropVisitor visitor, Expression logic)
+        {
+            var rule = Expression.Lambda<Action<TEntity, ValidationContext>>(logic, visitor.EntityParameter, visitor.ContextParameter).Compile();
+
+            return (entity, validationContext) =>
             {
-                if (!(a is TEntity))
+                if (!(entity is TEntity))
                     throw new InvalidOperationException("##");
 
                 // TODO: as
-                rule((TEntity)a, b);
+                rule((TEntity)entity, validationContext);
             };
         }
 
@@ -131,25 +136,25 @@ namespace BackToFront.Framework
 
         #region Meta
 
-        private RuleMeta _Meta;
-        public RuleMeta Meta
+        private IPreCompiledRule _Meta;
+        public IPreCompiledRule Meta
         {
             get 
             {
-                return _Meta ?? (_Meta = new RuleMeta(this));
+                return _Meta ?? (_Meta = new PreCompiledRule(this));
             }
         }
 
-        public override IEnumerable<MemberChainItem> ValidatableMembers
+        public override IEnumerable<MemberChainItem> ValidationSubjects
         {
             // TODO: cache???
-            get { return RegisteredItems.Select(a => a.ValidatableMembers).Aggregate(); }
+            get { return RegisteredItems.Select(a => a.ValidationSubjects).Aggregate(); }
         }
 
-        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
+        public override IEnumerable<MemberChainItem> RequiredForValidation
         {
             // TODO: cache???
-            get { return RegisteredItems.Select(a => a.RequiredForValidationMembers).Aggregate(); }
+            get { return RegisteredItems.Select(a => a.RequiredForValidation).Aggregate(); }
         }
 
         public List<DependencyWrapper> Dependencies
@@ -168,5 +173,54 @@ namespace BackToFront.Framework
         }
 
         #endregion
+
+        /// <summary>
+        /// TODO: this is a bad class, no error checking. Maybe have as private
+        /// </summary>
+        public class PreCompiledRule : IPreCompiledRule
+        {
+            public readonly RuleMeta Meta;
+            public readonly Expression Descriptor;
+            public readonly Action<object, ValidationContext> Worker;
+            public readonly ParameterExpression Entity;
+            public readonly ParameterExpression Context;
+
+            public PreCompiledRule(Rule<TEntity> rule)
+            {
+                var visitor = new SwapPropVisitor(typeof(TEntity));
+
+                Meta = new RuleMeta(rule);
+                Descriptor = rule.Compile(visitor);
+                Worker = rule.Compile(visitor, Descriptor);
+                Entity = visitor.EntityParameter;
+                Context = visitor.ContextParameter;
+            }
+
+            RuleMeta IPreCompiledRule.Meta
+            {
+                get { return Meta; }
+            }
+
+            Expression IPreCompiledRule.Descriptor
+            {
+                get { return Descriptor; }
+            }
+
+            Action<object, ValidationContext> IPreCompiledRule.Worker
+            {
+                get { return Worker; }
+            }
+
+            ParameterExpression IPreCompiledRule.Entity
+            {
+                get { return Entity; }
+            }
+
+            ParameterExpression IPreCompiledRule.Context
+            {
+                get { return Context; }
+            }
+        }
+
     }
 }

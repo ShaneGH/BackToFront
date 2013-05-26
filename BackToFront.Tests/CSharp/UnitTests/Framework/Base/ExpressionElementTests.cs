@@ -47,7 +47,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
 
             // act
             subject.Setup(a => a.PropertyRequirement).Returns(false);
-            var actual1 = subject.Object.ValidatableMembers;
+            var actual1 = subject.Object.ValidationSubjects;
 
             // assert
             Assert.AreEqual(0, actual1.Count());
@@ -55,7 +55,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
 
             // act
             subject.Setup(a => a.PropertyRequirement).Returns(true);
-            var actual2 = subject.Object.ValidatableMembers;
+            var actual2 = subject.Object.ValidationSubjects;
 
             // assert
             Assert.AreEqual(1, actual2.Count());
@@ -72,7 +72,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
 
             // act
             subject.Setup(a => a.PropertyRequirement).Returns(true);
-            var actual1 = subject.Object.RequiredForValidationMembers;
+            var actual1 = subject.Object.RequiredForValidation;
 
             // assert
             Assert.AreEqual(0, actual1.Count());
@@ -80,7 +80,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
 
             // act
             subject.Setup(a => a.PropertyRequirement).Returns(false);
-            var actual2 = subject.Object.RequiredForValidationMembers;
+            var actual2 = subject.Object.RequiredForValidation;
 
             // assert
             Assert.AreEqual(1, actual2.Count());

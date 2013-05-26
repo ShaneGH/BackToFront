@@ -72,12 +72,12 @@ namespace BackToFront.Framework
             return next != null ? next.Compile(visitor) : Expression.Empty();
         }
 
-        public override IEnumerable<MemberChainItem> ValidatableMembers
+        public override IEnumerable<MemberChainItem> ValidationSubjects
         {
             get { yield break; }
         }
 
-        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
+        public override IEnumerable<MemberChainItem> RequiredForValidation
         {
             get { yield break; }
         }

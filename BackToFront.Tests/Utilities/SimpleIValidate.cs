@@ -30,12 +30,12 @@ namespace BackToFront.Tests.Utilities
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<BackToFront.Utilities.MemberChainItem> ValidatableMembers
+        public override IEnumerable<BackToFront.Utilities.MemberChainItem> ValidationSubjects
         {
             get { throw new NotImplementedException(); }
         }
 
-        public override IEnumerable<BackToFront.Utilities.MemberChainItem> RequiredForValidationMembers
+        public override IEnumerable<BackToFront.Utilities.MemberChainItem> RequiredForValidation
         {
             get { throw new NotImplementedException(); }
         }
