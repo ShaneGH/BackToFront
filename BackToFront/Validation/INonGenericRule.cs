@@ -5,6 +5,7 @@ using BackToFront.Framework.Base;
 using BackToFront.Meta;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace BackToFront.Validation
 {
@@ -21,5 +22,7 @@ namespace BackToFront.Validation
         Action<object, ValidationContext> Compile(SwapPropVisitor visitor);
 
         ExpressionMeta Meta { get; }
+
+        Expression PreCompiled { get; }
     }
 }

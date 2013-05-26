@@ -81,6 +81,7 @@
     <Compile Include="Meta\MemberExpressionMeta.cs" />
     <Compile Include="Meta\MethodCallExpressionMeta.cs" />
     <Compile Include="Meta\ParameterExpressionMeta.cs" />
+    <Compile Include="Meta\RuleMeta.cs" />
     <Compile Include="Meta\UnaryExpressionMeta.cs" />
     <Compile Include="Meta\ExpressionMeta.cs" />
     <Compile Include="Framework\MultiCondition.cs" />

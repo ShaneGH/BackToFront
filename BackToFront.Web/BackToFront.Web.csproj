@@ -142,6 +142,10 @@
       <DependentUpon>ExpressionInvoker.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\BackToFront\Validation\ValidationContext.ts" />
+    <TypeScriptCompile Include="Scripts\BackToFront\Validation\Validate.ts" />
+    <Content Include="Scripts\BackToFront\Validation\Validate.js">
+      <DependentUpon>Validate.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\BackToFront\Validation\ValidationContext.js">
       <DependentUpon>ValidationContext.ts</DependentUpon>
     </Content>

@@ -45,7 +45,7 @@ namespace BackToFront.Framework
         Action<object, ValidationContext> INonGenericRule.Compile(SwapPropVisitor visitor)
         {
             var rule = Expression.Lambda<Action<TEntity, ValidationContext>>(Compile(visitor), visitor.EntityParameter, visitor.ContextParameter).Compile();
-
+            
             return (a, b) =>
             {
                 if (!(a is TEntity))
@@ -116,12 +116,21 @@ namespace BackToFront.Framework
         #endregion
 
         #region Validate
+        
+        private Expression _PreCompiled;
+        public Expression PreCompiled
+        {
+            get
+            {
+                return _PreCompiled ?? (_PreCompiled = _Compile(new SwapPropVisitor(typeof(TEntity))));
+            }
+        }
 
         #endregion
 
         #region Meta
 
-        public ExpressionMeta _Meta;
+        private ExpressionMeta _Meta;
         public ExpressionMeta Meta
         {
             get 

@@ -88,7 +88,7 @@ namespace BackToFront.DataAnnotations
                             dependencies.Add(dep.DependencyName, result.Value);
                     }
                 }
-
+                
                 var vc = new ValidationContext(false, null, dependencies);
                 r.Compile(new Expressions.Visitors.SwapPropVisitor(null, dependencies, r.RuleType))(ctxt.ObjectInstance, vc);
 

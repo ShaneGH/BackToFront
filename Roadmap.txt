@@ -14,8 +14,6 @@ If validating children, ensure child object is not mocked out
 
 Special case for IEnumerables: create custom linq methods which accept expressions
 
-Lambdas within rule definition, e.g. If(a => a.Any(b => b.Selected)).Then.....
-
 More Expression types
 
 
