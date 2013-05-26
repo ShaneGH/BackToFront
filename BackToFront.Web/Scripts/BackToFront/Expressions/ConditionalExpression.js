@@ -28,8 +28,8 @@ var __BTF;
                 var test = this.Test.Compile();
                 var ifTrue = this.IfTrue.Compile();
                 var ifFalse = this.IfFalse.Compile();
-                return function (namedArguments, context) {
-                    return test(namedArguments, context) ? ifTrue(namedArguments, context) : ifFalse(namedArguments, context);
+                return function (ambientContext) {
+                    return test(ambientContext) ? ifTrue(ambientContext) : ifFalse(ambientContext);
                 };
             };
             return ConditionalExpression;

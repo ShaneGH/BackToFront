@@ -65,8 +65,7 @@ test("Warmup", function () { expect(0); });
     (function (testName) {
         test(testName, function () {
             var ex = new tUtil.Expect("ex1", "ex2");
-
-            var namedArguments = {};
+            
             var context = {};
 
             // arrange
@@ -74,18 +73,16 @@ test("Warmup", function () { expect(0); });
                 Expressions: [
                 {
                     Compile: function () {
-                        return function (na, ctxt) {
+                        return function (ctxt) {
                             ex.ExpectationReached.push("ex1");
-                            assert.strictEqual(na, namedArguments);
                             assert.strictEqual(ctxt, context);
                             return "ex1";
                         }
                     }
                 }, {
                     Compile: function () {
-                        return function (na, ctxt) {
+                        return function (ctxt) {
                             ex.ExpectationReached.push("ex2");
-                            assert.strictEqual(na, namedArguments);
                             assert.strictEqual(ctxt, context);
                             return "ex2";
                         }
@@ -97,7 +94,7 @@ test("Warmup", function () { expect(0); });
             var result = __BTF.Expressions.BlockExpression.prototype._Compile.call(_this);
 
             // assert
-            result(namedArguments, context);
+            result(context);
             ex.VerifyOrderedExpectations();
         });
     })("_Compile test");

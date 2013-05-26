@@ -22,9 +22,9 @@ var __BTF;
                 var children = linq(this.Expressions).Select(function (a) {
                     return a.Compile();
                 }).Result;
-                return function (namedArguments, context) {
+                return function (ambientContext) {
                     return linq(children).Each(function (a) {
-                        return a(namedArguments, context);
+                        return a(ambientContext);
                     });
                 };
             };

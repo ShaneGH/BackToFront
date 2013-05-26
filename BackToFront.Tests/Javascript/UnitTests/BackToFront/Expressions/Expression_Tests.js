@@ -76,43 +76,26 @@ test("Warmup", function () { expect(0); });
         });
     })("Constructor test null expression type type");
 
-    // Compile test and cache
-    var compileTest = function (_break) {
-        return function () {
-            // arrange
-            var item = {};
-            var subject = new __BTF.Expressions.Expression({ NodeType: 22, ExpressionType: 55 });
-            subject._Compile = function () {
-                return function (i, c) {
-                    assert.strictEqual(item, i);
-                };
+    (function (testName) {
+        // arrange
+        var context = {};
+        var subject = new __BTF.Expressions.Expression({ NodeType: 22, ExpressionType: 55 });
+        subject._Compile = function () {
+            return function (c) {
+                assert.strictEqual(c, context);
             };
-
-            // act
-            var actual1 = subject.Compile();
-            var actual2 = subject.Compile();
-
-            // assert
-            assert.strictEqual(actual1, actual2);
-            actual1(item, {
-                Break: function () {
-                    return _break;
-                }
-            });
-
-            expect(1 + (_break ? 0 : 1));
         };
-    };
 
-    // Compile test and cache, Break == true
-    (function (testName) {
-        test(testName, compileTest(true));
-    })("Compile test and cache, Break == true");
+        // act
+        var actual1 = subject.Compile();
+        var actual2 = subject.Compile();
 
-    // Compile test and cache, Break == false
-    (function (testName) {
-        test(testName, compileTest(true));
-    })("Compile test and cache, Break == false");
+        // assert
+        assert.strictEqual(actual1, actual2);
+        actual1(item);
+
+        expect(1);
+    })("Compile test and cache");
 
     // GetAffectedProperties
     (function (testName) {

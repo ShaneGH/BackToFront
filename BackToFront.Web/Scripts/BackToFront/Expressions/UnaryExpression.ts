@@ -24,7 +24,7 @@ module __BTF {
 
             _Compile(): Validation.ExpressionInvokerAction {
                 var operand = this.Operand.Compile();
-                return (namedArguments, context) => UnaryExpression.OperatorDictionary[this.NodeType](operand(namedArguments, context))
+                return (ambientContext) => UnaryExpression.OperatorDictionary[this.NodeType](operand(ambientContext))
             }
         }
     }

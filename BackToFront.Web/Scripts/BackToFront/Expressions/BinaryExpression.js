@@ -63,8 +63,8 @@ var __BTF;
                 var _this = this;
                 var left = this.Left.Compile();
                 var right = this.Right.Compile();
-                return function (namedArguments, context) {
-                    return BinaryExpression.OperatorDictionary[_this.NodeType](left(namedArguments, context), right(namedArguments, context));
+                return function (ambientContext) {
+                    return BinaryExpression.OperatorDictionary[_this.NodeType](left(ambientContext), right(ambientContext));
                 };
             };
             return BinaryExpression;

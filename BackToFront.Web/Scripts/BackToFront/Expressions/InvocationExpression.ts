@@ -13,7 +13,7 @@ module __BTF {
 
             _Compile(): Validation.ExpressionInvokerAction {
 
-                return (namedArguments, context) => null;
+                return (ambientContext) => null;
             }
         }
     }

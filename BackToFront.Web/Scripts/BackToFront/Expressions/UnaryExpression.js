@@ -20,8 +20,8 @@ var __BTF;
             UnaryExpression.prototype._Compile = function () {
                 var _this = this;
                 var operand = this.Operand.Compile();
-                return function (namedArguments, context) {
-                    return UnaryExpression.OperatorDictionary[_this.NodeType](operand(namedArguments, context));
+                return function (ambientContext) {
+                    return UnaryExpression.OperatorDictionary[_this.NodeType](operand(ambientContext));
                 };
             };
             return UnaryExpression;

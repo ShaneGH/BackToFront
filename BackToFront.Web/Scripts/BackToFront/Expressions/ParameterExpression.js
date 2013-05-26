@@ -18,8 +18,8 @@ var __BTF;
             }
             ParameterExpression.prototype._Compile = function () {
                 var _this = this;
-                return function (namedArguments, context) {
-                    return namedArguments[_this.Name];
+                return function (ambientContext) {
+                    return ambientContext[_this.Name];
                 };
             };
             return ParameterExpression;

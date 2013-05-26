@@ -94,7 +94,6 @@ test("_Compile test: exception", function () {
 });
 
 test("_Compile test", function () {
-    var namedArguments = {};
     var context = {};
     var methodName = "IGBGBBJKB";
 
@@ -107,8 +106,7 @@ test("_Compile test", function () {
         MethodName: methodName,
         Object: {
             Compile: function () {
-                return function (na, ctxt) {
-                    assert.strictEqual(na, namedArguments);
+                return function (ctxt) {
                     assert.strictEqual(ctxt, context);
                     var output = {};
                     output[methodName] = function (argument1, argument2) {
@@ -125,16 +123,14 @@ test("_Compile test", function () {
         Arguments: [
         {
             Compile: function () {
-                return function (na, ctxt) {
-                    assert.strictEqual(na, namedArguments);
+                return function (ctxt) {
                     assert.strictEqual(ctxt, context);
                     return arg1;
                 }
             }
         }, {
             Compile: function () {
-                return function (na, ctxt) {
-                    assert.strictEqual(na, namedArguments);
+                return function (ctxt) {
                     assert.strictEqual(ctxt, context);
                     return arg2;
                 }
@@ -144,7 +140,7 @@ test("_Compile test", function () {
 
     // act
     var result = __BTF.Expressions.MethodCallExpression.prototype._Compile.call(_this);
-    var actual = result(namedArguments, context);
+    var actual = result(context);
 
     // assert
     assert.strictEqual(expected, actual);

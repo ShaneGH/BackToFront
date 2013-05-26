@@ -21,7 +21,7 @@ module __BTF {
 
             _Compile(): Validation.ExpressionInvokerAction {
                 var children = linq(this.Expressions).Select(a => a.Compile()).Result;
-                return (namedArguments, context) => linq(children).Each(a => a(namedArguments, context));
+                return (ambientContext) => linq(children).Each(a => a(ambientContext));
             }
         }
     }

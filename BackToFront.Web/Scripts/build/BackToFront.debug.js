@@ -542,12 +542,7 @@ var __BTF;
             }
             Expression.prototype.Compile = function () {
                 if(!this._Compiled) {
-                    var compiled = this._Compile();
-                    this._Compiled = function (item, context) {
-                        if(!context.Break()) {
-                            compiled(item, context);
-                        }
-                    };
+                    this._Compiled = this._Compile();
                 }
                 return this._Compiled;
             };
@@ -710,8 +705,8 @@ var __BTF;
                 var _this = this;
                 var left = this.Left.Compile();
                 var right = this.Right.Compile();
-                return function (namedArguments, context) {
-                    return BinaryExpression.OperatorDictionary[_this.NodeType](left(namedArguments, context), right(namedArguments, context));
+                return function (ambientContext) {
+                    return BinaryExpression.OperatorDictionary[_this.NodeType](left(ambientContext), right(ambientContext));
                 };
             };
             return BinaryExpression;
@@ -746,9 +741,9 @@ var __BTF;
                 var children = linq(this.Expressions).Select(function (a) {
                     return a.Compile();
                 }).Result;
-                return function (namedArguments, context) {
+                return function (ambientContext) {
                     return linq(children).Each(function (a) {
-                        return a(namedArguments, context);
+                        return a(ambientContext);
                     });
                 };
             };
@@ -790,8 +785,8 @@ var __BTF;
                 var test = this.Test.Compile();
                 var ifTrue = this.IfTrue.Compile();
                 var ifFalse = this.IfFalse.Compile();
-                return function (namedArguments, context) {
-                    return test(namedArguments, context) ? ifTrue(namedArguments, context) : ifFalse(namedArguments, context);
+                return function (ambientContext) {
+                    return test(ambientContext) ? ifTrue(ambientContext) : ifFalse(ambientContext);
                 };
             };
             return ConditionalExpression;
@@ -816,7 +811,7 @@ var __BTF;
                         _super.call(this, meta);
             }
             ConstantExpression.prototype._Compile = function () {
-                return function (namedArguments, context) {
+                return function (ambientContext) {
                     return null;
                 };
             };
@@ -842,7 +837,7 @@ var __BTF;
                         _super.call(this, meta);
             }
             DefaultExpression.prototype._Compile = function () {
-                return function (namedArguments, context) {
+                return function (ambientContext) {
                     return null;
                 };
             };
@@ -868,7 +863,7 @@ var __BTF;
                         _super.call(this, meta);
             }
             InvocationExpression.prototype._Compile = function () {
-                return function (namedArguments, context) {
+                return function (ambientContext) {
                     return null;
                 };
             };
@@ -909,8 +904,8 @@ var __BTF;
                 }
                 var name = this.MemberName;
                 var expression = this.Expression.Compile();
-                return function (namedArguments, context) {
-                    return expression(namedArguments, context)[name];
+                return function (ambientContext) {
+                    return expression(ambientContext)[name];
                 };
             };
             return MemberExpression;
@@ -962,10 +957,10 @@ var __BTF;
                 var args = linq(this.Arguments).Select(function (a) {
                     return a.Compile();
                 }).Result;
-                return function (namedParameters, context) {
-                    var o = object(namedParameters, context);
+                return function (ambientContext) {
+                    var o = object(ambientContext);
                     var params = linq(args).Select(function (a) {
-                        return a(namedParameters, context);
+                        return a(ambientContext);
                     }).Result;
                     return o[name].apply(o, params);
                 };
@@ -998,8 +993,8 @@ var __BTF;
             }
             ParameterExpression.prototype._Compile = function () {
                 var _this = this;
-                return function (namedArguments, context) {
-                    return namedArguments[_this.Name];
+                return function (ambientContext) {
+                    return ambientContext[_this.Name];
                 };
             };
             return ParameterExpression;
@@ -1032,8 +1027,8 @@ var __BTF;
             UnaryExpression.prototype._Compile = function () {
                 var _this = this;
                 var operand = this.Operand.Compile();
-                return function (namedArguments, context) {
-                    return UnaryExpression.OperatorDictionary[_this.NodeType](operand(namedArguments, context));
+                return function (ambientContext) {
+                    return UnaryExpression.OperatorDictionary[_this.NodeType](operand(ambientContext));
                 };
             };
             return UnaryExpression;

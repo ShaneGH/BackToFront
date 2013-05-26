@@ -34,7 +34,7 @@ module __BTF {
                 var ifTrue = this.IfTrue.Compile();
                 var ifFalse = this.IfFalse.Compile();
 
-                return (namedArguments, context) => test(namedArguments, context) ? ifTrue(namedArguments, context) : ifFalse(namedArguments, context);
+                return (ambientContext) => test(ambientContext) ? ifTrue(ambientContext) : ifFalse(ambientContext);
             }
         }
     }

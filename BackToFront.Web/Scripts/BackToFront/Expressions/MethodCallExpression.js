@@ -39,10 +39,10 @@ var __BTF;
                 var args = linq(this.Arguments).Select(function (a) {
                     return a.Compile();
                 }).Result;
-                return function (namedParameters, context) {
-                    var o = object(namedParameters, context);
+                return function (ambientContext) {
+                    var o = object(ambientContext);
                     var params = linq(args).Select(function (a) {
-                        return a(namedParameters, context);
+                        return a(ambientContext);
                     }).Result;
                     return o[name].apply(o, params);
                 };

@@ -97,7 +97,6 @@ test("Warmup", function () { expect(0); });
             debugger;
             var memberName = "LKJHLKJH";
 
-            var namedArguments = {};
             var context = {};
 
             var expected = {};
@@ -107,9 +106,8 @@ test("Warmup", function () { expect(0); });
                 Expression: {
                     Compile: function () {
                         ex.At("innerCompile");
-                        return function (na, ctxt) {
+                        return function (ctxt) {
                             ex.At("innerCall");
-                            assert.strictEqual(na, namedArguments);
                             assert.strictEqual(ctxt, context);
 
                             var output = {};
@@ -129,8 +127,8 @@ test("Warmup", function () { expect(0); });
             };
 
             var compiled = __BTF.Expressions.MemberExpression.prototype._Compile.call(subject);
-            assert.strictEqual(expected, compiled(namedArguments, context));
-            assert.strictEqual(expected, compiled(namedArguments, context));
+            assert.strictEqual(expected, compiled(context));
+            assert.strictEqual(expected, compiled(context));
 
             ex.VerifyOrderedExpectations();
         });

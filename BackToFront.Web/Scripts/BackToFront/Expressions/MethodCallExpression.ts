@@ -43,9 +43,9 @@ module __BTF {
 
                 var object = this.Object.Compile();
                 var args = linq(this.Arguments).Select(a => a.Compile()).Result;
-                return (namedParameters, context) => {
-                    var o = object(namedParameters, context);
-                    var params = linq(args).Select(a => a(namedParameters, context)).Result;
+                return (ambientContext) => {
+                    var o = object(ambientContext);
+                    var params = linq(args).Select(a => a(ambientContext)).Result;
 
                     return o[name].apply(o, params);
                 };

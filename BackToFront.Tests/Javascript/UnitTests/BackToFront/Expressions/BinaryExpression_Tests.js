@@ -95,16 +95,14 @@ test("Warmup", function () { expect(0); });
         test(testName, function () {
             var ex = new tUtil.Expect("left", "right", "exp");
 
-            var namedArguments = {};
             var context = {};
 
             // arrange
             var _this = {
                 Left: {
                     Compile: function () {
-                        return function (na, ctxt) {
+                        return function (ctxt) {
                             ex.ExpectationReached.push("left");
-                            assert.strictEqual(na, namedArguments);
                             assert.strictEqual(ctxt, context);
                             return "left";
                         }
@@ -112,9 +110,8 @@ test("Warmup", function () { expect(0); });
                 },
                 Right: {
                     Compile: function () {
-                        return function (na, ctxt) {
+                        return function (ctxt) {
                             ex.ExpectationReached.push("right");
-                            assert.strictEqual(na, namedArguments);
                             assert.strictEqual(ctxt, context);
                             return "right";
                         }
@@ -134,7 +131,7 @@ test("Warmup", function () { expect(0); });
             var result = __BTF.Expressions.BinaryExpression.prototype._Compile.call(_this);
 
             // assert
-            assert.deepEqual(result(namedArguments, context), "exp");
+            assert.deepEqual(result(context), "exp");
             ex.VerifyOrderedExpectations();
         });
     })("_Compile test");

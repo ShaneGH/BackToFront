@@ -40,7 +40,7 @@ module __BTF {
 
                 var name = this.MemberName;
                 var expression = this.Expression.Compile();
-                return (namedArguments, context) => expression(namedArguments, context)[name];
+                return (ambientContext) => expression(ambientContext)[name];
             }
         }
     }

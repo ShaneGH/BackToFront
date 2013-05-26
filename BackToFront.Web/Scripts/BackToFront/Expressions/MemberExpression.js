@@ -27,8 +27,8 @@ var __BTF;
                 }
                 var name = this.MemberName;
                 var expression = this.Expression.Compile();
-                return function (namedArguments, context) {
-                    return expression(namedArguments, context)[name];
+                return function (ambientContext) {
+                    return expression(ambientContext)[name];
                 };
             };
             return MemberExpression;

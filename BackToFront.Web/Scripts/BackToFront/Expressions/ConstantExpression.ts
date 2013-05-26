@@ -11,7 +11,7 @@ module __BTF {
 
             //TODO
             _Compile(): Validation.ExpressionInvokerAction {
-                return (namedArguments, context) => null;
+                return (ambientContext) => null;
             }
         }
     }

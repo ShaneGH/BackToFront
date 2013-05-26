@@ -25,7 +25,7 @@ test("Warmup", function () { expect(0); });
     (function (testName) {
         test(testName, function () {
             var ex = new tUtil.Expect("require", "true", "false", "test");
-            debugger;
+
             // arrange
             var meta = { IfTrue: "true", IfFalse: "false", Test: "test", NodeType: __BTF.Meta.ExpressionType.Add };
 
@@ -71,7 +71,6 @@ test("Warmup", function () { expect(0); });
     var compileTest = function (test) {
         var ex = new tUtil.Expect("test", "true", "false");
 
-        var namedArguments = {};
         var context = {};
 
         // arrange
@@ -79,8 +78,7 @@ test("Warmup", function () { expect(0); });
             IfTrue: {
                 Compile: function () {
                     ex.ExpectationReached.push("true");
-                    return function (na, ctxt) {
-                        assert.strictEqual(na, namedArguments);
+                    return function (ctxt) {
                         assert.strictEqual(ctxt, context);
                         return true;
                     }
@@ -89,8 +87,7 @@ test("Warmup", function () { expect(0); });
             IfFalse: {
                 Compile: function () {
                     ex.ExpectationReached.push("false");
-                    return function (na, ctxt) {
-                        assert.strictEqual(na, namedArguments);
+                    return function (ctxt) {
                         assert.strictEqual(ctxt, context);
                         return false;
                     }
@@ -99,8 +96,7 @@ test("Warmup", function () { expect(0); });
             Test: {
                 Compile: function () {
                     ex.ExpectationReached.push("test");
-                    return function (na, ctxt) {
-                        assert.strictEqual(na, namedArguments);
+                    return function (ctxt) {
                         assert.strictEqual(ctxt, context);
                         return test;
                     }
@@ -112,7 +108,7 @@ test("Warmup", function () { expect(0); });
         var result = __BTF.Expressions.ConditionalExpression.prototype._Compile.call(_this);
 
         // assert
-        assert.deepEqual(result(namedArguments, context), test);
+        assert.deepEqual(result(context), test);
         ex.VerifyOrderedExpectations();
     }
 

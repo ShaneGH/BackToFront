@@ -15,12 +15,7 @@ var __BTF;
             }
             Expression.prototype.Compile = function () {
                 if(!this._Compiled) {
-                    var compiled = this._Compile();
-                    this._Compiled = function (item, context) {
-                        if(!context.Break()) {
-                            compiled(item, context);
-                        }
-                    };
+                    this._Compiled = this._Compile();
                 }
                 return this._Compiled;
             };

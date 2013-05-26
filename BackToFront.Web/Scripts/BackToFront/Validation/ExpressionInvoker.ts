@@ -8,7 +8,7 @@ module __BTF {
     export module Validation {
 
         export interface ExpressionInvokerAction {
-            (namedArguments: any, context: ValidationContext): any;
+            (ambientContext): any;
         }
 
         export class ExpressionInvoker {

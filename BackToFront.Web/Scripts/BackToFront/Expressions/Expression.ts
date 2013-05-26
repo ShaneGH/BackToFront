@@ -42,11 +42,7 @@ module __BTF {
             private _Compiled: __BTF.Validation.ExpressionInvokerAction;
             Compile(): __BTF.Validation.ExpressionInvokerAction {
                 if (!this._Compiled) {
-                    var compiled = this._Compile();
-                    this._Compiled = (item, context) => {
-                        if (!context.Break())
-                            compiled(item, context);
-                    };
+                    this._Compiled = this._Compile();
                 }
 
                 return this._Compiled;

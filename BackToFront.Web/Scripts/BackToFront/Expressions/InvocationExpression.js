@@ -12,7 +12,7 @@ var __BTF;
                         _super.call(this, meta);
             }
             InvocationExpression.prototype._Compile = function () {
-                return function (namedArguments, context) {
+                return function (ambientContext) {
                     return null;
                 };
             };

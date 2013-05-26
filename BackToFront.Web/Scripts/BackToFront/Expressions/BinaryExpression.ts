@@ -56,7 +56,7 @@ module __BTF {
             _Compile(): Validation.ExpressionInvokerAction {
                 var left = this.Left.Compile();
                 var right = this.Right.Compile();
-                return (namedArguments, context) => BinaryExpression.OperatorDictionary[this.NodeType](left(namedArguments, context), right(namedArguments, context))
+                return (ambientContext) => BinaryExpression.OperatorDictionary[this.NodeType](left(ambientContext), right(ambientContext))
             };
         }
     }
