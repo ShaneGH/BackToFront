@@ -12,8 +12,7 @@ ConstantExpressionMeta. Need to serialize the Value
 
 If validating children, ensure child object is not mocked out
 
-Special case for IEnumerables
-IEnumerables: IfAll, IfAny, RequireThatAll, RequreThatAny, ElseIfAll, ElseIfAny etc.....
+Special case for IEnumerables: create custom linq methods which accept expressions
 
 Lambdas within rule definition, e.g. If(a => a.Any(b => b.Selected)).Then.....
 
