@@ -5,13 +5,16 @@ module __BTF {
     export module Expressions {
 
         export class ConstantExpression extends Expression {
+            Value: any;
+
             constructor(meta: Meta.ConstantExpressionMeta) {
                 super(meta);
+
+                this.Value = meta.Value;
             }
 
-            //TODO
             _Compile(): Validation.ExpressionInvokerAction {
-                return (ambientContext) => null;
+                return (ambientContext) => this.Value;
             }
         }
     }

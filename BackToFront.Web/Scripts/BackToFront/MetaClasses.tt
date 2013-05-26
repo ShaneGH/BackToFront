@@ -27,6 +27,7 @@
 	registeredTypes.Add(typeof(ExpressionType), typeof(ExpressionType).Name);
 	registeredTypes.Add(typeof(ExpressionMeta[]), typeof(ExpressionMeta[]).Name);
 	registeredTypes.Add(typeof(string), "string");
+	registeredTypes.Add(typeof(object), "any");
 #>
 
 module __BTF {

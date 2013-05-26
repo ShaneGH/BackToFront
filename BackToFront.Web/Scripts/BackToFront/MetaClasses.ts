@@ -25,6 +25,7 @@ module __BTF {
 		}
 
 		export interface ConstantExpressionMeta extends ExpressionMeta {
+			Value: any;
 		}
 
 		export interface InvocationExpressionMeta extends ExpressionMeta {

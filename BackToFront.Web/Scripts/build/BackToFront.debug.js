@@ -809,10 +809,12 @@ var __BTF;
             __extends(ConstantExpression, _super);
             function ConstantExpression(meta) {
                         _super.call(this, meta);
+                this.Value = meta.Value;
             }
             ConstantExpression.prototype._Compile = function () {
+                var _this = this;
                 return function (ambientContext) {
-                    return null;
+                    return _this.Value;
                 };
             };
             return ConstantExpression;

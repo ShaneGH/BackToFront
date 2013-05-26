@@ -7,25 +7,24 @@ test("Warmup", function () { expect(0); });
 
 (function (moduleName) {
 
-    var createExpression = __BTF.Expressions.Expression.CreateExpression;
-    var require = __BTF.Sanitizer.Require;
-
     module(moduleName, {
         setup: function () {
-            __BTF.Expressions.Expression.CreateExpression = createExpression;
-            __BTF.Sanitizer.Require = require;
         },
         teardown: function () {
-            __BTF.Expressions.Expression.CreateExpression = createExpression;
-            __BTF.Sanitizer.Require = require;
         }
     });
 
     // Constructor test OK
     (function (testName) {
         test(testName, function () {
-            assert.ok(true);
+            // arrange
+            var meta = { Value: {}, ExpressionType: 2, NodeType: __BTF.Meta.ExpressionType.Add };
+            // act
+            // assert
+            var subject = new __BTF.Expressions.ConstantExpression(meta);
+            assert.strictEqual(subject.Value, meta.Value);
+            assert.strictEqual(subject.Compile()(), meta.Value);
         });
-    })("Constructor test OK");
+    })("Constructor and compile test");
 
 })("__BTF.Expressions.ConstantExpression");
