@@ -23,7 +23,7 @@ namespace BackToFront.Validation
         
         Action<object, ValidationContext> Compile(SwapPropVisitor visitor);
 
-        ExpressionMeta Meta { get; }
+        RuleMeta Meta { get; }
 
         Expression PreCompiled { get; }
     }

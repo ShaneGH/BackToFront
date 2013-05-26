@@ -131,12 +131,12 @@ namespace BackToFront.Framework
 
         #region Meta
 
-        private ExpressionMeta _Meta;
-        public ExpressionMeta Meta
+        private RuleMeta _Meta;
+        public RuleMeta Meta
         {
             get 
-            { 
-                return _Meta ??(_Meta = ExpressionMeta.CreateMeta(Compile(new SwapPropVisitor(typeof(TEntity)))));
+            {
+                return _Meta ?? (_Meta = new RuleMeta(this));
             }
         }
 

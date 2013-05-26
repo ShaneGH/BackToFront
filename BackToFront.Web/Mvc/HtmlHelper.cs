@@ -20,7 +20,7 @@ namespace BackToFront.Web.Mvc
         public string Entity { get; set; }
 
         [DataMember]
-        public List<ExpressionMeta> Rules { get; set; }
+        public List<RuleMeta> Rules { get; set; }
     }
 
     public static class HtmlHelper
@@ -61,7 +61,7 @@ namespace BackToFront.Web.Mvc
             var rules = new RuleCollection
             {
                 Entity = type.FullName,
-                Rules = new List<ExpressionMeta>()
+                Rules = new List<RuleMeta>()
             };
 
             while (type != null)

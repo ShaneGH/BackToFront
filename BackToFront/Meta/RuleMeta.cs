@@ -1,29 +1,34 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using BackToFront.Utilities;
-//using BackToFront.Validation;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
+using BackToFront.Utilities;
+using BackToFront.Validation;
 
-//namespace BackToFront.Meta
-//{
-//    public class RuleMeta
-//    {
-//        public ExpressionMeta Expression { get; private set; }
-//        public MemberChainItem[] AffectedMembers { get; private set; }
+namespace BackToFront.Meta
+{
+    [DataContract]
+    public class RuleMeta
+    {
+        [DataMember]
+        public ExpressionMeta Expression { get; private set; }
 
-//        public RuleMeta() { }
+        [DataMember]
+        public MemberChainItem[] AffectedMembers { get; private set; }
 
-//        public RuleMeta(IEnumerable<MemberChainItem> affectedMembers, ExpressionMeta expression)
-//        {
-//            AffectedMembers = affectedMembers.ToArray();
-//            Expression = expression;
-//        }
+        public RuleMeta() { }
 
-//        public RuleMeta(INonGenericRule rule)
-//            : this(rule.AffectedMembers, ExpressionMeta.CreateMeta(rule.PreCompiled))
-//        {
-//        }
-//    }
-//}
+        public RuleMeta(IEnumerable<MemberChainItem> affectedMembers, ExpressionMeta expression)
+        {
+            AffectedMembers = affectedMembers.ToArray();
+            Expression = expression;
+        }
+
+        public RuleMeta(INonGenericRule rule)
+            : this(rule.ValidatableMembers, ExpressionMeta.CreateMeta(rule.PreCompiled))
+        {
+        }
+    }
+}
