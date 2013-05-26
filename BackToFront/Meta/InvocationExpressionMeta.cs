@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using System.Linq;
 using BackToFront.Enum;
+using System.Linq.Expressions;
 
 namespace BackToFront.Meta
 {
@@ -17,14 +18,14 @@ namespace BackToFront.Meta
         public InvocationExpressionMeta()
             : this(null) { }
 
-        public InvocationExpressionMeta(InvocationExpressionWrapper expression)
+        public InvocationExpressionMeta(InvocationExpression expression)
             : base(expression)
         {
             if (expression == null)
                 return;
 
-            Expression = expression.InnerExpression.Meta;
-            Arguments = expression.Arguments.Select(a => a.Meta).ToArray();
+            Expression = CreateMeta(expression.Expression);
+            Arguments = expression.Arguments.Select(a => CreateMeta(a)).ToArray();
         }
 
         public override ExpressionWrapperType ExpressionType

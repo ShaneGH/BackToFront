@@ -4,6 +4,7 @@ using System.Linq;
 using BackToFront.Enum;
 using System;
 using System.IO;
+using System.Linq.Expressions;
 
 namespace BackToFront.Meta
 {
@@ -17,14 +18,14 @@ namespace BackToFront.Meta
         public ConstantExpressionMeta()
             : this(null) { }
 
-        public ConstantExpressionMeta(ConstantExpressionWrapper expression)
+        public ConstantExpressionMeta(ConstantExpression expression)
             : base(expression)
         {
             if (expression == null)
                 return;
 
             // TODO: need somewhere to register types for serialization
-            Value = expression.Expression.Value;
+            Value = expression.Value;
         }
 
         public override ExpressionWrapperType ExpressionType

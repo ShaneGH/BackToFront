@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using System.Linq;
 using BackToFront.Enum;
+using System.Linq.Expressions;
 
 namespace BackToFront.Meta
 {
@@ -23,16 +24,16 @@ namespace BackToFront.Meta
         public MethodCallExpressionMeta()
             : this(null) { }
 
-        public MethodCallExpressionMeta(MethodCallExpressionWrapper expression)
+        public MethodCallExpressionMeta(MethodCallExpression expression)
             : base(expression)
         {
             if (expression == null)
                 return;
 
-            Object = expression.Object.Meta;
-            Arguments = expression.Arguments.Select(a => a.Meta).ToArray();
-            MethodName = expression.Expression.Method.Name;
-            MethodFullName = expression.Expression.Method.DeclaringType.FullName + "." + expression.Expression.Method.Name;
+            Object = CreateMeta(expression.Object);
+            Arguments = expression.Arguments.Select(a => CreateMeta(a)).ToArray();
+            MethodName = expression.Method.Name;
+            MethodFullName = expression.Method.DeclaringType.FullName + "." + expression.Method.Name;
         }
 
         public override ExpressionWrapperType ExpressionType

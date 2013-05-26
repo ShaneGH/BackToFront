@@ -91,14 +91,5 @@ namespace BackToFront.Expressions
                 return InnerExpression.UnorderedParameters;
             }
         }
-
-        private MemberExpressionMeta _Meta;
-        public override ExpressionMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new MemberExpressionMeta(this));
-            }
-        }
     }
 }

@@ -5,12 +5,16 @@ using BackToFront.Enum;
 using BackToFront.Expressions;
 using System.Runtime.Serialization.Json;
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace BackToFront.Meta
 {
     [DataContract]
     public abstract class ExpressionMeta
     {
+        public static readonly ReadOnlyDictionary<Type, Func<Expression, ExpressionMeta>> Constructors;
+
         private static DataContractJsonSerializer _JsonMetaSerializer;
         private static DataContractSerializer _MetaSerializer;
 
@@ -19,6 +23,21 @@ namespace BackToFront.Meta
         {
             var type = typeof(ExpressionMeta);
             MetaTypes = type.Assembly.GetTypes().Where(t => t != type && type.IsAssignableFrom(t)).ToArray();
+
+            var constructors = new Dictionary<Type, Func<Expression, ExpressionMeta>>();
+
+            constructors[typeof(BinaryExpression)] = expression => new BinaryExpressionMeta(expression as BinaryExpression);
+            constructors[typeof(ConstantExpression)] = expression => new ConstantExpressionMeta(expression as ConstantExpression);
+            constructors[typeof(MethodCallExpression)] = expression => new MethodCallExpressionMeta(expression as MethodCallExpression);
+            constructors[typeof(UnaryExpression)] = expression => new UnaryExpressionMeta(expression as UnaryExpression);
+            constructors[typeof(ParameterExpression)] = expression => new ParameterExpressionMeta(expression as ParameterExpression);
+            constructors[typeof(MemberExpression)] = expression => new MemberExpressionMeta(expression as MemberExpression);
+            constructors[typeof(BlockExpression)] = expression => new BlockExpressionMeta(expression as BlockExpression);
+            constructors[typeof(ConditionalExpression)] = expression => new ConditionalExpressionMeta(expression as ConditionalExpression);
+            constructors[typeof(DefaultExpression)] = expression => new DefaultExpressionMeta(expression as DefaultExpression);
+            constructors[typeof(InvocationExpression)] = expression => new InvocationExpressionMeta(expression as InvocationExpression);
+
+            Constructors = new ReadOnlyDictionary<Type, Func<Expression, ExpressionMeta>>(constructors);
         }
 
         /// <summary>
@@ -58,13 +77,31 @@ namespace BackToFront.Meta
 
         public ExpressionMeta() { }
 
-        public ExpressionMeta(ExpressionWrapperBase expression)
+        public ExpressionMeta(Expression expression)
             : this()
         {
             if (expression == null)
                 return;
 
-            NodeType = expression.WrappedExpression.NodeType;
+            NodeType = expression.NodeType;
+        }
+
+        public static ExpressionMeta CreateMeta(Expression expression)
+        {
+            var type = expression.GetType();
+
+            while (type != typeof(Expression))
+            {
+                if (Constructors.ContainsKey(type))
+                    break;
+                else
+                    type = type.BaseType;
+            }
+
+            if (type == typeof(Expression))
+                throw new InvalidOperationException("##" + expression.GetType().ToString());
+
+            return Constructors[type](expression);
         }
     }
 }

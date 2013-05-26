@@ -65,11 +65,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             {
                 get { return new ParameterExpression[20]; }
             }
-
-            public override ExpressionMeta Meta
-            {
-                get { throw new NotImplementedException(); }
-            }
         }
 
         #region constructors

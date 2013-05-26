@@ -18,13 +18,13 @@ namespace BackToFront.Meta
         public UnaryExpressionMeta()
             : this(null) { }
 
-        public UnaryExpressionMeta(UnaryExpressionWrapper expression)
+        public UnaryExpressionMeta(UnaryExpression expression)
             : base(expression)
         {
             if (expression == null)
                 return;
 
-            Operand = expression.Operand.Meta;
+            Operand = CreateMeta(expression.Operand);
         }
 
         public override ExpressionWrapperType ExpressionType

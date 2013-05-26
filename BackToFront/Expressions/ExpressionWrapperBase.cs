@@ -20,28 +20,27 @@ namespace BackToFront.Expressions
     {
         private readonly Dictionary<ParameterExpression, IEnumerable<MemberChainItem>> _MembersCache = new Dictionary<ParameterExpression, IEnumerable<MemberChainItem>>();
         public static readonly ReadOnlyDictionary<Type, Func<Expression, ExpressionWrapperBase>> Constructors;
-        private static readonly Dictionary<Type, Func<Expression, ExpressionWrapperBase>> _Constructors = new Dictionary<Type, Func<Expression, ExpressionWrapperBase>>();
 
         static ExpressionWrapperBase()
         {
-            Constructors = new ReadOnlyDictionary<Type, Func<Expression, ExpressionWrapperBase>>(_Constructors);
+            var constructors = new Dictionary<Type, Func<Expression, ExpressionWrapperBase>>();
 
-            _Constructors[typeof(BinaryExpression)] = expression => new BinaryExpressionWrapper(expression as BinaryExpression);
-            _Constructors[typeof(ConstantExpression)] = expression => new ConstantExpressionWrapper(expression as ConstantExpression);
-            _Constructors[typeof(MethodCallExpression)] = expression => new MethodCallExpressionWrapper(expression as MethodCallExpression);
-            _Constructors[typeof(UnaryExpression)] = expression => new UnaryExpressionWrapper(expression as UnaryExpression);
-            _Constructors[typeof(ParameterExpression)] = expression => new ParameterExpressionWrapper(expression as ParameterExpression);
-            _Constructors[typeof(MemberExpression)] = expression => new MemberExpressionWrapper(expression as MemberExpression);
-            _Constructors[typeof(BlockExpression)] = expression => new BlockExpressionWrapper(expression as BlockExpression);
-            _Constructors[typeof(ConditionalExpression)] = expression => new ConditionalExpressionWrapper(expression as ConditionalExpression);
-            _Constructors[typeof(DefaultExpression)] = expression => new DefaultExpressionWrapper(expression as DefaultExpression);
-            _Constructors[typeof(InvocationExpression)] = expression => new InvocationExpressionWrapper(expression as InvocationExpression);
+            constructors[typeof(BinaryExpression)] = expression => new BinaryExpressionWrapper(expression as BinaryExpression);
+            constructors[typeof(ConstantExpression)] = expression => new ConstantExpressionWrapper(expression as ConstantExpression);
+            constructors[typeof(MethodCallExpression)] = expression => new MethodCallExpressionWrapper(expression as MethodCallExpression);
+            constructors[typeof(UnaryExpression)] = expression => new UnaryExpressionWrapper(expression as UnaryExpression);
+            constructors[typeof(ParameterExpression)] = expression => new ParameterExpressionWrapper(expression as ParameterExpression);
+            constructors[typeof(MemberExpression)] = expression => new MemberExpressionWrapper(expression as MemberExpression);
+            constructors[typeof(BlockExpression)] = expression => new BlockExpressionWrapper(expression as BlockExpression);
+            constructors[typeof(ConditionalExpression)] = expression => new ConditionalExpressionWrapper(expression as ConditionalExpression);
+            constructors[typeof(DefaultExpression)] = expression => new DefaultExpressionWrapper(expression as DefaultExpression);
+            constructors[typeof(InvocationExpression)] = expression => new InvocationExpressionWrapper(expression as InvocationExpression);
+
+            Constructors = new ReadOnlyDictionary<Type, Func<Expression, ExpressionWrapperBase>>(constructors);
         }
         
         public abstract Expression WrappedExpression { get; }
         protected abstract IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter);
-
-        public abstract ExpressionMeta Meta { get; }
 
         private IEnumerable<ParameterExpression> CachedUnorderedParameters;
         public IEnumerable<ParameterExpression> UnorderedParameters

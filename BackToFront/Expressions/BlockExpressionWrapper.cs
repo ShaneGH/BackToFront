@@ -35,15 +35,6 @@ namespace BackToFront.Expressions
             return ChildExpressions.Select(ex => ex.GetMembersForParameter(parameter)).Aggregate();
         }
 
-        private BlockExpressionMeta _Meta;
-        public override ExpressionMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new BlockExpressionMeta(this));
-            }
-        }
-
         protected override IEnumerable<ParameterExpression> _UnorderedParameters
         {
             get 

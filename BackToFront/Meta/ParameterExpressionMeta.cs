@@ -1,6 +1,6 @@
-﻿using BackToFront.Enum;
-using BackToFront.Expressions;
+﻿using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using BackToFront.Enum;
 
 namespace BackToFront.Meta
 {
@@ -13,13 +13,13 @@ namespace BackToFront.Meta
         public ParameterExpressionMeta()
             : this(null) { }
 
-        public ParameterExpressionMeta(ParameterExpressionWrapper expression)
+        public ParameterExpressionMeta(ParameterExpression expression)
             : base(expression)
         {
             if (expression == null)
                 return;
 
-            Name = expression.Expression.Name;
+            Name = expression.Name;
         }
 
         public override ExpressionWrapperType ExpressionType

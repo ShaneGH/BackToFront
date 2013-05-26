@@ -18,13 +18,13 @@ namespace BackToFront.Meta
         public BlockExpressionMeta()
             : this(null) { }
 
-        public BlockExpressionMeta(BlockExpressionWrapper expression)
+        public BlockExpressionMeta(BlockExpression expression)
             : base(expression)
         {
             if (expression == null)
                 return;
 
-            Expressions = expression.ChildExpressions.Select(ce => ce.Meta).ToArray();
+            Expressions = expression.Expressions.Select(ce => CreateMeta(ce)).ToArray();
         }
 
         public override ExpressionWrapperType ExpressionType

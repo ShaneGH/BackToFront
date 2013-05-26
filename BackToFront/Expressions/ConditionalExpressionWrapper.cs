@@ -55,15 +55,6 @@ namespace BackToFront.Expressions
                 .Union(IfFalse.GetMembersForParameter(parameter));
         }
 
-        private ConditionalExpressionMeta _Meta;
-        public override ExpressionMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new ConditionalExpressionMeta(this));
-            }
-        }
-
         protected override IEnumerable<ParameterExpression> _UnorderedParameters
         {
             get 

@@ -55,14 +55,5 @@ namespace BackToFront.Expressions
         {
             get { yield return Expression; }
         }
-
-        private ParameterExpressionMeta _Meta;
-        public override ExpressionMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new ParameterExpressionMeta(this));
-            }
-        }
     }
 }

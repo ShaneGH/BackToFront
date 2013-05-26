@@ -24,15 +24,15 @@ namespace BackToFront.Meta
         public ConditionalExpressionMeta()
             : this(null) { }
 
-        public ConditionalExpressionMeta(ConditionalExpressionWrapper expression)
+        public ConditionalExpressionMeta(ConditionalExpression expression)
             : base(expression)
         {
             if (expression == null)
                 return;
 
-            IfTrue = expression.IfTrue.Meta;
-            IfFalse = expression.IfFalse.Meta;
-            Test = expression.Test.Meta;
+            IfTrue = CreateMeta(expression.IfTrue);
+            IfFalse = CreateMeta(expression.IfFalse);
+            Test = CreateMeta(expression.Test);
         }
 
         public override ExpressionWrapperType ExpressionType

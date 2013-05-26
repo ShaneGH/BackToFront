@@ -126,7 +126,7 @@ namespace BackToFront.Framework
         {
             get 
             { 
-                return _Meta ??(_Meta = ExpressionWrapperBase.CreateChildWrapper(Compile(new SwapPropVisitor(typeof(TEntity)))).Meta);
+                return _Meta ??(_Meta = ExpressionMeta.CreateMeta(Compile(new SwapPropVisitor(typeof(TEntity)))));
             }
         }
 

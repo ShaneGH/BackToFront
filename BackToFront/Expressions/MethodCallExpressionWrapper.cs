@@ -79,14 +79,5 @@ namespace BackToFront.Expressions
                     return a.WrappedExpression;
             })));
         }
-
-        private MethodCallExpressionMeta _Meta;
-        public override ExpressionMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new MethodCallExpressionMeta(this));
-            }
-        }
     }
 }

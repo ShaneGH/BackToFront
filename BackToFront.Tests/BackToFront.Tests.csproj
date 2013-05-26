@@ -161,8 +161,6 @@
     <Compile Include="CSharp\UnitTests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Meta\BinaryExpressionMeta_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Meta\ExpressionMeta_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Utilities\Dependencies_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -234,6 +232,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CSharp\UnitTests\Logic\" />
+    <Folder Include="CSharp\UnitTests\Meta\" />
     <Folder Include="CSharp\UnitTests\Web\" />
   </ItemGroup>
   <ItemGroup>

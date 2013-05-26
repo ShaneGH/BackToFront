@@ -59,14 +59,5 @@ namespace BackToFront.Expressions
                 return Left.UnorderedParameters.Union(Right.UnorderedParameters);
             }
         }
-
-        private BinaryExpressionMeta _Meta;
-        public override ExpressionMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new BinaryExpressionMeta(this));
-            }
-        }
     }
 }

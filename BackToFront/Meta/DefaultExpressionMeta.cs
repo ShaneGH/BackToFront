@@ -15,7 +15,7 @@ namespace BackToFront.Meta
         public DefaultExpressionMeta()
             : this(null) { }
 
-        public DefaultExpressionMeta(DefaultExpressionWrapper expression)
+        public DefaultExpressionMeta(DefaultExpression expression)
             : base(expression) { }
 
         public override ExpressionWrapperType ExpressionType

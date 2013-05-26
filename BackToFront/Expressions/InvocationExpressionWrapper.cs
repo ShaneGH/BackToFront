@@ -49,15 +49,6 @@ namespace BackToFront.Expressions
                 .Aggregate();
         }
 
-        public ExpressionMeta _Meta;
-        public override ExpressionMeta Meta
-        {
-            get 
-            {
-                return _Meta ?? (_Meta = new InvocationExpressionMeta(this));
-            }
-        }
-
         protected override IEnumerable<ParameterExpression> _UnorderedParameters
         {
             get

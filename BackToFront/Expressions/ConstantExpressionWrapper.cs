@@ -27,14 +27,5 @@ namespace BackToFront.Expressions
         {
             get { yield break; }
         }
-
-        private ConstantExpressionMeta _Meta;
-        public override ExpressionMeta Meta
-        {
-            get
-            {
-                return _Meta ?? (_Meta = new ConstantExpressionMeta(this));
-            }
-        }
     }
 }

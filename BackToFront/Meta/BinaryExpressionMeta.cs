@@ -21,14 +21,14 @@ namespace BackToFront.Meta
         public BinaryExpressionMeta()
             : this(null) { }
 
-        public BinaryExpressionMeta(BinaryExpressionWrapper expression)
+        public BinaryExpressionMeta(BinaryExpression expression)
             : base(expression)
         {
             if (expression == null)
                 return;
 
-            Left = expression.Left.Meta;
-            Right = expression.Right.Meta;
+            Left = CreateMeta(expression.Left);
+            Right = CreateMeta(expression.Right);
         }
 
         public override ExpressionWrapperType ExpressionType
