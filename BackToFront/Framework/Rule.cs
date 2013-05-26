@@ -179,46 +179,47 @@ namespace BackToFront.Framework
         /// </summary>
         public class PreCompiledRule : IPreCompiledRule
         {
-            public readonly RuleMeta Meta;
-            public readonly Expression Descriptor;
-            public readonly Action<object, ValidationContext> Worker;
-            public readonly ParameterExpression Entity;
-            public readonly ParameterExpression Context;
+            protected readonly RuleMeta _Meta;
+            protected readonly Expression _Descriptor;
+            protected readonly Action<object, ValidationContext> _Worker;
+            protected readonly ParameterExpression _Entity;
+            protected readonly ParameterExpression _Context;
 
             public PreCompiledRule(Rule<TEntity> rule)
             {
                 var visitor = new SwapPropVisitor(typeof(TEntity));
 
-                Meta = new RuleMeta(rule);
-                Descriptor = rule.Compile(visitor);
-                Worker = rule.Compile(visitor, Descriptor);
-                Entity = visitor.EntityParameter;
-                Context = visitor.ContextParameter;
+                _Descriptor = rule.Compile(visitor);
+                _Worker = rule.Compile(visitor, _Descriptor);
+                _Entity = visitor.EntityParameter;
+                _Context = visitor.ContextParameter;
+
+                _Meta = new RuleMeta(rule.ValidationSubjects, rule.RequiredForValidation, ExpressionMeta.CreateMeta(rule.Compile(visitor)), _Entity.Name, _Context.Name);
             }
 
-            RuleMeta IPreCompiledRule.Meta
+            public RuleMeta Meta
             {
-                get { return Meta; }
+                get { return _Meta; }
             }
 
-            Expression IPreCompiledRule.Descriptor
+            public Expression Descriptor
             {
-                get { return Descriptor; }
+                get { return _Descriptor; }
             }
 
-            Action<object, ValidationContext> IPreCompiledRule.Worker
+            public Action<object, ValidationContext> Worker
             {
-                get { return Worker; }
+                get { return _Worker; }
             }
 
-            ParameterExpression IPreCompiledRule.Entity
+            public ParameterExpression Entity
             {
-                get { return Entity; }
+                get { return _Entity; }
             }
 
-            ParameterExpression IPreCompiledRule.Context
+            public ParameterExpression Context
             {
-                get { return Context; }
+                get { return _Context; }
             }
         }
 
