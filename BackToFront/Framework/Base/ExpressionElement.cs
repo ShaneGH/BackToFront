@@ -32,11 +32,23 @@ namespace BackToFront.Framework.Base
             EntityParameter = Parameters.First();
         }
 
-        public override IEnumerable<AffectedMembers> AffectedMembers
+        public override IEnumerable<MemberChainItem> ValidatableMembers
         {
-            get 
+            get
             {
-                return Descriptor.GetMembersForParameter(EntityParameter).Select(m => new AffectedMembers { Member = m, Requirement = PropertyRequirement });
+                return PropertyRequirement ?
+                    Descriptor.GetMembersForParameter(EntityParameter) :
+                    Enumerable.Empty<MemberChainItem>();
+            }
+        }
+
+        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
+        {
+            get
+            {
+                return PropertyRequirement ?
+                    Enumerable.Empty<MemberChainItem>() :
+                    Descriptor.GetMembersForParameter(EntityParameter);
             }
         }
     }

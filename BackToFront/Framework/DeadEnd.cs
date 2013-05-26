@@ -15,7 +15,15 @@ namespace BackToFront.Framework
         public DeadEnd()
             : base(null) { }
 
-        public override IEnumerable<AffectedMembers> AffectedMembers
+        public override IEnumerable<MemberChainItem> ValidatableMembers
+        {
+            get
+            {
+                yield break;
+            }
+        }
+
+        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
         {
             get
             {

@@ -37,12 +37,19 @@ namespace BackToFront.Framework
             get { return _If.Select(a => a.Action).ToArray(); }
         }
 
-        public override IEnumerable<AffectedMembers> AffectedMembers
+        public override IEnumerable<MemberChainItem> ValidatableMembers
         {
             get
             {
-                // TODO: cache???
-                return _If.Select(a => a.Descriptor.GetMembersForParameter(a.EntityParameter).Select(m => new AffectedMembers { Member = m, Requirement = PropertyRequirement })).Aggregate();
+                return _If.Select(a => a.Descriptor.GetMembersForParameter(a.EntityParameter)).Aggregate();
+            }
+        }
+
+        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
+        {
+            get
+            {
+                yield break;
             }
         }
 

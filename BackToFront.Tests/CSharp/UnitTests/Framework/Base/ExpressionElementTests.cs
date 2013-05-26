@@ -38,7 +38,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
         //}
 
         [Test]
-        public void AffectedMembers_Test()
+        public void ValidatableMembers_Test()
         {
             // arrange
             Expression<Func<object, string>> desc = a => a.ToString();
@@ -46,13 +46,45 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
             var expected = subject.Object.Descriptor.GetMembersForParameter(desc.Parameters.First());
 
             // act
-            var actual = subject.Object.AffectedMembers;
+            subject.Setup(a => a.PropertyRequirement).Returns(false);
+            var actual1 = subject.Object.ValidatableMembers;
 
             // assert
-            Assert.AreEqual(1, actual.Count());
-            Assert.AreEqual(expected, actual.Select(a => a.Member));
-            foreach (var r in actual.Select(a => a.Requirement))
-                Assert.AreEqual(subject.Object.PropertyRequirement, r);
+            Assert.AreEqual(0, actual1.Count());
+
+
+            // act
+            subject.Setup(a => a.PropertyRequirement).Returns(true);
+            var actual2 = subject.Object.ValidatableMembers;
+
+            // assert
+            Assert.AreEqual(1, actual2.Count());
+            Assert.AreEqual(expected, actual2);
+        }
+
+        [Test]
+        public void RequiredForValidationMembers_Test()
+        {
+            // arrange
+            Expression<Func<object, string>> desc = a => a.ToString();
+            var subject = new M.Mock<ExpressionElement<object, string>>(desc, null) { CallBase = true };
+            var expected = subject.Object.Descriptor.GetMembersForParameter(desc.Parameters.First());
+
+            // act
+            subject.Setup(a => a.PropertyRequirement).Returns(true);
+            var actual1 = subject.Object.RequiredForValidationMembers;
+
+            // assert
+            Assert.AreEqual(0, actual1.Count());
+
+
+            // act
+            subject.Setup(a => a.PropertyRequirement).Returns(false);
+            var actual2 = subject.Object.RequiredForValidationMembers;
+
+            // assert
+            Assert.AreEqual(1, actual2.Count());
+            Assert.AreEqual(expected, actual2);
         }
     }
 }

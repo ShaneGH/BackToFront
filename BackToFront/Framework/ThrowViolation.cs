@@ -42,12 +42,14 @@ namespace BackToFront.Framework
             }
         }
 
-        public override IEnumerable<AffectedMembers> AffectedMembers
+        public override IEnumerable<MemberChainItem> ValidatableMembers
         {
-            get
-            {
-                yield break;
-            }
+            get { yield break; }
+        }
+
+        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
+        {
+            get { yield break; }
         }
 
         public override bool PropertyRequirement

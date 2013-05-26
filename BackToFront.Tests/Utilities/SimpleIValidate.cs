@@ -12,11 +12,6 @@ namespace BackToFront.Tests.Utilities
         public SimpleIValidate()
             : base(null) { }
 
-        public override IEnumerable<AffectedMembers> AffectedMembers
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         public override bool PropertyRequirement
         {
             get { throw new NotImplementedException(); }
@@ -33,6 +28,16 @@ namespace BackToFront.Tests.Utilities
         protected override System.Linq.Expressions.Expression _Compile(Expressions.Visitors.SwapPropVisitor visitor)
         {
             throw new NotImplementedException();
+        }
+
+        public override IEnumerable<BackToFront.Utilities.MemberChainItem> ValidatableMembers
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override IEnumerable<BackToFront.Utilities.MemberChainItem> RequiredForValidationMembers
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

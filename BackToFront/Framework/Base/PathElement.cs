@@ -12,12 +12,6 @@ using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Framework.Base
 {
-    public class AffectedMembers
-    {
-        public MemberChainItem Member { get; set; }
-        public bool Requirement { get; set; }
-    }
-
     /// <summary>
     /// A class attached to a Rule which points to the next step in the operation
     /// </summary>
@@ -28,7 +22,9 @@ namespace BackToFront.Framework.Base
         protected readonly Rule<TEntity> ParentRule;
         private static readonly DeadEnd<TEntity> _DeadEnd = new DeadEnd<TEntity>();
 
-        public abstract IEnumerable<AffectedMembers> AffectedMembers { get; }
+        public abstract IEnumerable<MemberChainItem> ValidatableMembers { get; }
+        public abstract IEnumerable<MemberChainItem> RequiredForValidationMembers { get; }
+
         public abstract bool PropertyRequirement { get; }
 
         public abstract IEnumerable<PathElement<TEntity>> AllPossiblePaths { get; }

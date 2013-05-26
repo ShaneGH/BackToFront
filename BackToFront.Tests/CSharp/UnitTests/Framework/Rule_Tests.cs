@@ -101,26 +101,26 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         }
 
         [Test]
-        public void AffectedMembers_Test()
+        public void ValidatableMembers_Test()
         {
             // arrange
             var subject = new Rule<object>();
 
-            var item1 = new AffectedMembers { Member = new U.MemberChainItem(typeof(string)) };
+            var item1 = new U.MemberChainItem(typeof(string));
             var v1 = new Mock<IValidate<object>>();
-            v1.Setup(a => a.AffectedMembers).Returns(new[] { item1 });
+            v1.Setup(a => a.ValidatableMembers).Returns(new[] { item1 });
             subject.Register(v1.Object);
 
-            var item2 = new AffectedMembers { Member = new U.MemberChainItem(typeof(string)) };
+            var item2 = new U.MemberChainItem(typeof(int));
             var v2 = new Mock<IValidate<object>>();
-            v2.Setup(a => a.AffectedMembers).Returns(new[] { item2 });
+            v2.Setup(a => a.ValidatableMembers).Returns(new[] { item2 });
             subject.Register(v2.Object);
 
             // act
-            var actual = subject.AffectedMembers;
+            var actual = subject.ValidatableMembers;
 
             // assert
-            Assert.IsTrue(AreKindOfEqual(new[] { item1, item2 }, actual));
+            Assert.AreEqual(new[] { item1, item2 }, actual.ToArray());
         }
 
         [Test]

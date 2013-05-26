@@ -17,10 +17,9 @@ namespace BackToFront.Validation
     /// <typeparam name="TEntity">Type of the entity to validate</typeparam>
     public interface IValidate<TEntity>
     {
-        /// <summary>
-        /// All of the members which are touched by this object and its children
-        /// </summary>
-        IEnumerable<AffectedMembers> AffectedMembers { get; }
+        IEnumerable<MemberChainItem> ValidatableMembers { get; }
+
+        IEnumerable<MemberChainItem> RequiredForValidationMembers { get; }
 
         /// <summary>
         /// Gets the function of this element

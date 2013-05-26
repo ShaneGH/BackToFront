@@ -45,7 +45,7 @@ namespace BackToFront.Framework
 
         public IAdditionalRuleCondition<TEntity> WithModelViolation(Func<TEntity, IViolation> violation)
         {
-            Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule, AffectedMembers.Select(a => a.Member)); });
+            Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule, ValidatableMembers); });
             return ParentRule;
         }
 

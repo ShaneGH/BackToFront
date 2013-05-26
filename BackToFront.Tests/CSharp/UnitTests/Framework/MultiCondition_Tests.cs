@@ -30,21 +30,22 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         }
 
         [Test]
-        public void AffectedMembers_Test()
+        public void ValidatableMembers_Test()
         {
             // arrange
             var subject = new MultiCondition<object>(null);
 
             subject.Add(a => a.GetHashCode() == 6);
-            subject.Add(a => a.GetHashCode() == 6);
+            subject.Add(a => a.ToString() == "asdasd");
             subject.Add(a => a.GetHashCode() == 6);
 
             // act
-            var actual = subject.AffectedMembers;
+            var actual = subject.ValidatableMembers;
 
             // assert
-            Assert.AreEqual(3, actual.Count());
-            Assert.IsTrue(actual.All(a => a.Member.UltimateMember == typeof(object).GetMethod("GetHashCode")));
+            Assert.AreEqual(2, actual.Count());
+            Assert.AreEqual(typeof(object).GetMethod("GetHashCode"), actual.First().UltimateMember);
+            Assert.AreEqual(typeof(object).GetMethod("ToString"), actual.Last().UltimateMember);
         }
 
         [Test]

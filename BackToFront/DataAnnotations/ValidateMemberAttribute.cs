@@ -72,7 +72,7 @@ namespace BackToFront.DataAnnotations
 
             var member = Create(validationContext.ObjectType, validationContext.MemberName);
             
-            var rulesForMember = ctxt.Rules.Where(rule => rule.AffectedMembers.Any(am => am.Requirement && am.Member == member) &&
+            var rulesForMember = ctxt.Rules.Where(rule => rule.ValidatableMembers.Any(am => am == member) &&
                 (DependencyBehavior != Enum.DependencyBehavior.IgnoreRulesWithDependencies || !rule.Dependencies.Any()));
 
             // add violations to cache

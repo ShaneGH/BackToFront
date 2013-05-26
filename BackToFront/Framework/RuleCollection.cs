@@ -43,9 +43,14 @@ namespace BackToFront.Framework
             return Expression.Block(compiled);
         }
 
-        public IEnumerable<AffectedMembers> AffectedMembers
+        public IEnumerable<MemberChainItem> ValidatableMembers
         {
-            get { return _Rules.Select(r => r.AffectedMembers).Aggregate(); }
+            get { return _Rules.Select(r => r.ValidatableMembers).Aggregate(); }
+        }
+
+        public IEnumerable<MemberChainItem> RequiredForValidationMembers
+        {
+            get { return _Rules.Select(r => r.RequiredForValidationMembers).Aggregate(); }
         }
 
         public bool PropertyRequirement

@@ -6,6 +6,7 @@ using BackToFront.Meta;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using BackToFront.Utilities;
 
 namespace BackToFront.Validation
 {
@@ -13,7 +14,8 @@ namespace BackToFront.Validation
     {
         Type RuleType { get; }
 
-        IEnumerable<AffectedMembers> AffectedMembers { get; }
+        IEnumerable<MemberChainItem> ValidatableMembers { get; }
+        IEnumerable<MemberChainItem> RequiredForValidationMembers { get; }
 
         List<DependencyWrapper> Dependencies { get; }
 

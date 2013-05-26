@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using BackToFront.Expressions;
+using BackToFront.Utilities;
 
 namespace BackToFront.Framework
 {
@@ -139,10 +140,16 @@ namespace BackToFront.Framework
             }
         }
 
-        public override IEnumerable<AffectedMembers> AffectedMembers
+        public override IEnumerable<MemberChainItem> ValidatableMembers
         {
             // TODO: cache???
-            get { return RegisteredItems.Select(a => a.AffectedMembers).Aggregate(); }
+            get { return RegisteredItems.Select(a => a.ValidatableMembers).Aggregate(); }
+        }
+
+        public override IEnumerable<MemberChainItem> RequiredForValidationMembers
+        {
+            // TODO: cache???
+            get { return RegisteredItems.Select(a => a.RequiredForValidationMembers).Aggregate(); }
         }
 
         public List<DependencyWrapper> Dependencies

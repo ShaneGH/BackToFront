@@ -27,23 +27,23 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         }
 
         [Test]
-        public void AffectedMembers_Test()
+        public void ValidatableMembers_Test()
         {
             // arrange
             var subject = new SubRuleCollection<object>(null);
 
-            var item1 = new AffectedMembers { Member = new MemberChainItem(typeof(string)) };
+            var item1 = new MemberChainItem(typeof(string));
             var rule1 = new M.Mock<Rule<object>>(null);
-            rule1.Setup(a => a.AffectedMembers).Returns(new[] { item1 });
+            rule1.Setup(a => a.ValidatableMembers).Returns(new[] { item1 });
             subject.AddSubRule(rule1.Object);
 
-            var item2 = new AffectedMembers { Member = new MemberChainItem(typeof(string)) };
+            var item2 = new MemberChainItem(typeof(int));
             var rule2 = new M.Mock<Rule<object>>(null);
-            rule2.Setup(a => a.AffectedMembers).Returns(new[] { item2 });
+            rule2.Setup(a => a.ValidatableMembers).Returns(new[] { item2 });
             subject.AddSubRule(rule2.Object);
             
             // act
-            var actual = subject.AffectedMembers;
+            var actual = subject.ValidatableMembers;
 
             // assert
             Assert.IsTrue(AreKindOfEqual(new[] { item1, item2 }, actual));
