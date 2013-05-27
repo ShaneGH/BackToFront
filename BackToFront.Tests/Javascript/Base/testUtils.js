@@ -13,7 +13,7 @@
     };
 
     tUtil.Expect.prototype.At = function (currentPoint) {
-        this.Expect(currentPoint);
+        this.ExpectationReached.push(currentPoint);
     };
 
     tUtil.Expect.prototype.VerifyOrderedExpectations = function () {
