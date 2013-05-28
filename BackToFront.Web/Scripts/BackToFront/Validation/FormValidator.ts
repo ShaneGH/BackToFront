@@ -12,11 +12,7 @@ module __BTF {
         export class FormValidator extends __BTF.Validation.Validator{
             constructor(rules: Meta.RuleMeta[], entity: string, public Context: HTMLElement) {
                 super(rules, entity);
-            }
-
-            /*
-        RequiredForValidationNames: String[];
-        ValidationSubjectNames: String[];*/
+            };
 
             GetEntity(): any {
                 var complete = {};
@@ -33,7 +29,7 @@ module __BTF {
                 }
 
                 return entity;
-            }
+            };
         }
     }
 }
