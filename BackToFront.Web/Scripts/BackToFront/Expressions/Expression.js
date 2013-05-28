@@ -58,6 +58,9 @@ var __BTF;
                 dictionary[__BTF.Meta.ExpressionWrapperType.Invocation] = function (meta) {
                     return new __BTF.Expressions.InvocationExpression(meta);
                 };
+                dictionary[__BTF.Meta.ExpressionWrapperType.New] = function (meta) {
+                    return new __BTF.Expressions.NewExpression(meta);
+                };
                 return dictionary;
             })();
             Expression.CreateExpression = function CreateExpression(meta) {

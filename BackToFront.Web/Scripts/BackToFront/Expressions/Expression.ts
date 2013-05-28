@@ -14,8 +14,6 @@
 /// <reference path="ParameterExpression.ts" />
 /// <reference path="UnaryExpression.ts" />
 
-
-/// <reference path="../Validation/ValidationContext.ts" />
 /// <reference path="../Validation/ExpressionInvoker.ts" />
 
 
@@ -67,6 +65,7 @@ module __BTF {
                 dictionary[__BTF.Meta.ExpressionWrapperType.Parameter] = meta => new __BTF.Expressions.ParameterExpression(meta);
                 dictionary[__BTF.Meta.ExpressionWrapperType.Unary] = meta => new __BTF.Expressions.UnaryExpression(meta);
                 dictionary[__BTF.Meta.ExpressionWrapperType.Invocation] = meta => new __BTF.Expressions.InvocationExpression(meta);
+                dictionary[__BTF.Meta.ExpressionWrapperType.New] = meta => new __BTF.Expressions.NewExpression(meta);
 
                 return dictionary;                
             })();
