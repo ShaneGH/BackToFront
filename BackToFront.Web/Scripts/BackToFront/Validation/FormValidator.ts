@@ -23,7 +23,16 @@ module __BTF {
                     for (var j in allNames) {
                         if (!complete[allNames[j]]) {
                             complete[allNames[j]] = true;
+                            var item = $$("[name=\"" + allNames[j] + "\"]");
                             entity[allNames[j]] = $$("[name=\"" + allNames[j] + "\"]").val();
+                            if (item.attr("data-val-number")) {
+                                // TODO: parse int or float?
+                                entity[allNames[j]] = parseInt(entity[allNames[j]]);
+                            } else if (item.attr("type") === "checkbox") {
+                                // TODO: other input type which contains bool
+                                entity[allNames[j]] = entity[allNames[j]] &&
+                                    (entity[allNames[j]].toLower() === "true" || parseInt(entity[allNames[j]]) > 0);
+                            }
                         }
                     }
                 }

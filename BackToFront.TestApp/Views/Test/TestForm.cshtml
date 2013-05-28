@@ -1,0 +1,17 @@
+﻿@model BackToFront.TestApp.Controllers.TestModel
+@{
+    ViewBag.Title = "TestForm";
+}
+
+<h2>TestForm</h2>
+
+@using (Html.BeginForm()) 
+{ 
+    @Html.LabelFor(m => m.ValidateFlag)<br />
+    @Html.CheckBoxFor(m => m.ValidateFlag)<br />
+    
+    @Html.LabelFor(m => m.Name)<br />
+    @Html.EditorFor(m => m.Name)<br />
+    
+    @Html.HiddenFor(m => m.RequireThat)
+}
