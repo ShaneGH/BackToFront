@@ -66,13 +66,13 @@ namespace BackToFront.Framework
         {
             // var violation
             var violation = Expression.Variable(typeof(IViolation), "violation");
-            // violationX = _violation(entity);
+            // violation = _violation(entity);
             var createViolation = Expression.Assign(violation, Expression.Invoke(Expression.Constant(_violation), visitor.EntityParameter));
-            // violationX.ViolatedEntity = entity;
+            // violation.ViolatedEntity = entity;
             var assignViolatedEntity = Expression.Assign(Expression.PropertyOrField(violation, "ViolatedEntity"), visitor.EntityParameter);
             // violation.Violated = _violatedMembers.ToArray();
             var assignViolated = Expression.Assign(Expression.PropertyOrField(violation, "Violated"), Expression.Call(_ToArray, Expression.Constant(_violatedMembers)));
-            // context.Violations.Add(violationX);
+            // context.Violations.Add(violation);
             var assignContext = Expression.Call(Expression.PropertyOrField(visitor.ContextParameter, "Violations"), _Add, violation);
 
             return Expression.Block(new[] { violation }, createViolation, assignViolatedEntity, assignViolated, assignContext);
