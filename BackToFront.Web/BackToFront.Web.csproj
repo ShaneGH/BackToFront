@@ -134,8 +134,9 @@
     <Content Include="Scripts\BackToFront\Validation\ExpressionInvoker.js">
       <DependentUpon>ExpressionInvoker.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\BackToFront\Validation\ValidationContext.js">
-      <DependentUpon>ValidationContext.ts</DependentUpon>
+    <TypeScriptCompile Include="Scripts\BackToFront\Validation\FormValidator.ts" />
+    <Content Include="Scripts\BackToFront\Validation\FormValidator.js">
+      <DependentUpon>FormValidator.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\BackToFront\Validation\Validator.js">
       <DependentUpon>Validator.ts</DependentUpon>
@@ -170,7 +171,6 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="Scripts\BackToFront\Sanitizer.ts" />
     <TypeScriptCompile Include="Scripts\BackToFront\Validation\ExpressionInvoker.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Validation\ValidationContext.ts" />
     <TypeScriptCompile Include="Scripts\BackToFront\Validation\Validator.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

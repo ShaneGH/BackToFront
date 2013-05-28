@@ -53,12 +53,12 @@ module __BTF {
                     .Where((rule: IValidate) => rule.ValidationSubjectNames.indexOf(propertyName) !== -1)
                     .Select((rule: IValidate) => rule.Validate(entity, breakOnFirstError))
                     .Aggregate().Result;
-            }
+            };
 
-            // abstract
+                // abstract
             GetEntity(): any {
                 throw "Invalid operation, this method is abstract";
-            }
+            };
         }
     }
 }
