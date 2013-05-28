@@ -24,7 +24,7 @@ namespace BackToFront.Meta
             if (expression == null)
                 return;
 
-            Expression = CreateMeta(expression.Expression);
+            Expression = expression.Expression != null ? CreateMeta(expression.Expression) : null;
             MemberName = expression.Member.Name;
         }
 

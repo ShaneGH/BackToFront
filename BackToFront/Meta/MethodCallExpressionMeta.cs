@@ -30,7 +30,7 @@ namespace BackToFront.Meta
             if (expression == null)
                 return;
 
-            Object = CreateMeta(expression.Object);
+            Object = expression.Object != null ? CreateMeta(expression.Object) : null;
             Arguments = expression.Arguments.Select(a => CreateMeta(a)).ToArray();
             MethodName = expression.Method.Name;
             MethodFullName = expression.Method.DeclaringType.FullName + "." + expression.Method.Name;

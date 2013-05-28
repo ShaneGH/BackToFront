@@ -12,6 +12,7 @@ using BackToFront.Utilities;
 using System.Runtime.Serialization;
 using BackToFront.Expressions.Visitors;
 using BackToFront.Extensions.IEnumerable;
+using System.Reflection;
 
 namespace BackToFront.Framework
 {
@@ -21,6 +22,10 @@ namespace BackToFront.Framework
     /// <typeparam name="TEntity"></typeparam>
     public class ThrowViolation<TEntity> : PathElement<TEntity>
     {
+        private static readonly MethodInfo _Add = typeof(ICollection<IViolation>).GetMethod("Add");
+        private static readonly MethodInfo _ToArray = typeof(Enumerable).GetMethod("ToArray", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
+            .MakeGenericMethod(typeof(MemberChainItem));
+
         private readonly IEnumerable<MemberChainItem> _violatedMembers;
         private readonly Func<TEntity, IViolation> _violation;
         //TODO: pass in affected members and pass to copile method
@@ -59,15 +64,18 @@ namespace BackToFront.Framework
 
         protected override Expression _Compile(SwapPropVisitor visitor)
         {
-            Action<TEntity, ValidationContext> block = (entity, context) =>
-            {
-                var violation = _violation(entity);
-                violation.ViolatedEntity = entity;
-                violation.Violated = _violatedMembers.ToArray();
-                context.Violations.Add(violation);
-            };
-            
-            return Expression.Invoke(Expression.Constant(block), visitor.EntityParameter, visitor.ContextParameter);
+            // var violation
+            var violation = Expression.Variable(typeof(IViolation), "violation");
+            // violationX = _violation(entity);
+            var createViolation = Expression.Assign(violation, Expression.Invoke(Expression.Constant(_violation), visitor.EntityParameter));
+            // violationX.ViolatedEntity = entity;
+            var assignViolatedEntity = Expression.Assign(Expression.PropertyOrField(violation, "ViolatedEntity"), visitor.EntityParameter);
+            // violation.Violated = _violatedMembers.ToArray();
+            var assignViolated = Expression.Assign(Expression.PropertyOrField(violation, "Violated"), Expression.Call(_ToArray, Expression.Constant(_violatedMembers)));
+            // context.Violations.Add(violationX);
+            var assignContext = Expression.Call(Expression.PropertyOrField(visitor.ContextParameter, "Violations"), _Add, violation);
+
+            return Expression.Block(new[] { violation }, createViolation, assignViolatedEntity, assignViolated, assignContext);
         }
     }
 }
