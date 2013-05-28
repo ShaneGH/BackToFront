@@ -105,6 +105,7 @@
     </Compile>
     <Compile Include="CSharp\UnitTests\Expressions\BlockExpressionWrapper_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Expressions\ConditionalExpressionWrapper_Tests.cs" />
+    <Compile Include="CSharp\UnitTests\Expressions\NewExpressionWrapper_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Expressions\InvocationExpressionWrapper_Tests.cs" />
     <Compile Include="CSharp\UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>

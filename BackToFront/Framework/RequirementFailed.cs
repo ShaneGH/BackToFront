@@ -33,9 +33,9 @@ namespace BackToFront.Framework
         }
 
         protected ThrowViolation<TEntity> Violation;
-        public IAdditionalRuleCondition<TEntity> WithModelViolation(Func<IViolation> violation)
+        public IAdditionalRuleCondition<TEntity> WithModelViolation(Expression<Func<IViolation>> violation)
         {
-            return WithModelViolation(a => violation());
+            return WithModelViolation(Expression.Lambda<Func<TEntity, IViolation>>(violation.Body, Expression.Parameter(typeof(TEntity))));
         }
 
         public IAdditionalRuleCondition<TEntity> WithModelViolation(string violation)
@@ -43,7 +43,7 @@ namespace BackToFront.Framework
             return WithModelViolation(a => new SimpleViolation(violation));
         }
 
-        public IAdditionalRuleCondition<TEntity> WithModelViolation(Func<TEntity, IViolation> violation)
+        public IAdditionalRuleCondition<TEntity> WithModelViolation(Expression<Func<TEntity, IViolation>> violation)
         {
             Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule, ValidationSubjects); });
             return ParentRule;

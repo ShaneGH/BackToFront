@@ -19,7 +19,7 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
     [TestFixture]
     public class TestPass2Test : Base.RulesRepositoryTestBase
     {
-        public static TestViolation Violation = new TestViolation("Violation");
+        public static string Violation = "adsasdadadsddzxfsr";
         public class TestPass2
         {
             public bool ThrowViolationSwitch1 { get; set; }
@@ -31,7 +31,7 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
             base.TestFixtureSetUp();
 
             Repository.AddRule<TestPass2>(rule => rule
-                    .If(a => a.ThrowViolationSwitch1 && a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(() => Violation));
+                    .If(a => a.ThrowViolationSwitch1 && a.ThrowViolationSwitch2).RequirementFailed.WithModelViolation(Violation));
 
         }
 
@@ -54,7 +54,10 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
             var violation = subject.Validate(Repository).FirstViolation;
 
             // assert
-            Assert.AreEqual(v, violation);
+            if (v == null)
+                Assert.IsNull(violation);
+            else
+                Assert.AreEqual(v, violation.UserMessage);
         }
     }
 }

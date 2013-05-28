@@ -52,6 +52,7 @@
     <Compile Include="Enum\PathElementType.cs" />
     <Compile Include="Expressions\BlockExpressionWrapper.cs" />
     <Compile Include="Expressions\ConditionalExpressionWrapper.cs" />
+    <Compile Include="Expressions\NewExpressionWrapper.cs" />
     <Compile Include="Expressions\DefaultExpressionWrapper.cs" />
     <Compile Include="Expressions\ElementAtExpressionWrapper.cs" />
     <Compile Include="Expressions\Visitors\SwapPropVisitor.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Meta\BlockExpressionMeta.cs" />
     <Compile Include="Meta\ConditionalExpressionMeta.cs" />
     <Compile Include="Meta\ConstantExpressionMeta.cs" />
+    <Compile Include="Meta\NewExpressionMeta.cs" />
     <Compile Include="Meta\IMeta.cs" />
     <Compile Include="Meta\InvocationExpressionMeta.cs" />
     <Compile Include="Meta\DefaultExpressionMeta.cs" />

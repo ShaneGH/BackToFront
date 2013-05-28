@@ -28,6 +28,12 @@ module __BTF {
 			Value: any;
 		}
 
+		export interface NewExpressionMeta extends ExpressionMeta {
+			Arguments: ExpressionMeta[];
+			Members: string[];
+			Type: string;
+		}
+
 		export interface InvocationExpressionMeta extends ExpressionMeta {
 			Expression: ExpressionMeta;
 			Arguments: ExpressionMeta[];
@@ -88,6 +94,7 @@ module __BTF {
 			Block = 8,
 			Conditional = 9,
 			Invocation = 10,
+			New = 11,
 		}
 
 		export enum ExpressionType {

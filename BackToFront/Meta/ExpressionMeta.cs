@@ -36,6 +36,7 @@ namespace BackToFront.Meta
             constructors[typeof(ConditionalExpression)] = expression => new ConditionalExpressionMeta(expression as ConditionalExpression);
             constructors[typeof(DefaultExpression)] = expression => new DefaultExpressionMeta(expression as DefaultExpression);
             constructors[typeof(InvocationExpression)] = expression => new InvocationExpressionMeta(expression as InvocationExpression);
+            constructors[typeof(NewExpression)] = expression => new NewExpressionMeta(expression as NewExpression);
 
             Constructors = new ReadOnlyDictionary<Type, Func<Expression, ExpressionMeta>>(constructors);
         }

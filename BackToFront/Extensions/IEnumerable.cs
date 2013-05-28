@@ -16,9 +16,8 @@ namespace BackToFront.Extensions.IEnumerable
         /// <param name="action"></param>
         public static IEnumerable<T> Each<T>(this IEnumerable<T> items, Action<T> action)
         {
-            var enumerated = items.ToArray();
-            for (int i = 0, ii = enumerated.Length; i < ii; i++)
-                action(enumerated[i]);
+            foreach (var item in items)
+                action(item);
 
             return items;
         }
@@ -31,17 +30,24 @@ namespace BackToFront.Extensions.IEnumerable
         /// <param name="action"></param>
         public static void Each<T>(this IEnumerable<T> items, Action<T, int> action)
         {
-            var enumerated = items.ToArray();
-            for (int i = 0, ii = enumerated.Length; i < ii; i++)
-                action(enumerated[i], i);
+            var i = 0;
+            foreach (var item in items)
+            {
+                action(item, i);
+                i++;
+            }
         }
 
         public static bool All<T>(this IEnumerable<T> items, Func<T, int, bool> action)
         {
-            var enumerated = items.ToArray();
-            for (int i = 0, ii = enumerated.Length; i < ii; i++)
-                if (!action(enumerated[i], i))
+            var i = 0;
+            foreach(var item in items)
+            {
+                if (!action(item, i))
                     return false;
+                i++;
+            }
+
             return true;
         }
 

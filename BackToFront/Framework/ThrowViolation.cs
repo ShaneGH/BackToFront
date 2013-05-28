@@ -27,9 +27,9 @@ namespace BackToFront.Framework
             .MakeGenericMethod(typeof(MemberChainItem));
 
         private readonly IEnumerable<MemberChainItem> _violatedMembers;
-        private readonly Func<TEntity, IViolation> _violation;
-        //TODO: pass in affected members and pass to copile method
-        public ThrowViolation(Func<TEntity, IViolation> violation, Rule<TEntity> parentRule, IEnumerable<MemberChainItem> violatedMembers)
+        private readonly Expression<Func<TEntity, IViolation>> _violation;
+
+        public ThrowViolation(Expression<Func<TEntity, IViolation>> violation, Rule<TEntity> parentRule, IEnumerable<MemberChainItem> violatedMembers)
             : base(parentRule)
         {
             if (violation == null)
@@ -64,10 +64,16 @@ namespace BackToFront.Framework
 
         protected override Expression _Compile(SwapPropVisitor visitor)
         {
+            Expression createViolationMethod = null;
+            using (visitor.WithEntityParameter(_violation.Parameters.First()))
+            {
+                createViolationMethod = visitor.Visit(_violation.Body);
+            }
+
             // var violation
             var violation = Expression.Variable(typeof(IViolation), "violation");
             // violation = _violation(entity);
-            var createViolation = Expression.Assign(violation, Expression.Invoke(Expression.Constant(_violation), visitor.EntityParameter));
+            var createViolation = Expression.Assign(violation, createViolationMethod);
             // violation.ViolatedEntity = entity;
             var assignViolatedEntity = Expression.Assign(Expression.PropertyOrField(violation, "ViolatedEntity"), visitor.EntityParameter);
             // violation.Violated = _violatedMembers.ToArray();

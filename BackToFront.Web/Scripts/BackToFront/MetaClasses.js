@@ -13,6 +13,7 @@ var __BTF;
             ExpressionWrapperType.Block = 8;
             ExpressionWrapperType.Conditional = 9;
             ExpressionWrapperType.Invocation = 10;
+            ExpressionWrapperType.New = 11;
         })(Meta.ExpressionWrapperType || (Meta.ExpressionWrapperType = {}));
         var ExpressionWrapperType = Meta.ExpressionWrapperType;
         (function (ExpressionType) {

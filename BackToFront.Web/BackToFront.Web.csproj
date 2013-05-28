@@ -104,6 +104,10 @@
     <Content Include="Scripts\BackToFront\Expressions\ConstantExpression.js">
       <DependentUpon>ConstantExpression.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\NewExpression.ts" />
+    <Content Include="Scripts\BackToFront\Expressions\Copy of MethodCallExpression.js">
+      <DependentUpon>NewExpression.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\BackToFront\Expressions\DefaultExpression.js">
       <DependentUpon>DefaultExpression.ts</DependentUpon>
     </Content>

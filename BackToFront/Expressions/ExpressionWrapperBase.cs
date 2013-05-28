@@ -35,6 +35,7 @@ namespace BackToFront.Expressions
             constructors[typeof(ConditionalExpression)] = expression => new ConditionalExpressionWrapper(expression as ConditionalExpression);
             constructors[typeof(DefaultExpression)] = expression => new DefaultExpressionWrapper(expression as DefaultExpression);
             constructors[typeof(InvocationExpression)] = expression => new InvocationExpressionWrapper(expression as InvocationExpression);
+            constructors[typeof(NewExpression)] = expression => new NewExpressionWrapper(expression as NewExpression);
 
             Constructors = new ReadOnlyDictionary<Type, Func<Expression, ExpressionWrapperBase>>(constructors);
         }

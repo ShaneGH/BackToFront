@@ -11,7 +11,6 @@ using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Expressions
 {
-    // TODO: test
     public class UnaryExpressionWrapper : ExpressionWrapperBase<UnaryExpression>, ILinearExpression
     {
         private ExpressionWrapperBase _Operand;

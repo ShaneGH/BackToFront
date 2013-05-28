@@ -31,7 +31,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
         public class Accessor : ThrowViolation<object>
         {
-            public Accessor(Func<object, IViolation> violation, IEnumerable<MemberChainItem> items)
+            public Accessor(Expression<Func<object, IViolation>> violation, IEnumerable<MemberChainItem> items)
                 : base(violation, null, items) { }
 
             public Expression __Compile(SwapPropVisitor visitor)
