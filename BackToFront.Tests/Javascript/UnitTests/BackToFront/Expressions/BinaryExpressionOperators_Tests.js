@@ -3,92 +3,69 @@
 /// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../../Base/testUtils.js" />
 
-test("Warmup", function () { expect(0); });
+var dic = __BTF.Expressions.BinaryExpression.OperatorDictionary;
 
-(function (moduleName) {
+module("__BTF.Expressions.BinaryExpression.OperatorDictionary", {
+    setup: function () {
+    },
+    teardown: function () {
+    }
+});
 
-    var dic = __BTF.Expressions.BinaryExpression.OperatorDictionary;
-
-    module(moduleName, {
-        setup: function () {
-        },
-        teardown: function () {
-        }
+(function (testName) {
+    test("Add", function () {
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.Add](1, 2), 3);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.Add]("1", "2"), "12");
     });
 
-    (function (testName) {
-        test(testName, function () {
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.Add](1, 2), 3);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.Add]("1", "2"), "12");
-        });
-    })("Add");
+    test("AndAlso", function () {
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.AndAlso](true, true), true);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.AndAlso](true, false), false);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.AndAlso](false, true), false);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.AndAlso](false, false), false);
+    });
 
-    (function (testName) {
-        test(testName, function () {
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.AndAlso](true, true), true);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.AndAlso](true, false), false);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.AndAlso](false, true), false);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.AndAlso](false, false), false);
-        });
-    })("AndAlso");
+    test("Divide", function () {
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.Divide](6, 2), 3);
+    });
 
-    (function (testName) {
-        test(testName, function () {
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.Divide](6, 2), 3);
-        });
-    })("Divide");
+    test("GreaterThan", function () {
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThan](1, 2), false);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThan](2, 2), false);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThan](3, 2), true);
+    });
 
-    (function (testName) {
-        test(testName, function () {
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThan](1, 2), false);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThan](2, 2), false);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThan](3, 2), true);
-        });
-    })("GreaterThan");
+    test("GreaterThanOrEqual", function () {
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThanOrEqual](1, 2), false);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThanOrEqual](2, 2), true);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThanOrEqual](3, 2), true);
+    });
 
-    (function (testName) {
-        test(testName, function () {
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThanOrEqual](1, 2), false);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThanOrEqual](2, 2), true);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.GreaterThanOrEqual](3, 2), true);
-        });
-    })("GreaterThanOrEqual");
+    test("LessThan", function () {
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThan](1, 2), true);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThan](2, 2), false);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThan](3, 2), false);
+    });
 
-    (function (testName) {
-        test(testName, function () {
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThan](1, 2), true);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThan](2, 2), false);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThan](3, 2), false);
-        });
-    })("LessThan");
+    test("LessThanOrEqual", function () {
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThanOrEqual](1, 2), true);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThanOrEqual](2, 2), true);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThanOrEqual](3, 2), false);
+    });
 
-    (function (testName) {
-        test(testName, function () {
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThanOrEqual](1, 2), true);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThanOrEqual](2, 2), true);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.LessThanOrEqual](3, 2), false);
-        });
-    })("LessThanOrEqual");
+    test("Multiply", function () {
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.Multiply](6, 2), 12);
+    });
 
-    (function (testName) {
-        test(testName, function () {
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.Multiply](6, 2), 12);
-        });
-    })("Multiply");
+    test("OrElse", function () {
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.OrElse](true, true), true);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.OrElse](true, false), true);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.OrElse](false, true), true);
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.OrElse](false, false), false);
+    });
 
-    (function (testName) {
-        test(testName, function () {
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.OrElse](true, true), true);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.OrElse](true, false), true);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.OrElse](false, true), true);
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.OrElse](false, false), false);
-        });
-    })("OrElse");
-
-    (function (testName) {
-        test(testName, function () {
-            assert.deepEqual(dic[__BTF.Meta.ExpressionType.Subtract](6, 2), 4);
-        });
-    })("Subtract");
+    test("Subtract", function () {
+        assert.deepEqual(dic[__BTF.Meta.ExpressionType.Subtract](6, 2), 4);
+    });
 
 })("__BTF.Expressions.BinaryExpression.OperatorDictionary");
