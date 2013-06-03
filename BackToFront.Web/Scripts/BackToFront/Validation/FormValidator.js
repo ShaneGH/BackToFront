@@ -11,24 +11,24 @@ var __BTF;
             function FormValidator(rules, entity, Context) {
                         _super.call(this, rules, entity);
                 this.Context = Context;
+                if(!jQuery) {
+                    throw "This item requires jQuery";
+                }
             }
             FormValidator.prototype.GetEntity = function () {
-                var complete = {
-                };
                 var entity = {
                 };
-                for(var i in this.Rules) {
-                    var allNames = linq(this.Rules[i].RequiredForValidationNames).Union(this.Rules[i].ValidationSubjectNames).Result;
-                    for(var j in allNames) {
-                        if(!complete[allNames[j]]) {
-                            complete[allNames[j]] = true;
-                            var item = $$("[name=\"" + allNames[j] + "\"]");
-                            entity[allNames[j]] = $$("[name=\"" + allNames[j] + "\"]").val();
-                            if(item.attr("data-val-number")) {
-                                entity[allNames[j]] = parseInt(entity[allNames[j]]);
-                            } else if(item.attr("type") === "checkbox") {
-                                entity[allNames[j]] = entity[allNames[j]] && (entity[allNames[j]].toLower() === "true" || parseInt(entity[allNames[j]]) > 0);
-                            }
+                var allNames = linq(this.Rules).Select(function (r) {
+                    return linq(r.RequiredForValidationNames || []).Union(r.ValidationSubjectNames || []).Result;
+                }).Aggregate().Result;
+                for(var j = 0, jj = allNames.length; j < jj; j++) {
+                    var item = jQuery("[name=\"" + allNames[j] + "\"]", this.Context);
+                    if(item.attr("type") === "checkbox") {
+                        entity[allNames[j]] = item.is(":checked");
+                    } else {
+                        entity[allNames[j]] = item.val();
+                        if(item.attr("data-val-number")) {
+                            entity[allNames[j]] = entity[allNames[j]].indexOf(".") !== -1 ? parseFloat(entity[allNames[j]]) : parseInt(entity[allNames[j]]);
                         }
                     }
                 }

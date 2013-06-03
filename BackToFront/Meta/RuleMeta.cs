@@ -54,12 +54,12 @@ namespace BackToFront.Meta
         {
         }
 
-        private static IEnumerable<string> GetProperties(IEnumerable<MemberChainItem> membersX)
+        private static IEnumerable<string> GetProperties(IEnumerable<MemberChainItem> members)
         {
-            foreach (var m in membersX)
+            foreach (var m in members)
             {
                 if (!(m.Member is Type))
-                    continue;
+                    throw new ArgumentException("##");
 
                 // don't want initial type
                 var current = m.Member;

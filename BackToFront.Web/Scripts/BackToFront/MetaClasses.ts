@@ -30,6 +30,7 @@ module __BTF {
 
 		export interface NewExpressionMeta extends ExpressionMeta {
 			Arguments: ExpressionMeta[];
+			IsAnonymous: bool;
 			Members: string[];
 			Type: string;
 		}
@@ -71,7 +72,7 @@ module __BTF {
 		}
 
 		export interface IValidationContext {
-			BreakOnFirstError: Boolean;
+			BreakOnFirstError: bool;
 			Violations: IViolation;
 			Mocks: any[];
 			Dependencies: any;

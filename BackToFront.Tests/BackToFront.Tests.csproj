@@ -240,12 +240,14 @@
     <TypeScriptCompile Include="Javascript\Scripts\qUnit.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Javascript\Base\jquery-2.0.2.js" />
     <Content Include="Javascript\Base\testUtils.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\BinaryExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\BinaryExpressionOperators_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\BlockExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\ConditionalExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\ConstantExpression_Tests.js" />
+    <Content Include="Javascript\UnitTests\BackToFront\Expressions\NewExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\UnaryExpressionOperators_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\UnaryExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\ParameterExpression_Tests.js" />
@@ -254,6 +256,8 @@
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\MemberExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Sanitizer_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\Expression_Tests.js" />
+    <Content Include="Javascript\UnitTests\BackToFront\Validation\FormValidator_Test.js" />
+    <Content Include="Javascript\UnitTests\BackToFront\Validation\Validator_Test.js" />
     <Content Include="Javascript\UnitTests\CURRENT_TEST.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

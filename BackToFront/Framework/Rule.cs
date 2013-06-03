@@ -174,10 +174,7 @@ namespace BackToFront.Framework
 
         #endregion
 
-        /// <summary>
-        /// TODO: this is a bad class, no error checking. Maybe have as private
-        /// </summary>
-        public class PreCompiledRule : IPreCompiledRule
+        private class PreCompiledRule : IPreCompiledRule
         {
             protected readonly RuleMeta _Meta;
             protected readonly Expression _Descriptor;
@@ -194,7 +191,7 @@ namespace BackToFront.Framework
                 _Entity = visitor.EntityParameter;
                 _Context = visitor.ContextParameter;
 
-                _Meta = new RuleMeta(rule.ValidationSubjects, rule.RequiredForValidation, ExpressionMeta.CreateMeta(rule.Compile(visitor)), _Entity.Name, _Context.Name);
+                _Meta = new RuleMeta(rule.ValidationSubjects, rule.RequiredForValidation, ExpressionMeta.CreateMeta(_Descriptor), _Entity.Name, _Context.Name);
             }
 
             public RuleMeta Meta

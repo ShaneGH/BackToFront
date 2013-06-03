@@ -607,6 +607,56 @@ var __BTF;
 
 var __BTF;
 (function (__BTF) {
+    (function (Validation) {
+        var Validator = (function () {
+            function Validator(rules, Entity) {
+                this.Entity = Entity;
+                this.Rules = linq(rules || []).Select(Validator.CreateRule).Result;
+            }
+            Validator.CreateRule = function CreateRule(rule) {
+                var r = new __BTF.Expressions.Expression(rule.Expression).Compile();
+                return {
+                    RequiredForValidationNames: rule.RequiredForValidationNames,
+                    ValidationSubjectNames: rule.ValidationSubjectNames,
+                    Validate: function (entity, breakOnFirstError) {
+                        if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
+                        var context = {
+                        };
+                        context[rule.EntityParameter] = entity;
+                        context[rule.ContextParameter] = {
+                            Violations: [],
+                            BreakOnFirstError: breakOnFirstError,
+                            Mocks: [],
+                            Dependencies: {
+                            }
+                        };
+                        r(context);
+                        return context[rule.ContextParameter].Violations;
+                    }
+                };
+            };
+            Validator.prototype.Validate = function (propertyName, breakOnFirstError) {
+                if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
+                var entity = this.GetEntity();
+                return linq(this.Rules).Where(function (rule) {
+                    return rule.ValidationSubjectNames.indexOf(propertyName) !== -1;
+                }).Select(function (rule) {
+                    return rule.Validate(entity, breakOnFirstError);
+                }).Aggregate().Result;
+            };
+            Validator.prototype.GetEntity = function () {
+                throw "Invalid operation, this method is abstract";
+            };
+            return Validator;
+        })();
+        Validation.Validator = Validator;        
+    })(__BTF.Validation || (__BTF.Validation = {}));
+    var Validation = __BTF.Validation;
+})(__BTF || (__BTF = {}));
+
+
+var __BTF;
+(function (__BTF) {
     __BTF.Initialize = function (data) {
     };
     var Sanitizer = (function () {
@@ -1071,27 +1121,30 @@ var __BTF;
                     inputName: "Arguments",
                     inputConstructor: Array
                 }, {
+                    inputName: "IsAnonymous",
+                    inputConstructor: Boolean
+                }, {
                     inputName: "Type",
                     inputConstructor: String
                 });
-                if(meta.Members) {
+                if(meta.IsAnonymous) {
                     __BTF.Sanitizer.Require(meta, {
                         inputName: "Members",
                         inputConstructor: Array
                     });
-                    if(meta.Members.length && meta.Members.length !== meta.Arguments.length) {
+                    if(meta.Members.length !== meta.Arguments.length) {
                         throw "If members are defined, each must have a corresponding argument";
                     }
                 }
                 this.Arguments = linq(meta.Arguments).Select(function (a) {
-                    return Expressions.Expression.CreateExpression(a);
+                    return __BTF.Expressions.Expression.CreateExpression(a);
                 }).Result;
                 this.Members = meta.Members;
                 this.Type = meta.Type;
+                this.IsAnonymous = meta.IsAnonymous;
             }
             NewExpression.prototype._Compile = function () {
                 var _this = this;
-                var construct = NewExpression.RegisteredTypes[this.Type] ? NewExpression.RegisteredTypes[this.Type] : Object;
                 var args = linq(this.Arguments).Select(function (a) {
                     return a.Compile();
                 }).Result;
@@ -1099,10 +1152,13 @@ var __BTF;
                     var params = linq(args).Select(function (a) {
                         return a(ambientContext);
                     }).Result;
-                    if(_this.Members && _this.Members.length) {
+                    if(_this.IsAnonymous) {
                         return _this.ConstructAnonymous(params);
+                    } else if(NewExpression.RegisteredTypes[_this.Type]) {
+                        return _this.Construct(NewExpression.RegisteredTypes[_this.Type], params);
                     } else {
-                        return _this.Construct(construct, params);
+                        return {
+                        };
                     }
                 };
             };
@@ -1233,24 +1289,24 @@ var __BTF;
             function FormValidator(rules, entity, Context) {
                         _super.call(this, rules, entity);
                 this.Context = Context;
+                if(!jQuery) {
+                    throw "This item requires jQuery";
+                }
             }
             FormValidator.prototype.GetEntity = function () {
-                var complete = {
-                };
                 var entity = {
                 };
-                for(var i in this.Rules) {
-                    var allNames = linq(this.Rules[i].RequiredForValidationNames).Union(this.Rules[i].ValidationSubjectNames).Result;
-                    for(var j in allNames) {
-                        if(!complete[allNames[j]]) {
-                            complete[allNames[j]] = true;
-                            var item = $$("[name=\"" + allNames[j] + "\"]");
-                            entity[allNames[j]] = $$("[name=\"" + allNames[j] + "\"]").val();
-                            if(item.attr("data-val-number")) {
-                                entity[allNames[j]] = parseInt(entity[allNames[j]]);
-                            } else if(item.attr("type") === "checkbox") {
-                                entity[allNames[j]] = entity[allNames[j]] && (entity[allNames[j]].toLower() === "true" || parseInt(entity[allNames[j]]) > 0);
-                            }
+                var allNames = linq(this.Rules).Select(function (r) {
+                    return linq(r.RequiredForValidationNames || []).Union(r.ValidationSubjectNames || []).Result;
+                }).Aggregate().Result;
+                for(var j = 0, jj = allNames.length; j < jj; j++) {
+                    var item = jQuery("[name=\"" + allNames[j] + "\"]", this.Context);
+                    if(item.attr("type") === "checkbox") {
+                        entity[allNames[j]] = item.is(":checked");
+                    } else {
+                        entity[allNames[j]] = item.val();
+                        if(item.attr("data-val-number")) {
+                            entity[allNames[j]] = entity[allNames[j]].indexOf(".") !== -1 ? parseFloat(entity[allNames[j]]) : parseInt(entity[allNames[j]]);
                         }
                     }
                 }
@@ -1259,56 +1315,6 @@ var __BTF;
             return FormValidator;
         })(__BTF.Validation.Validator);
         Validation.FormValidator = FormValidator;        
-    })(__BTF.Validation || (__BTF.Validation = {}));
-    var Validation = __BTF.Validation;
-})(__BTF || (__BTF = {}));
-
-
-var __BTF;
-(function (__BTF) {
-    (function (Validation) {
-        var Validator = (function () {
-            function Validator(rules, Entity) {
-                this.Entity = Entity;
-                this.Rules = linq(rules || []).Select(Validator.CreateRule).Result;
-            }
-            Validator.CreateRule = function CreateRule(rule) {
-                var r = new __BTF.Expressions.Expression(rule.Expression).Compile();
-                return {
-                    RequiredForValidationNames: rule.RequiredForValidationNames,
-                    ValidationSubjectNames: rule.ValidationSubjectNames,
-                    Validate: function (entity, breakOnFirstError) {
-                        if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
-                        var context = {
-                        };
-                        context[rule.EntityParameter] = entity;
-                        context[rule.ContextParameter] = {
-                            Violations: [],
-                            BreakOnFirstError: breakOnFirstError,
-                            Mocks: [],
-                            Dependencies: {
-                            }
-                        };
-                        r(context);
-                        return context[rule.ContextParameter].Violations;
-                    }
-                };
-            };
-            Validator.prototype.Validate = function (propertyName, breakOnFirstError) {
-                if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
-                var entity = this.GetEntity();
-                return linq(this.Rules).Where(function (rule) {
-                    return rule.ValidationSubjectNames.indexOf(propertyName) !== -1;
-                }).Select(function (rule) {
-                    return rule.Validate(entity, breakOnFirstError);
-                }).Aggregate().Result;
-            };
-            Validator.prototype.GetEntity = function () {
-                throw "Invalid operation, this method is abstract";
-            };
-            return Validator;
-        })();
-        Validation.Validator = Validator;        
     })(__BTF.Validation || (__BTF.Validation = {}));
     var Validation = __BTF.Validation;
 })(__BTF || (__BTF = {}));

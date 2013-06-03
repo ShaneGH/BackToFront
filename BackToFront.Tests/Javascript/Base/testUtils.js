@@ -8,9 +8,13 @@
         this.ExpectationReached = [];
 
         for (var i = 0, ii = arguments.length; i < ii; i++) {
-            this.Expectations.push(arguments[i]);
+            this.Expect(arguments[i]);
         }
     };
+
+    tUtil.Expect.prototype.Expect = function (item) {
+        this.Expectations.push(item);
+    }
 
     tUtil.Expect.prototype.At = function (currentPoint) {
         this.ExpectationReached.push(currentPoint);

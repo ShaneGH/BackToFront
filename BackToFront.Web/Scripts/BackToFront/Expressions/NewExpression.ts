@@ -9,6 +9,7 @@ module __BTF {
             Arguments: Expression[];
             Members: string[];
             Type: string;
+            IsAnonymous: bool;
 
             constructor(meta: Meta.NewExpressionMeta) {
                 super(meta);
@@ -17,40 +18,41 @@ module __BTF {
                     inputName: "Arguments",
                     inputConstructor: Array
                 }, {
+                    inputName: "IsAnonymous",
+                    inputConstructor: Boolean
+                }, {
                     inputName: "Type",
                     inputConstructor: String
                 });
 
-                if (meta.Members) {
+                if (meta.IsAnonymous) {
                     __BTF.Sanitizer.Require(meta, {
                         inputName: "Members",
                         inputConstructor: Array
                     });
 
-                    if (meta.Members.length && meta.Members.length !== meta.Arguments.length)
+                    if (meta.Members.length !== meta.Arguments.length)
                         throw "If members are defined, each must have a corresponding argument";
                 }
 
-                this.Arguments = linq(meta.Arguments).Select(a => Expression.CreateExpression(a)).Result;
+                this.Arguments = linq(meta.Arguments).Select(a => __BTF.Expressions.Expression.CreateExpression(a)).Result;
                 this.Members = meta.Members;
                 this.Type = meta.Type;
+                this.IsAnonymous = meta.IsAnonymous;
             }
 
             // TODO: register types
-            // TODO: optomistic construction, what to do with arguments
             _Compile(): Validation.ExpressionInvokerAction {
-                var construct = NewExpression.RegisteredTypes[this.Type] ?
-                    NewExpression.RegisteredTypes[this.Type] :
-                    Object;
 
                 var args = linq(this.Arguments).Select(a => a.Compile()).Result;
                 return (ambientContext) => {
                     var params = linq(args).Select(a => a(ambientContext)).Result;
-                    //TODO better way of determining if it is anonymous constructor
-                    if (this.Members && this.Members.length)
+                    if (this.IsAnonymous)
                         return this.ConstructAnonymous(params);
+                    else if (NewExpression.RegisteredTypes[this.Type])
+                        return this.Construct(NewExpression.RegisteredTypes[this.Type], params);
                     else
-                        return this.Construct(construct, params);
+                        return {};
                 };
             }
 

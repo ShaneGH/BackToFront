@@ -13,6 +13,9 @@ namespace BackToFront.Meta
         public ExpressionMeta[] Arguments { get; private set; }
 
         [DataMember]
+        public bool IsAnonymous { get; private set; }
+
+        [DataMember]
         public string[] Members { get; private set; }
 
         [DataMember]
@@ -29,7 +32,12 @@ namespace BackToFront.Meta
 
             Type = expression.Constructor.DeclaringType.FullName;
             Arguments = expression.Arguments.Select(a => CreateMeta(a)).ToArray();
-            Members = (expression.Members ?? Enumerable.Empty<MemberInfo>()).Select(m => m.Name).ToArray();
+
+            if (expression.Members != null)
+            {
+                Members = expression.Members.Select(m => m.Name).ToArray();
+                IsAnonymous = true;
+            }
         }
 
         public override ExpressionWrapperType ExpressionType

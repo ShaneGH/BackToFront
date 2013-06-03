@@ -188,8 +188,8 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
-      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\BackToFront\MetaClasses.js" "$(ProjectDir)Scripts\BackToFront\Expressions\Expression.js" "$(ProjectDir)Scripts\BackToFront"  -out $(ProjectDir)Scripts\build\BackToFront.min.js
-      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\BackToFront\MetaClasses.js" "$(ProjectDir)Scripts\BackToFront\Expressions\Expression.js" "$(ProjectDir)Scripts\BackToFront" -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false
+      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\BackToFront\MetaClasses.js" "$(ProjectDir)Scripts\BackToFront\Expressions\Expression.js" "$(ProjectDir)Scripts\BackToFront\Validation\Validator.js" "$(ProjectDir)Scripts\BackToFront"  -out $(ProjectDir)Scripts\build\BackToFront.min.js
+      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\BackToFront\MetaClasses.js" "$(ProjectDir)Scripts\BackToFront\Expressions\Expression.js" "$(ProjectDir)Scripts\BackToFront\Validation\Validator.js" "$(ProjectDir)Scripts\BackToFront" -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

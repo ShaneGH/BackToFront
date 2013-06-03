@@ -33,7 +33,7 @@
 	registeredTypes.Add(typeof(ExpressionMeta[]), typeof(ExpressionMeta[]).Name);
 
 	registeredTypes.Add(typeof(string), "string");
-	registeredTypes.Add(typeof(bool), "Boolean");
+	registeredTypes.Add(typeof(bool), "bool");
 	registeredTypes.Add(typeof(object), "any");
 	
 	registeredTypes.Add(typeof(string[]), "string[]");

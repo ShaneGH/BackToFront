@@ -14,27 +14,30 @@ var __BTF;
                     inputName: "Arguments",
                     inputConstructor: Array
                 }, {
+                    inputName: "IsAnonymous",
+                    inputConstructor: Boolean
+                }, {
                     inputName: "Type",
                     inputConstructor: String
                 });
-                if(meta.Members) {
+                if(meta.IsAnonymous) {
                     __BTF.Sanitizer.Require(meta, {
                         inputName: "Members",
                         inputConstructor: Array
                     });
-                    if(meta.Members.length && meta.Members.length !== meta.Arguments.length) {
+                    if(meta.Members.length !== meta.Arguments.length) {
                         throw "If members are defined, each must have a corresponding argument";
                     }
                 }
                 this.Arguments = linq(meta.Arguments).Select(function (a) {
-                    return Expressions.Expression.CreateExpression(a);
+                    return __BTF.Expressions.Expression.CreateExpression(a);
                 }).Result;
                 this.Members = meta.Members;
                 this.Type = meta.Type;
+                this.IsAnonymous = meta.IsAnonymous;
             }
             NewExpression.prototype._Compile = function () {
                 var _this = this;
-                var construct = NewExpression.RegisteredTypes[this.Type] ? NewExpression.RegisteredTypes[this.Type] : Object;
                 var args = linq(this.Arguments).Select(function (a) {
                     return a.Compile();
                 }).Result;
@@ -42,10 +45,13 @@ var __BTF;
                     var params = linq(args).Select(function (a) {
                         return a(ambientContext);
                     }).Result;
-                    if(_this.Members && _this.Members.length) {
+                    if(_this.IsAnonymous) {
                         return _this.ConstructAnonymous(params);
+                    } else if(NewExpression.RegisteredTypes[_this.Type]) {
+                        return _this.Construct(NewExpression.RegisteredTypes[_this.Type], params);
                     } else {
-                        return _this.Construct(construct, params);
+                        return {
+                        };
                     }
                 };
             };
