@@ -38,6 +38,7 @@ namespace BackToFront.Meta
         public override ExpressionWrapperType ExpressionType
         {
             get { return ExpressionWrapperType.Conditional; }
+            protected set { /* do nothing */ }
         }
     }
 }

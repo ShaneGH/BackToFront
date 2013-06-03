@@ -26,7 +26,7 @@ namespace BackToFront.Framework
         private static readonly MethodInfo _ToArray = typeof(Enumerable).GetMethod("ToArray", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
             .MakeGenericMethod(typeof(MemberChainItem));
 
-        private readonly IEnumerable<MemberChainItem> _violatedMembers;
+        private readonly MemberChainItem[] _violatedMembers;
         private readonly Expression<Func<TEntity, IViolation>> _violation;
 
         public ThrowViolation(Expression<Func<TEntity, IViolation>> violation, Rule<TEntity> parentRule, IEnumerable<MemberChainItem> violatedMembers)
@@ -70,14 +70,14 @@ namespace BackToFront.Framework
                 createViolationMethod = visitor.Visit(_violation.Body);
             }
 
-            // var violation
+            // IViolation violation;
             var violation = Expression.Variable(typeof(IViolation), "violation");
             // violation = _violation(entity);
             var createViolation = Expression.Assign(violation, createViolationMethod);
             // violation.ViolatedEntity = entity;
             var assignViolatedEntity = Expression.Assign(Expression.PropertyOrField(violation, "ViolatedEntity"), visitor.EntityParameter);
-            // violation.Violated = _violatedMembers.ToArray();
-            var assignViolated = Expression.Assign(Expression.PropertyOrField(violation, "Violated"), Expression.Call(_ToArray, Expression.Constant(_violatedMembers)));
+            // violation.Violated = _violatedMembers;
+            var assignViolated = Expression.Assign(Expression.PropertyOrField(violation, "Violated"), Expression.Constant(_violatedMembers));
             // context.Violations.Add(violation);
             var assignContext = Expression.Call(Expression.PropertyOrField(visitor.ContextParameter, "Violations"), _Add, violation);
 

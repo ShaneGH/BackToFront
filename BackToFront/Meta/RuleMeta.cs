@@ -62,19 +62,21 @@ namespace BackToFront.Meta
                     throw new ArgumentException("##");
 
                 // don't want initial type
-                var current = m.Member;
+                var current = m.NextItem;
                 var member = new List<string>();
                 var finish = false;
                 while (current != null)
                 {
-                    if (m.Member is PropertyInfo || m.Member is FieldInfo)
-                        member.Add(current.Name);
+                    if (current.Member is PropertyInfo || current.Member is FieldInfo)
+                        member.Add(current.Member.Name);
                     else
                     {
                         // don't want methods
                         finish = true;
                         break;
                     }
+
+                    current = current.NextItem;
                 }
 
                 if (!finish && member.Count > 0)

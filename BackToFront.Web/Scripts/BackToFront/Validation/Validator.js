@@ -7,7 +7,7 @@ var __BTF;
                 this.Rules = linq(rules || []).Select(Validator.CreateRule).Result;
             }
             Validator.CreateRule = function CreateRule(rule) {
-                var r = new __BTF.Expressions.Expression(rule.Expression).Compile();
+                var r = __BTF.Expressions.Expression.CreateExpression(rule.Expression).Compile();
                 return {
                     RequiredForValidationNames: rule.RequiredForValidationNames,
                     ValidationSubjectNames: rule.ValidationSubjectNames,

@@ -21,6 +21,7 @@ namespace BackToFront.Meta
         public override ExpressionWrapperType ExpressionType
         {
             get { return ExpressionWrapperType.Default; }
+            protected set { /* do nothing */ }
         }
     }
 }

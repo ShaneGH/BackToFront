@@ -1,4 +1,5 @@
 ﻿@model BackToFront.TestApp.Controllers.TestModel
+@using BackToFront.TestApp.Controllers
 @{
     ViewBag.Title = "TestForm";
 }
@@ -7,11 +8,16 @@
 
 @using (Html.BeginForm()) 
 { 
+    @Html.RenderRulesForModel(TestModel.Repository, true)
+    
     @Html.LabelFor(m => m.ValidateFlag)<br />
     @Html.CheckBoxFor(m => m.ValidateFlag)<br />
     
     @Html.LabelFor(m => m.Name)<br />
     @Html.EditorFor(m => m.Name)<br />
+    @Html.ValidationMessageFor(m => m.Name)<br />
     
     @Html.HiddenFor(m => m.RequireThat)
+
+    <input type="submit" value="Go" />
 }

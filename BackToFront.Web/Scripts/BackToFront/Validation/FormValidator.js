@@ -34,6 +34,26 @@ var __BTF;
                 }
                 return entity;
             };
+            FormValidator.RegisterRule = function RegisterRule(rule) {
+                FormValidator.Registered.push(new FormValidator(rule.Rules, rule.Entity));
+            };
+            FormValidator.Registered = [];
+            FormValidator._Setup = false;
+            FormValidator.Setup = function Setup() {
+                if(!jQuery || !jQuery.validator) {
+                    throw "This item requires jQuery and jQuery validation";
+                }
+                if(FormValidator._Setup) {
+                    return;
+                }
+                FormValidator._Setup = true;
+                jQuery.validator.addMethod("backtofront", function (value, element, parmas) {
+                    var results = linq(FormValidator.Registered).Select(function (a) {
+                        return a.Validate($(element).attr("name"), false);
+                    }).Aggregate();
+                    return results.Result.length === 0;
+                }, "XXX");
+            };
             return FormValidator;
         })(__BTF.Validation.Validator);
         Validation.FormValidator = FormValidator;        

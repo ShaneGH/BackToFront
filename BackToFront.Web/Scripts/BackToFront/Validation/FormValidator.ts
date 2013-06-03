@@ -7,6 +7,7 @@
 module __BTF {
 
     export module Validation {
+        //TODO: rename to JQueryValidator
         export class FormValidator extends __BTF.Validation.Validator {
             constructor(rules: Meta.RuleMeta[], entity: string, public Context?: HTMLElement) {
                 super(rules, entity);
@@ -25,8 +26,9 @@ module __BTF {
                 for (var j = 0, jj = allNames.length; j < jj; j++) {
 
                     var item = jQuery("[name=\"" + allNames[j] + "\"]", this.Context);
-                    //TODO: radio buttons
 
+                    //TODO: radio buttons
+                    //TODO: other boolean
                     if (item.attr("type") === "checkbox") {
                         entity[allNames[j]] = item.is(":checked");
                     } else {
@@ -42,6 +44,30 @@ module __BTF {
 
                 return entity;
             };
+
+            //TODO: nuit test
+            static RegisterRule(rule: any) {
+                FormValidator.Registered.push(new FormValidator(rule.Rules, rule.Entity));
+            }
+
+            static Registered: FormValidator[] = [];
+            private static _Setup = false;
+            //TODO: nuit test
+            static Setup() {
+                if (!jQuery || !jQuery.validator) {
+                    throw "This item requires jQuery and jQuery validation";
+                }
+
+                if (FormValidator._Setup)
+                    return;
+                else
+                    FormValidator._Setup = true;
+
+                jQuery.validator.addMethod("backtofront", function (value, element, parmas) {                    
+                    var results = linq(FormValidator.Registered).Select((a: FormValidator) => a.Validate($(element).attr("name"), false)).Aggregate();
+                    return results.Result.length === 0
+                }, "XXX");
+            }
         }
     }
 }

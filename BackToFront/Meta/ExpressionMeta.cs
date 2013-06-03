@@ -74,7 +74,7 @@ namespace BackToFront.Meta
         public ExpressionType NodeType { get; private set; }
 
         [DataMember]
-        public abstract ExpressionWrapperType ExpressionType { get; }
+        public abstract ExpressionWrapperType ExpressionType { get; protected set; }
 
         public ExpressionMeta() { }
 

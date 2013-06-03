@@ -11,6 +11,8 @@ namespace BackToFront.Web
 {
     public class WebValidateAttribute : ValidateMemberAttribute, IClientValidatable
     {
+        public const string ValidationType = "backtofront";
+
         /// <summary>
         /// Indicates whether to skip server side validation of the property. Default: false
         /// </summary>
@@ -26,7 +28,10 @@ namespace BackToFront.Web
 
         public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
         {
-            throw new NotImplementedException();
+            yield return new ModelClientValidationRule 
+            {
+                ValidationType = ValidationType
+            };
         }
     }
 }

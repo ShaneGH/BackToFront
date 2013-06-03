@@ -50,7 +50,7 @@ test("Create rule test", function () {
     };
     var placeholder = {};
     var r = function (ctxt) { return placeholder.r(ctxt); };
-    __BTF.Expressions.Expression = function () { ex.At("exp"); this.Compile = function () { ex.At("compile"); return r; } };
+    __BTF.Expressions.Expression.CreateExpression = function () { ex.At("exp"); return { Compile: function () { ex.At("compile"); return r; } } };
 
     // act
     var result = __BTF.Validation.Validator.CreateRule(rule);

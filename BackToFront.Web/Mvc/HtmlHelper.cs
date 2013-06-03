@@ -25,22 +25,29 @@ namespace BackToFront.Web.Mvc
 
     public static class HtmlHelper
     {
-        private static readonly DataContractJsonSerializer Serializer = new DataContractJsonSerializer(typeof(RuleCollection));
+
+        private static readonly DataContractJsonSerializer Serializer = new DataContractJsonSerializer(typeof(RuleCollection), new DataContractJsonSerializerSettings 
+        {
+            KnownTypes = ExpressionMeta.MetaTypes,
+            EmitTypeInformation =  EmitTypeInformation.Always
+        });
 
         public static void RulesForModel<TModel>(this HtmlHelper<TModel> helper, Repository repository, bool includeScriptTags = true)
         {
-            WriteRulesToStream<TModel>(repository, helper.ViewContext.HttpContext.Response.OutputStream, includeScriptTags);
+            WriteRulesToStream<TModel>(repository, helper.ViewContext.HttpContext.Response.OutputStream, includeScriptTags).Dispose();
         }
 
         public static MvcHtmlString RenderRulesForModel<TModel>(this HtmlHelper<TModel> helper, Repository repository, bool includeScriptTags = true)
         {
             using (var stream = new MemoryStream())
             {
-                WriteRulesToStream<TModel>(repository, stream, includeScriptTags);
-                stream.Position = 0;
-                using (var r = new StreamReader(stream))
+                using (WriteRulesToStream<TModel>(repository, stream, includeScriptTags))
                 {
-                    return new MvcHtmlString(r.ReadToEnd());
+                    stream.Position = 0;
+                    using (var r = new StreamReader(stream))
+                    {
+                        return new MvcHtmlString(r.ReadToEnd());
+                    }
                 }
             }
         }
@@ -50,12 +57,12 @@ namespace BackToFront.Web.Mvc
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="stream"></param>
-        private static void WriteRulesToStream<TEntity>(Repository repository, Stream stream, bool includeScriptTags)
+        private static IDisposable WriteRulesToStream<TEntity>(Repository repository, Stream stream, bool includeScriptTags)
         {
-            WriteRulesToStream<TEntity>(new[] { repository }, stream, includeScriptTags);
+            return WriteRulesToStream<TEntity>(new[] { repository }, stream, includeScriptTags);
         }
 
-        private static void WriteRulesToStream<TEntity>(IEnumerable<Repository> repositories, Stream stream, bool includeScriptTags)
+        private static IDisposable WriteRulesToStream<TEntity>(IEnumerable<Repository> repositories, Stream stream, bool includeScriptTags)
         {
             var type = typeof(TEntity);
             var rules = new RuleCollection
@@ -70,20 +77,21 @@ namespace BackToFront.Web.Mvc
                 type = type.BaseType;
             }
 
-            using (var writer = new StreamWriter(stream))
-            {
-                if (includeScriptTags)
-                    writer.WriteLine("<script type=\"text/javascript\">");
-                writer.WriteLine("if(!__BTF || !__BTF.RegisterRule || __BTF.RegisterRule.constructor !== Function) throw 'BackToFront has not been initialised';");
-                writer.Write("__BTF.RegisterRule(");
-                Serializer.WriteObject(stream, rules);
-                writer.WriteLine(");");
+            var writer = new StreamWriter(stream);
+            if (includeScriptTags)
+                writer.WriteLine("<script type=\"text/javascript\">");
 
-                if (includeScriptTags)
-                    writer.WriteLine("</script>");
+            writer.WriteLine("if(!__BTF || !__BTF.Validation || !__BTF.Validation.FormValidator || !__BTF.Validation.FormValidator.RegisterRule || __BTF.Validation.FormValidator.RegisterRule.constructor !== Function) throw 'BackToFront has not been initialised';");
+            writer.Write("__BTF.Validation.FormValidator.RegisterRule(");
+            writer.Flush();
+            Serializer.WriteObject(stream, rules);
+            writer.WriteLine(");");
 
-                writer.Flush();
-            }
+            if (includeScriptTags)
+                writer.WriteLine("</script>");
+
+            writer.Flush();
+            return writer;
         }
     }
 }
