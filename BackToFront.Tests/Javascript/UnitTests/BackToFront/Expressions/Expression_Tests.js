@@ -1,11 +1,16 @@
 ﻿
 // Chutzpah
 /// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
+/// <reference path="../../../Base/testUtils.js" />
+
+var assExp = __BTF.Expressions.AssignmentExpression;
 
 module("__BTF.Expressions.Expression", {
     setup: function () {
+        __BTF.Expressions.AssignmentExpression = assExp;
     },
     teardown: function () {
+        __BTF.Expressions.AssignmentExpression = assExp;
     }
 });
 
@@ -74,6 +79,29 @@ test("GetAffectedProperties", function () {
     // assert
     assert.deepEqual(subject.GetAffectedProperties(), []);
 });
+
+test("CreateExpression, assignment special case", function () {
+    var ex = new tUtil.Expect("new");
+
+    // arrange
+    var meta = {
+        NodeType: __BTF.Meta.ExpressionType.Assign,
+        ExpressionType: __BTF.Meta.ExpressionWrapperType.Binary
+    };
+
+    __BTF.Expressions.AssignmentExpression = function (input) {
+        assert.strictEqual(input, meta);
+        ex.At("new");
+    }
+
+    // act
+    var result = __BTF.Expressions.Expression.CreateExpression(meta);
+
+    // assert
+    ex.VerifyOrderedExpectations();
+    assert.strictEqual(result.constructor, __BTF.Expressions.AssignmentExpression);
+});
+
 
 test("CreateExpression, valid", function () {
     // arrange

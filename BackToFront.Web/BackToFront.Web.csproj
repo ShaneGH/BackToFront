@@ -92,6 +92,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\AssignmentExpression.ts" />
+    <Content Include="Scripts\BackToFront\Expressions\AssignmentExpression.js">
+      <DependentUpon>AssignmentExpression.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\BackToFront\Expressions\BinaryExpression.js">
       <DependentUpon>BinaryExpression.ts</DependentUpon>
     </Content>

@@ -64,6 +64,9 @@ var __BTF;
                 return dictionary;
             })();
             Expression.CreateExpression = function CreateExpression(meta) {
+                if(meta.NodeType === __BTF.Meta.ExpressionType.Assign && meta.ExpressionType === __BTF.Meta.ExpressionWrapperType.Binary) {
+                    return new __BTF.Expressions.AssignmentExpression(meta);
+                }
                 if(Expression.ExpressionConstructorDictionary[meta.ExpressionType]) {
                     return Expression.ExpressionConstructorDictionary[meta.ExpressionType](meta);
                 }

@@ -247,6 +247,7 @@
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\BlockExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\ConditionalExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\ConstantExpression_Tests.js" />
+    <Content Include="Javascript\UnitTests\BackToFront\Expressions\AssignmentExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\NewExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\UnaryExpressionOperators_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\UnaryExpression_Tests.js" />

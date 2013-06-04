@@ -45,8 +45,9 @@ var __BTF;
                 }
                 if(FormValidator._Setup) {
                     return;
+                } else {
+                    FormValidator._Setup = true;
                 }
-                FormValidator._Setup = true;
                 jQuery.validator.addMethod("backtofront", function (value, element, parmas) {
                     var results = linq(FormValidator.Registered).Select(function (a) {
                         return a.Validate($(element).attr("name"), false);

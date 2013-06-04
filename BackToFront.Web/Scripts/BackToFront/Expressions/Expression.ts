@@ -4,6 +4,7 @@
 /// <reference path="../MetaClasses.ts" />
 /// <reference path="../Sanitizer.ts" />
 
+/// <reference path="AssignmentExpression.ts" />
 /// <reference path="BinaryExpression.ts" />
 /// <reference path="BlockExpression.ts" />
 /// <reference path="ConditionalExpression.ts" />
@@ -51,7 +52,7 @@ module __BTF {
                 throw "Invalid operation";
             }
 
-            GetAffectedProperties(): string[]{ return []; }
+            GetAffectedProperties(): string[] { return []; }
 
             static ExpressionConstructorDictionary = (function () {
                 var dictionary = {};
@@ -67,10 +68,15 @@ module __BTF {
                 dictionary[__BTF.Meta.ExpressionWrapperType.Invocation] = meta => new __BTF.Expressions.InvocationExpression(meta);
                 dictionary[__BTF.Meta.ExpressionWrapperType.New] = meta => new __BTF.Expressions.NewExpression(meta);
 
-                return dictionary;                
+                return dictionary;
             })();
 
             static CreateExpression(meta: __BTF.Meta.ExpressionMeta): Expression {
+                // special case for assignment
+                if (meta.NodeType === __BTF.Meta.ExpressionType.Assign && meta.ExpressionType === __BTF.Meta.ExpressionWrapperType.Binary) {
+                    return new __BTF.Expressions.AssignmentExpression(<Meta.BinaryExpressionMeta>meta);
+                }
+
                 if (Expression.ExpressionConstructorDictionary[meta.ExpressionType])
                     return Expression.ExpressionConstructorDictionary[meta.ExpressionType](meta);
 
