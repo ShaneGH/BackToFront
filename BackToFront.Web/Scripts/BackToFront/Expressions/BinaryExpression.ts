@@ -24,6 +24,8 @@ module __BTF {
                 output[__BTF.Meta.ExpressionType.Add] = (left, right) => left + right;
                 output[__BTF.Meta.ExpressionType.AndAlso] = (left, right) => left && right;
                 output[__BTF.Meta.ExpressionType.Divide] = (left, right) => left / right;
+                //TODO: is this the right equals?
+                output[__BTF.Meta.ExpressionType.Equal] = (left, right) => left === right;
                 output[__BTF.Meta.ExpressionType.GreaterThan] = (left, right) => left > right;
                 output[__BTF.Meta.ExpressionType.GreaterThanOrEqual] = (left, right) => left >= right;
                 output[__BTF.Meta.ExpressionType.LessThan] = (left, right) => left < right;

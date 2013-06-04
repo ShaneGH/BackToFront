@@ -139,9 +139,11 @@ namespace BackToFront.Framework
         private IPreCompiledRule _Meta;
         public IPreCompiledRule Meta
         {
-            get 
+            get
             {
-                return _Meta ?? (_Meta = new PreCompiledRule(this));
+                // no cache for debugging purposes
+                //return _Meta ?? (_Meta = new PreCompiledRule(this));
+                return new PreCompiledRule(this);
             }
         }
 

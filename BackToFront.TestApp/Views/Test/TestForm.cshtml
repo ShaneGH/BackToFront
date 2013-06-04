@@ -4,11 +4,11 @@
     ViewBag.Title = "TestForm";
 }
 
+    @Html.RenderRulesForModel(TestModel.Repository, true)
 <h2>TestForm</h2>
 
 @using (Html.BeginForm()) 
 { 
-    @Html.RenderRulesForModel(TestModel.Repository, true)
     
     @Html.LabelFor(m => m.ValidateFlag)<br />
     @Html.CheckBoxFor(m => m.ValidateFlag)<br />
@@ -18,6 +18,10 @@
     @Html.ValidationMessageFor(m => m.Name)<br />
     
     @Html.HiddenFor(m => m.RequireThat)
+    
+    @Html.LabelFor(m => m.TestAllOk)
+    @Html.EditorFor(m => m.TestAllOk)
+    @Html.ValidationMessageFor(m => m.TestAllOk)
 
     <input type="submit" value="Go" />
 }

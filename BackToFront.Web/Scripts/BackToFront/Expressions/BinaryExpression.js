@@ -36,6 +36,9 @@ var __BTF;
                 output[__BTF.Meta.ExpressionType.Divide] = function (left, right) {
                     return left / right;
                 };
+                output[__BTF.Meta.ExpressionType.Equal] = function (left, right) {
+                    return left === right;
+                };
                 output[__BTF.Meta.ExpressionType.GreaterThan] = function (left, right) {
                     return left > right;
                 };

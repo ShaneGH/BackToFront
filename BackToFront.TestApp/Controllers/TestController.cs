@@ -25,6 +25,9 @@ namespace BackToFront.TestApp.Controllers
         public bool ValidateFlag { get; set; }
 
         public string RequireThat { get; set; }
+
+        [Required]
+        public string TestAllOk { get; set; }
     }
 
     public class customAttribute : BackToFront.Web.WebValidateAttribute

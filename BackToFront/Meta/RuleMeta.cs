@@ -23,17 +23,11 @@ namespace BackToFront.Meta
         [DataMember]
         public string ContextParameter { get; private set; }
 
-        [IgnoreDataMember]
+        [DataMember]
         public MemberChainItem[] ValidationSubjects { get; private set; }
 
-        [IgnoreDataMember]
+        [DataMember]
         public MemberChainItem[] RequiredForValidation { get; private set; }
-
-        [DataMember]
-        public string[] ValidationSubjectNames { get; set; }
-
-        [DataMember]
-        public string[] RequiredForValidationNames { get; set; }
 
         public RuleMeta() { }
 
@@ -44,9 +38,6 @@ namespace BackToFront.Meta
             Expression = expression;
             EntityParameter = entity;
             ContextParameter = contextParameter;
-
-            ValidationSubjectNames = GetProperties(validationSubjects).ToArray();
-            RequiredForValidationNames = GetProperties(requiredForValidation).ToArray();
         }
 
         public RuleMeta(INonGenericRule rule)

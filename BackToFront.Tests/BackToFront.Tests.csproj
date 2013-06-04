@@ -237,9 +237,6 @@
     <Folder Include="CSharp\UnitTests\Web\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Javascript\Scripts\qUnit.d.ts" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Javascript\Base\jquery-2.0.2.js" />
     <Content Include="Javascript\Base\testUtils.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\BinaryExpression_Tests.js" />

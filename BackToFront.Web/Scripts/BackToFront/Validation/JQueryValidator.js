@@ -34,7 +34,6 @@ var __BTF;
             };
             JQueryValidator.Registered = [];
             JQueryValidator.ValidatorName = "backtofront";
-            JQueryValidator._Setup = false;
             JQueryValidator.RegisterRule = function RegisterRule(rule) {
                 __BTF.Sanitizer.Require(rule, {
                     inputName: "Rules",
@@ -49,10 +48,8 @@ var __BTF;
                 if(!jQuery || !jQuery.validator) {
                     throw "This item requires jQuery and jQuery validation";
                 }
-                if(JQueryValidator._Setup) {
+                if(jQuery.validator.methods[JQueryValidator.ValidatorName]) {
                     return;
-                } else {
-                    JQueryValidator._Setup = true;
                 }
                 jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
             };
@@ -61,6 +58,8 @@ var __BTF;
                 for (var _i = 0; _i < (arguments.length - 2); _i++) {
                     params[_i] = arguments[_i + 2];
                 }
+                debugger;
+
                 var results = linq(JQueryValidator.Registered).Select(function (a) {
                     return a.Validate($(element).attr("name"), false);
                 }).Aggregate();

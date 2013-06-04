@@ -72,7 +72,7 @@ namespace BackToFront.Framework
             {
                 using (visitor.WithEntityParameter(a.EntityParameter))
                     return new Tuple<Expression, Expression>(visitor.Visit(a.Descriptor.WrappedExpression), a.Action.Compile(visitor));
-            });
+            }).ToArray();
 
             if (possibilities.Any())
             {

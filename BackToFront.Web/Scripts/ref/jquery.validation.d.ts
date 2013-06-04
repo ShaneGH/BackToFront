@@ -46,6 +46,7 @@ interface Validator {
     addMethod(name: string, method: (value: any, element: any, ...params: any[]) => any, message?: any): void;
     addClassRules(rules: any): void;
     addClassRules(name: string, rules: any): void;
+    methods: any;
 }
 
 interface JQuery {

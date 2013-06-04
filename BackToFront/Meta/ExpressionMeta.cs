@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using BackToFront.Utilities;
 
 namespace BackToFront.Meta
 {
@@ -22,7 +23,8 @@ namespace BackToFront.Meta
         static ExpressionMeta()
         {
             var type = typeof(ExpressionMeta);
-            MetaTypes = type.Assembly.GetTypes().Where(t => t != type && type.IsAssignableFrom(t)).ToArray();
+            MetaTypes = type.Assembly.GetTypes().Where(t => t != type && type.IsAssignableFrom(t))
+                .Union(new[] { typeof(MemberChainItem), typeof(MemberChainItem[]) }).ToArray();
 
             var constructors = new Dictionary<Type, Func<Expression, ExpressionMeta>>();
 

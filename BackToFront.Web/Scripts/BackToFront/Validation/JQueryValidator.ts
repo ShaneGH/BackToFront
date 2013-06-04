@@ -48,7 +48,6 @@ module __BTF {
 
             static Registered: JQueryValidator[] = [];
             private static ValidatorName = "backtofront";
-            private static _Setup = false;
 
             //TODO: unit test
             static RegisterRule(rule: Meta.RuleCollectionMeta) {
@@ -69,16 +68,15 @@ module __BTF {
                     throw "This item requires jQuery and jQuery validation";
                 }
 
-                if (JQueryValidator._Setup)
+                if (jQuery.validator.methods[JQueryValidator.ValidatorName])
                     return;
-                else
-                    JQueryValidator._Setup = true;
 
                 jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
             }
 
             //TODO: unit test
             static Validate(value: any, element: any, ...params: any[]) {
+                debugger;
                 var results = linq(JQueryValidator.Registered).Select((a: JQueryValidator) => a.Validate($(element).attr("name"), false)).Aggregate();
                 return results.Result.length === 0
             }

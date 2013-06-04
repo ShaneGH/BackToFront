@@ -14,11 +14,14 @@ using BackToFront.Logic.Compilations;
 using BackToFront.Utilities;
 using System.Runtime.Serialization;
 using BackToFront.Expressions.Visitors;
+using System.Reflection;
 
 namespace BackToFront.Framework
 {
     public class RequirementFailed<TEntity> : ExpressionElement<TEntity, bool>, IModelViolation<TEntity>
     {
+        private static ConstructorInfo _SimpleViolation = typeof(SimpleViolation).GetConstructor(new[] { typeof(string) });
+
         public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
             get
@@ -40,9 +43,11 @@ namespace BackToFront.Framework
 
         public IAdditionalRuleCondition<TEntity> WithModelViolation(string violation)
         {
-            return WithModelViolation(a => new SimpleViolation(violation));
+            var ctor = Expression.New(_SimpleViolation, Expression.Constant(violation));
+            return WithModelViolation(Expression.Lambda<Func<TEntity, IViolation>>(ctor, Expression.Parameter(typeof(TEntity))));
         }
 
+        //TODO: does this helper work if serialized into JSON via a meta class, other helpers had to be converted to using pure Expressions (not lambdas)
         public IAdditionalRuleCondition<TEntity> WithModelViolation(Expression<Func<TEntity, IViolation>> violation)
         {
             Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule, ValidationSubjects); });

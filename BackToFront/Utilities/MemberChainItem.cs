@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Runtime.Serialization;
 using BackToFront.Extensions.Reflection;
 
 namespace BackToFront.Utilities
 {
+    [DataContract]
     public class MemberChainItem
     {
         private static readonly Type _IEnumerable = typeof(IEnumerable<>);
@@ -16,6 +15,8 @@ namespace BackToFront.Utilities
         public readonly MemberIndex Index;
         public readonly MemberInfo Member;
         private MemberChainItem _NextItem;
+
+        [DataMember]
         public MemberChainItem NextItem
         {
             get
@@ -36,6 +37,17 @@ namespace BackToFront.Utilities
                     _NextItem = value;
                 }
             }
+        }
+
+        [DataMember]
+        public string MemberName
+        {
+            get
+            {
+                return Member.Name;
+            }
+            // Cannot set
+            set { }
         }
 
         public MemberInfo UltimateMember

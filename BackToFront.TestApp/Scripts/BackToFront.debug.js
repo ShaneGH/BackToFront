@@ -788,6 +788,9 @@ var __BTF;
                 output[__BTF.Meta.ExpressionType.Divide] = function (left, right) {
                     return left / right;
                 };
+                output[__BTF.Meta.ExpressionType.Equal] = function (left, right) {
+                    return left === right;
+                };
                 output[__BTF.Meta.ExpressionType.GreaterThan] = function (left, right) {
                     return left > right;
                 };
@@ -1345,9 +1348,7 @@ var __BTF;
             function JQueryValidator(rules, entity, Context) {
                         _super.call(this, rules, entity);
                 this.Context = Context;
-                if(!jQuery) {
-                    throw "This item requires jQuery";
-                }
+                JQueryValidator.Setup();
             }
             JQueryValidator.prototype.GetEntity = function () {
                 var entity = {
@@ -1368,26 +1369,38 @@ var __BTF;
                 }
                 return entity;
             };
+            JQueryValidator.Registered = [];
+            JQueryValidator.ValidatorName = "backtofront";
             JQueryValidator.RegisterRule = function RegisterRule(rule) {
+                __BTF.Sanitizer.Require(rule, {
+                    inputName: "Rules",
+                    inputConstructor: Array
+                }, {
+                    inputName: "Entity",
+                    inputConstructor: String
+                });
                 JQueryValidator.Registered.push(new JQueryValidator(rule.Rules, rule.Entity));
             };
-            JQueryValidator.Registered = [];
-            JQueryValidator._Setup = false;
             JQueryValidator.Setup = function Setup() {
                 if(!jQuery || !jQuery.validator) {
                     throw "This item requires jQuery and jQuery validation";
                 }
-                if(JQueryValidator._Setup) {
+                if(jQuery.validator.methods[JQueryValidator.ValidatorName]) {
                     return;
-                } else {
-                    JQueryValidator._Setup = true;
                 }
-                jQuery.validator.addMethod("backtofront", function (value, element, parmas) {
-                    var results = linq(JQueryValidator.Registered).Select(function (a) {
-                        return a.Validate($(element).attr("name"), false);
-                    }).Aggregate();
-                    return results.Result.length === 0;
-                }, "XXX");
+                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
+            };
+            JQueryValidator.Validate = function Validate(value, element) {
+                var params = [];
+                for (var _i = 0; _i < (arguments.length - 2); _i++) {
+                    params[_i] = arguments[_i + 2];
+                }
+                debugger;
+
+                var results = linq(JQueryValidator.Registered).Select(function (a) {
+                    return a.Validate($(element).attr("name"), false);
+                }).Aggregate();
+                return results.Result.length === 0;
             };
             return JQueryValidator;
         })(__BTF.Validation.Validator);

@@ -64,6 +64,6 @@ namespace BackToFront.Framework.Base
             return Expression.IfThen(Expression.Not(Expression.Property(visitor.ContextParameter, _break)), nc ?? Expression.Empty());
         }
 
-        protected abstract Expression _Compile(SwapPropVisitor visitor);
+        protected abstract Expression _Compile(SwapPropVisitor visitor); 
     }
 }
