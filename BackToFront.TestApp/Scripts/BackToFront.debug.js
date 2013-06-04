@@ -592,6 +592,9 @@ var __BTF;
                 return dictionary;
             })();
             Expression.CreateExpression = function CreateExpression(meta) {
+                if(meta.NodeType === __BTF.Meta.ExpressionType.Assign && meta.ExpressionType === __BTF.Meta.ExpressionWrapperType.Binary) {
+                    return new __BTF.Expressions.AssignmentExpression(meta);
+                }
                 if(Expression.ExpressionConstructorDictionary[meta.ExpressionType]) {
                     return Expression.ExpressionConstructorDictionary[meta.ExpressionType](meta);
                 }
@@ -704,6 +707,59 @@ var __BTF;
     var Validation = __BTF.Validation;
     var Meta = __BTF.Meta;
     (function (Expressions) {
+        var AssignmentExpression = (function (_super) {
+            __extends(AssignmentExpression, _super);
+            function AssignmentExpression(meta) {
+                        _super.call(this, meta);
+                __BTF.Sanitizer.Require(meta, {
+                    inputName: "Left",
+                    inputType: "object"
+                }, {
+                    inputName: "Right",
+                    inputType: "object"
+                });
+                switch(meta.Left.ExpressionType) {
+                    case __BTF.Meta.ExpressionWrapperType.Parameter:
+                        this.Left = null;
+                        this.LeftProperty = (meta.Left).Name;
+                        break;
+                    case __BTF.Meta.ExpressionWrapperType.Member:
+                        this.Left = __BTF.Expressions.Expression.CreateExpression((meta.Left).Expression);
+                        this.LeftProperty = (meta.Left).MemberName;
+                        break;
+                    default:
+                        throw "The left hand side of an assignment must be a parameter or a member";
+                }
+                this.Right = __BTF.Expressions.Expression.CreateExpression(meta.Right);
+            }
+            AssignmentExpression.prototype._Compile = function () {
+                var _this = this;
+                var left = this.Left ? this.Left.Compile() : function (context) {
+                    return context;
+                };
+                var right = this.Right.Compile();
+                return function (ambientContext) {
+                    return left(ambientContext)[_this.LeftProperty] = right(ambientContext);
+                };
+            };
+            return AssignmentExpression;
+        })(Expressions.Expression);
+        Expressions.AssignmentExpression = AssignmentExpression;        
+    })(__BTF.Expressions || (__BTF.Expressions = {}));
+    var Expressions = __BTF.Expressions;
+})(__BTF || (__BTF = {}));
+
+
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __BTF;
+(function (__BTF) {
+    var Validation = __BTF.Validation;
+    var Meta = __BTF.Meta;
+    (function (Expressions) {
         var BinaryExpression = (function (_super) {
             __extends(BinaryExpression, _super);
             function BinaryExpression(meta) {
@@ -728,9 +784,6 @@ var __BTF;
                 };
                 output[__BTF.Meta.ExpressionType.AndAlso] = function (left, right) {
                     return left && right;
-                };
-                output[__BTF.Meta.ExpressionType.Assign] = function (left, right) {
-                    return right;
                 };
                 output[__BTF.Meta.ExpressionType.Divide] = function (left, right) {
                     return left / right;
@@ -1287,16 +1340,16 @@ var __extends = this.__extends || function (d, b) {
 var __BTF;
 (function (__BTF) {
     (function (Validation) {
-        var FormValidator = (function (_super) {
-            __extends(FormValidator, _super);
-            function FormValidator(rules, entity, Context) {
+        var JQueryValidator = (function (_super) {
+            __extends(JQueryValidator, _super);
+            function JQueryValidator(rules, entity, Context) {
                         _super.call(this, rules, entity);
                 this.Context = Context;
                 if(!jQuery) {
                     throw "This item requires jQuery";
                 }
             }
-            FormValidator.prototype.GetEntity = function () {
+            JQueryValidator.prototype.GetEntity = function () {
                 var entity = {
                 };
                 var allNames = linq(this.Rules).Select(function (r) {
@@ -1315,29 +1368,30 @@ var __BTF;
                 }
                 return entity;
             };
-            FormValidator.RegisterRule = function RegisterRule(rule) {
-                FormValidator.Registered.push(new FormValidator(rule.Rules, rule.Entity));
+            JQueryValidator.RegisterRule = function RegisterRule(rule) {
+                JQueryValidator.Registered.push(new JQueryValidator(rule.Rules, rule.Entity));
             };
-            FormValidator.Registered = [];
-            FormValidator._Setup = false;
-            FormValidator.Setup = function Setup() {
+            JQueryValidator.Registered = [];
+            JQueryValidator._Setup = false;
+            JQueryValidator.Setup = function Setup() {
                 if(!jQuery || !jQuery.validator) {
                     throw "This item requires jQuery and jQuery validation";
                 }
-                if(FormValidator._Setup) {
+                if(JQueryValidator._Setup) {
                     return;
+                } else {
+                    JQueryValidator._Setup = true;
                 }
-                FormValidator._Setup = true;
                 jQuery.validator.addMethod("backtofront", function (value, element, parmas) {
-                    var results = linq(FormValidator.Registered).Select(function (a) {
+                    var results = linq(JQueryValidator.Registered).Select(function (a) {
                         return a.Validate($(element).attr("name"), false);
                     }).Aggregate();
                     return results.Result.length === 0;
                 }, "XXX");
             };
-            return FormValidator;
+            return JQueryValidator;
         })(__BTF.Validation.Validator);
-        Validation.FormValidator = FormValidator;        
+        Validation.JQueryValidator = JQueryValidator;        
     })(__BTF.Validation || (__BTF.Validation = {}));
     var Validation = __BTF.Validation;
 })(__BTF || (__BTF = {}));

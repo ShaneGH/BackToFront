@@ -257,7 +257,7 @@
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\MemberExpression_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Sanitizer_Tests.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Expressions\Expression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Validation\FormValidator_Test.js" />
+    <Content Include="Javascript\UnitTests\BackToFront\Validation\JQueryValidator_Test.js" />
     <Content Include="Javascript\UnitTests\BackToFront\Validation\Validator_Test.js" />
     <Content Include="Javascript\UnitTests\CURRENT_TEST.js" />
   </ItemGroup>

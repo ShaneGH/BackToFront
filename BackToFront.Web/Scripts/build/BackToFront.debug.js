@@ -1340,16 +1340,14 @@ var __extends = this.__extends || function (d, b) {
 var __BTF;
 (function (__BTF) {
     (function (Validation) {
-        var FormValidator = (function (_super) {
-            __extends(FormValidator, _super);
-            function FormValidator(rules, entity, Context) {
+        var JQueryValidator = (function (_super) {
+            __extends(JQueryValidator, _super);
+            function JQueryValidator(rules, entity, Context) {
                         _super.call(this, rules, entity);
                 this.Context = Context;
-                if(!jQuery) {
-                    throw "This item requires jQuery";
-                }
+                JQueryValidator.Setup();
             }
-            FormValidator.prototype.GetEntity = function () {
+            JQueryValidator.prototype.GetEntity = function () {
                 var entity = {
                 };
                 var allNames = linq(this.Rules).Select(function (r) {
@@ -1368,30 +1366,43 @@ var __BTF;
                 }
                 return entity;
             };
-            FormValidator.RegisterRule = function RegisterRule(rule) {
-                FormValidator.Registered.push(new FormValidator(rule.Rules, rule.Entity));
+            JQueryValidator.Registered = [];
+            JQueryValidator.ValidatorName = "backtofront";
+            JQueryValidator._Setup = false;
+            JQueryValidator.RegisterRule = function RegisterRule(rule) {
+                __BTF.Sanitizer.Require(rule, {
+                    inputName: "Rules",
+                    inputConstructor: Array
+                }, {
+                    inputName: "Entity",
+                    inputConstructor: String
+                });
+                JQueryValidator.Registered.push(new JQueryValidator(rule.Rules, rule.Entity));
             };
-            FormValidator.Registered = [];
-            FormValidator._Setup = false;
-            FormValidator.Setup = function Setup() {
+            JQueryValidator.Setup = function Setup() {
                 if(!jQuery || !jQuery.validator) {
                     throw "This item requires jQuery and jQuery validation";
                 }
-                if(FormValidator._Setup) {
+                if(JQueryValidator._Setup) {
                     return;
                 } else {
-                    FormValidator._Setup = true;
+                    JQueryValidator._Setup = true;
                 }
-                jQuery.validator.addMethod("backtofront", function (value, element, parmas) {
-                    var results = linq(FormValidator.Registered).Select(function (a) {
-                        return a.Validate($(element).attr("name"), false);
-                    }).Aggregate();
-                    return results.Result.length === 0;
-                }, "XXX");
+                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
             };
-            return FormValidator;
+            JQueryValidator.Validate = function Validate(value, element) {
+                var params = [];
+                for (var _i = 0; _i < (arguments.length - 2); _i++) {
+                    params[_i] = arguments[_i + 2];
+                }
+                var results = linq(JQueryValidator.Registered).Select(function (a) {
+                    return a.Validate($(element).attr("name"), false);
+                }).Aggregate();
+                return results.Result.length === 0;
+            };
+            return JQueryValidator;
         })(__BTF.Validation.Validator);
-        Validation.FormValidator = FormValidator;        
+        Validation.JQueryValidator = JQueryValidator;        
     })(__BTF.Validation || (__BTF.Validation = {}));
     var Validation = __BTF.Validation;
 })(__BTF || (__BTF = {}));

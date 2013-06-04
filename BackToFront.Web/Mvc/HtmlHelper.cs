@@ -13,20 +13,9 @@ using System.Runtime.Serialization;
 
 namespace BackToFront.Web.Mvc
 {
-    [DataContract]
-    public class RuleCollection
-    {
-        [DataMember]
-        public string Entity { get; set; }
-
-        [DataMember]
-        public List<RuleMeta> Rules { get; set; }
-    }
-
     public static class HtmlHelper
     {
-
-        private static readonly DataContractJsonSerializer Serializer = new DataContractJsonSerializer(typeof(RuleCollection), new DataContractJsonSerializerSettings 
+        private static readonly DataContractJsonSerializer Serializer = new DataContractJsonSerializer(typeof(RuleCollectionMeta), new DataContractJsonSerializerSettings 
         {
             KnownTypes = ExpressionMeta.MetaTypes,
             EmitTypeInformation =  EmitTypeInformation.Always
@@ -65,7 +54,7 @@ namespace BackToFront.Web.Mvc
         private static IDisposable WriteRulesToStream<TEntity>(IEnumerable<Repository> repositories, Stream stream, bool includeScriptTags)
         {
             var type = typeof(TEntity);
-            var rules = new RuleCollection
+            var rules = new RuleCollectionMeta
             {
                 Entity = type.FullName,
                 Rules = new List<RuleMeta>()
@@ -81,8 +70,8 @@ namespace BackToFront.Web.Mvc
             if (includeScriptTags)
                 writer.WriteLine("<script type=\"text/javascript\">");
 
-            writer.WriteLine("if(!__BTF || !__BTF.Validation || !__BTF.Validation.FormValidator || !__BTF.Validation.FormValidator.RegisterRule || __BTF.Validation.FormValidator.RegisterRule.constructor !== Function) throw 'BackToFront has not been initialised';");
-            writer.Write("__BTF.Validation.FormValidator.RegisterRule(");
+            writer.WriteLine("if(!__BTF || !__BTF.Validation || !__BTF.Validation.JQueryValidator || !__BTF.Validation.JQueryValidator.RegisterRule || __BTF.Validation.JQueryValidator.RegisterRule.constructor !== Function) throw 'BackToFront has not been initialised';");
+            writer.Write("__BTF.Validation.JQueryValidator.RegisterRule(");
             writer.Flush();
             Serializer.WriteObject(stream, rules);
             writer.WriteLine(");");

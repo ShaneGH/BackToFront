@@ -142,9 +142,9 @@
     <Content Include="Scripts\BackToFront\Validation\ExpressionInvoker.js">
       <DependentUpon>ExpressionInvoker.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="Scripts\BackToFront\Validation\FormValidator.ts" />
-    <Content Include="Scripts\BackToFront\Validation\FormValidator.js">
-      <DependentUpon>FormValidator.ts</DependentUpon>
+    <TypeScriptCompile Include="Scripts\BackToFront\Validation\JQueryValidator.ts" />
+    <Content Include="Scripts\BackToFront\Validation\JQueryValidator.js">
+      <DependentUpon>JQueryValidator.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\BackToFront\Validation\Validator.js">
       <DependentUpon>Validator.ts</DependentUpon>

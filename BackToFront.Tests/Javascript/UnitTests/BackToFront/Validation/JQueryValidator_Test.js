@@ -5,7 +5,7 @@
 /// <reference path="../../../Base/jquery-2.0.2.js" />
 
 var jq = jQuery;
-module("__BTF.Validation.FormValidator", {
+module("__BTF.Validation.JQueryValidator", {
     setup: function () {
     },
     teardown: function () {
@@ -21,7 +21,7 @@ test("Constructor, no jQuery", function () {
     // act
     // assert
     assert.throws(function () {
-        new __BTF.Validation.FormValidator();
+        new __BTF.Validation.JQueryValidator();
     });
 });
 
@@ -43,7 +43,7 @@ test("GetEntity, string", function () {
     };
 
     // act
-    var entity = __BTF.Validation.FormValidator.prototype.GetEntity.call(subject);
+    var entity = __BTF.Validation.JQueryValidator.prototype.GetEntity.call(subject);
 
     // assert
     assert.strictEqual(entity[name1], val1);
@@ -68,7 +68,7 @@ test("GetEntity, data-val-number", function () {
     };
 
     // act
-    var entity = __BTF.Validation.FormValidator.prototype.GetEntity.call(subject);
+    var entity = __BTF.Validation.JQueryValidator.prototype.GetEntity.call(subject);
 
     // assert
     assert.strictEqual(entity[name1], val1);
@@ -95,7 +95,7 @@ test("GetEntity, checkbox", function () {
     };
 
     // act
-    var entity = __BTF.Validation.FormValidator.prototype.GetEntity.call(subject);
+    var entity = __BTF.Validation.JQueryValidator.prototype.GetEntity.call(subject);
 
     // assert
     assert.strictEqual(entity[name1], val1);

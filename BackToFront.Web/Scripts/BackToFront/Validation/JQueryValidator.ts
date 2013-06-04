@@ -5,16 +5,13 @@
 /// <reference path="../../ref/jquery.d.ts" />
 
 module __BTF {
-
     export module Validation {
-        //TODO: rename to JQueryValidator
-        export class FormValidator extends __BTF.Validation.Validator {
+        export class JQueryValidator extends __BTF.Validation.Validator {
+
             constructor(rules: Meta.RuleMeta[], entity: string, public Context?: HTMLElement) {
                 super(rules, entity);
 
-                if (!jQuery) {
-                    throw "This item requires jQuery";
-                }
+                JQueryValidator.Setup();
             };
 
             GetEntity(): any {
@@ -45,28 +42,45 @@ module __BTF {
                 return entity;
             };
 
-            //TODO: nuit test
-            static RegisterRule(rule: any) {
-                FormValidator.Registered.push(new FormValidator(rule.Rules, rule.Entity));
+            //#######################################################
+            //###### Static
+            //#######################################################
+
+            static Registered: JQueryValidator[] = [];
+            private static ValidatorName = "backtofront";
+            private static _Setup = false;
+
+            //TODO: unit test
+            static RegisterRule(rule: Meta.RuleCollectionMeta) {
+                __BTF.Sanitizer.Require(rule, {
+                    inputName: "Rules",
+                    inputConstructor: Array
+                }, {
+                    inputName: "Entity",
+                    inputConstructor: String
+                });
+
+                JQueryValidator.Registered.push(new JQueryValidator(rule.Rules, rule.Entity));
             }
 
-            static Registered: FormValidator[] = [];
-            private static _Setup = false;
-            //TODO: nuit test
+            //TODO: unit test
             static Setup() {
                 if (!jQuery || !jQuery.validator) {
                     throw "This item requires jQuery and jQuery validation";
                 }
 
-                if (FormValidator._Setup)
+                if (JQueryValidator._Setup)
                     return;
                 else
-                    FormValidator._Setup = true;
+                    JQueryValidator._Setup = true;
 
-                jQuery.validator.addMethod("backtofront", function (value, element, parmas) {                    
-                    var results = linq(FormValidator.Registered).Select((a: FormValidator) => a.Validate($(element).attr("name"), false)).Aggregate();
-                    return results.Result.length === 0
-                }, "XXX");
+                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
+            }
+
+            //TODO: unit test
+            static Validate(value: any, element: any, ...params: any[]) {
+                var results = linq(JQueryValidator.Registered).Select((a: JQueryValidator) => a.Validate($(element).attr("name"), false)).Aggregate();
+                return results.Result.length === 0
             }
         }
     }

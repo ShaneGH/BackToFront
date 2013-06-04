@@ -71,6 +71,11 @@ module __BTF {
 			RequiredForValidationNames: string[];
 		}
 
+		export interface RuleCollectionMeta {
+			Entity: string;
+			Rules: RuleMeta[];
+		}
+
 		export interface IValidationContext {
 			BreakOnFirstError: bool;
 			Violations: IViolation;

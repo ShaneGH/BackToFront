@@ -20,6 +20,7 @@
 	var types = baseClass.Assembly.GetTypes().Where(t => baseClass.IsAssignableFrom(t)).Union(new[] 
 	{ 
 		typeof(BackToFront.Meta.RuleMeta), 
+		typeof(BackToFront.Meta.RuleCollectionMeta), 
 		typeof(BackToFront.Framework.IValidationContext) , 
 		typeof(BackToFront.IViolation) 
 	});
@@ -39,6 +40,7 @@
 	registeredTypes.Add(typeof(string[]), "string[]");
 	registeredTypes.Add(typeof(object[]), "any[]");
 	
+	registeredTypes.Add(typeof(System.Collections.Generic.IList<BackToFront.Meta.RuleMeta>), typeof(BackToFront.Meta.RuleMeta).Name + "[]");
 	registeredTypes.Add(typeof(System.Collections.Generic.IList<BackToFront.IViolation>), typeof(BackToFront.IViolation).Name);
 	registeredTypes.Add(typeof(System.Collections.Generic.IDictionary<string, object>), "any");
 	
