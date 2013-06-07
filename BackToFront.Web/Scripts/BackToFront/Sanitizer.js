@@ -1,6 +1,6 @@
-var __BTF;
-(function (__BTF) {
-    __BTF.Initialize = function (data) {
+var BackToFront;
+(function (BackToFront) {
+    BackToFront.Initialize = function (data) {
     };
     var Sanitizer = (function () {
         function Sanitizer() { }
@@ -33,5 +33,5 @@ var __BTF;
         };
         return Sanitizer;
     })();
-    __BTF.Sanitizer = Sanitizer;    
-})(__BTF || (__BTF = {}));
+    BackToFront.Sanitizer = Sanitizer;    
+})(BackToFront || (BackToFront = {}));

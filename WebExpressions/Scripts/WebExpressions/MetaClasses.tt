@@ -1,0 +1,67 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Runtime.Serialization" #>
+<#@ assembly name="C:\Dev\Apps\BackToFront\WebExpressions\bin\Debug\WebExpressions.dll" #>
+<#@ assembly name="C:\Dev\Apps\BackToFront\BackToFront.Web\bin\Debug\BackToFront.Web.dll" #>
+
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Runtime.Serialization" #>
+<#@ import namespace="BackToFront.Web.T4Helpers" #>
+<#@ import namespace="WebExpressions.Meta" #>
+
+<#@ output extension=".ts" #>
+
+<# 
+	var baseClass = typeof(ExpressionMeta);
+	var types = baseClass.Assembly.GetTypes().Where(t => baseClass.IsAssignableFrom(t));
+
+	var registeredTypes = new Dictionary<Type, string>();
+	foreach(var t in types)
+	{
+		registeredTypes.Add(t, t.Name);
+	}
+	
+	// each referenced type must be defined
+	registeredTypes.Add(typeof(WebExpressions.Enum.ExpressionWrapperType), typeof(WebExpressions.Enum.ExpressionWrapperType).Name);
+	registeredTypes.Add(typeof(ExpressionType), typeof(ExpressionType).Name);
+	registeredTypes.Add(typeof(ExpressionMeta[]), typeof(ExpressionMeta[]).Name);
+
+	registeredTypes.Add(typeof(string), "string");
+	registeredTypes.Add(typeof(bool), "bool");
+	registeredTypes.Add(typeof(object), "any");
+	
+	registeredTypes.Add(typeof(string[]), "string[]");
+	registeredTypes.Add(typeof(object[]), "any[]");
+	
+	registeredTypes.Add(typeof(System.Collections.Generic.IDictionary<string, object>), "any");
+#>
+
+module WebExpressions {
+	export module Meta {
+<#foreach(var type in types) {
+var members = type.GetMembers(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly)
+	.Where(m => m.GetCustomAttribute<DataMemberAttribute>() != null);
+var implements = types.Contains(type.BaseType) ? " extends " + type.BaseType.Name : "";#>
+		export interface <#=type.Name + implements#> {
+<#foreach(var member in members) {#>
+			<#=member.Name + ": " + registeredTypes.TypeNameFor(member) #>;
+<#}#>
+		}
+
+<#}#>
+		export enum ExpressionWrapperType {
+<#foreach(var item in System.Enum.GetValues(typeof(WebExpressions.Enum.ExpressionWrapperType))) {#>
+			<#=item.ToString()#> = <#=((int)item).ToString()#>,
+<#}#>
+		}
+
+		export enum ExpressionType {
+<#foreach(var item in System.Enum.GetValues(typeof(ExpressionType))) {#>
+			<#=item.ToString()#> = <#=((int)item).ToString()#>,
+<#}#>
+		}
+	}
+}

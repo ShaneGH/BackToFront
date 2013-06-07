@@ -1,5 +1,5 @@
-var __BTF;
-(function (__BTF) {
+var BackToFront;
+(function (BackToFront) {
     (function (Validation) {
         var Validator = (function () {
             function Validator(rules, Entity) {
@@ -7,10 +7,10 @@ var __BTF;
                 this.Rules = linq(rules || []).Select(Validator.CreateRule).Result;
             }
             Validator.CreateRule = function CreateRule(rule) {
-                var r = __BTF.Expressions.Expression.CreateExpression(rule.Expression).Compile();
+                var r = ex.createExpression(rule.Expression).Compile();
                 return {
-                    RequiredForValidationNames: rule.RequiredForValidationNames,
-                    ValidationSubjectNames: rule.ValidationSubjectNames,
+                    RequiredForValidationNames: rule.RequiredForValidation,
+                    ValidationSubjectNames: rule.ValidationSubjects,
                     Validate: function (entity, breakOnFirstError) {
                         if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
                         var context = {
@@ -43,6 +43,6 @@ var __BTF;
             return Validator;
         })();
         Validation.Validator = Validator;        
-    })(__BTF.Validation || (__BTF.Validation = {}));
-    var Validation = __BTF.Validation;
-})(__BTF || (__BTF = {}));
+    })(BackToFront.Validation || (BackToFront.Validation = {}));
+    var Validation = BackToFront.Validation;
+})(BackToFront || (BackToFront = {}));

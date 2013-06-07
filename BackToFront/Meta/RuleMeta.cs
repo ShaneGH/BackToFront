@@ -8,11 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using BackToFront.Utilities;
 using BackToFront.Validation;
+using WebExpressions.Meta;
 
 namespace BackToFront.Meta
 {
     [DataContract]
-    public class RuleMeta : IMeta
+    public class RuleMeta
     {
         [DataMember]
         public ExpressionMeta Expression { get; private set; }

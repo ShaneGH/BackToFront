@@ -3,7 +3,7 @@
 /// <reference path="../ref/jquery.validation.d.ts" />
 /// <reference path="MetaClasses.ts" />
 
-module __BTF {
+module BackToFront {
     export var Initialize = function (data) { };
 
     export interface RequiredProperty {

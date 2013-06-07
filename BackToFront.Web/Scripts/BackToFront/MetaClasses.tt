@@ -1,6 +1,7 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ assembly name="System.Runtime.Serialization" #>
+<#@ assembly name="C:\Dev\Apps\BackToFront\WebExpressions\bin\Debug\WebExpressions.dll" #>
 <#@ assembly name="C:\Dev\Apps\BackToFront\BackToFront\bin\Debug\BackToFront.dll" #>
 <#@ assembly name="C:\Dev\Apps\BackToFront\BackToFront.Web\bin\Debug\BackToFront.Web.dll" #>
 
@@ -10,28 +11,28 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Runtime.Serialization" #>
 <#@ import namespace="BackToFront.Meta" #>
+<#@ import namespace="WebExpressions.Meta" #>
 <#@ import namespace="BackToFront.Web.T4Helpers" #>
-<#@ import namespace="BackToFront.Extensions.IEnumerable" #>
 
 <#@ output extension=".ts" #>
 
 <# 
-	var baseClass = typeof(ExpressionMeta);
-	var types = baseClass.Assembly.GetTypes().Where(t => baseClass.IsAssignableFrom(t)).Union(new[] 
+	var types = new[] 
 	{ 
 		typeof(BackToFront.Meta.RuleMeta), 
 		typeof(BackToFront.Meta.RuleCollectionMeta), 
 		typeof(BackToFront.Framework.IValidationContext) , 
 		typeof(BackToFront.IViolation) 
-	});
+	};
 
 	var registeredTypes = new Dictionary<Type, string>();
-	types.Each(t => registeredTypes.Add(t, t.Name));
+	foreach (var t in types)
+	{
+		registeredTypes.Add(t, t.Name);
+	}
 	
 	// each referenced type must be defined
-	registeredTypes.Add(typeof(BackToFront.Enum.ExpressionWrapperType), typeof(BackToFront.Enum.ExpressionWrapperType).Name);
-	registeredTypes.Add(typeof(ExpressionType), typeof(ExpressionType).Name);
-	registeredTypes.Add(typeof(ExpressionMeta[]), typeof(ExpressionMeta[]).Name);
+	registeredTypes.Add(typeof(ExpressionMeta), "WebExpressions.Meta.ExpressionMeta");
 
 	registeredTypes.Add(typeof(string), "string");
 	registeredTypes.Add(typeof(bool), "bool");
@@ -44,10 +45,13 @@
 	registeredTypes.Add(typeof(System.Collections.Generic.IList<BackToFront.IViolation>), typeof(BackToFront.IViolation).Name);
 	registeredTypes.Add(typeof(System.Collections.Generic.IDictionary<string, object>), "any");
 	
+	registeredTypes.Add(typeof(BackToFront.Utilities.MemberChainItem), "any");
+	registeredTypes.Add(typeof(BackToFront.Utilities.MemberChainItem[]), "any[]");
 	registeredTypes.Add(typeof(System.Collections.Generic.IEnumerable<BackToFront.Utilities.MemberChainItem>), "any[]");
 #>
+/// <reference path="../../../WebExpressions/Scripts/ref/Exports.ts" />
 
-module __BTF {
+module BackToFront {
 	export module Meta {
 <#foreach(var type in types) {
 var members = type.GetMembers(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly)
@@ -60,16 +64,5 @@ var implements = types.Contains(type.BaseType) ? " extends " + type.BaseType.Nam
 		}
 
 <#}#>
-		export enum ExpressionWrapperType {
-<#foreach(var item in System.Enum.GetValues(typeof(BackToFront.Enum.ExpressionWrapperType))) {#>
-			<#=item.ToString()#> = <#=((int)item).ToString()#>,
-<#}#>
-		}
-
-		export enum ExpressionType {
-<#foreach(var item in System.Enum.GetValues(typeof(ExpressionType))) {#>
-			<#=item.ToString()#> = <#=((int)item).ToString()#>,
-<#}#>
-		}
 	}
 }

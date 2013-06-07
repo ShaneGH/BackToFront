@@ -45,7 +45,6 @@
     <Compile Include="DataAnnotations\ClientSideMemberAttribute.cs" />
     <Compile Include="DataAnnotations\ValidateMemberAttribute.cs" />
     <Compile Include="Dependency\IDependencyResolver.cs" />
-    <Compile Include="Enum\ExpressionType.cs" />
     <Compile Include="Enum\DependencyBehavior.cs" />
     <Compile Include="Enum\MemberIndexType.cs" />
     <Compile Include="Enum\MockBehavior.cs" />
@@ -74,21 +73,8 @@
     <Compile Include="Framework\MultiCondition+Condition.cs" />
     <Compile Include="Framework\DeadEnd.cs" />
     <Compile Include="Framework\ValidationContext.cs" />
-    <Compile Include="Meta\BinaryExpressionMeta.cs" />
-    <Compile Include="Meta\BlockExpressionMeta.cs" />
-    <Compile Include="Meta\ConditionalExpressionMeta.cs" />
-    <Compile Include="Meta\ConstantExpressionMeta.cs" />
-    <Compile Include="Meta\NewExpressionMeta.cs" />
-    <Compile Include="Meta\IMeta.cs" />
-    <Compile Include="Meta\InvocationExpressionMeta.cs" />
-    <Compile Include="Meta\DefaultExpressionMeta.cs" />
-    <Compile Include="Meta\MemberExpressionMeta.cs" />
-    <Compile Include="Meta\MethodCallExpressionMeta.cs" />
-    <Compile Include="Meta\ParameterExpressionMeta.cs" />
     <Compile Include="Meta\RuleCollectionMeta.cs" />
     <Compile Include="Meta\RuleMeta.cs" />
-    <Compile Include="Meta\UnaryExpressionMeta.cs" />
-    <Compile Include="Meta\ExpressionMeta.cs" />
     <Compile Include="Framework\MultiCondition.cs" />
     <Compile Include="Framework\RequirementFailed.cs" />
     <Compile Include="Framework\RequireOperator.cs" />
@@ -138,7 +124,12 @@
     <Compile Include="Validation\IValidate.cs" />
     <Compile Include="_\IViolation.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\WebExpressions\WebExpressions.csproj">
+      <Project>{8b96663c-4c77-4a13-b7fb-eb980be26737}</Project>
+      <Name>WebExpressions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

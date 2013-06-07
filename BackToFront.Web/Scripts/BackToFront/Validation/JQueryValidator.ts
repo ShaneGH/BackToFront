@@ -1,12 +1,12 @@
 
 /// <reference path="Validator.ts" />
 /// <reference path="../Sanitizer.ts" />
-/// <reference path="../Expressions/Expression.ts" />
+/// <reference path="../../../../WebExpressions/Scripts/ref/Exports.ts" />
 /// <reference path="../../ref/jquery.d.ts" />
 
-module __BTF {
+module BackToFront {
     export module Validation {
-        export class JQueryValidator extends __BTF.Validation.Validator {
+        export class JQueryValidator extends BackToFront.Validation.Validator {
 
             constructor(rules: Meta.RuleMeta[], entity: string, public Context?: HTMLElement) {
                 super(rules, entity);
@@ -51,7 +51,7 @@ module __BTF {
 
             //TODO: unit test
             static RegisterRule(rule: Meta.RuleCollectionMeta) {
-                __BTF.Sanitizer.Require(rule, {
+                BackToFront.Sanitizer.Require(rule, {
                     inputName: "Rules",
                     inputConstructor: Array
                 }, {

@@ -92,47 +92,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\AssignmentExpression.ts" />
-    <Content Include="Scripts\BackToFront\Expressions\AssignmentExpression.js">
-      <DependentUpon>AssignmentExpression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\BinaryExpression.js">
-      <DependentUpon>BinaryExpression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\BlockExpression.js">
-      <DependentUpon>BlockExpression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\ConditionalExpression.js">
-      <DependentUpon>ConditionalExpression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\ConstantExpression.js">
-      <DependentUpon>ConstantExpression.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\NewExpression.ts" />
-    <Content Include="Scripts\BackToFront\Expressions\Copy of MethodCallExpression.js">
-      <DependentUpon>NewExpression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\DefaultExpression.js">
-      <DependentUpon>DefaultExpression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\Expression.js">
-      <DependentUpon>Expression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\InvocationExpression.js">
-      <DependentUpon>InvocationExpression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\MemberExpression.js">
-      <DependentUpon>MemberExpression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\MethodCallExpression.js">
-      <DependentUpon>MethodCallExpression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\ParameterExpression.js">
-      <DependentUpon>ParameterExpression.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Expressions\UnaryExpression.js">
-      <DependentUpon>UnaryExpression.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\BackToFront\MetaClasses.js">
       <DependentUpon>MetaClasses.ts</DependentUpon>
     </Content>
@@ -158,20 +117,8 @@
     <Content Include="Scripts\linq-0.0.js" />
     <Content Include="Scripts\ref\jquery.d.ts" />
     <Content Include="Scripts\ref\jquery.validation.d.ts" />
-    <Content Include="Scripts\ref\linq.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\BinaryExpression.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\BlockExpression.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\ConditionalExpression.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\ConstantExpression.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\DefaultExpression.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\Expression.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\InvocationExpression.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\MemberExpression.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\MethodCallExpression.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\ParameterExpression.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Expressions\UnaryExpression.ts" />
     <TypeScriptCompile Include="Scripts\BackToFront\MetaClasses.ts">
       <DependentUpon>MetaClasses.tt</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -192,8 +139,8 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
-      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\BackToFront\MetaClasses.js" "$(ProjectDir)Scripts\BackToFront\Expressions\Expression.js" "$(ProjectDir)Scripts\BackToFront\Validation\Validator.js" "$(ProjectDir)Scripts\BackToFront"  -out $(ProjectDir)Scripts\build\BackToFront.min.js
-      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\BackToFront\MetaClasses.js" "$(ProjectDir)Scripts\BackToFront\Expressions\Expression.js" "$(ProjectDir)Scripts\BackToFront\Validation\Validator.js" "$(ProjectDir)Scripts\BackToFront" -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false
+      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\BackToFront\MetaClasses.js" "$(ProjectDir)Scripts\BackToFront\Validation\Validator.js" "$(ProjectDir)Scripts\BackToFront" -out $(ProjectDir)Scripts\build\BackToFront.min.js
+      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\BackToFront\MetaClasses.js" "$(ProjectDir)Scripts\BackToFront\Validation\Validator.js" "$(ProjectDir)Scripts\BackToFront" -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

@@ -15,11 +15,11 @@ namespace BackToFront.Web.Mvc
 {
     public static class HtmlHelper
     {
-        private static readonly DataContractJsonSerializer Serializer = new DataContractJsonSerializer(typeof(RuleCollectionMeta), new DataContractJsonSerializerSettings 
+        private static readonly DataContractJsonSerializer Serializer = null;/*new DataContractJsonSerializer(typeof(RuleCollectionMeta), new DataContractJsonSerializerSettings 
         {
             KnownTypes = ExpressionMeta.MetaTypes,
             EmitTypeInformation =  EmitTypeInformation.Always
-        });
+        });*/
 
         public static void RulesForModel<TModel>(this HtmlHelper<TModel> helper, Repository repository, bool includeScriptTags = true)
         {

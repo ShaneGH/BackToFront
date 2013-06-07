@@ -1,8 +1,8 @@
 
 /// <reference path="../Sanitizer.ts" />
-/// <reference path="../Expressions/Expression.ts" />
+/// <reference path="../../../../WebExpressions/Scripts/ref/Exports.ts" />
 
-module __BTF {
+module BackToFront {
 
     export interface IValidate {
         RequiredForValidationNames: String[];
@@ -22,10 +22,10 @@ module __BTF {
             };
 
             static CreateRule(rule: Meta.RuleMeta): IValidate {
-                var r = __BTF.Expressions.Expression.CreateExpression(rule.Expression).Compile();
+                var r = ex.createExpression(rule.Expression).Compile();
                 return {
-                    RequiredForValidationNames: rule.RequiredForValidationNames,
-                    ValidationSubjectNames: rule.ValidationSubjectNames,
+                    RequiredForValidationNames: rule.RequiredForValidation,
+                    ValidationSubjectNames: rule.ValidationSubjects,
                     Validate: (entity: any, breakOnFirstError: bool = false) => {
 
                         var context = {};

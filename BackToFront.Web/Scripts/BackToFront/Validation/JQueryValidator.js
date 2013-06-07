@@ -3,8 +3,8 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var __BTF;
-(function (__BTF) {
+var BackToFront;
+(function (BackToFront) {
     (function (Validation) {
         var JQueryValidator = (function (_super) {
             __extends(JQueryValidator, _super);
@@ -35,7 +35,7 @@ var __BTF;
             JQueryValidator.Registered = [];
             JQueryValidator.ValidatorName = "backtofront";
             JQueryValidator.RegisterRule = function RegisterRule(rule) {
-                __BTF.Sanitizer.Require(rule, {
+                BackToFront.Sanitizer.Require(rule, {
                     inputName: "Rules",
                     inputConstructor: Array
                 }, {
@@ -66,8 +66,8 @@ var __BTF;
                 return results.Result.length === 0;
             };
             return JQueryValidator;
-        })(__BTF.Validation.Validator);
+        })(BackToFront.Validation.Validator);
         Validation.JQueryValidator = JQueryValidator;        
-    })(__BTF.Validation || (__BTF.Validation = {}));
-    var Validation = __BTF.Validation;
-})(__BTF || (__BTF = {}));
+    })(BackToFront.Validation || (BackToFront.Validation = {}));
+    var Validation = BackToFront.Validation;
+})(BackToFront || (BackToFront = {}));

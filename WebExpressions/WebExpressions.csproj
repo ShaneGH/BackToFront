@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8B96663C-4C77-4A13-B7FB-EB980BE26737}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebExpressions</RootNamespace>
+    <AssemblyName>WebExpressions</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enum\ExpressionWrapperType.cs" />
+    <Compile Include="Meta\BinaryExpressionMeta.cs" />
+    <Compile Include="Meta\BlockExpressionMeta.cs" />
+    <Compile Include="Meta\ConditionalExpressionMeta.cs" />
+    <Compile Include="Meta\ConstantExpressionMeta.cs" />
+    <Compile Include="Meta\DefaultExpressionMeta.cs" />
+    <Compile Include="Meta\ExpressionMeta.cs" />
+    <Compile Include="Meta\InvocationExpressionMeta.cs" />
+    <Compile Include="Meta\MemberExpressionMeta.cs" />
+    <Compile Include="Meta\MethodCallExpressionMeta.cs" />
+    <Compile Include="Meta\NewExpressionMeta.cs" />
+    <Compile Include="Meta\ParameterExpressionMeta.cs" />
+    <Compile Include="Meta\UnaryExpressionMeta.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\ref\Exports.ts" />
+    <Content Include="Scripts\build\WebExpressions.debug.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\build\WebExpressions.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\linq-0.0.js" />
+    <Content Include="Scripts\ref\Exports.js">
+      <DependentUpon>Exports.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ref\linq.d.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\MemberExpression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\InvocationExpression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\Expression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\DefaultExpression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\ConstantExpression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\ConditionalExpression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\BlockExpression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\BinaryExpression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\AssignmentExpression.ts" />
+    <Content Include="Scripts\WebExpressions\AssignmentExpression.js">
+      <DependentUpon>AssignmentExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\BinaryExpression.js">
+      <DependentUpon>BinaryExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\BlockExpression.js">
+      <DependentUpon>BlockExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\ConditionalExpression.js">
+      <DependentUpon>ConditionalExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\ConstantExpression.js">
+      <DependentUpon>ConstantExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\DefaultExpression.js">
+      <DependentUpon>DefaultExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\Expression.js">
+      <DependentUpon>Expression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\InvocationExpression.js">
+      <DependentUpon>InvocationExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\MemberExpression.js">
+      <DependentUpon>MemberExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\MetaClasses.js">
+      <DependentUpon>MetaClasses.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Scripts\WebExpressions\ParameterExpression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\NewExpression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\MethodCallExpression.ts" />
+    <Content Include="Scripts\WebExpressions\MethodCallExpression.js">
+      <DependentUpon>MethodCallExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\NewExpression.js">
+      <DependentUpon>NewExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\ParameterExpression.js">
+      <DependentUpon>ParameterExpression.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\Sanitizer.js">
+      <DependentUpon>Sanitizer.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\WebExpressions\UnaryExpression.js">
+      <DependentUpon>UnaryExpression.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Scripts\WebExpressions\UnaryExpression.ts" />
+    <TypeScriptCompile Include="Scripts\WebExpressions\MetaClasses.ts">
+      <DependentUpon>MetaClasses.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Scripts\WebExpressions\Sanitizer.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\WebExpressions\MetaClasses.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MetaClasses.ts</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="Scripts\WebExpressions\MetaClasses.ts">
+      <DependentUpon>MetaClasses.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.-->
+  <Target Name="BeforeBuild">
+    <Message Text="Compiling TypeScript files" />
+    <Message Text="Executing tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+    <!--Use this line when AppHarbour supports typescript. Also delete "BackToFront\Tools\Typescript" <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />-->
+    <Exec Command="..\Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\WebExpressions\MetaClasses.js" "$(ProjectDir)Scripts\WebExpressions\Expression.js" "$(ProjectDir)Scripts\WebExpressions" "$(ProjectDir)Scripts\ref\Exports.js" -out $(ProjectDir)Scripts\build\WebExpressions.min.js
+      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\WebExpressions\MetaClasses.js" "$(ProjectDir)Scripts\WebExpressions\Expression.js" "$(ProjectDir)Scripts\WebExpressions" "$(ProjectDir)Scripts\ref\Exports.js" -out $(ProjectDir)Scripts\build\WebExpressions.debug.js -compress false
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>del "$(TargetDir)Yui"
+xcopy "$(SolutionDir)Tools\Yui" "$(TargetDir)Yui" /E /i /y</PreBuildEvent>
+  </PropertyGroup>
+  <!-- <Target Name="AfterBuild">
+  </Target>-->
+</Project>
