@@ -149,6 +149,13 @@
       <AutoGen>True</AutoGen>
     </CodeAnalysisDictionary>
   </ItemGroup>
+  <ItemGroup Label="OrderedCompiledJs">
+    <JsCompile Include="Scripts\linq-0.0.js" />
+    <JsCompile Include="Scripts\WebExpressions\MetaClasses.js" />
+    <JsCompile Include="Scripts\WebExpressions\Expression.js" />
+    <JsCompile Include="Scripts\WebExpressions" />
+    <JsCompile Include="Scripts\ref\Exports.js" />
+  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -161,8 +168,8 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
-      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\WebExpressions\MetaClasses.js" "$(ProjectDir)Scripts\WebExpressions\Expression.js" "$(ProjectDir)Scripts\WebExpressions" "$(ProjectDir)Scripts\ref\Exports.js" -out $(ProjectDir)Scripts\build\WebExpressions.min.js
-      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\WebExpressions\MetaClasses.js" "$(ProjectDir)Scripts\WebExpressions\Expression.js" "$(ProjectDir)Scripts\WebExpressions" "$(ProjectDir)Scripts\ref\Exports.js" -out $(ProjectDir)Scripts\build\WebExpressions.debug.js -compress false
+      $(TargetDir)Yui\YuiBuildProcess @(JsCompile ->'&quot;%(fullpath)&quot;', ' ') -out $(ProjectDir)Scripts\build\WebExpressions.min.js
+      $(TargetDir)Yui\YuiBuildProcess @(JsCompile ->'&quot;%(fullpath)&quot;', ' ') -out $(ProjectDir)Scripts\build\WebExpressions.debug.js -compress false
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
