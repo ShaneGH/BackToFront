@@ -78,8 +78,9 @@
     <TypeScriptCompile Include="Scripts\WebExpressions\BinaryExpression.ts" />
     <TypeScriptCompile Include="Scripts\WebExpressions\AssignmentExpression.ts" />
     <Content Include="Scripts\WebExpressions\AssignmentExpression.js">
-      <DependentUpon>AssignmentExpression.ts</DependentUpon>
-    </Content>
+      <JsCompile />
+      <DependentUpon>AssignmentExpression.ts</DependentUpon>    
+  </Content>
     <Content Include="Scripts\WebExpressions\BinaryExpression.js">
       <DependentUpon>BinaryExpression.ts</DependentUpon>
     </Content>
@@ -142,40 +143,40 @@
       <LastGenOutput>MetaClasses.ts</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDictionary Include="Scripts\WebExpressions\MetaClasses.ts">
-      <DependentUpon>MetaClasses.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </CodeAnalysisDictionary>
-  </ItemGroup>
-  <ItemGroup Label="OrderedCompiledJs">
-    <JsCompile Include="Scripts\linq-0.0.js" />
-    <JsCompile Include="Scripts\WebExpressions\MetaClasses.js" />
-    <JsCompile Include="Scripts\WebExpressions\Expression.js" />
-    <JsCompile Include="Scripts\WebExpressions" />
-    <JsCompile Include="Scripts\ref\Exports.js" />
-  </ItemGroup>
-  <ItemGroup />
+  
+  <PropertyGroup>
+    <JsCompile>"Scripts\linq-0.0.js" "Scripts\WebExpressions\MetaClasses.js" "Scripts\WebExpressions\Expression.js" "Scripts\WebExpressions" "Scripts\ref\Exports.js"</JsCompile>
+  </PropertyGroup>
+  
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
   <Target Name="BeforeBuild">
+    <CallTarget Targets="BuildTypescriptFiles;BuildJavascriptApp;" />
+  </Target>
+  <Target Name="BuildTypescriptFiles">
     <Message Text="Compiling TypeScript files" />
     <Message Text="Executing tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
     <!--Use this line when AppHarbour supports typescript. Also delete "BackToFront\Tools\Typescript" <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />-->
-    <Exec Command="..\Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+    <Exec Command="$(SolutionDir)Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent>
-      $(TargetDir)Yui\YuiBuildProcess @(JsCompile ->'&quot;%(fullpath)&quot;', ' ') -out $(ProjectDir)Scripts\build\WebExpressions.min.js -compress true -wrap true -exportVar ex
-      $(TargetDir)Yui\YuiBuildProcess @(JsCompile ->'&quot;%(fullpath)&quot;', ' ') -out $(ProjectDir)Scripts\build\WebExpressions.debug.js -compress false -wrap true -exportVar ex
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>del "$(TargetDir)Yui"
-xcopy "$(SolutionDir)Tools\Yui" "$(TargetDir)Yui" /E /i /y</PreBuildEvent>
-  </PropertyGroup>
-  <!-- <Target Name="AfterBuild">
+  <Target Name="BuildJavascriptApp">
+    <Message Text="Deleting old files" />
+    <RemoveDir Directories="$(TargetDir)Yui" />
+    
+    <Message Text="Copying tools" />
+    <Copy SourceFiles="$(SolutionDir)Tools\Yui\YuiBuildProcess.exe;" DestinationFolder="$(TargetDir)Yui" />
+    <Copy SourceFiles="$(SolutionDir)Tools\Yui\EcmaScript.NET.dll;" DestinationFolder="$(TargetDir)Yui" />
+    <Copy SourceFiles="$(SolutionDir)Tools\Yui\Iesi.Collections.dll;" DestinationFolder="$(TargetDir)Yui" />
+    <Copy SourceFiles="$(SolutionDir)Tools\Yui\Iesi.Collections.xml;" DestinationFolder="$(TargetDir)Yui" />
+    <Copy SourceFiles="$(SolutionDir)Tools\Yui\Yahoo.Yui.Compressor.dll;" DestinationFolder="$(TargetDir)Yui" />
+    
+    <Message Text="Compiling Javascript files files" />
+    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\WebExpressions.debug.js -compress false -wrap true -exportVar ex" />
+    
+    <Message Text="Compiling Javascript files files" />
+    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\WebExpressions.min.js -compress true -wrap true -exportVar ex" />
+  </Target>
+   <!--<Target Name="AfterBuild">
   </Target>-->
 </Project>

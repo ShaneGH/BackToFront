@@ -128,25 +128,40 @@
     <TypeScriptCompile Include="Scripts\BackToFront\Validation\ExpressionInvoker.ts" />
     <TypeScriptCompile Include="Scripts\BackToFront\Validation\Validator.ts" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <JsCompile>"bin\Debug\Scripts\build\WebExpressions.debug.js" "Scripts\linq-0.0.js" "Scripts\BackToFront\MetaClasses.js" "Scripts\BackToFront\Validation\Validator.js" "Scripts\BackToFront"</JsCompile>
+  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
   <Target Name="BeforeBuild">
+    <CallTarget Targets="BuildTypescriptFiles;" />
+  </Target>
+  <Target Name="AfterBuild">
+    <CallTarget Targets="BuildJavascriptApp;" />
+  </Target>
+  <Target Name="BuildTypescriptFiles">
     <Message Text="Compiling TypeScript files" />
     <Message Text="Executing tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
     <!--Use this line when AppHarbour supports typescript. Also delete "BackToFront\Tools\Typescript" <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />-->
-    <Exec Command="..\Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+    <Exec Command="$(SolutionDir)Tools\TypeScript\SDK\tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent>
-      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\BackToFront\MetaClasses.js" "$(ProjectDir)Scripts\BackToFront\Validation\Validator.js" "$(ProjectDir)Scripts\BackToFront" -out $(ProjectDir)Scripts\build\BackToFront.min.js
-      $(TargetDir)Yui\YuiBuildProcess "$(ProjectDir)Scripts\linq-0.0.js" "$(ProjectDir)Scripts\BackToFront\MetaClasses.js" "$(ProjectDir)Scripts\BackToFront\Validation\Validator.js" "$(ProjectDir)Scripts\BackToFront" -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>del "$(TargetDir)Yui"
-xcopy "$(SolutionDir)Tools\Yui" "$(TargetDir)Yui" /E /i /y</PreBuildEvent>
-  </PropertyGroup>
-  <!-- <Target Name="AfterBuild">
-  </Target>-->
+  <Target Name="BuildJavascriptApp">
+    <Message Text="Deleting old files" />
+    <RemoveDir Directories="$(TargetDir)Yui" />
+
+    <Message Text="Copying tools" />
+    <Copy SourceFiles="$(SolutionDir)Tools\Yui\YuiBuildProcess.exe;" DestinationFolder="$(TargetDir)Yui" />
+    <Copy SourceFiles="$(SolutionDir)Tools\Yui\EcmaScript.NET.dll;" DestinationFolder="$(TargetDir)Yui" />
+    <Copy SourceFiles="$(SolutionDir)Tools\Yui\Iesi.Collections.dll;" DestinationFolder="$(TargetDir)Yui" />
+    <Copy SourceFiles="$(SolutionDir)Tools\Yui\Iesi.Collections.xml;" DestinationFolder="$(TargetDir)Yui" />
+    <Copy SourceFiles="$(SolutionDir)Tools\Yui\Yahoo.Yui.Compressor.dll;" DestinationFolder="$(TargetDir)Yui" />
+
+    <Message Text="Compiling Javascript files files" />
+    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false -wrap true -exportVar ex" />
+
+    <Message Text="Compiling Javascript files files" />
+    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\BackToFront.min.js -compress true -wrap true -exportVar ex" />
+  </Target>
 </Project>

@@ -1,5 +1,4 @@
-(function () {
-
+(function () { 
 /*
     Basics:
         create a linq object using:
