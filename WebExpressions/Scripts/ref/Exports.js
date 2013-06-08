@@ -3,5 +3,6 @@ var ex = (function () {
     ex.createExpression = function createExpression(meta) {
         return WebExpressions.Expression.CreateExpression(meta);
     };
+    ex.ns = WebExpressions;
     return ex;
 })();

@@ -7,4 +7,6 @@ class ex {
     static createExpression(meta: WebExpressions.Meta.ExpressionMeta): WebExpressions.Expression {
         return WebExpressions.Expression.CreateExpression(meta);
     }
+
+    static ns = WebExpressions;
 }

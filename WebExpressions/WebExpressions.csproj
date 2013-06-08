@@ -168,8 +168,8 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
-      $(TargetDir)Yui\YuiBuildProcess @(JsCompile ->'&quot;%(fullpath)&quot;', ' ') -out $(ProjectDir)Scripts\build\WebExpressions.min.js
-      $(TargetDir)Yui\YuiBuildProcess @(JsCompile ->'&quot;%(fullpath)&quot;', ' ') -out $(ProjectDir)Scripts\build\WebExpressions.debug.js -compress false
+      $(TargetDir)Yui\YuiBuildProcess @(JsCompile ->'&quot;%(fullpath)&quot;', ' ') -out $(ProjectDir)Scripts\build\WebExpressions.min.js -compress true -wrap true -exportVar ex
+      $(TargetDir)Yui\YuiBuildProcess @(JsCompile ->'&quot;%(fullpath)&quot;', ' ') -out $(ProjectDir)Scripts\build\WebExpressions.debug.js -compress false -wrap true -exportVar ex
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
