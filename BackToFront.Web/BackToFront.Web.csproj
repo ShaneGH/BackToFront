@@ -129,7 +129,7 @@
     <TypeScriptCompile Include="Scripts\BackToFront\Validation\Validator.ts" />
   </ItemGroup>
   <PropertyGroup>
-    <JsCompile>"Scripts\BackToFront"</JsCompile>
+    <JsCompile>"$(TargetDir)Scripts\build\WebExpressions.debug.js" "Scripts\linq-0.0.js" "Scripts\BackToFront\MetaClasses.js" "Scripts\BackToFront\Validation\Validator.js" "Scripts\BackToFront"</JsCompile>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -156,8 +156,8 @@
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\Iesi.Collections.xml;" DestinationFolder="$(TargetDir)Yui" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\Yahoo.Yui.Compressor.dll;" DestinationFolder="$(TargetDir)Yui" />
     <Message Text="Compiling Javascript files files" />
-    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false -wrap true -exportVar &quot;BackToFront, __BTF&quot;" />
+    <Exec Command="$(TargetDir)Yui\YuiBuildProcess &quot;$(TargetDir)Scripts\build\WebExpressions.debug.js&quot; &quot;Scripts\linq-0.0.js&quot; &quot;Scripts\BackToFront\MetaClasses.js&quot; &quot;Scripts\BackToFront\Validation\Validator.js&quot; &quot;Scripts\BackToFront&quot; -out &quot;$(ProjectDir)Scripts\build\BackToFront.debug.js&quot; -compress false -wrap true -exportVar &quot;BackToFront, __BTF&quot;" />
     <Message Text="Compiling Javascript files files" />
-    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\BackToFront.min.js -compress true -wrap true -exportVar &quot;BackToFront, __BTF&quot;" />
+    <Exec Command="$(TargetDir)Yui\YuiBuildProcess &quot;$(TargetDir)Scripts\build\WebExpressions.debug.js&quot; &quot;Scripts\linq-0.0.js&quot; &quot;Scripts\BackToFront\MetaClasses.js&quot; &quot;Scripts\BackToFront\Validation\Validator.js&quot; &quot;Scripts\BackToFront&quot; -out &quot;$(ProjectDir)Scripts\build\BackToFront.min.js&quot; -compress true -wrap true -exportVar &quot;BackToFront, __BTF&quot;" />
   </Target>
 </Project>
