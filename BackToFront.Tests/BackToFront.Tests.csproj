@@ -84,130 +84,130 @@
     <Compile Include="Base\TestBase.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\IntegrationTests\Children.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass1_Simplified_Test.cs" />
-    <Compile Include="CSharp\IntegrationTests\Inheritance.cs" />
-    <Compile Include="CSharp\UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\DataAnnotations\BTFValidationContext_Tests.cs">
+    <Compile Include="CSharp\BackToFront\IntegrationTests\Children.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass1_Simplified_Test.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\Inheritance.cs" />
+    <Compile Include="CSharp\BackToFront\UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />
+    <Compile Include="CSharp\BackToFront\UnitTests\DataAnnotations\BTFValidationContext_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\DataAnnotations\ValidateMemberAttribute_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\DataAnnotations\ValidateMemberAttribute_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Dependency\DependencyWrapper_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Dependency\DependencyWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\BinaryExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\BinaryExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\ConstantExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\ConstantExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\BlockExpressionWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Expressions\ConditionalExpressionWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Expressions\NewExpressionWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Expressions\InvocationExpressionWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\BlockExpressionWrapper_Tests.cs" />
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\ConditionalExpressionWrapper_Tests.cs" />
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\NewExpressionWrapper_Tests.cs" />
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\InvocationExpressionWrapper_Tests.cs" />
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\DependencyInjectionExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\ElementAtExpressionWrapper_Tests.cs" />
-    <Compile Include="CSharp\UnitTests\Expressions\ExpressionWrapperBase_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\ElementAtExpressionWrapper_Tests.cs" />
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\ExpressionWrapperBase_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\MemberExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\MemberExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\MethodCallExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\MethodCallExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\ParameterExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\ParameterExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Expressions\Visitors\SwapPropVisitor_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\Visitors\SwapPropVisitor_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Extensions\IEnumerable.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Extensions\IEnumerable.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Extensions\Reflection.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Extensions\Reflection.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\Base\ExpressionElementTests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Framework\Base\ExpressionElementTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\Base\PathElementTests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Framework\Base\PathElementTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\MultiCondition_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Framework\MultiCondition_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\RequirementFailed_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Framework\RequirementFailed_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\RequireOperator_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Framework\RequireOperator_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\RuleCollection_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Framework\RuleCollection_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\Rule_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Framework\Rule_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\SubRuleCollection_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Framework\SubRuleCollection_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Framework\ThrowViolationTests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Framework\ThrowViolationTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Utilities\Dependencies_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Utilities\Dependencies_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Utilities\MemberChainItem_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Utilities\MemberChainItem_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Utilities\MemberIndex_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Utilities\MemberIndex_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Utilities\Mocks_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Utilities\Mocks_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Utilities\Mock_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Utilities\Mock_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Utilities\ReflectionWrapper_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Utilities\ReflectionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\Utilities\Utilities_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Utilities\Utilities_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\_\Repository_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\_\Repository_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\UnitTests\_\Rules_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\_\Rules_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Javascript\JavascriptTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass7Test_2.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass1_1_Test.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass7Test_1.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass4Test_1.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass8Test.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass7Test.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass6Test.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass5Test.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass4Test.cs" />
-    <Compile Include="CSharp\IntegrationTests\TestPass1Test.cs">
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass7Test_2.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass1_1_Test.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass7Test_1.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass4Test_1.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass8Test.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass7Test.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass6Test.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass5Test.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass4Test.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass1Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\IntegrationTests\TestPass2Test.cs">
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass2Test.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\IntegrationTests\TestPass3Test.cs">
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass3Test.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\SimpleIValidate.cs">
@@ -226,37 +226,81 @@
       <Project>{811c6a9d-bd86-4947-8074-2ea0cbc26431}</Project>
       <Name>BackToFront</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebExpressions\WebExpressions.csproj">
+      <Project>{8b96663c-4c77-4a13-b7fb-eb980be26737}</Project>
+      <Name>WebExpressions</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Javascript\JUnit.xsd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="CSharp\UnitTests\Logic\" />
-    <Folder Include="CSharp\UnitTests\Meta\" />
-    <Folder Include="CSharp\UnitTests\Web\" />
+    <Folder Include="CSharp\BackToFront\UnitTests\Logic\" />
+    <Folder Include="CSharp\BackToFront\UnitTests\Meta\" />
+    <Folder Include="CSharp\BackToFront\UnitTests\Web\" />
+    <Folder Include="CSharp\WebExpressions\UnitTests\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Javascript\Base\jquery-2.0.2.js" />
     <Content Include="Javascript\Base\testUtils.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\BinaryExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\BinaryExpressionOperators_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\BlockExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\ConditionalExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\ConstantExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\AssignmentExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\NewExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\UnaryExpressionOperators_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\UnaryExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\ParameterExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\InvocationExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\MethodCallExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\MemberExpression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Sanitizer_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Expressions\Expression_Tests.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Validation\JQueryValidator_Test.js" />
-    <Content Include="Javascript\UnitTests\BackToFront\Validation\Validator_Test.js" />
-    <Content Include="Javascript\UnitTests\CURRENT_TEST.js" />
+    <Content Include="Javascript\WebExpressions\UnitTests\BinaryExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\BinaryExpressionOperators_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\BlockExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\ConditionalExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\ConstantExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\AssignmentExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\NewExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\Sanitizer_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\UnaryExpressionOperators_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\UnaryExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\ParameterExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\InvocationExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\MethodCallExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\MemberExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\BackToFront\UnitTests\BackToFront\Sanitizer_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\Expression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\BackToFront\UnitTests\BackToFront\Validation\JQueryValidator_Test.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\BackToFront\UnitTests\BackToFront\Validation\Validator_Test.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\CURRENT_TEST.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

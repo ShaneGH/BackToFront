@@ -5,8 +5,8 @@
 module BackToFront {
 
     export interface IValidate {
-        RequiredForValidationNames: String[];
-        ValidationSubjectNames: String[];
+        RequiredForValidation: String[];
+        ValidationSubjects: String[];
 
         Validate(entity: any, breakOnFirstError: bool): Meta.IViolation[];
     }
@@ -24,8 +24,8 @@ module BackToFront {
             static CreateRule(rule: Meta.RuleMeta): IValidate {
                 var r = ex.createExpression(rule.Expression).Compile();
                 return {
-                    RequiredForValidationNames: rule.RequiredForValidation,
-                    ValidationSubjectNames: rule.ValidationSubjects,
+                    RequiredForValidation: rule.RequiredForValidation,
+                    ValidationSubjects: rule.ValidationSubjects,
                     Validate: (entity: any, breakOnFirstError: bool = false) => {
 
                         var context = {};
@@ -50,7 +50,7 @@ module BackToFront {
                 var entity = this.GetEntity();
 
                 return linq(this.Rules)
-                    .Where((rule: IValidate) => rule.ValidationSubjectNames.indexOf(propertyName) !== -1)
+                    .Where((rule: IValidate) => rule.ValidationSubjects.indexOf(propertyName) !== -1)
                     .Select((rule: IValidate) => rule.Validate(entity, breakOnFirstError))
                     .Aggregate().Result;
             };

@@ -1616,8 +1616,8 @@ var BackToFront;
             Validator.CreateRule = function CreateRule(rule) {
                 var r = ex.createExpression(rule.Expression).Compile();
                 return {
-                    RequiredForValidationNames: rule.RequiredForValidation,
-                    ValidationSubjectNames: rule.ValidationSubjects,
+                    RequiredForValidation: rule.RequiredForValidation,
+                    ValidationSubjects: rule.ValidationSubjects,
                     Validate: function (entity, breakOnFirstError) {
                         if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
                         var context = {
@@ -1639,7 +1639,7 @@ var BackToFront;
                 if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
                 var entity = this.GetEntity();
                 return linq(this.Rules).Where(function (rule) {
-                    return rule.ValidationSubjectNames.indexOf(propertyName) !== -1;
+                    return rule.ValidationSubjects.indexOf(propertyName) !== -1;
                 }).Select(function (rule) {
                     return rule.Validate(entity, breakOnFirstError);
                 }).Aggregate().Result;
@@ -1692,8 +1692,6 @@ var BackToFront;
     })();
     BackToFront.Sanitizer = Sanitizer;    
 })(BackToFront || (BackToFront = {}));
-
-
 
 
 var __extends = this.__extends || function (d, b) {
@@ -1771,5 +1769,5 @@ var BackToFront;
 })(BackToFront || (BackToFront = {}));
 
 
-window.ex = ex;
+window["__BTF"] = BackToFront;
 })();

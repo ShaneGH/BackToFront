@@ -47,50 +47,6 @@ namespace BackToFront.Tests
             }
         }
 
-        //[Test]
-        public void Test()
-        {
-            var repository = new Repository();
-
-            repository.AddRule<Something>(trunk => trunk
-                .If(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
-                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
-                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
-                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
-                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
-                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello")
-                .ElseIf(b => b.Value1 == 2 && b.Value2 == 6).RequirementFailed.WithModelViolation("Hello"));
-
-            var dcs = ExpressionMeta.JsonMetaSerializer;
-
-            var subject = new Rule<object>();
-            subject.If(a => a.Equals(true)).RequireThat(a => !a.Equals(4)).WithModelViolation("Hello")
-                .ElseIf(a => a.Equals(false)).RequireThat(a => !a.Equals(3)).WithModelViolation("Hello")
-                .Else.RequireThat(a => !a.Equals(3)).WithModelViolation("Hello");
-
-            using (Stream str = new MemoryStream())
-            {
-                dcs.WriteObject(str, subject.Meta);
-                str.Position = 0;
-                using (StreamReader r = new StreamReader(str))
-                {
-                    var outx = r.ReadToEnd();
-
-                    using (Stream str2 = new MemoryStream())
-                    {
-                        using (StreamWriter w = new StreamWriter(str2))
-                        {
-                            w.Write(outx);
-                            w.Flush();
-                            str2.Position = 0;
-                            var val = dcs.ReadObject(str2);
-                        }
-                    }
-                }
-            }
-        }
-
-
         public static Repository Repository;
 
         public static void SetupTestpad()

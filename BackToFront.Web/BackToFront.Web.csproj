@@ -80,6 +80,10 @@
       <Project>{811c6a9d-bd86-4947-8074-2ea0cbc26431}</Project>
       <Name>BackToFront</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebExpressions\WebExpressions.csproj">
+      <Project>{8b96663c-4c77-4a13-b7fb-eb980be26737}</Project>
+      <Name>WebExpressions</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -97,9 +101,6 @@
     </Content>
     <Content Include="Scripts\BackToFront\Sanitizer.js">
       <DependentUpon>Sanitizer.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\BackToFront\Validation\ExpressionInvoker.js">
-      <DependentUpon>ExpressionInvoker.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\BackToFront\Validation\JQueryValidator.ts" />
     <Content Include="Scripts\BackToFront\Validation\JQueryValidator.js">
@@ -125,10 +126,8 @@
       <AutoGen>True</AutoGen>
     </TypeScriptCompile>
     <TypeScriptCompile Include="Scripts\BackToFront\Sanitizer.ts" />
-    <TypeScriptCompile Include="Scripts\BackToFront\Validation\ExpressionInvoker.ts" />
     <TypeScriptCompile Include="Scripts\BackToFront\Validation\Validator.ts" />
   </ItemGroup>
-
   <PropertyGroup>
     <JsCompile>"bin\Debug\Scripts\build\WebExpressions.debug.js" "Scripts\linq-0.0.js" "Scripts\BackToFront\MetaClasses.js" "Scripts\BackToFront\Validation\Validator.js" "Scripts\BackToFront"</JsCompile>
   </PropertyGroup>
@@ -150,18 +149,15 @@
   <Target Name="BuildJavascriptApp">
     <Message Text="Deleting old files" />
     <RemoveDir Directories="$(TargetDir)Yui" />
-
     <Message Text="Copying tools" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\YuiBuildProcess.exe;" DestinationFolder="$(TargetDir)Yui" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\EcmaScript.NET.dll;" DestinationFolder="$(TargetDir)Yui" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\Iesi.Collections.dll;" DestinationFolder="$(TargetDir)Yui" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\Iesi.Collections.xml;" DestinationFolder="$(TargetDir)Yui" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\Yahoo.Yui.Compressor.dll;" DestinationFolder="$(TargetDir)Yui" />
-
     <Message Text="Compiling Javascript files files" />
-    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false -wrap true -exportVar ex" />
-
+    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\BackToFront.debug.js -compress false -wrap true -exportVar &quot;BackToFront, __BTF&quot;" />
     <Message Text="Compiling Javascript files files" />
-    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\BackToFront.min.js -compress true -wrap true -exportVar ex" />
+    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\BackToFront.min.js -compress true -wrap true -exportVar &quot;BackToFront, __BTF&quot;" />
   </Target>
 </Project>

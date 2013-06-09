@@ -1,16 +1,18 @@
 ﻿
 // Chutzpah
-/// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
-/// <reference path="../../../Base/testUtils.js" />
+/// <reference path="../../../Scripts/build/BackToFront.debug.js" />
+/// <reference path="../../Base/testUtils.js" />
 
-var assExp = __BTF.Expressions.AssignmentExpression;
+var WebExpressions = ex.ns;
 
-module("__BTF.Expressions.Expression", {
+var assExp = WebExpressions.AssignmentExpression;
+
+module("WebExpressions.Expression", {
     setup: function () {
-        __BTF.Expressions.AssignmentExpression = assExp;
+        WebExpressions.AssignmentExpression = assExp;
     },
     teardown: function () {
-        __BTF.Expressions.AssignmentExpression = assExp;
+        WebExpressions.AssignmentExpression = assExp;
     }
 });
 
@@ -19,7 +21,7 @@ test("Constructor test OK", function () {
     var expected = { NodeType: 22, ExpressionType: 55 };
 
     // act
-    var actual = new __BTF.Expressions.Expression(expected);
+    var actual = new WebExpressions.Expression(expected);
 
     // assert
     assert.strictEqual(expected.NodeType, actual.NodeType);
@@ -33,7 +35,7 @@ test("Constructor test Bad node type", function () {
     // act
     // assert
     assert.throws(function () {
-        var actual = new __BTF.Expressions.Expression(expected);
+        var actual = new WebExpressions.Expression(expected);
     });
 });
 
@@ -44,14 +46,14 @@ test("Constructor test null expression type type", function () {
     // act
     // assert
     assert.throws(function () {
-        var actual = new __BTF.Expressions.Expression(expected);
+        var actual = new WebExpressions.Expression(expected);
     });
 });
 
 test("Compile test and cache", function () {
     // arrange
     var context = {};
-    var subject = new __BTF.Expressions.Expression({ NodeType: 22, ExpressionType: 55 });
+    var subject = new WebExpressions.Expression({ NodeType: 22, ExpressionType: 55 });
     var returnVal = function (c) {
         assert.strictEqual(c, context);
     };
@@ -73,7 +75,7 @@ test("Compile test and cache", function () {
 
 test("GetAffectedProperties", function () {
     // arrange
-    var subject = new __BTF.Expressions.Expression({ NodeType: 22, ExpressionType: 55 });
+    var subject = new WebExpressions.Expression({ NodeType: 22, ExpressionType: 55 });
 
     // act
     // assert
@@ -85,32 +87,32 @@ test("CreateExpression, assignment special case", function () {
 
     // arrange
     var meta = {
-        NodeType: __BTF.Meta.ExpressionType.Assign,
-        ExpressionType: __BTF.Meta.ExpressionWrapperType.Binary
+        NodeType: WebExpressions.Meta.ExpressionType.Assign,
+        ExpressionType: WebExpressions.Meta.ExpressionWrapperType.Binary
     };
 
-    __BTF.Expressions.AssignmentExpression = function (input) {
+    WebExpressions.AssignmentExpression = function (input) {
         assert.strictEqual(input, meta);
         ex.At("new");
     }
 
     // act
-    var result = __BTF.Expressions.Expression.CreateExpression(meta);
+    var result = WebExpressions.Expression.CreateExpression(meta);
 
     // assert
     ex.VerifyOrderedExpectations();
-    assert.strictEqual(result.constructor, __BTF.Expressions.AssignmentExpression);
+    assert.strictEqual(result.constructor, WebExpressions.AssignmentExpression);
 });
 
 
 test("CreateExpression, valid", function () {
     // arrange
     // act
-    var result = __BTF.Expressions.Expression.CreateExpression({ NodeType: 22, ExpressionType: __BTF.Meta.ExpressionWrapperType.Parameter, Name: "KJGKJ" });
+    var result = WebExpressions.Expression.CreateExpression({ NodeType: 22, ExpressionType: WebExpressions.Meta.ExpressionWrapperType.Parameter, Name: "KJGKJ" });
 
     // assert
     assert.notEqual(result, null);
-    assert.strictEqual(result.constructor, __BTF.Expressions.ParameterExpression);
+    assert.strictEqual(result.constructor, WebExpressions.ParameterExpression);
 });
 
 test("CreateExpression, inalid", function () {
@@ -118,7 +120,7 @@ test("CreateExpression, inalid", function () {
     // act
     // assert
     throws(function () {
-        var result = __BTF.Expressions.Expression.CreateExpression({ NodeType: 22, ExpressionType: 9875, Name: "KJGKJ" });
+        var result = WebExpressions.Expression.CreateExpression({ NodeType: 22, ExpressionType: 9875, Name: "KJGKJ" });
     });
 });
 
@@ -126,13 +128,13 @@ test("ExpressionConstructorDictionary", function () {
     // arrange
     // act
     // assert
-    for (var i in __BTF.Meta.ExpressionWrapperType) {
+    for (var i in WebExpressions.Meta.ExpressionWrapperType) {
         // typescript puts in some crap
-        if (__BTF.Meta.ExpressionWrapperType[i].constructor !== Number)
+        if (WebExpressions.Meta.ExpressionWrapperType[i].constructor !== Number)
             continue;
 
-        i = __BTF.Meta.ExpressionWrapperType[i];
-        assert.notEqual(__BTF.Expressions.Expression.ExpressionConstructorDictionary[i], null, i);
-        assert.strictEqual(__BTF.Expressions.Expression.ExpressionConstructorDictionary[i].constructor, Function);
+        i = WebExpressions.Meta.ExpressionWrapperType[i];
+        assert.notEqual(WebExpressions.Expression.ExpressionConstructorDictionary[i], null, i);
+        assert.strictEqual(WebExpressions.Expression.ExpressionConstructorDictionary[i].constructor, Function);
     }
 });

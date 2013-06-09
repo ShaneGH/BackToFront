@@ -1,11 +1,13 @@
 ﻿
 // Chutzpah
-/// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
-/// <reference path="../../../Base/testUtils.js" />
-/// <reference path="../../../Base/jquery-2.0.2.js" />
+/// <reference path="../../../../../Scripts/build/BackToFront.debug.js" />
+/// <reference path="../../../../Base/testUtils.js" />
+/// <reference path="../../../../Base/jquery-2.0.2.js" />
+
+var BackToFront = __BTF;
 
 var jq = jQuery;
-module("__BTF.Validation.JQueryValidator", {
+module("BackToFront.Validation.JQueryValidator", {
     setup: function () {
     },
     teardown: function () {
@@ -21,7 +23,7 @@ test("Constructor, no jQuery", function () {
     // act
     // assert
     assert.throws(function () {
-        new __BTF.Validation.JQueryValidator();
+        new BackToFront.Validation.JQueryValidator();
     });
 });
 
@@ -43,7 +45,7 @@ test("GetEntity, string", function () {
     };
 
     // act
-    var entity = __BTF.Validation.JQueryValidator.prototype.GetEntity.call(subject);
+    var entity = BackToFront.Validation.JQueryValidator.prototype.GetEntity.call(subject);
 
     // assert
     assert.strictEqual(entity[name1], val1);
@@ -68,7 +70,7 @@ test("GetEntity, data-val-number", function () {
     };
 
     // act
-    var entity = __BTF.Validation.JQueryValidator.prototype.GetEntity.call(subject);
+    var entity = BackToFront.Validation.JQueryValidator.prototype.GetEntity.call(subject);
 
     // assert
     assert.strictEqual(entity[name1], val1);
@@ -95,7 +97,7 @@ test("GetEntity, checkbox", function () {
     };
 
     // act
-    var entity = __BTF.Validation.JQueryValidator.prototype.GetEntity.call(subject);
+    var entity = BackToFront.Validation.JQueryValidator.prototype.GetEntity.call(subject);
 
     // assert
     assert.strictEqual(entity[name1], val1);

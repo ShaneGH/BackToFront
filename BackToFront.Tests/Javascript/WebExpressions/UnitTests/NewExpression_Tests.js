@@ -1,22 +1,24 @@
 ﻿
 // Chutzpah
-/// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
-/// <reference path="../../../Base/testUtils.js" />
+/// <reference path="../../../Scripts/build/BackToFront.debug.js" />
+/// <reference path="../../Base/testUtils.js" />
 
-var rt = __BTF.Expressions.NewExpression.RegisteredTypes;
-var createExpression = __BTF.Expressions.NewExpression.CreateExpression;
-var require = __BTF.Sanitizer.Require;
+var WebExpressions = ex.ns;
 
-module("__BTF.Expressions.NewExpression", {
+var rt = WebExpressions.NewExpression.RegisteredTypes;
+var createExpression = WebExpressions.NewExpression.CreateExpression;
+var require = WebExpressions.Sanitizer.Require;
+
+module("WebExpressions.NewExpression", {
     setup: function () {
-        __BTF.Expressions.Expression.CreateExpression = createExpression;
-        __BTF.Sanitizer.Require = require;
-        __BTF.Expressions.NewExpression.RegisteredTypes = rt;
+        WebExpressions.Expression.CreateExpression = createExpression;
+        WebExpressions.Sanitizer.Require = require;
+        WebExpressions.NewExpression.RegisteredTypes = rt;
     },
     teardown: function () {
-        __BTF.Expressions.Expression.CreateExpression = createExpression;
-        __BTF.Sanitizer.Require = require;
-        __BTF.Expressions.NewExpression.RegisteredTypes = rt;
+        WebExpressions.Expression.CreateExpression = createExpression;
+        WebExpressions.Sanitizer.Require = require;
+        WebExpressions.NewExpression.RegisteredTypes = rt;
     }
 });
 
@@ -30,7 +32,7 @@ test("Constructor test OK", function () {
     // first Sanitizer is in parent class
     var skip = true;
     var number = 0;
-    __BTF.Sanitizer.Require = function (input1, input2, input3, input4, input5) {
+    WebExpressions.Sanitizer.Require = function (input1, input2, input3, input4, input5) {
         if (skip) {
             skip = false;
             return;
@@ -61,13 +63,13 @@ test("Constructor test OK", function () {
         number++;
     };
 
-    __BTF.Expressions.Expression.CreateExpression = function (input) {
+    WebExpressions.Expression.CreateExpression = function (input) {
         ex.ExpectationReached.push(input);
         return input + "XX";
     };
 
     // act
-    var actual = new __BTF.Expressions.NewExpression(meta);
+    var actual = new WebExpressions.NewExpression(meta);
 
     // assert
     ex.VerifyOrderedExpectations();
@@ -85,11 +87,11 @@ test("Constructor test invalid member count", function () {
 
     // arrange
     var meta = { Arguments: ["arg1"], Members: ["mem1", "mem2"], Type: "type", IsAnonymous: "IAN" };
-    __BTF.Sanitizer.Require = function () { };
+    WebExpressions.Sanitizer.Require = function () { };
 
     // act
     // assert
-    assert.throws(function () { new __BTF.Expressions.NewExpression(meta); });
+    assert.throws(function () { new WebExpressions.NewExpression(meta); });
 });
 
 // Constructor test OK
@@ -102,10 +104,10 @@ test("_Compile test, non anonymous, no constructor defined", function () {
         Type: "LKJBKJBLK"
     };
 
-    __BTF.Expressions.NewExpression.RegisteredTypes = {};
+    WebExpressions.NewExpression.RegisteredTypes = {};
 
     // act
-    var result = __BTF.Expressions.NewExpression.prototype._Compile.call(subject)();
+    var result = WebExpressions.NewExpression.prototype._Compile.call(subject)();
 
     // assert
     assert.strictEqual(result.constructor, Object);
@@ -125,7 +127,7 @@ test("_Compile test, non anonymous, constructor defined", function () {
         }],
         IsAnonymous: false,
         Construct: function (constr, params) {
-            assert.strictEqual(__BTF.Expressions.NewExpression.RegisteredTypes[type], constr);
+            assert.strictEqual(WebExpressions.NewExpression.RegisteredTypes[type], constr);
             assert.strictEqual(1, params.length);
             assert.strictEqual(arg, params[0]);
             return newObj;
@@ -133,11 +135,11 @@ test("_Compile test, non anonymous, constructor defined", function () {
         Type: type
     };
 
-    __BTF.Expressions.NewExpression.RegisteredTypes = {};
-    __BTF.Expressions.NewExpression.RegisteredTypes[type] = {};
+    WebExpressions.NewExpression.RegisteredTypes = {};
+    WebExpressions.NewExpression.RegisteredTypes[type] = {};
 
     // act
-    var result = __BTF.Expressions.NewExpression.prototype._Compile.call(subject)(ctxt);
+    var result = WebExpressions.NewExpression.prototype._Compile.call(subject)(ctxt);
 
     // assert
     assert.strictEqual(result, newObj);
@@ -165,7 +167,7 @@ test("_Compile test, anonymous", function () {
     };
 
     // act
-    var result = __BTF.Expressions.NewExpression.prototype._Compile.call(subject)(ctxt);
+    var result = WebExpressions.NewExpression.prototype._Compile.call(subject)(ctxt);
 
     // assert
     assert.strictEqual(result, newObj);
@@ -182,7 +184,7 @@ test("ConstructAnonymous test", function () {
     };
 
     // act
-    var result = __BTF.Expressions.NewExpression.prototype.ConstructAnonymous.call(subject, [arg]);
+    var result = WebExpressions.NewExpression.prototype.ConstructAnonymous.call(subject, [arg]);
 
     // assert
     assert.strictEqual(result.constructor, Object);
@@ -197,7 +199,7 @@ test("Construct test", function () {
     var c = function (arg1) { this.arg1 = arg1 };
 
     // act
-    var result = __BTF.Expressions.NewExpression.prototype.Construct.call(null, c, [arg]);
+    var result = WebExpressions.NewExpression.prototype.Construct.call(null, c, [arg]);
 
     // assert
     assert.strictEqual(result.constructor, c);

@@ -1,34 +1,37 @@
 ﻿
 // Chutzpah
-/// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
-/// <reference path="../../../Base/testUtils.js" />
+/// <reference path="../../../Scripts/build/BackToFront.debug.js" />
+/// <reference path="../../Base/testUtils.js" />
 
-var createExpression = __BTF.Expressions.Expression.CreateExpression;
-var require = __BTF.Sanitizer.Require;
-var operators = __BTF.Expressions.BinaryExpression.OperatorDictionary;
+var WebExpressions = ex.ns;
 
-module("__BTF.Expressions.BinaryExpression", {
+var createExpression = WebExpressions.Expression.CreateExpression;
+var require = WebExpressions.Sanitizer.Require;
+var operators = WebExpressions.UnaryExpression.OperatorDictionary;
+
+module("WebExpressions.UnaryExpression", {
     setup: function () {
-        __BTF.Expressions.Expression.CreateExpression = createExpression;
-        __BTF.Sanitizer.Require = require;
-        __BTF.Expressions.BinaryExpression.OperatorDictionary = operators;
+        WebExpressions.Expression.CreateExpression = createExpression;
+        WebExpressions.Sanitizer.Require = require;
+        WebExpressions.UnaryExpression.OperatorDictionary = operators;
     },
     teardown: function () {
-        __BTF.Expressions.Expression.CreateExpression = createExpression;
-        __BTF.Sanitizer.Require = require;
-        __BTF.Expressions.BinaryExpression.OperatorDictionary = operators;
+        WebExpressions.Expression.CreateExpression = createExpression;
+        WebExpressions.Sanitizer.Require = require;
+        WebExpressions.UnaryExpression.OperatorDictionary = operators;
     }
 });
 
+// Constructor test OK
 test("Constructor test OK", function () {
-    var ex = new tUtil.Expect("require", "left", "right");
+    var ex = new tUtil.Expect("require", "operand");
 
     // arrange
-    var meta = { Left: {}, Right: {}, NodeType: __BTF.Meta.ExpressionType.Add };
+    var meta = { Operand: {}, NodeType: WebExpressions.Meta.ExpressionType.Add };
 
     // first Sanitizer is in parent class
     var skip = true;
-    __BTF.Sanitizer.Require = function (input1, input2, input3) {
+    WebExpressions.Sanitizer.Require = function (input1, input2, input3) {
         if (skip) {
             skip = false;
             return;
@@ -38,113 +41,98 @@ test("Constructor test OK", function () {
 
         assert.strictEqual(input1, meta);
 
-        assert.deepEqual(input2.inputName, "Left");
+        assert.deepEqual(input2.inputName, "Operand");
         assert.deepEqual(input2.inputType, "object");
-
-        assert.deepEqual(input3.inputName, "Right");
-        assert.deepEqual(input3.inputType, "object");
     };
 
-    var time = 0;
-    __BTF.Expressions.Expression.CreateExpression = function (input) {
-        assert.deepEqual(true, time < 2);
-        time++;
-
-        if (time === 1) {
-            ex.ExpectationReached.push("left");
-            strictEqual(input, meta.Left);
-            return "left";
-        }
-        else {
-            ex.ExpectationReached.push("right");
-            strictEqual(input, meta.Right);
-            return "right";
-        }
+    WebExpressions.Expression.CreateExpression = function (input) {
+        ex.ExpectationReached.push("operand");
+        strictEqual(input, meta.Operand);
+        return "operand";
     };
 
     // act
-    var actual = new __BTF.Expressions.BinaryExpression(meta);
+    var actual = new WebExpressions.UnaryExpression(meta);
 
     // assert
     ex.VerifyOrderedExpectations();
-    assert.deepEqual("left", actual.Left);
-    assert.deepEqual("right", actual.Right);
+    assert.deepEqual("operand", actual.Operand);
 });
 
+// Constructor test Invalid node type
 test("Constructor test Invalid node type", function () {
     // arrange
-    var meta = { Left: {}, Right: {}, NodeType: -7654 };
+    var meta = { Operand: {}, NodeType: -7654 };
 
     // act
     // assert
-    throws(function () { new __BTF.Expressions.BinaryExpression(meta); });
+    throws(function () { new WebExpressions.UnaryExpression(meta); });
 });
 
+// _Compile test
 test("_Compile test", function () {
-    var ex = new tUtil.Expect("left", "right", "exp");
+    var ex = new tUtil.Expect("operand", "exp");
 
     var context = {};
 
     // arrange
     var _this = {
-        Left: {
+        Operand: {
             Compile: function () {
                 return function (ctxt) {
-                    ex.ExpectationReached.push("left");
+                    ex.ExpectationReached.push("operand");
                     assert.strictEqual(ctxt, context);
-                    return "left";
-                }
-            }
-        },
-        Right: {
-            Compile: function () {
-                return function (ctxt) {
-                    ex.ExpectationReached.push("right");
-                    assert.strictEqual(ctxt, context);
-                    return "right";
+                    return "operand";
                 }
             }
         },
         NodeType: 0
     };
 
-    __BTF.Expressions.BinaryExpression.OperatorDictionary = [function (arg1, arg2) {
+    WebExpressions.UnaryExpression.OperatorDictionary = [function (arg1, arg2) {
         ex.ExpectationReached.push("exp");
-        assert.strictEqual(arg1, "left");
-        assert.strictEqual(arg2, "right");
+        assert.strictEqual(arg1, "operand");
         return "exp";
     }];
 
     // act
-    var result = __BTF.Expressions.BinaryExpression.prototype._Compile.call(_this);
+    var result = WebExpressions.UnaryExpression.prototype._Compile.call(_this);
 
     // assert
     assert.deepEqual(result(context), "exp");
     ex.VerifyOrderedExpectations();
 });
 
-test("OperatorDictionary", function () {
+// 
+test("OperatorDictionary test", function () {
     // arrange
     var ignored = {};
+    ignored.Add = true;
     ignored.AddChecked = true;
     ignored.And = true;
+    ignored.AndAlso = true;
     ignored.ArrayLength = true;
     ignored.ArrayIndex = true;
     ignored.Call = true;
     ignored.Coalesce = true;
     ignored.Conditional = true;
     ignored.Constant = true;
-    ignored.Convert = true;
     ignored.ConvertChecked = true;
+    ignored.Divide = true;
     ignored.Equal = true;
     ignored.ExclusiveOr = true;
+    ignored.GreaterThan = true;
+    ignored.GreaterThanOrEqual = true;
     ignored.Invoke = true;
     ignored.Lambda = true;
     ignored.LeftShift = true;
+    ignored.LessThan = true;
+    ignored.LessThanOrEqual = true;
     ignored.ListInit = true;
     ignored.MemberAccess = true;
     ignored.MemberInit = true;
     ignored.Modulo = true;
+    ignored.Multiply = true;
     ignored.MultiplyChecked = true;
     ignored.Negate = true;
     ignored.UnaryPlus = true;
@@ -152,13 +140,14 @@ test("OperatorDictionary", function () {
     ignored.New = true;
     ignored.NewArrayInit = true;
     ignored.NewArrayBounds = true;
-    ignored.Not = true;
     ignored.NotEqual = true;
     ignored.Or = true;
+    ignored.OrElse = true;
     ignored.Parameter = true;
     ignored.Power = true;
     ignored.Quote = true;
     ignored.RightShift = true;
+    ignored.Subtract = true;
     ignored.SubtractChecked = true;
     ignored.TypeAs = true;
     ignored.TypeIs = true;
@@ -202,9 +191,9 @@ test("OperatorDictionary", function () {
     ignored.IsTrue = true;
     ignored.IsFalse = true;
 
-    for (var i in __BTF.Meta.ExpressionType) {
-        if (__BTF.Meta.ExpressionType[i].constructor === Number && !ignored[i]) {
-            ok(__BTF.Expressions.BinaryExpression.OperatorDictionary[__BTF.Meta.ExpressionType[i]]);
+    for (var i in WebExpressions.Meta.ExpressionType) {
+        if (WebExpressions.Meta.ExpressionType[i].constructor === Number && !ignored[i]) {
+            ok(WebExpressions.UnaryExpression.OperatorDictionary[WebExpressions.Meta.ExpressionType[i]]);
         }
     }
 });

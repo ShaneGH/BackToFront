@@ -14,29 +14,21 @@ namespace BackToFront.Tests.Javascript
     [TestFixture]
     public class JavascriptTests : Base.TestBase
     {
-        /*<?xml version="1.0" encoding="UTF-8" ?>
-<testsuites>
-  <testsuite name="C:\Dev\Apps\BackToFront\BackToFront.Tests\Javascript\UnitTests\BackToFront.ts" tests="1" failures="0" time="41">
-    <testcase name="Hello" />
-  </testsuite>
-</testsuites>
-*/
+        public const string BackToFrontResultsX = "BTFJSTestResults.xml";
+        public const string WebExpressionsResultsX = "WEJSTestResults.xml";
 
-        public const string TestResultsFile = "JSTestResults.xml";
-
-        [Test]
-        public void Run()
+        public void Run(string path, string resultsFile)
         {
             using (var process = new Process { StartInfo = new ProcessStartInfo() })
             {
                 process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 process.StartInfo.FileName = @"Chutzpah\chutzpah.console.exe";
-                process.StartInfo.Arguments = @"/path Javascript\UnitTests /testMode JavaScript /junit JSTestResults.xml";
+                process.StartInfo.Arguments = @"/path " + path + " /testMode JavaScript /junit " + resultsFile;
                 process.Start();
                 process.WaitForExit();
             }
 
-            using (var file = new FileStream(TestResultsFile, FileMode.Open))
+            using (var file = new FileStream(resultsFile, FileMode.Open))
             {
                 var results = XDocument.Load(file).Elements()
                     .Where(e => e.Name == "testsuites");
@@ -55,9 +47,16 @@ namespace BackToFront.Tests.Javascript
             }
         }
 
-        public override void TestFixtureSetUp()
+        [Test]
+        public void RunBackToFrontTests()
         {
-            base.TestFixtureSetUp();
+            Run(@"Javascript\BackToFront\UnitTests", BackToFrontResultsX);
+        }
+
+        [Test]
+        public void RunWebExpressionsTests()
+        {
+            Run(@"Javascript\WebExpressions\UnitTests", WebExpressionsResultsX);
         }
     }
 }

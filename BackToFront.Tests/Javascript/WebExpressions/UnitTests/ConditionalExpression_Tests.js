@@ -1,19 +1,21 @@
 ﻿
 // Chutzpah
-/// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
-/// <reference path="../../../Base/testUtils.js" />
+/// <reference path="../../../Scripts/build/BackToFront.debug.js" />
+/// <reference path="../../Base/testUtils.js" />
 
-var createExpression = __BTF.Expressions.Expression.CreateExpression;
-var require = __BTF.Sanitizer.Require;
+var WebExpressions = ex.ns;
 
-module("__BTF.Expressions.ConditionalExpression", {
+var createExpression = WebExpressions.Expression.CreateExpression;
+var require = WebExpressions.Sanitizer.Require;
+
+module("WebExpressions.ConditionalExpression", {
     setup: function () {
-        __BTF.Expressions.Expression.CreateExpression = createExpression;
-        __BTF.Sanitizer.Require = require;
+        WebExpressions.Expression.CreateExpression = createExpression;
+        WebExpressions.Sanitizer.Require = require;
     },
     teardown: function () {
-        __BTF.Expressions.Expression.CreateExpression = createExpression;
-        __BTF.Sanitizer.Require = require;
+        WebExpressions.Expression.CreateExpression = createExpression;
+        WebExpressions.Sanitizer.Require = require;
     }
 });
 
@@ -22,11 +24,11 @@ test("Constructor test OK", function () {
     var ex = new tUtil.Expect("require", "true", "false", "test");
 
     // arrange
-    var meta = { IfTrue: "true", IfFalse: "false", Test: "test", NodeType: __BTF.Meta.ExpressionType.Add };
+    var meta = { IfTrue: "true", IfFalse: "false", Test: "test", NodeType: WebExpressions.Meta.ExpressionType.Add };
 
     // first Sanitizer is in parent class
     var skip = true;
-    __BTF.Sanitizer.Require = function (input1, input2, input3, input4) {
+    WebExpressions.Sanitizer.Require = function (input1, input2, input3, input4) {
         if (skip) {
             skip = false;
             return;
@@ -46,13 +48,13 @@ test("Constructor test OK", function () {
         assert.deepEqual(input4.inputType, "object");
     };
 
-    __BTF.Expressions.Expression.CreateExpression = function (input) {
+    WebExpressions.Expression.CreateExpression = function (input) {
         ex.ExpectationReached.push(input);
         return input + "XX";
     };
 
     // act
-    var actual = new __BTF.Expressions.ConditionalExpression(meta);
+    var actual = new WebExpressions.ConditionalExpression(meta);
 
     // assert
     ex.VerifyOrderedExpectations();
@@ -99,7 +101,7 @@ var compileTest = function (test) {
     };
 
     // act
-    var result = __BTF.Expressions.ConditionalExpression.prototype._Compile.call(_this);
+    var result = WebExpressions.ConditionalExpression.prototype._Compile.call(_this);
 
     // assert
     assert.deepEqual(result(context), test);
@@ -113,3 +115,4 @@ test("_Compile test: true", function () {
 test("_Compile test: false", function () {
     compileTest(false);
 });
+

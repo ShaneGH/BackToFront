@@ -1,22 +1,24 @@
 ﻿
 // Chutzpah
-/// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
-/// <reference path="../../../Base/testUtils.js" />
+/// <reference path="../../../Scripts/build/BackToFront.debug.js" />
+/// <reference path="../../Base/testUtils.js" />
 
-var property = __BTF.Expressions.MemberExpression.PropertyRegex;
-var createExpression = __BTF.Expressions.Expression.CreateExpression;
-var require = __BTF.Sanitizer.Require;
+var WebExpressions = ex.ns;
 
-module("__BTF.Expressions.MemberExpression", {
+var property = WebExpressions.MemberExpression.PropertyRegex;
+var createExpression = WebExpressions.Expression.CreateExpression;
+var require = WebExpressions.Sanitizer.Require;
+
+module("WebExpressions.MemberExpression", {
     setup: function () {
-        __BTF.Expressions.MemberExpression.PropertyRegex = property;
-        __BTF.Expressions.Expression.CreateExpression = createExpression;
-        __BTF.Sanitizer.Require = require;
+        WebExpressions.MemberExpression.PropertyRegex = property;
+        WebExpressions.Expression.CreateExpression = createExpression;
+        WebExpressions.Sanitizer.Require = require;
     },
     teardown: function () {
-        __BTF.Expressions.MemberExpression.PropertyRegex = property;
-        __BTF.Expressions.Expression.CreateExpression = createExpression;
-        __BTF.Sanitizer.Require = require;
+        WebExpressions.MemberExpression.PropertyRegex = property;
+        WebExpressions.Expression.CreateExpression = createExpression;
+        WebExpressions.Sanitizer.Require = require;
     }
 });
 
@@ -25,11 +27,11 @@ test("Constructor test OK", function () {
     var ex = new tUtil.Expect("require", "expression");
 
     // arrange
-    var meta = { MemberName: "askjhvdkahsvd", Expression: "expression", NodeType: __BTF.Meta.ExpressionType.Add };
+    var meta = { MemberName: "askjhvdkahsvd", Expression: "expression", NodeType: WebExpressions.Meta.ExpressionType.Add };
 
     // first Sanitizer is in parent class
     var skip = true;
-    __BTF.Sanitizer.Require = function (input1, input2, input3) {
+    WebExpressions.Sanitizer.Require = function (input1, input2, input3) {
         if (skip) {
             skip = false;
             return;
@@ -46,13 +48,13 @@ test("Constructor test OK", function () {
         assert.deepEqual(input3.inputConstructor, String);
     };
 
-    __BTF.Expressions.Expression.CreateExpression = function (input) {
+    WebExpressions.Expression.CreateExpression = function (input) {
         ex.ExpectationReached.push(input);
         return input + "XX";
     };
 
     // act
-    var actual = new __BTF.Expressions.MemberExpression(meta);
+    var actual = new WebExpressions.MemberExpression(meta);
 
     // assert
     ex.VerifyOrderedExpectations();
@@ -67,7 +69,7 @@ test("_Compile test: exception", function () {
         MemberName: "LJBHKLJBLKJB"
     };
 
-    __BTF.Expressions.MemberExpression.PropertyRegex = {
+    WebExpressions.MemberExpression.PropertyRegex = {
         test: function (member) {
             ex.At("test");
             assert.strictEqual(member, subject.MemberName);
@@ -76,7 +78,7 @@ test("_Compile test: exception", function () {
     };
 
     assert.throws(function () {
-        __BTF.Expressions.MemberExpression.prototype._Compile.call(subject);
+        WebExpressions.MemberExpression.prototype._Compile.call(subject);
     });
 
     ex.VerifyOrderedExpectations();
@@ -109,7 +111,7 @@ test("_Compile test: ok", function () {
         }
     };
 
-    __BTF.Expressions.MemberExpression.PropertyRegex = {
+    WebExpressions.MemberExpression.PropertyRegex = {
         test: function (member) {
             ex.At("test");
             assert.strictEqual(member, subject.MemberName);
@@ -117,7 +119,7 @@ test("_Compile test: ok", function () {
         }
     };
 
-    var compiled = __BTF.Expressions.MemberExpression.prototype._Compile.call(subject);
+    var compiled = WebExpressions.MemberExpression.prototype._Compile.call(subject);
     assert.strictEqual(expected, compiled(context));
     assert.strictEqual(expected, compiled(context));
 

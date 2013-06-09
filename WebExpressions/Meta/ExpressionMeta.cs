@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -16,12 +17,11 @@ namespace WebExpressions.Meta
         //private static DataContractJsonSerializer _JsonMetaSerializer;
         //private static DataContractSerializer _MetaSerializer;
 
-        //internal static readonly Type[] MetaTypes;
+        public static readonly Type[] MetaTypes;
         static ExpressionMeta()
         {
-            //var type = typeof(ExpressionMeta);
-            //MetaTypes = type.Assembly.GetTypes().Where(t => t != type && type.IsAssignableFrom(t))
-            //    .Union(new[] { typeof(MemberChainItem), typeof(MemberChainItem[]) }).ToArray();
+            var type = typeof(ExpressionMeta);
+            MetaTypes = type.Assembly.GetTypes().Where(t => t != type && type.IsAssignableFrom(t)).ToArray();
 
             var constructors = new Dictionary<Type, Func<Expression, ExpressionMeta>>();
 

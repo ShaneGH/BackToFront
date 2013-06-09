@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BackToFront.Meta;
 using NUnit.Framework;
+using WebExpressions.Meta;
 
 namespace BackToFront.Tests.Base
 {

@@ -1,19 +1,21 @@
 ﻿
 // Chutzpah
-/// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
-/// <reference path="../../../Base/testUtils.js" />
+/// <reference path="../../../Scripts/build/BackToFront.debug.js" />
+/// <reference path="../../Base/testUtils.js" />
 
-var createExpression = __BTF.Expressions.Expression.CreateExpression;
-var require = __BTF.Sanitizer.Require;
 
-module("__BTF.Expressions.AssignmentExpression", {
+var WebExpressions = ex.ns;
+var createExpression = WebExpressions.Expression.CreateExpression;
+var require = WebExpressions.Sanitizer.Require;
+
+module("WebExpressions.AssignmentExpression", {
     setup: function () {
-        __BTF.Expressions.Expression.CreateExpression = createExpression;
-        __BTF.Sanitizer.Require = require;
+        WebExpressions.Expression.CreateExpression = createExpression;
+        WebExpressions.Sanitizer.Require = require;
     },
     teardown: function () {
-        __BTF.Expressions.Expression.CreateExpression = createExpression;
-        __BTF.Sanitizer.Require = require;
+        WebExpressions.Expression.CreateExpression = createExpression;
+        WebExpressions.Sanitizer.Require = require;
     }
 });
 
@@ -21,11 +23,11 @@ test("Constructor test OK, parameter", function () {
     var ex = new tUtil.Expect("require", "right");
 
     // arrange
-    var meta = { Left: { ExpressionType: __BTF.Meta.ExpressionWrapperType.Parameter, Name: "HVLKJHVKJHV" }, Right: "right", NodeType: __BTF.Meta.ExpressionType.Add };
+    var meta = { Left: { ExpressionType: WebExpressions.Meta.ExpressionWrapperType.Parameter, Name: "HVLKJHVKJHV" }, Right: "right", NodeType: WebExpressions.Meta.ExpressionType.Add };
 
     // first Sanitizer is in parent class
     var skip = true;
-    __BTF.Sanitizer.Require = function (input1, input2, input3) {
+    WebExpressions.Sanitizer.Require = function (input1, input2, input3) {
         if (skip) {
             skip = false;
             return;
@@ -42,13 +44,13 @@ test("Constructor test OK, parameter", function () {
         assert.deepEqual(input3.inputType, "object");
     };
 
-    __BTF.Expressions.Expression.CreateExpression = function (input) {
+    WebExpressions.Expression.CreateExpression = function (input) {
         ex.At(input);
         return "XX" + input;
     };
 
     // act
-    var actual = new __BTF.Expressions.AssignmentExpression(meta);
+    var actual = new WebExpressions.AssignmentExpression(meta);
 
     // assert
     ex.VerifyOrderedExpectations();
@@ -61,11 +63,11 @@ test("Constructor test OK, member", function () {
     var ex = new tUtil.Expect("require", "left", "right");
 
     // arrange
-    var meta = { Left: { ExpressionType: __BTF.Meta.ExpressionWrapperType.Member, Expression: "left", MemberName: "HVLKJHVKJHV" }, Right: "right", NodeType: __BTF.Meta.ExpressionType.Add };
+    var meta = { Left: { ExpressionType: WebExpressions.Meta.ExpressionWrapperType.Member, Expression: "left", MemberName: "HVLKJHVKJHV" }, Right: "right", NodeType: WebExpressions.Meta.ExpressionType.Add };
 
     // first Sanitizer is in parent class
     var skip = true;
-    __BTF.Sanitizer.Require = function (input1, input2, input3) {
+    WebExpressions.Sanitizer.Require = function (input1, input2, input3) {
         if (skip) {
             skip = false;
             return;
@@ -82,13 +84,13 @@ test("Constructor test OK, member", function () {
         assert.deepEqual(input3.inputType, "object");
     };
 
-    __BTF.Expressions.Expression.CreateExpression = function (input) {
+    WebExpressions.Expression.CreateExpression = function (input) {
         ex.At(input);
         return "XX" + input;
     };
 
     // act
-    var actual = new __BTF.Expressions.AssignmentExpression(meta);
+    var actual = new WebExpressions.AssignmentExpression(meta);
 
     // assert
     ex.VerifyOrderedExpectations();
@@ -105,7 +107,7 @@ test("Constructor test invalid meta type", function () {
 
     // first Sanitizer is in parent class
     var skip = true;
-    __BTF.Sanitizer.Require = function (input1, input2, input3) {
+    WebExpressions.Sanitizer.Require = function (input1, input2, input3) {
         if (skip) {
             skip = false;
             return;
@@ -125,7 +127,7 @@ test("Constructor test invalid meta type", function () {
     // act
     // assert
     assert.throws(function () {
-        var actual = new __BTF.Expressions.AssignmentExpression(meta);
+        var actual = new WebExpressions.AssignmentExpression(meta);
     });
 
     ex.VerifyOrderedExpectations();
@@ -162,7 +164,7 @@ test("_Compile test, has Left", function () {
     };
 
     // act
-    var compiled = __BTF.Expressions.AssignmentExpression.prototype._Compile.call(subject);
+    var compiled = WebExpressions.AssignmentExpression.prototype._Compile.call(subject);
     var actual = compiled(context);
 
     // assert
@@ -191,7 +193,7 @@ test("_Compile test, no Left", function () {
     };
 
     // act
-    var compiled = __BTF.Expressions.AssignmentExpression.prototype._Compile.call(subject);
+    var compiled = WebExpressions.AssignmentExpression.prototype._Compile.call(subject);
     var actual = compiled(context);
 
     // assert

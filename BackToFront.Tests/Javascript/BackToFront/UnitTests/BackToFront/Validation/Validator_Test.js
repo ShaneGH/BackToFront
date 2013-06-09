@@ -1,15 +1,17 @@
 ﻿
 // Chutzpah
-/// <reference path="../../../../Scripts/build/BackToFront.debug.js" />
-/// <reference path="../../../Base/testUtils.js" />
+/// <reference path="../../../../../Scripts/build/BackToFront.debug.js" />
+/// <reference path="../../../../Base/testUtils.js" />
 
-var exp = __BTF.Expressions.Expression;
+var BackToFront = __BTF;
 
-module("__BTF.Validation.Validator", {
+var exp = ex.createExpression;
+
+module("BackToFront.Validation.Validator", {
     setup: function () {
     },
     teardown: function () {
-        __BTF.Expressions.Expression = exp;
+        ex.createExpression = exp;
     }
 });
 
@@ -22,7 +24,7 @@ test("Validate test", function () {
     var subject = {
         GetEntity: function () { return entity; },
         Rules: [{
-            ValidationSubjectNames: propertyName,
+            ValidationSubjects: propertyName,
             Validate: function (ent, br) {
                 assert.strictEqual(ent, entity);
                 assert.ok(!br);
@@ -32,43 +34,44 @@ test("Validate test", function () {
     };
 
     // act
-    var result = __BTF.Validation.Validator.prototype.Validate.call(subject, propertyName);
+    var result = BackToFront.Validation.Validator.prototype.Validate.call(subject, propertyName);
 
     // assert
     assert.deepEqual(result, [error]);
 });
 
 test("Create rule test", function () {
-    var ex = new tUtil.Expect("exp", "compile");
+    var expectations = new tUtil.Expect("exp", "compile");
 
     // arrange
     var rule = {
-        RequiredForValidationNames: {},
-        ValidationSubjectNames: {},
+        RequiredForValidation: {},
+        ValidationSubject: {},
         EntityParameter: "LKJBLKJB",
         ContextParameter: "P(HBOH"
     };
     var placeholder = {};
-    var r = function (ctxt) { return placeholder.r(ctxt); };
-    __BTF.Expressions.Expression.CreateExpression = function () { ex.At("exp"); return { Compile: function () { ex.At("compile"); return r; } } };
+    var r = function (ctxt) { return placeholder.r(ctxt); }; // placeholder.r() is defined later
+    ex.createExpression = function () { expectations.At("exp"); return { Compile: function () { expectations.At("compile"); return r; } } };
 
+    debugger;
     // act
-    var result = __BTF.Validation.Validator.CreateRule(rule);
+    var result = BackToFront.Validation.Validator.CreateRule(rule);
 
     // assert
-    assert.strictEqual(result.RequiredForValidationNames, rule.RequiredForValidationNames);
-    assert.strictEqual(result.ValidationSubjectNames, rule.ValidationSubjectNames);
+    assert.strictEqual(result.RequiredForValidation, rule.RequiredForValidation);
+    assert.strictEqual(result.ValidationSubjects, rule.ValidationSubjects);
     assert.strictEqual(result.Validate.constructor, Function);
 
-    ex.VerifyOrderedExpectations();
+    expectations.VerifyOrderedExpectations();
 
 
     // arrange
-    ex.Expect("run");
+    expectations.Expect("run");
     var entity = {};
     var violations = {};
     placeholder.r = function (ctxt) {
-        ex.At("run");
+        expectations.At("run");
 
         assert.strictEqual(ctxt[rule.EntityParameter], entity);
         assert.deepEqual(ctxt[rule.ContextParameter], {
@@ -87,5 +90,5 @@ test("Create rule test", function () {
     // assert
     assert.strictEqual(validated, violations);
 
-    ex.VerifyOrderedExpectations();
+    expectations.VerifyOrderedExpectations();
 });
