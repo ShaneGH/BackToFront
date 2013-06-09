@@ -30,6 +30,15 @@ module WebExpressions {
                 this.MemberName = meta.MemberName;
             }
 
+            // TODO: replace . with [] and watch for injection
+            ToString(): string {
+                if (!MemberExpression.PropertyRegex.test(this.MemberName)) {
+                    throw "Invalid property name: " + this.MemberName;
+                }
+
+                return this.Expression.ToString() + "." + this.MemberName;
+            }
+
             // TODO: not throwing null exceptions
             _Compile(): ExpressionInvokerAction {
                 if (!MemberExpression.PropertyRegex.test(this.MemberName)) {

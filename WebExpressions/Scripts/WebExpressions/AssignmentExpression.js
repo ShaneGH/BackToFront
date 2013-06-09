@@ -30,6 +30,9 @@ var WebExpressions;
             }
             this.Right = WebExpressions.Expression.CreateExpression(meta.Right);
         }
+        AssignmentExpression.prototype.ToString = function () {
+            return (this.Left ? this.Left.ToString() + "." : "") + this.LeftProperty + " = " + this.Right.ToString();
+        };
         AssignmentExpression.prototype._Compile = function () {
             var _this = this;
             var left = this.Left ? this.Left.Compile() : function (context) {

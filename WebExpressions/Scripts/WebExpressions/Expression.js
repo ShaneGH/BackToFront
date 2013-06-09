@@ -18,7 +18,16 @@ var WebExpressions;
             }
             return this._Compiled;
         };
+        Expression.prototype.EvalCompile = function () {
+            if(!this._EvalCompiled) {
+                this._EvalCompiled = new Function("", this.ToString());
+            }
+            return this._EvalCompiled;
+        };
         Expression.prototype._Compile = function () {
+            throw "Invalid operation";
+        };
+        Expression.prototype.ToString = function () {
             throw "Invalid operation";
         };
         Expression.prototype.GetAffectedProperties = function () {

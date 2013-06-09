@@ -28,6 +28,26 @@ module WebExpressions {
                 return output;
             })();
 
+            private static OperatorStringDictionary: string[] = (() => {
+                var output: string[] = [];
+
+                // TODO: more (all) operators
+                output[WebExpressions.Meta.ExpressionType.Add] = " + ";
+                output[WebExpressions.Meta.ExpressionType.AndAlso] = " && ";
+                output[WebExpressions.Meta.ExpressionType.Divide] = " / ";
+                //TODO: is this the right equals?
+                output[WebExpressions.Meta.ExpressionType.Equal] = " === ";
+                output[WebExpressions.Meta.ExpressionType.GreaterThan] = " > ";
+                output[WebExpressions.Meta.ExpressionType.GreaterThanOrEqual] = " >= ";
+                output[WebExpressions.Meta.ExpressionType.LessThan] = " < ";
+                output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = " left <= ";
+                output[WebExpressions.Meta.ExpressionType.Multiply] = " * ";
+                output[WebExpressions.Meta.ExpressionType.OrElse] = " || ";
+                output[WebExpressions.Meta.ExpressionType.Subtract] = " - ";
+
+                return output;
+            })();
+
             constructor(meta: Meta.BinaryExpressionMeta) {
                 super(meta);
 
@@ -45,6 +65,11 @@ module WebExpressions {
                 this.Left = Expression.CreateExpression(meta.Left);
                 this.Right = Expression.CreateExpression(meta.Right);
             };
+
+            public ToString(): string {
+                return this.Left.ToString() + BinaryExpression.OperatorStringDictionary[this.NodeType] + this.Right.ToString();
+            }
+                 
 
             _Compile(): ExpressionInvokerAction {
                 var left = this.Left.Compile();

@@ -8,6 +8,10 @@ module WebExpressions {
                 super(meta);
             }
 
+            ToString(): string {
+                return "";
+            }
+
             //TODO
             _Compile(): ExpressionInvokerAction {
                 return (ambientContext) => null;

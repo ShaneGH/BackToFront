@@ -56,6 +56,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\WebExpressions\Utils\Dictionary.js">
+      <DependentUpon>Dictionary.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Scripts\WebExpressions\Utils\Dictionary.ts" />
     <TypeScriptCompile Include="Scripts\ref\Exports.ts" />
     <Content Include="Scripts\build\WebExpressions.debug.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -79,8 +83,8 @@
     <TypeScriptCompile Include="Scripts\WebExpressions\AssignmentExpression.ts" />
     <Content Include="Scripts\WebExpressions\AssignmentExpression.js">
       <JsCompile />
-      <DependentUpon>AssignmentExpression.ts</DependentUpon>    
-  </Content>
+      <DependentUpon>AssignmentExpression.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\WebExpressions\BinaryExpression.js">
       <DependentUpon>BinaryExpression.ts</DependentUpon>
     </Content>
@@ -143,11 +147,9 @@
       <LastGenOutput>MetaClasses.ts</LastGenOutput>
     </None>
   </ItemGroup>
-  
   <PropertyGroup>
     <JsCompile>"Scripts\linq-0.0.js" "Scripts\WebExpressions\MetaClasses.js" "Scripts\WebExpressions\Expression.js" "Scripts\WebExpressions" "Scripts\ref\Exports.js"</JsCompile>
   </PropertyGroup>
-  
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
@@ -163,20 +165,17 @@
   <Target Name="BuildJavascriptApp">
     <Message Text="Deleting old files" />
     <RemoveDir Directories="$(TargetDir)Yui" />
-    
     <Message Text="Copying tools" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\YuiBuildProcess.exe;" DestinationFolder="$(TargetDir)Yui" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\EcmaScript.NET.dll;" DestinationFolder="$(TargetDir)Yui" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\Iesi.Collections.dll;" DestinationFolder="$(TargetDir)Yui" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\Iesi.Collections.xml;" DestinationFolder="$(TargetDir)Yui" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\Yahoo.Yui.Compressor.dll;" DestinationFolder="$(TargetDir)Yui" />
-    
     <Message Text="Compiling Javascript files files" />
     <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\WebExpressions.debug.js -compress false -wrap true -exportVar ex" />
-    
     <Message Text="Compiling Javascript files files" />
     <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\WebExpressions.min.js -compress true -wrap true -exportVar ex" />
   </Target>
-   <!--<Target Name="AfterBuild">
+  <!--<Target Name="AfterBuild">
   </Target>-->
 </Project>

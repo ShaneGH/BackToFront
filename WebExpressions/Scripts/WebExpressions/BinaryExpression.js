@@ -60,6 +60,24 @@ var WebExpressions;
             };
             return output;
         })();
+        BinaryExpression.OperatorStringDictionary = (function () {
+            var output = [];
+            output[WebExpressions.Meta.ExpressionType.Add] = " + ";
+            output[WebExpressions.Meta.ExpressionType.AndAlso] = " && ";
+            output[WebExpressions.Meta.ExpressionType.Divide] = " / ";
+            output[WebExpressions.Meta.ExpressionType.Equal] = " === ";
+            output[WebExpressions.Meta.ExpressionType.GreaterThan] = " > ";
+            output[WebExpressions.Meta.ExpressionType.GreaterThanOrEqual] = " >= ";
+            output[WebExpressions.Meta.ExpressionType.LessThan] = " < ";
+            output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = " left <= ";
+            output[WebExpressions.Meta.ExpressionType.Multiply] = " * ";
+            output[WebExpressions.Meta.ExpressionType.OrElse] = " || ";
+            output[WebExpressions.Meta.ExpressionType.Subtract] = " - ";
+            return output;
+        })();
+        BinaryExpression.prototype.ToString = function () {
+            return this.Left.ToString() + BinaryExpression.OperatorStringDictionary[this.NodeType] + this.Right.ToString();
+        };
         BinaryExpression.prototype._Compile = function () {
             var _this = this;
             var left = this.Left.Compile();

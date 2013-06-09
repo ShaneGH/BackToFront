@@ -17,6 +17,11 @@ var WebExpressions;
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
         }
+        BlockExpression.prototype.ToString = function () {
+            return linq(this.Expressions).Select(function (a) {
+                return a.ToString() + ";";
+            }).Result.join("\n");
+        };
         BlockExpression.prototype._Compile = function () {
             var children = linq(this.Expressions).Select(function (a) {
                 return a.Compile();

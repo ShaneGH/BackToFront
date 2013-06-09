@@ -37,6 +37,11 @@ module WebExpressions {
             this.Right = WebExpressions.Expression.CreateExpression(meta.Right);
         };
 
+        ToString(): string {
+            // TODO: replace . with [] and watch for injection
+            return (this.Left ? this.Left.ToString() + "." : "") + this.LeftProperty + " = " + this.Right.ToString();
+        }
+
         _Compile(): ExpressionInvokerAction {
             var left = this.Left ? this.Left.Compile() : (context) => context;
             var right = this.Right.Compile();

@@ -29,10 +29,22 @@ var WebExpressions;
             this.MethodName = meta.MethodName;
             this.MethodFullName = meta.MethodFullName;
         }
+        MethodCallExpression.prototype.ToString = function () {
+            if(!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
+                throw "Invalid method name: " + this.MethodName;
+            }
+            var args = linq(this.Arguments).Select(function (a) {
+                return a.ToString();
+            }).Result;
+            var object = this.Object.ToString();
+            var mthd = "o[\"" + this.MethodName + "\"]";
+            return "(" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"])" + ".call(";
+            return "(function (o) { return (" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"]).call(o, " + args.join(", ") + "); })(" + object + ")";
+        };
         MethodCallExpression.prototype._Compile = function () {
-            var name = this.MethodName;
-            if(!WebExpressions.MemberExpression.PropertyRegex.test(name)) {
-                throw "Invalid method name: " + name;
+            var _this = this;
+            if(!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
+                throw "Invalid method name: " + this.MethodName;
             }
             var object = this.Object.Compile();
             var args = linq(this.Arguments).Select(function (a) {
@@ -43,8 +55,10 @@ var WebExpressions;
                 var params = linq(args).Select(function (a) {
                     return a(ambientContext);
                 }).Result;
-                return o[name].apply(o, params);
+                return (o[_this.MethodName] ? o[_this.MethodName] : MethodCallExpression.RegisteredMethods[_this.MethodFullName]).apply(o, params);
             };
+        };
+        MethodCallExpression.RegisteredMethods = {
         };
         return MethodCallExpression;
     })(WebExpressions.Expression);

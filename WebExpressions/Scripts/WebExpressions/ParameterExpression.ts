@@ -17,6 +17,10 @@ module WebExpressions {
             this.Name = meta.Name;
         }
 
+        ToString(): string {
+            return this.Name;
+        }
+
         _Compile(): ExpressionInvokerAction {
             return ambientContext => ambientContext[this.Name];
         }

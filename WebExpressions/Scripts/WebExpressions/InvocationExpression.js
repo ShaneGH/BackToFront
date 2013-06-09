@@ -21,6 +21,11 @@ var WebExpressions;
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
         }
+        InvocationExpression.prototype.ToString = function () {
+            return this.Expression.ToString() + "(" + linq(this.Arguments).Select(function (a) {
+                return a.ToString();
+            }).Result.join(", ") + ")";
+        };
         InvocationExpression.prototype._Compile = function () {
             var expresion = this.Expression.Compile();
             var args = linq(this.Arguments).Select(function (a) {

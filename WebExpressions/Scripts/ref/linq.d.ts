@@ -11,9 +11,9 @@ interface Linq {
     Aggregate(lambda: string) : Linq;
     Aggregate(lambda: Function) : Linq;
     Aggregate() : Linq;
-    Any(lambda: string) : Boolean;
-    Any(lambda: Function) : Boolean;
-    Contains(item): Boolean;
+    Any(lambda: string) : bool;
+    Any(lambda: Function): bool;
+    Contains(item): bool;
     Distinct() : Linq;
     Each(lambda: string) : Linq;
     Each(lambda: Function) : Linq;

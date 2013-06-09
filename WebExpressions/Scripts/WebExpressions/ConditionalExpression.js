@@ -23,6 +23,18 @@ var WebExpressions;
             this.IfFalse = WebExpressions.Expression.CreateExpression(meta.IfFalse);
             this.Test = WebExpressions.Expression.CreateExpression(meta.Test);
         }
+        ConditionalExpression.prototype.ToString = function () {
+            if(this.IfTrue.ExpressionType === WebExpressions.Meta.ExpressionWrapperType.Block || this.IfFalse.ExpressionType === WebExpressions.Meta.ExpressionWrapperType.Block) {
+                return this._ToBlockString();
+            }
+            return this._ToInlineString();
+        };
+        ConditionalExpression.prototype._ToInlineString = function () {
+            return this.Test.ToString() + " ? " + this.IfTrue.ToString() + " : " + this.IfFalse.ToString();
+        };
+        ConditionalExpression.prototype._ToBlockString = function () {
+            return "if(" + this.Test.ToString() + ") { " + this.IfTrue.ToString() + " } else { " + this.IfFalse.ToString() + " }";
+        };
         ConditionalExpression.prototype._Compile = function () {
             var test = this.Test.Compile();
             var ifTrue = this.IfTrue.Compile();

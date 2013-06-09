@@ -22,6 +22,10 @@ module WebExpressions {
                 this.Arguments = linq(meta.Arguments).Select(a => Expression.CreateExpression(a)).Result;
             }
 
+            ToString(): string {
+                return this.Expression.ToString() + "(" + linq(this.Arguments).Select(a => a.ToString()).Result.join(", ") + ")";
+            }
+
             _Compile(): ExpressionInvokerAction {
 
                 var expresion = this.Expression.Compile();

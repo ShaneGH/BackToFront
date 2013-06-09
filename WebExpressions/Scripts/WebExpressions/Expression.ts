@@ -49,8 +49,22 @@ module WebExpressions {
             return this._Compiled;
         }
 
+        private _EvalCompiled: Function;
+        EvalCompile(): Function {
+            if (!this._EvalCompiled) {
+                this._EvalCompiled = new Function("", this.ToString());
+            }
+
+            return this._EvalCompiled;
+        }
+
         // abstract
         _Compile(): ExpressionInvokerAction {
+            throw "Invalid operation";
+        }
+
+        // ToString
+        ToString(): string {
             throw "Invalid operation";
         }
 

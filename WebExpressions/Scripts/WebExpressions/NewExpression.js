@@ -35,6 +35,24 @@ var WebExpressions;
             this.Type = meta.Type;
             this.IsAnonymous = meta.IsAnonymous;
         }
+        NewExpression.prototype.ToString = function () {
+            var args = linq(this.Arguments).Select(function (a) {
+                return a.ToString();
+            }).Result;
+            if(this.IsAnonymous) {
+                for(var i = 0, ii = args.length; i < ii; i++) {
+                    args[i] = this.Members[i] + args[i];
+                }
+                return "{" + args.join(", ") + "}";
+            } else if(NewExpression.RegisteredTypes[this.Type]) {
+                var args = linq(this.Arguments).Select(function (a) {
+                    return a.ToString();
+                }).Result;
+                return "new ex.ns.NewExpression.RegisteredTypes[\"" + this.Type + "\"](" + args.join(", ") + ")";
+            } else {
+                return "{}";
+            }
+        };
         NewExpression.prototype._Compile = function () {
             var _this = this;
             var args = linq(this.Arguments).Select(function (a) {
@@ -47,7 +65,7 @@ var WebExpressions;
                 if(_this.IsAnonymous) {
                     return _this.ConstructAnonymous(params);
                 } else if(NewExpression.RegisteredTypes[_this.Type]) {
-                    return _this.Construct(NewExpression.RegisteredTypes[_this.Type], params);
+                    return NewExpression.Construct(NewExpression.RegisteredTypes[_this.Type], params);
                 } else {
                     return {
                     };
@@ -62,7 +80,7 @@ var WebExpressions;
             }
             return obj;
         };
-        NewExpression.prototype.Construct = function (constr, args) {
+        NewExpression.Construct = function Construct(constr, args) {
             var obj = Object.create(constr.prototype);
             var result = constr.apply(obj, args);
             return typeof result === 'object' ? result : obj;
