@@ -129,7 +129,7 @@
     <TypeScriptCompile Include="Scripts\BackToFront\Validation\Validator.ts" />
   </ItemGroup>
   <PropertyGroup>
-    <JsCompile>"bin\Debug\Scripts\build\WebExpressions.debug.js" "Scripts\linq-0.0.js" "Scripts\BackToFront\MetaClasses.js" "Scripts\BackToFront\Validation\Validator.js" "Scripts\BackToFront"</JsCompile>
+    <JsCompile>"Scripts\BackToFront"</JsCompile>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
