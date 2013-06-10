@@ -23,17 +23,29 @@ var WebExpressions;
             this.IfFalse = WebExpressions.Expression.CreateExpression(meta.IfFalse);
             this.Test = WebExpressions.Expression.CreateExpression(meta.Test);
         }
-        ConditionalExpression.prototype.ToString = function () {
+        ConditionalExpression.prototype.EvalExpression = function () {
             if(this.IfTrue.ExpressionType === WebExpressions.Meta.ExpressionWrapperType.Block || this.IfFalse.ExpressionType === WebExpressions.Meta.ExpressionWrapperType.Block) {
                 return this._ToBlockString();
             }
             return this._ToInlineString();
         };
         ConditionalExpression.prototype._ToInlineString = function () {
-            return this.Test.ToString() + " ? " + this.IfTrue.ToString() + " : " + this.IfFalse.ToString();
+            var test = this.Test.EvalExpression();
+            var ifTrue = this.IfTrue.EvalExpression();
+            var ifFalse = this.IfFalse.EvalExpression();
+            return {
+                Constants: test.Constants.Merge(ifTrue.Constants).Merge(ifFalse.Constants),
+                Expression: test.Expression + " ? " + ifTrue.Expression + " : " + ifFalse.Expression
+            };
         };
         ConditionalExpression.prototype._ToBlockString = function () {
-            return "if(" + this.Test.ToString() + ") { " + this.IfTrue.ToString() + " } else { " + this.IfFalse.ToString() + " }";
+            var test = this.Test.EvalExpression();
+            var ifTrue = this.IfTrue.EvalExpression();
+            var ifFalse = this.IfFalse.EvalExpression();
+            return {
+                Constants: test.Constants.Merge(ifTrue.Constants).Merge(ifFalse.Constants),
+                Expression: "if(" + test.Expression + ") { " + ifTrue.Expression + " } else { " + ifFalse.Expression + " }"
+            };
         };
         ConditionalExpression.prototype._Compile = function () {
             var test = this.Test.Compile();

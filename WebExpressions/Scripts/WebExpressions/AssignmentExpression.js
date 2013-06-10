@@ -30,8 +30,16 @@ var WebExpressions;
             }
             this.Right = WebExpressions.Expression.CreateExpression(meta.Right);
         }
-        AssignmentExpression.prototype.ToString = function () {
-            return (this.Left ? this.Left.ToString() + "." : "") + this.LeftProperty + " = " + this.Right.ToString();
+        AssignmentExpression.prototype.EvalExpression = function () {
+            var right = this.Right.EvalExpression();
+            var left = this.Left ? this.Left.EvalExpression() : null;
+            if(left) {
+                right.Constants.Merge(left.Constants);
+            }
+            return {
+                Expression: "(" + (left ? left.Expression + "." : "") + this.LeftProperty + " = " + right.Expression + ")",
+                Constants: right.Constants
+            };
         };
         AssignmentExpression.prototype._Compile = function () {
             var _this = this;

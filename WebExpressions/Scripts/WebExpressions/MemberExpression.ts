@@ -31,12 +31,17 @@ module WebExpressions {
             }
 
             // TODO: replace . with [] and watch for injection
-            ToString(): string {
+            EvalExpression(): CreateEvalExpression {
                 if (!MemberExpression.PropertyRegex.test(this.MemberName)) {
                     throw "Invalid property name: " + this.MemberName;
                 }
 
-                return this.Expression.ToString() + "." + this.MemberName;
+                var expression = this.Expression.EvalExpression();
+
+                return {
+                    Expression: expression.Expression + "." + this.MemberName,
+                    Constants: expression.Constants
+                };
             }
 
             // TODO: not throwing null exceptions

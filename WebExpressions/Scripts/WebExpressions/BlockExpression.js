@@ -17,10 +17,25 @@ var WebExpressions;
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
         }
-        BlockExpression.prototype.ToString = function () {
-            return linq(this.Expressions).Select(function (a) {
-                return a.ToString() + ";";
-            }).Result.join("\n");
+        BlockExpression.prototype.EvalExpression = function () {
+            var expressions = linq(this.Expressions).Select(function (a) {
+                return a.EvalExpression();
+            }).Result;
+            if(!expressions.length) {
+                return {
+                    Constants: new WebExpressions.Utils.Dictionary(),
+                    Expression: ""
+                };
+            }
+            for(var i = 1, ii = expressions.length; i < ii; i++) {
+                expressions[0].Constants.Merge(expressions[i].Constants);
+            }
+            return {
+                Expression: linq(expressions).Select(function (a) {
+                    return a.Expression;
+                }).Result.join(";\n"),
+                Constants: expressions[0].Constants
+            };
         };
         BlockExpression.prototype._Compile = function () {
             var children = linq(this.Expressions).Select(function (a) {

@@ -46,5 +46,16 @@ module WebExpressions.Utils {
 
             return false;
         }
+
+        public Merge(dictionary: Dictionary): Dictionary {
+            if (dictionary) {
+                for (var i = 0, ii = dictionary._InnerDictionary.length; i < ii; i++) {
+                    var item = dictionary._InnerDictionary[i];
+                    this.Add(item.Key, item.Value);
+                }
+            }
+
+            return this;
+        }
     }
 }

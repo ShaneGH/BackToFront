@@ -7,42 +7,35 @@ module WebExpressions {
     export class ConstantExpression extends Expression {
         Value: any;
 
+        // const
+        static ConstantParameter = "__constants";
+
+        static GenerateConstantId: { (): string; } = (function () {
+            var id = 0;
+            return function () {
+                return "constant-" + (++id);
+            };
+        })();
+
         constructor(meta: Meta.ConstantExpressionMeta) {
             super(meta);
 
             this.Value = meta.Value;
         }
 
-        ToString(): string {
-            return ConstantExpression.ToString(this.Value);
+        EvalExpression(): CreateEvalExpression {
+
+            var accessor = ConstantExpression.GenerateConstantId();
+            var constant = new WebExpressions.Utils.Dictionary();
+            constant.Add(accessor, this.Value);
+            return {
+                Constants: constant,
+                Expression: ConstantExpression.ConstantParameter + "[" + accessor + "]"
+            };
         }
 
         _Compile(): ExpressionInvokerAction {
             return (ambientContext) => this.Value;
         }
-
-        static ToString(value) {
-            if (value === null) {
-                return "null";
-            } else if (value === undefined) {
-                return "undefined";
-            } else if (ConstantExpression.RegisteredConverters.ContainsKey(this.Value.constructor)) {
-                return ConstantExpression.RegisteredConverters.Value(value.constructor)(value);
-            } else {
-                return null;
-            }
-        }
-
-        static RegisteredConverters: WebExpressions.Utils.Dictionary = (function () {
-            var dic = new WebExpressions.Utils.Dictionary();
-
-            //TODO: object, date time, regexp + others
-            dic.Add(String, function (a) { return "\"" + a + "\"" });
-            dic.Add(Number, function (a) { return a.toString(); });
-            dic.Add(Boolean, function (a) { return a.toString(); });
-            dic.Add(Array, function (a) { return "[" + linq(a).Select(a => ConstantExpression.ToString(a)).Result.join(", ") + "]" });
-
-            return dic;
-        })();
     }
 }

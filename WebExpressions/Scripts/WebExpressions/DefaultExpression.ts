@@ -8,8 +8,11 @@ module WebExpressions {
                 super(meta);
             }
 
-            ToString(): string {
-                return "";
+            EvalExpression(): CreateEvalExpression {
+                return {
+                    Expression: "",
+                    Constants: new WebExpressions.Utils.Dictionary()
+                };
             }
 
             //TODO

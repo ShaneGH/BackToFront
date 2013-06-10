@@ -66,12 +66,24 @@ module WebExpressions {
                 this.Right = Expression.CreateExpression(meta.Right);
             };
 
-            public ToString(): string {
-                return this.Left.ToString() + BinaryExpression.OperatorStringDictionary[this.NodeType] + this.Right.ToString();
-            }
-                 
+            EvalExpression(): CreateEvalExpression {
+                if (!BinaryExpression.OperatorStringDictionary[this.NodeType]) {
+                    throw "Invalid expression type";
+                }
+
+                var left = this.Left.EvalExpression();
+                var right = this.Right.EvalExpression();
+                return {
+                    Expression: left.Expression + BinaryExpression.OperatorStringDictionary[this.NodeType] + right.Expression,
+                    Constants: left.Constants.Merge(right.Constants)
+                };
+            }                 
 
             _Compile(): ExpressionInvokerAction {
+                if (!BinaryExpression.OperatorStringDictionary[this.NodeType]) {
+                    throw "Invalid expression type";
+                }
+
                 var left = this.Left.Compile();
                 var right = this.Right.Compile();
                 return (ambientContext) => BinaryExpression.OperatorDictionary[this.NodeType](left(ambientContext), right(ambientContext))

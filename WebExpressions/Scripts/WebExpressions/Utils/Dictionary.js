@@ -48,6 +48,15 @@ var WebExpressions;
                 }
                 return false;
             };
+            Dictionary.prototype.Merge = function (dictionary) {
+                if(dictionary) {
+                    for(var i = 0, ii = dictionary._InnerDictionary.length; i < ii; i++) {
+                        var item = dictionary._InnerDictionary[i];
+                        this.Add(item.Key, item.Value);
+                    }
+                }
+                return this;
+            };
             return Dictionary;
         })();
         Utils.Dictionary = Dictionary;        

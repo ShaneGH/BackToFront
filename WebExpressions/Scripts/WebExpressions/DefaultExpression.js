@@ -10,8 +10,11 @@ var WebExpressions;
         function DefaultExpression(meta) {
                 _super.call(this, meta);
         }
-        DefaultExpression.prototype.ToString = function () {
-            return "";
+        DefaultExpression.prototype.EvalExpression = function () {
+            return {
+                Expression: "",
+                Constants: new WebExpressions.Utils.Dictionary()
+            };
         };
         DefaultExpression.prototype._Compile = function () {
             return function (ambientContext) {

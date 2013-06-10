@@ -148,7 +148,7 @@
     </None>
   </ItemGroup>
   <PropertyGroup>
-    <JsCompile>"Scripts\linq-0.0.js" "Scripts\WebExpressions\MetaClasses.js" "Scripts\WebExpressions\Expression.js" "Scripts\WebExpressions" "Scripts\ref\Exports.js"</JsCompile>
+    <JsCompile>"Scripts\linq-0.0.js" "Scripts\WebExpressions\Utils" "Scripts\WebExpressions\MetaClasses.js" "Scripts\WebExpressions\Expression.js" "Scripts\WebExpressions" "Scripts\ref\Exports.js"</JsCompile>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -28,7 +28,7 @@ module WebExpressions {
                 this.Test = Expression.CreateExpression(meta.Test);
             }
 
-            ToString(): string {
+            EvalExpression(): CreateEvalExpression {
                 if (this.IfTrue.ExpressionType === WebExpressions.Meta.ExpressionWrapperType.Block ||
                     this.IfFalse.ExpressionType === WebExpressions.Meta.ExpressionWrapperType.Block) {
                     return this._ToBlockString();
@@ -37,17 +37,32 @@ module WebExpressions {
                 return this._ToInlineString();
             }
 
-            private _ToInlineString(): string {
-                return this.Test.ToString() + " ? " + this.IfTrue.ToString() + " : " + this.IfFalse.ToString();
+            // TODO: can ifFalse be null
+            private _ToInlineString(): CreateEvalExpression {
+                var test = this.Test.EvalExpression();
+                var ifTrue = this.IfTrue.EvalExpression();
+                var ifFalse = this.IfFalse.EvalExpression();
 
+                return {
+                    Constants: test.Constants.Merge(ifTrue.Constants).Merge(ifFalse.Constants),
+                    Expression: test.Expression + " ? " + ifTrue.Expression + " : " + ifFalse.Expression
+                };
             }
 
-            private _ToBlockString(): string {
-                return "if(" + this.Test.ToString() + ") { " +
-                    this.IfTrue.ToString() +
-                    " } else { " +
-                    this.IfFalse.ToString() +
-                    " }";
+            // TODO: can ifFalse be null
+            private _ToBlockString(): CreateEvalExpression {
+                var test = this.Test.EvalExpression();
+                var ifTrue = this.IfTrue.EvalExpression();
+                var ifFalse = this.IfFalse.EvalExpression();
+
+                return {
+                    Constants: test.Constants.Merge(ifTrue.Constants).Merge(ifFalse.Constants),
+                    Expression: "if(" + test.Expression + ") { " +
+                        ifTrue.Expression +
+                        " } else { " +
+                        ifFalse.Expression +
+                        " }"
+                };
             }
 
             _Compile(): ExpressionInvokerAction {

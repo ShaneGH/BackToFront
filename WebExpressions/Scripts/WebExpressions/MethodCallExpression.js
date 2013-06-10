@@ -29,17 +29,22 @@ var WebExpressions;
             this.MethodName = meta.MethodName;
             this.MethodFullName = meta.MethodFullName;
         }
-        MethodCallExpression.prototype.ToString = function () {
+        MethodCallExpression.prototype.EvalExpression = function () {
             if(!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
             var args = linq(this.Arguments).Select(function (a) {
-                return a.ToString();
+                return a.EvalExpression();
             }).Result;
-            var object = this.Object.ToString();
-            var mthd = "o[\"" + this.MethodName + "\"]";
-            return "(" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"])" + ".call(";
-            return "(function (o) { return (" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"]).call(o, " + args.join(", ") + "); })(" + object + ")";
+            var object = this.Object.EvalExpression();
+            linq(args).Each(function (a) {
+                return object.Constants.Merge(a.Constants);
+            });
+            var mthd = "__o[\"" + this.MethodName + "\"]";
+            return {
+                Expression: "(function (__o) { return (" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"]).call(__o, " + args.join(", ") + "); })(" + object.Expression + ")",
+                Constants: object.Constants
+            };
         };
         MethodCallExpression.prototype._Compile = function () {
             var _this = this;

@@ -32,19 +32,21 @@ module WebExpressions {
             this.MethodFullName = meta.MethodFullName;
         }
 
-        ToString(): string {
+        EvalExpression(): CreateEvalExpression {
             if (!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
 
-            var args = <string[]>linq(this.Arguments).Select(a => a.ToString()).Result;
-            var object = this.Object.ToString();
+            var args = <string[]>linq(this.Arguments).Select(a => a.EvalExpression()).Result;
+            var object = this.Object.EvalExpression();
+            linq(args).Each(a => object.Constants.Merge(a.Constants));
 
-            var mthd = "o[\"" + this.MethodName + "\"]";
-            return "(" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"])"
-                + ".call(";
+            var mthd = "__o[\"" + this.MethodName + "\"]";
 
-            return "(function (o) { return (" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"]).call(o, " + args.join(", ") + "); })(" + object + ")";
+            return {
+                Expression: "(function (__o) { return (" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"]).call(__o, " + args.join(", ") + "); })(" + object.Expression + ")",
+                Constants: object.Constants
+            };
         }
 
         // TODO: register methods

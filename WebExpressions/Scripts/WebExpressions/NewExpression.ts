@@ -39,19 +39,27 @@ module WebExpressions {
             this.IsAnonymous = meta.IsAnonymous;
         }
 
-        ToString(): string {
-            var args = <string[]>linq(this.Arguments).Select(a => a.ToString()).Result;
-            if (this.IsAnonymous) {
-                for (var i = 0, ii = args.length; i < ii; i++) {
-                    args[i] = this.Members[i] + args[i];
-                }
+        EvalExpression(): CreateEvalExpression {
+            var args = <CreateEvalExpression[]>linq(this.Arguments).Select(a => a.EvalExpression()).Result;
+            var constants = new WebExpressions.Utils.Dictionary();
+            linq(args).Each(a => constants.Merge(a.Constants));
+            var argsString = linq(args).Select(a => a.Expression).Result.join(", ");
 
-                return "{" + args.join(", ") + "}";
+            if (this.IsAnonymous) {
+                return {
+                    Constants: constants,
+                    Expression: "{" + argsString + "}"
+                };
             } else if (NewExpression.RegisteredTypes[this.Type]) {
-                var args = <string[]>linq(this.Arguments).Select(a => a.ToString()).Result;
-                return "new ex.ns.NewExpression.RegisteredTypes[\"" + this.Type + "\"](" + args.join(", ") + ")";
+                return {
+                    Constants: constants,
+                    Expression: "new ex.ns.NewExpression.RegisteredTypes[\"" + this.Type + "\"](" + argsString + ")"
+                }
             } else {
-                return "{}";
+                return {
+                    Constants: constants,
+                    Expression: "{}"
+                };
             }
         }
 

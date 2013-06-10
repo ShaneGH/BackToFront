@@ -35,22 +35,32 @@ var WebExpressions;
             this.Type = meta.Type;
             this.IsAnonymous = meta.IsAnonymous;
         }
-        NewExpression.prototype.ToString = function () {
+        NewExpression.prototype.EvalExpression = function () {
             var args = linq(this.Arguments).Select(function (a) {
-                return a.ToString();
+                return a.EvalExpression();
             }).Result;
+            var constants = new WebExpressions.Utils.Dictionary();
+            linq(args).Each(function (a) {
+                return constants.Merge(a.Constants);
+            });
+            var argsString = linq(args).Select(function (a) {
+                return a.Expression;
+            }).Result.join(", ");
             if(this.IsAnonymous) {
-                for(var i = 0, ii = args.length; i < ii; i++) {
-                    args[i] = this.Members[i] + args[i];
-                }
-                return "{" + args.join(", ") + "}";
+                return {
+                    Constants: constants,
+                    Expression: "{" + argsString + "}"
+                };
             } else if(NewExpression.RegisteredTypes[this.Type]) {
-                var args = linq(this.Arguments).Select(function (a) {
-                    return a.ToString();
-                }).Result;
-                return "new ex.ns.NewExpression.RegisteredTypes[\"" + this.Type + "\"](" + args.join(", ") + ")";
+                return {
+                    Constants: constants,
+                    Expression: "new ex.ns.NewExpression.RegisteredTypes[\"" + this.Type + "\"](" + argsString + ")"
+                };
             } else {
-                return "{}";
+                return {
+                    Constants: constants,
+                    Expression: "{}"
+                };
             }
         };
         NewExpression.prototype._Compile = function () {

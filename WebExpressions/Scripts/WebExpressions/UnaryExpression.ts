@@ -3,35 +3,52 @@
 
 module WebExpressions {
 
-        export class UnaryExpression extends Expression {
+    export class UnaryExpression extends Expression {
 
-            private static OperatorDictionary: { (operand): any; }[] = (() => {
-                var output: { (operand): any; }[] = [];
+        private static OperatorDictionary: { (operand): any; }[] = (() => {
+            var output: { (operand): any; }[] = [];
 
-                // TODO: more (all) operators
-                output[WebExpressions.Meta.ExpressionType.Convert] = (operand) => operand;
-                output[WebExpressions.Meta.ExpressionType.Not] = (operand) => !operand;
+            // TODO: more (all) operators
+            output[WebExpressions.Meta.ExpressionType.Convert] = (operand) => operand;
+            output[WebExpressions.Meta.ExpressionType.Not] = (operand) => !operand;
 
-                return output;
-            })();
+            return output;
+        })();
 
-            Operand: Expression;
+        private static OperatorStringDictionary: { (operand: string): string; }[] = (() => {
+            var output: { (operand: string): string; }[] = [];
 
-            constructor(meta: Meta.UnaryExpressionMeta) {
-                super(meta);
+            // TODO: more (all) operators
+            output[WebExpressions.Meta.ExpressionType.Convert] = (operand) => operand;
+            output[WebExpressions.Meta.ExpressionType.Not] = (operand) => "!" + operand;
 
-                WebExpressions.Sanitizer.Require(meta, {
-                    inputName: "Operand",
-                    inputType: "object"
-                });
+            return output;
+        })();
 
-                this.Operand = Expression.CreateExpression(meta.Operand);
-            }
+        Operand: Expression;
 
-            _Compile(): ExpressionInvokerAction {
-                var operand = this.Operand.Compile();
-                return (ambientContext) => UnaryExpression.OperatorDictionary[this.NodeType](operand(ambientContext))
-            }
+        constructor(meta: Meta.UnaryExpressionMeta) {
+            super(meta);
+
+            WebExpressions.Sanitizer.Require(meta, {
+                inputName: "Operand",
+                inputType: "object"
+            });
+
+            this.Operand = Expression.CreateExpression(meta.Operand);
         }
-    
+
+        EvalExpression(): CreateEvalExpression {
+            var operand = this.Operand.EvalExpression();
+            return {
+                Expression: UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression),
+                Constants: operand.Constants
+            };
+        }
+
+        _Compile(): ExpressionInvokerAction {
+            var operand = this.Operand.Compile();
+            return (ambientContext) => UnaryExpression.OperatorDictionary[this.NodeType](operand(ambientContext))
+        }
+    }
 }

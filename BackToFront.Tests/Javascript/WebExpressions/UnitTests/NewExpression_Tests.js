@@ -6,6 +6,7 @@
 var WebExpressions = ex.ns;
 
 var rt = WebExpressions.NewExpression.RegisteredTypes;
+var cstrt = WebExpressions.NewExpression.Construct;
 var createExpression = WebExpressions.NewExpression.CreateExpression;
 var require = WebExpressions.Sanitizer.Require;
 
@@ -14,11 +15,13 @@ module("WebExpressions.NewExpression", {
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
         WebExpressions.NewExpression.RegisteredTypes = rt;
+        WebExpressions.NewExpression.Construct = cstrt;
     },
     teardown: function () {
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
         WebExpressions.NewExpression.RegisteredTypes = rt;
+        WebExpressions.NewExpression.Construct = cstrt;
     }
 });
 
@@ -126,17 +129,17 @@ test("_Compile test, non anonymous, constructor defined", function () {
             Compile: function () { return function (context) { assert.strictEqual(context, ctxt); return arg; } }
         }],
         IsAnonymous: false,
-        Construct: function (constr, params) {
-            assert.strictEqual(WebExpressions.NewExpression.RegisteredTypes[type], constr);
-            assert.strictEqual(1, params.length);
-            assert.strictEqual(arg, params[0]);
-            return newObj;
-        },
         Type: type
     };
 
     WebExpressions.NewExpression.RegisteredTypes = {};
     WebExpressions.NewExpression.RegisteredTypes[type] = {};
+    WebExpressions.NewExpression.Construct = function (constr, params) {
+        assert.strictEqual(WebExpressions.NewExpression.RegisteredTypes[type], constr);
+        assert.strictEqual(1, params.length);
+        assert.strictEqual(arg, params[0]);
+        return newObj;
+    };
 
     // act
     var result = WebExpressions.NewExpression.prototype._Compile.call(subject)(ctxt);
@@ -199,7 +202,7 @@ test("Construct test", function () {
     var c = function (arg1) { this.arg1 = arg1 };
 
     // act
-    var result = WebExpressions.NewExpression.prototype.Construct.call(null, c, [arg]);
+    var result = WebExpressions.NewExpression.Construct(c, [arg]);
 
     // assert
     assert.strictEqual(result.constructor, c);

@@ -22,3 +22,15 @@ test("Value test", function () {
     assert.strictEqual(subject.Value, meta.Value);
     assert.strictEqual(subject.Compile()(), meta.Value);
 });
+
+// Constructor test OK
+test("GenerateConstantId test", function () {
+    // arrange
+    // act
+    // assert
+    assert.strictEqual(WebExpressions.ConstantExpression.GenerateConstantId(), "constant-1");
+    assert.strictEqual(WebExpressions.ConstantExpression.GenerateConstantId(), "constant-2");
+    assert.strictEqual(WebExpressions.ConstantExpression.GenerateConstantId(), "constant-3");
+    assert.strictEqual(WebExpressions.ConstantExpression.GenerateConstantId(), "constant-4");
+    assert.strictEqual(WebExpressions.ConstantExpression.GenerateConstantId(), "constant-5");
+});

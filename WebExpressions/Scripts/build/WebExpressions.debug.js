@@ -416,6 +416,73 @@
 
 var WebExpressions;
 (function (WebExpressions) {
+    (function (Utils) {
+        var KeyValuePair = (function () {
+            function KeyValuePair(Key, Value) {
+                this.Key = Key;
+                this.Value = Value;
+            }
+            return KeyValuePair;
+        })();        
+        var Dictionary = (function () {
+            function Dictionary() {
+                this._InnerDictionary = [];
+            }
+            Dictionary.prototype.ContainsKey = function (key) {
+                return linq(this._InnerDictionary).Any(function (a) {
+                    return a.Key === key;
+                });
+            };
+            Dictionary.prototype.Add = function (key, value) {
+                if(this.ContainsKey(key)) {
+                    throw "Dictionary alredy contains the key " + key;
+                }
+                this._InnerDictionary.push(new KeyValuePair(key, value));
+            };
+            Dictionary.prototype.AddOrReplace = function (key, value) {
+                var existing = linq(this._InnerDictionary).First(function (a) {
+                    return a.Key === key;
+                });
+                if(existing) {
+                    existing.Value = value;
+                } else {
+                    this._InnerDictionary.push(new KeyValuePair(key, value));
+                }
+            };
+            Dictionary.prototype.Value = function (key) {
+                var existing = linq(this._InnerDictionary).First(function (a) {
+                    return a.Key === key;
+                });
+                return existing ? existing.Value : null;
+            };
+            Dictionary.prototype.Remove = function (key) {
+                for(var i = 0, ii = this._InnerDictionary.length; i < ii; i++) {
+                    if(this._InnerDictionary[i].Key === key) {
+                        this._InnerDictionary.splice(i, 1);
+                        return true;
+                    }
+                }
+                return false;
+            };
+            Dictionary.prototype.Merge = function (dictionary) {
+                if(dictionary) {
+                    for(var i = 0, ii = dictionary._InnerDictionary.length; i < ii; i++) {
+                        var item = dictionary._InnerDictionary[i];
+                        this.Add(item.Key, item.Value);
+                    }
+                }
+                return this;
+            };
+            return Dictionary;
+        })();
+        Utils.Dictionary = Dictionary;        
+    })(WebExpressions.Utils || (WebExpressions.Utils = {}));
+    var Utils = WebExpressions.Utils;
+})(WebExpressions || (WebExpressions = {}));
+
+
+var WebExpressions;
+(function (WebExpressions) {
     (function (Meta) {
         (function (ExpressionWrapperType) {
             ExpressionWrapperType._map = [];
@@ -548,14 +615,15 @@ var WebExpressions;
         };
         Expression.prototype.EvalCompile = function () {
             if(!this._EvalCompiled) {
-                this._EvalCompiled = new Function("", this.ToString());
+                var result = this.EvalExpression();
+                this._EvalCompiled = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
             }
             return this._EvalCompiled;
         };
         Expression.prototype._Compile = function () {
             throw "Invalid operation";
         };
-        Expression.prototype.ToString = function () {
+        Expression.prototype.EvalExpression = function () {
             throw "Invalid operation";
         };
         Expression.prototype.GetAffectedProperties = function () {
@@ -646,8 +714,16 @@ var WebExpressions;
             }
             this.Right = WebExpressions.Expression.CreateExpression(meta.Right);
         }
-        AssignmentExpression.prototype.ToString = function () {
-            return (this.Left ? this.Left.ToString() + "." : "") + this.LeftProperty + " = " + this.Right.ToString();
+        AssignmentExpression.prototype.EvalExpression = function () {
+            var right = this.Right.EvalExpression();
+            var left = this.Left ? this.Left.EvalExpression() : null;
+            if(left) {
+                right.Constants.Merge(left.Constants);
+            }
+            return {
+                Expression: "(" + (left ? left.Expression + "." : "") + this.LeftProperty + " = " + right.Expression + ")",
+                Constants: right.Constants
+            };
         };
         AssignmentExpression.prototype._Compile = function () {
             var _this = this;
@@ -742,11 +818,22 @@ var WebExpressions;
             output[WebExpressions.Meta.ExpressionType.Subtract] = " - ";
             return output;
         })();
-        BinaryExpression.prototype.ToString = function () {
-            return this.Left.ToString() + BinaryExpression.OperatorStringDictionary[this.NodeType] + this.Right.ToString();
+        BinaryExpression.prototype.EvalExpression = function () {
+            if(!BinaryExpression.OperatorStringDictionary[this.NodeType]) {
+                throw "Invalid expression type";
+            }
+            var left = this.Left.EvalExpression();
+            var right = this.Right.EvalExpression();
+            return {
+                Expression: left.Expression + BinaryExpression.OperatorStringDictionary[this.NodeType] + right.Expression,
+                Constants: left.Constants.Merge(right.Constants)
+            };
         };
         BinaryExpression.prototype._Compile = function () {
             var _this = this;
+            if(!BinaryExpression.OperatorStringDictionary[this.NodeType]) {
+                throw "Invalid expression type";
+            }
             var left = this.Left.Compile();
             var right = this.Right.Compile();
             return function (ambientContext) {
@@ -778,10 +865,25 @@ var WebExpressions;
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
         }
-        BlockExpression.prototype.ToString = function () {
-            return linq(this.Expressions).Select(function (a) {
-                return a.ToString() + ";";
-            }).Result.join("\n");
+        BlockExpression.prototype.EvalExpression = function () {
+            var expressions = linq(this.Expressions).Select(function (a) {
+                return a.EvalExpression();
+            }).Result;
+            if(!expressions.length) {
+                return {
+                    Constants: new WebExpressions.Utils.Dictionary(),
+                    Expression: ""
+                };
+            }
+            for(var i = 1, ii = expressions.length; i < ii; i++) {
+                expressions[0].Constants.Merge(expressions[i].Constants);
+            }
+            return {
+                Expression: linq(expressions).Select(function (a) {
+                    return a.Expression;
+                }).Result.join(";\n"),
+                Constants: expressions[0].Constants
+            };
         };
         BlockExpression.prototype._Compile = function () {
             var children = linq(this.Expressions).Select(function (a) {
@@ -824,17 +926,29 @@ var WebExpressions;
             this.IfFalse = WebExpressions.Expression.CreateExpression(meta.IfFalse);
             this.Test = WebExpressions.Expression.CreateExpression(meta.Test);
         }
-        ConditionalExpression.prototype.ToString = function () {
+        ConditionalExpression.prototype.EvalExpression = function () {
             if(this.IfTrue.ExpressionType === WebExpressions.Meta.ExpressionWrapperType.Block || this.IfFalse.ExpressionType === WebExpressions.Meta.ExpressionWrapperType.Block) {
                 return this._ToBlockString();
             }
             return this._ToInlineString();
         };
         ConditionalExpression.prototype._ToInlineString = function () {
-            return this.Test.ToString() + " ? " + this.IfTrue.ToString() + " : " + this.IfFalse.ToString();
+            var test = this.Test.EvalExpression();
+            var ifTrue = this.IfTrue.EvalExpression();
+            var ifFalse = this.IfFalse.EvalExpression();
+            return {
+                Constants: test.Constants.Merge(ifTrue.Constants).Merge(ifFalse.Constants),
+                Expression: test.Expression + " ? " + ifTrue.Expression + " : " + ifFalse.Expression
+            };
         };
         ConditionalExpression.prototype._ToBlockString = function () {
-            return "if(" + this.Test.ToString() + ") { " + this.IfTrue.ToString() + " } else { " + this.IfFalse.ToString() + " }";
+            var test = this.Test.EvalExpression();
+            var ifTrue = this.IfTrue.EvalExpression();
+            var ifFalse = this.IfFalse.EvalExpression();
+            return {
+                Constants: test.Constants.Merge(ifTrue.Constants).Merge(ifFalse.Constants),
+                Expression: "if(" + test.Expression + ") { " + ifTrue.Expression + " } else { " + ifFalse.Expression + " }"
+            };
         };
         ConditionalExpression.prototype._Compile = function () {
             var test = this.Test.Compile();
@@ -863,8 +977,21 @@ var WebExpressions;
                 _super.call(this, meta);
             this.Value = meta.Value;
         }
-        ConstantExpression.prototype.ToString = function () {
-            return ConstantExpression.ToString(this.Value);
+        ConstantExpression.ConstantParameter = "__constants";
+        ConstantExpression.GenerateConstantId = (function () {
+            var id = 0;
+            return function () {
+                return "constant-" + (++id);
+            };
+        })();
+        ConstantExpression.prototype.EvalExpression = function () {
+            var accessor = ConstantExpression.GenerateConstantId();
+            var constant = new WebExpressions.Utils.Dictionary();
+            constant.Add(accessor, this.Value);
+            return {
+                Constants: constant,
+                Expression: ConstantExpression.ConstantParameter + "[" + accessor + "]"
+            };
         };
         ConstantExpression.prototype._Compile = function () {
             var _this = this;
@@ -872,35 +999,6 @@ var WebExpressions;
                 return _this.Value;
             };
         };
-        ConstantExpression.ToString = function ToString(value) {
-            if(value === null) {
-                return "null";
-            } else if(value === undefined) {
-                return "undefined";
-            } else if(ConstantExpression.RegisteredConverters.ContainsKey(this.Value.constructor)) {
-                return ConstantExpression.RegisteredConverters.Value(value.constructor)(value);
-            } else {
-                return null;
-            }
-        };
-        ConstantExpression.RegisteredConverters = (function () {
-            var dic = new WebExpressions.Utils.Dictionary();
-            dic.Add(String, function (a) {
-                return "\"" + a + "\"";
-            });
-            dic.Add(Number, function (a) {
-                return a.toString();
-            });
-            dic.Add(Boolean, function (a) {
-                return a.toString();
-            });
-            dic.Add(Array, function (a) {
-                return "[" + linq(a).Select(function (a) {
-                    return ConstantExpression.ToString(a);
-                }).Result.join(", ") + "]";
-            });
-            return dic;
-        })();
         return ConstantExpression;
     })(WebExpressions.Expression);
     WebExpressions.ConstantExpression = ConstantExpression;    
@@ -919,8 +1017,11 @@ var WebExpressions;
         function DefaultExpression(meta) {
                 _super.call(this, meta);
         }
-        DefaultExpression.prototype.ToString = function () {
-            return "";
+        DefaultExpression.prototype.EvalExpression = function () {
+            return {
+                Expression: "",
+                Constants: new WebExpressions.Utils.Dictionary()
+            };
         };
         DefaultExpression.prototype._Compile = function () {
             return function (ambientContext) {
@@ -956,10 +1057,20 @@ var WebExpressions;
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
         }
-        InvocationExpression.prototype.ToString = function () {
-            return this.Expression.ToString() + "(" + linq(this.Arguments).Select(function (a) {
-                return a.ToString();
-            }).Result.join(", ") + ")";
+        InvocationExpression.prototype.EvalExpression = function () {
+            var expression = this.Expression.EvalExpression();
+            var args = linq(this.Arguments).Select(function (a) {
+                return a.EvalExpression();
+            });
+            linq(args).Each(function (a) {
+                return expression.Constants.Merge(a.Constants);
+            });
+            return {
+                Constants: expression.Constants,
+                Expression: expression.Expression + "(" + linq(args).Select(function (a) {
+                    return a.Expression;
+                }).Result.join(", ") + ")"
+            };
         };
         InvocationExpression.prototype._Compile = function () {
             var expresion = this.Expression.Compile();
@@ -1002,11 +1113,15 @@ var WebExpressions;
             this.MemberName = meta.MemberName;
         }
         MemberExpression.PropertyRegex = new RegExp("^[a-zA-Z][a-zA-Z0-9]*$");
-        MemberExpression.prototype.ToString = function () {
+        MemberExpression.prototype.EvalExpression = function () {
             if(!MemberExpression.PropertyRegex.test(this.MemberName)) {
                 throw "Invalid property name: " + this.MemberName;
             }
-            return this.Expression.ToString() + "." + this.MemberName;
+            var expression = this.Expression.EvalExpression();
+            return {
+                Expression: expression.Expression + "." + this.MemberName,
+                Constants: expression.Constants
+            };
         };
         MemberExpression.prototype._Compile = function () {
             if(!MemberExpression.PropertyRegex.test(this.MemberName)) {
@@ -1055,17 +1170,22 @@ var WebExpressions;
             this.MethodName = meta.MethodName;
             this.MethodFullName = meta.MethodFullName;
         }
-        MethodCallExpression.prototype.ToString = function () {
+        MethodCallExpression.prototype.EvalExpression = function () {
             if(!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
             var args = linq(this.Arguments).Select(function (a) {
-                return a.ToString();
+                return a.EvalExpression();
             }).Result;
-            var object = this.Object.ToString();
-            var mthd = "o[\"" + this.MethodName + "\"]";
-            return "(" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"])" + ".call(";
-            return "(function (o) { return (" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"]).call(o, " + args.join(", ") + "); })(" + object + ")";
+            var object = this.Object.EvalExpression();
+            linq(args).Each(function (a) {
+                return object.Constants.Merge(a.Constants);
+            });
+            var mthd = "__o[\"" + this.MethodName + "\"]";
+            return {
+                Expression: "(function (__o) { return (" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"]).call(__o, " + args.join(", ") + "); })(" + object.Expression + ")",
+                Constants: object.Constants
+            };
         };
         MethodCallExpression.prototype._Compile = function () {
             var _this = this;
@@ -1129,22 +1249,32 @@ var WebExpressions;
             this.Type = meta.Type;
             this.IsAnonymous = meta.IsAnonymous;
         }
-        NewExpression.prototype.ToString = function () {
+        NewExpression.prototype.EvalExpression = function () {
             var args = linq(this.Arguments).Select(function (a) {
-                return a.ToString();
+                return a.EvalExpression();
             }).Result;
+            var constants = new WebExpressions.Utils.Dictionary();
+            linq(args).Each(function (a) {
+                return constants.Merge(a.Constants);
+            });
+            var argsString = linq(args).Select(function (a) {
+                return a.Expression;
+            }).Result.join(", ");
             if(this.IsAnonymous) {
-                for(var i = 0, ii = args.length; i < ii; i++) {
-                    args[i] = this.Members[i] + args[i];
-                }
-                return "{" + args.join(", ") + "}";
+                return {
+                    Constants: constants,
+                    Expression: "{" + argsString + "}"
+                };
             } else if(NewExpression.RegisteredTypes[this.Type]) {
-                var args = linq(this.Arguments).Select(function (a) {
-                    return a.ToString();
-                }).Result;
-                return "new ex.ns.NewExpression.RegisteredTypes[\"" + this.Type + "\"](" + args.join(", ") + ")";
+                return {
+                    Constants: constants,
+                    Expression: "new ex.ns.NewExpression.RegisteredTypes[\"" + this.Type + "\"](" + argsString + ")"
+                };
             } else {
-                return "{}";
+                return {
+                    Constants: constants,
+                    Expression: "{}"
+                };
             }
         };
         NewExpression.prototype._Compile = function () {
@@ -1204,8 +1334,11 @@ var WebExpressions;
             });
             this.Name = meta.Name;
         }
-        ParameterExpression.prototype.ToString = function () {
-            return this.Name;
+        ParameterExpression.prototype.EvalExpression = function () {
+            return {
+                Expression: this.Name,
+                Constants: new WebExpressions.Utils.Dictionary()
+            };
         };
         ParameterExpression.prototype._Compile = function () {
             var _this = this;
@@ -1285,6 +1418,23 @@ var WebExpressions;
             };
             return output;
         })();
+        UnaryExpression.OperatorStringDictionary = (function () {
+            var output = [];
+            output[WebExpressions.Meta.ExpressionType.Convert] = function (operand) {
+                return operand;
+            };
+            output[WebExpressions.Meta.ExpressionType.Not] = function (operand) {
+                return "!" + operand;
+            };
+            return output;
+        })();
+        UnaryExpression.prototype.EvalExpression = function () {
+            var operand = this.Operand.EvalExpression();
+            return {
+                Expression: UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression),
+                Constants: operand.Constants
+            };
+        };
         UnaryExpression.prototype._Compile = function () {
             var _this = this;
             var operand = this.Operand.Compile();
@@ -1295,64 +1445,6 @@ var WebExpressions;
         return UnaryExpression;
     })(WebExpressions.Expression);
     WebExpressions.UnaryExpression = UnaryExpression;    
-})(WebExpressions || (WebExpressions = {}));
-
-
-var WebExpressions;
-(function (WebExpressions) {
-    (function (Utils) {
-        var KeyValuePair = (function () {
-            function KeyValuePair(Key, Value) {
-                this.Key = Key;
-                this.Value = Value;
-            }
-            return KeyValuePair;
-        })();        
-        var Dictionary = (function () {
-            function Dictionary() {
-                this._InnerDictionary = [];
-            }
-            Dictionary.prototype.ContainsKey = function (key) {
-                return linq(this._InnerDictionary).Any(function (a) {
-                    return a.Key === key;
-                });
-            };
-            Dictionary.prototype.Add = function (key, value) {
-                if(this.ContainsKey(key)) {
-                    throw "Dictionary alredy contains the key " + key;
-                }
-                this._InnerDictionary.push(new KeyValuePair(key, value));
-            };
-            Dictionary.prototype.AddOrReplace = function (key, value) {
-                var existing = linq(this._InnerDictionary).First(function (a) {
-                    return a.Key === key;
-                });
-                if(existing) {
-                    existing.Value = value;
-                } else {
-                    this._InnerDictionary.push(new KeyValuePair(key, value));
-                }
-            };
-            Dictionary.prototype.Value = function (key) {
-                var existing = linq(this._InnerDictionary).First(function (a) {
-                    return a.Key === key;
-                });
-                return existing ? existing.Value : null;
-            };
-            Dictionary.prototype.Remove = function (key) {
-                for(var i = 0, ii = this._InnerDictionary.length; i < ii; i++) {
-                    if(this._InnerDictionary[i].Key === key) {
-                        this._InnerDictionary.splice(i, 1);
-                        return true;
-                    }
-                }
-                return false;
-            };
-            return Dictionary;
-        })();
-        Utils.Dictionary = Dictionary;        
-    })(WebExpressions.Utils || (WebExpressions.Utils = {}));
-    var Utils = WebExpressions.Utils;
 })(WebExpressions || (WebExpressions = {}));
 
 

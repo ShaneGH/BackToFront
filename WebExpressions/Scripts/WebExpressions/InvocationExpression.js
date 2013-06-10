@@ -21,10 +21,20 @@ var WebExpressions;
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
         }
-        InvocationExpression.prototype.ToString = function () {
-            return this.Expression.ToString() + "(" + linq(this.Arguments).Select(function (a) {
-                return a.ToString();
-            }).Result.join(", ") + ")";
+        InvocationExpression.prototype.EvalExpression = function () {
+            var expression = this.Expression.EvalExpression();
+            var args = linq(this.Arguments).Select(function (a) {
+                return a.EvalExpression();
+            });
+            linq(args).Each(function (a) {
+                return expression.Constants.Merge(a.Constants);
+            });
+            return {
+                Constants: expression.Constants,
+                Expression: expression.Expression + "(" + linq(args).Select(function (a) {
+                    return a.Expression;
+                }).Result.join(", ") + ")"
+            };
         };
         InvocationExpression.prototype._Compile = function () {
             var expresion = this.Expression.Compile();

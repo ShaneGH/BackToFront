@@ -23,6 +23,11 @@ module WebExpressions {
         (ambientContext): any;
     }
 
+    export interface CreateEvalExpression {
+        Expression: string;
+        Constants: WebExpressions.Utils.Dictionary;
+    }
+
     export class Expression {
         NodeType: WebExpressions.Meta.ExpressionType;
         ExpressionType: WebExpressions.Meta.ExpressionWrapperType;
@@ -52,7 +57,8 @@ module WebExpressions {
         private _EvalCompiled: Function;
         EvalCompile(): Function {
             if (!this._EvalCompiled) {
-                this._EvalCompiled = new Function("", this.ToString());
+                var result = this.EvalExpression();
+                this._EvalCompiled = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
             }
 
             return this._EvalCompiled;
@@ -63,8 +69,8 @@ module WebExpressions {
             throw "Invalid operation";
         }
 
-        // ToString
-        ToString(): string {
+        // abstract
+        EvalExpression(): CreateEvalExpression {
             throw "Invalid operation";
         }
 

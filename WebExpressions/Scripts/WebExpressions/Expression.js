@@ -20,14 +20,15 @@ var WebExpressions;
         };
         Expression.prototype.EvalCompile = function () {
             if(!this._EvalCompiled) {
-                this._EvalCompiled = new Function("", this.ToString());
+                var result = this.EvalExpression();
+                this._EvalCompiled = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
             }
             return this._EvalCompiled;
         };
         Expression.prototype._Compile = function () {
             throw "Invalid operation";
         };
-        Expression.prototype.ToString = function () {
+        Expression.prototype.EvalExpression = function () {
             throw "Invalid operation";
         };
         Expression.prototype.GetAffectedProperties = function () {

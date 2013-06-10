@@ -17,8 +17,11 @@ module WebExpressions {
             this.Name = meta.Name;
         }
 
-        ToString(): string {
-            return this.Name;
+        EvalExpression(): CreateEvalExpression {
+            return {
+                Expression: this.Name,
+                Constants: new WebExpressions.Utils.Dictionary()
+            }
         }
 
         _Compile(): ExpressionInvokerAction {

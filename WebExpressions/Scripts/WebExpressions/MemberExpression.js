@@ -20,11 +20,15 @@ var WebExpressions;
             this.MemberName = meta.MemberName;
         }
         MemberExpression.PropertyRegex = new RegExp("^[a-zA-Z][a-zA-Z0-9]*$");
-        MemberExpression.prototype.ToString = function () {
+        MemberExpression.prototype.EvalExpression = function () {
             if(!MemberExpression.PropertyRegex.test(this.MemberName)) {
                 throw "Invalid property name: " + this.MemberName;
             }
-            return this.Expression.ToString() + "." + this.MemberName;
+            var expression = this.Expression.EvalExpression();
+            return {
+                Expression: expression.Expression + "." + this.MemberName,
+                Constants: expression.Constants
+            };
         };
         MemberExpression.prototype._Compile = function () {
             if(!MemberExpression.PropertyRegex.test(this.MemberName)) {

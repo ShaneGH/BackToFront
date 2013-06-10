@@ -22,8 +22,15 @@ module WebExpressions {
                 this.Arguments = linq(meta.Arguments).Select(a => Expression.CreateExpression(a)).Result;
             }
 
-            ToString(): string {
-                return this.Expression.ToString() + "(" + linq(this.Arguments).Select(a => a.ToString()).Result.join(", ") + ")";
+            EvalExpression(): CreateEvalExpression {
+                var expression = this.Expression.EvalExpression();
+                var args = linq(this.Arguments).Select(a => a.EvalExpression());
+                linq(args).Each(a => expression.Constants.Merge(a.Constants));
+
+                return {
+                    Constants: expression.Constants,
+                    Expression: expression.Expression + "(" + linq(args).Select(a => a.Expression).Result.join(", ") + ")"
+                };
             }
 
             _Compile(): ExpressionInvokerAction {
