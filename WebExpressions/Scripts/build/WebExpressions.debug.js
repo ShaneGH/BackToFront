@@ -616,7 +616,10 @@ var WebExpressions;
         Expression.prototype.EvalCompile = function () {
             if(!this._EvalCompiled) {
                 var result = this.EvalExpression();
-                this._EvalCompiled = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
+                var logic = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
+                this._EvalCompiled = function () {
+                    logic(result.Constants);
+                };
             }
             return this._EvalCompiled;
         };
