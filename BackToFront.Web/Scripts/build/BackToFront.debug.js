@@ -618,7 +618,7 @@ var WebExpressions;
                 var result = this.EvalExpression();
                 var logic = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
                 this._EvalCompiled = function () {
-                    logic(result.Constants);
+                    return logic(result.Constants);
                 };
             }
             return this._EvalCompiled;
@@ -828,7 +828,7 @@ var WebExpressions;
             var left = this.Left.EvalExpression();
             var right = this.Right.EvalExpression();
             return {
-                Expression: left.Expression + BinaryExpression.OperatorStringDictionary[this.NodeType] + right.Expression,
+                Expression: "(" + left.Expression + BinaryExpression.OperatorStringDictionary[this.NodeType] + right.Expression + ")",
                 Constants: left.Constants.Merge(right.Constants)
             };
         };
@@ -1456,12 +1456,12 @@ var ex = (function () {
     ex.createExpression = function createExpression(meta) {
         return WebExpressions.Expression.CreateExpression(meta);
     };
-    ex.ns = WebExpressions;
     return ex;
 })();
 
 
 window.ex = ex;
+window.WebExpressions = WebExpressions;
 })();
 
 

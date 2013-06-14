@@ -3,8 +3,6 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var WebExpressions = ex.ns;
-
 var assExp = WebExpressions.AssignmentExpression;
 
 module("WebExpressions.Expression", {
@@ -137,4 +135,40 @@ test("ExpressionConstructorDictionary", function () {
         assert.notEqual(WebExpressions.Expression.ExpressionConstructorDictionary[i], null, i);
         assert.strictEqual(WebExpressions.Expression.ExpressionConstructorDictionary[i].constructor, Function);
     }
+});
+
+test("EvalCompile test, no cache", function () {
+    // arrange
+    var val = { v: "LIJBLKJBLKJG*GBV" };
+    var subject = {
+        EvalExpression: function () {
+            return {
+                Expression: "return " + WebExpressions.ConstantExpression.ConstantParameter + ".v",
+                Constants: val
+            };
+        }
+    };
+
+    // act
+    var result = WebExpressions.Expression.prototype.EvalCompile.call(subject);
+    var endValue = result();
+
+    // assert
+    assert.strictEqual(subject._EvalCompiled, result);
+    assert.strictEqual(endValue, val.v);
+});
+
+test("EvalCompile test, with cache", function () {
+    // arrange
+    var ec = {};
+    var subject = {
+        _EvalCompiled: ec
+    };
+
+    // act
+    var result = WebExpressions.Expression.prototype.EvalCompile.call(subject);
+
+    // assert
+    assert.strictEqual(result, subject._EvalCompiled);
+    assert.strictEqual(ec, subject._EvalCompiled);
 });

@@ -3,8 +3,6 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var WebExpressions = ex.ns;
-
 var dic = WebExpressions.BinaryExpression.OperatorDictionary;
 
 module("WebExpressions.BinaryExpression.OperatorDictionary", {

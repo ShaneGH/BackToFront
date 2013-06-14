@@ -3,8 +3,6 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var WebExpressions = ex.ns;
-
 module("WebExpressions.ConstantExpression", {
     setup: function () {
     },

@@ -59,7 +59,7 @@ module WebExpressions {
             if (!this._EvalCompiled) {
                 var result = this.EvalExpression();
                 var logic = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
-                this._EvalCompiled = function () { logic(result.Constants); };
+                this._EvalCompiled = function () { return logic(result.Constants); };
             }
 
             return this._EvalCompiled;

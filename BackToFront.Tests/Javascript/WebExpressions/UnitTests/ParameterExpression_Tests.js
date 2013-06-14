@@ -3,8 +3,6 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var WebExpressions = ex.ns;
-
 var property = WebExpressions.MemberExpression.PropertyRegex;
 var createExpression = WebExpressions.Expression.CreateExpression;
 var require = WebExpressions.Sanitizer.Require;
@@ -74,4 +72,21 @@ test("_Compile test", function () {
 
     // assert
     assert.strictEqual(context.something, actual);
+});
+
+// Constructor test OK
+test("EvalExpression test", function () {
+
+    // arrange
+    var subject = {
+        Name: "LKJLKJHLKH"
+    };
+
+    // act
+    var result = WebExpressions.ParameterExpression.prototype.EvalExpression.call(subject);
+
+    // assert
+    assert.strictEqual(result.Expression, subject.Name);
+    assert.strictEqual(result.Constants.constructor, WebExpressions.Utils.Dictionary);
+    assert.strictEqual(0, result.Constants._InnerDictionary.length);
 });

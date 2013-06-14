@@ -172,7 +172,7 @@
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\Iesi.Collections.xml;" DestinationFolder="$(TargetDir)Yui" />
     <Copy SourceFiles="$(SolutionDir)Tools\Yui\Yahoo.Yui.Compressor.dll;" DestinationFolder="$(TargetDir)Yui" />
     <Message Text="Compiling Javascript files files" />
-    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\WebExpressions.debug.js -compress false -wrap true -exportVar ex" />
+    <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\WebExpressions.debug.js -compress false -wrap true -exportVar ex -exportVar WebExpressions" />
     <Message Text="Compiling Javascript files files" />
     <Exec Command="$(TargetDir)Yui\YuiBuildProcess $(JsCompile) -out $(ProjectDir)Scripts\build\WebExpressions.min.js -compress true -wrap true -exportVar ex" />
   </Target>

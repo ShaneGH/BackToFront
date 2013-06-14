@@ -2,8 +2,6 @@
 // Chutzpah
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 
-var WebExpressions = ex.ns;
-
 module("WebExpressions.Sanitizer", {
     setup: function () {
     },

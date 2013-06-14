@@ -23,7 +23,7 @@ var WebExpressions;
                 var result = this.EvalExpression();
                 var logic = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
                 this._EvalCompiled = function () {
-                    logic(result.Constants);
+                    return logic(result.Constants);
                 };
             }
             return this._EvalCompiled;

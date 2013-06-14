@@ -82,7 +82,7 @@ var WebExpressions;
             var left = this.Left.EvalExpression();
             var right = this.Right.EvalExpression();
             return {
-                Expression: left.Expression + BinaryExpression.OperatorStringDictionary[this.NodeType] + right.Expression,
+                Expression: "(" + left.Expression + BinaryExpression.OperatorStringDictionary[this.NodeType] + right.Expression + ")",
                 Constants: left.Constants.Merge(right.Constants)
             };
         };

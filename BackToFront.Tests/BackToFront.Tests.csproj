@@ -243,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Javascript\Base\jquery-2.0.2.js" />
+    <Content Include="Javascript\Base\qunit.mock.js" />
     <Content Include="Javascript\Base\testUtils.js" />
     <Content Include="Javascript\WebExpressions\UnitTests\BinaryExpression_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -301,6 +302,7 @@
     <Content Include="Javascript\CURRENT_TEST.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\Utils\Dictionary_Tests.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,8 +3,6 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var WebExpressions = ex.ns;
-
 var rt = WebExpressions.NewExpression.RegisteredTypes;
 var cstrt = WebExpressions.NewExpression.Construct;
 var createExpression = WebExpressions.NewExpression.CreateExpression;

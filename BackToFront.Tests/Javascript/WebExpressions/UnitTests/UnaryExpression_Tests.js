@@ -3,22 +3,23 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var WebExpressions = ex.ns;
-
 var createExpression = WebExpressions.Expression.CreateExpression;
 var require = WebExpressions.Sanitizer.Require;
 var operators = WebExpressions.UnaryExpression.OperatorDictionary;
+var operatorStrings = WebExpressions.UnaryExpression.OperatorStringDictionary;
 
 module("WebExpressions.UnaryExpression", {
     setup: function () {
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
         WebExpressions.UnaryExpression.OperatorDictionary = operators;
+        WebExpressions.UnaryExpression.OperatorStringDictionary = operatorStrings;
     },
     teardown: function () {
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
         WebExpressions.UnaryExpression.OperatorDictionary = operators;
+        WebExpressions.UnaryExpression.OperatorStringDictionary = operatorStrings;
     }
 });
 
@@ -101,6 +102,36 @@ test("_Compile test", function () {
     // assert
     assert.deepEqual(result(context), "exp");
     ex.VerifyOrderedExpectations();
+});
+
+// Constructor test OK
+test("EvalExpression test", function () {
+    var expect = new tUtil.Expect("callFromDictionary");
+
+    // arrange
+    var expression = {};
+    var operand = { Constants: {}, Expression: {} };
+    var subject = {
+        NodeType: "nt",
+        Operand: {
+            EvalExpression: function () { return operand; }
+        }
+    };
+    WebExpressions.UnaryExpression.OperatorStringDictionary = {
+        nt: function (input) {
+            expect.At("callFromDictionary");
+            assert.strictEqual(input, operand.Expression);
+            return expression;
+        }
+    };
+
+    // act
+    var result = WebExpressions.UnaryExpression.prototype.EvalExpression.call(subject);
+
+    // assert
+    expect.VerifyOrderedExpectations();
+    assert.strictEqual(result.Expression, expression);
+    assert.strictEqual(result.Constants, operand.Constants);
 });
 
 // 
