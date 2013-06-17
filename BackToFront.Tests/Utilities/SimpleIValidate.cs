@@ -12,11 +12,6 @@ namespace BackToFront.Tests.Utilities
         public SimpleIValidate()
             : base(null) { }
 
-        public override bool PropertyRequirement
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         public override IEnumerable<PathElement<object>> AllPossiblePaths
         {
             get

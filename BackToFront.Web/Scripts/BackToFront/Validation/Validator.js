@@ -46,11 +46,16 @@ var BackToFront;
             Validator.prototype.Validate = function (propertyName, breakOnFirstError) {
                 if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
                 var entity = this.GetEntity();
-                return linq(this.Rules).Where(function (rule) {
-                    return rule.ValidationSubjects.indexOf(propertyName) !== -1;
-                }).Select(function (rule) {
-                    return rule.Validate(entity, breakOnFirstError);
-                }).Aggregate().Result;
+                try  {
+                    return linq(this.Rules).Where(function (rule) {
+                        return rule.ValidationSubjects.indexOf(propertyName) !== -1;
+                    }).Select(function (rule) {
+                        return rule.Validate(entity, breakOnFirstError);
+                    }).Aggregate().Result;
+                } catch (e) {
+                    debugger;
+
+                }
             };
             Validator.prototype.GetEntity = function () {
                 throw "Invalid operation, this method is abstract";

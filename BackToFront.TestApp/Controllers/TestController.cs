@@ -24,6 +24,7 @@ namespace BackToFront.TestApp.Controllers
 
         public bool ValidateFlag { get; set; }
 
+        [custom]
         public string RequireThat { get; set; }
 
         [Required]

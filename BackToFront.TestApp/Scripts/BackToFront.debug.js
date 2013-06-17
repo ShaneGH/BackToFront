@@ -1935,11 +1935,16 @@
                 Validator.prototype.Validate = function (propertyName, breakOnFirstError) {
                     if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
                     var entity = this.GetEntity();
-                    return linq(this.Rules).Where(function (rule) {
-                        return rule.ValidationSubjects.indexOf(propertyName) !== -1;
-                    }).Select(function (rule) {
-                        return rule.Validate(entity, breakOnFirstError);
-                    }).Aggregate().Result;
+                    try {
+                        return linq(this.Rules).Where(function (rule) {
+                            return rule.ValidationSubjects.indexOf(propertyName) !== -1;
+                        }).Select(function (rule) {
+                            return rule.Validate(entity, breakOnFirstError);
+                        }).Aggregate().Result;
+                    } catch (e) {
+                        debugger;
+
+                    }
                 };
                 Validator.prototype.GetEntity = function () {
                     throw "Invalid operation, this method is abstract";
@@ -1968,6 +1973,12 @@
             Initialize._InitializeConstructors = function _InitializeConstructors() {
             };
             Initialize._InitializeMethods = function _InitializeMethods() {
+                ex.registeredMethods["System.Collections.Generic.ICollection`1[[BackToFront.IViolation, BackToFront, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]].Add"] = function (item) {
+                    if (!this || !this.push || this.push.constructor !== Function) {
+                        throw "This method must be called on an array" + "##";
+                    }
+                    this.push(item);
+                };
             };
             return Initialize;
         })();
@@ -2066,11 +2077,14 @@
                     if (jQuery.validator.methods[JQueryValidator.ValidatorName]) {
                         return;
                     }
-                    jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
+                    debugger;
+                    jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, function (aaaa, bbbb, cccc, dddd, eeee) {
+                        debugger;
+                        return jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\""); //("\"me\"", "\"and me\""); });
+                    });
                     if (jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
                         jQuery.validator.unobtrusive.adapters.add("backtofront", [], function (options) {
                             options.rules["backtofront"] = options.params;
-                            options.messages["backtofront"] = options.message;
                         });
                     }
                 };
@@ -2079,8 +2093,6 @@
                     for (var _i = 0; _i < (arguments.length - 2) ; _i++) {
                         params[_i] = arguments[_i + 2];
                     }
-                    debugger;
-
                     var results = linq(JQueryValidator.Registered).Select(function (a) {
                         return a.Validate($(element).attr("name"), false);
                     }).Aggregate();

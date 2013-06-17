@@ -4,20 +4,21 @@
     ViewBag.Title = "TestForm";
 }
 
-    @Html.RenderRulesForModel(TestModel.Repository, true)
+@Html.RenderRulesForModel(TestModel.Repository, true)
 <h2>TestForm</h2>
 
-@using (Html.BeginForm()) 
-{ 
-    
+@using (Html.BeginForm())
+{     
     @Html.LabelFor(m => m.ValidateFlag)<br />
     @Html.CheckBoxFor(m => m.ValidateFlag)<br />
     
     @Html.LabelFor(m => m.Name)<br />
-    @Html.EditorFor(m => m.Name)<br />
+    @Html.EditorFor(m => m.Name)
     @Html.ValidationMessageFor(m => m.Name)<br />
     
-    @Html.HiddenFor(m => m.RequireThat)
+    @Html.LabelFor(m => m.RequireThat)<br />
+    @Html.EditorFor(m => m.RequireThat)
+    @Html.ValidationMessageFor(m => m.RequireThat)<br />
     
     @Html.LabelFor(m => m.TestAllOk)
     @Html.EditorFor(m => m.TestAllOk)
@@ -25,3 +26,12 @@
 
     <input type="submit" value="Go" />
 }
+<br />
+<br />
+<br />
+        Options to:
+    <ul>
+        <li>Only validate current</li>
+        <li>Validate current and everything else in the ValidationSubjects</li>
+        <li>Validate when RequiredForValidation field is triggered</li>
+    </ul>

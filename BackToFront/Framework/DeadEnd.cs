@@ -15,27 +15,6 @@ namespace BackToFront.Framework
         public DeadEnd()
             : base(null) { }
 
-        public override IEnumerable<MemberChainItem> ValidationSubjects
-        {
-            get
-            {
-                yield break;
-            }
-        }
-
-        public override IEnumerable<MemberChainItem> RequiredForValidation
-        {
-            get
-            {
-                yield break;
-            }
-        }
-
-        public override bool PropertyRequirement
-        {
-            get { return false; }
-        }
-
         public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
         {
             get { yield break; }

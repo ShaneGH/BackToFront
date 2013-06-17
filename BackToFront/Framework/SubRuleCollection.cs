@@ -73,10 +73,5 @@ namespace BackToFront.Framework
                 return _subRules.RequiredForValidation;
             }
         }
-
-        public override bool PropertyRequirement
-        {
-            get { return false; }
-        }
     }
 }

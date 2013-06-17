@@ -37,32 +37,11 @@ namespace BackToFront.Framework
             get { return _If.Select(a => a.Action).ToArray(); }
         }
 
-        public override IEnumerable<MemberChainItem> ValidationSubjects
-        {
-            get
-            {
-                return _If.Select(a => a.Descriptor.GetMembersForParameter(a.EntityParameter)).Aggregate();
-            }
-        }
-
-        public override IEnumerable<MemberChainItem> RequiredForValidation
-        {
-            get
-            {
-                yield break;
-            }
-        }
-
         public RequireOperator<TEntity> Add(Expression<Func<TEntity, bool>> condition)
         {
             var _if = new Condition(condition, ParentRule);
             _If.Add(_if);
             return _if.Action;
-        }
-
-        public override bool PropertyRequirement
-        {
-            get { return true; }
         }
 
         protected override Expression _Compile(SwapPropVisitor visitor)

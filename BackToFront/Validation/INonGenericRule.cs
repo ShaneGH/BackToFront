@@ -27,8 +27,6 @@ namespace BackToFront.Validation
         IEnumerable<MemberChainItem> RequiredForValidation { get; }
 
         List<DependencyWrapper> Dependencies { get; }
-
-        bool PropertyRequirement { get; }
         
         Action<object, ValidationContext> Compile(SwapPropVisitor visitor);
 

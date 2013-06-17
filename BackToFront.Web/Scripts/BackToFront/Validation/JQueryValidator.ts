@@ -71,19 +71,19 @@ module BackToFront {
                 if (jQuery.validator.methods[JQueryValidator.ValidatorName])
                     return;
 
-                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
+                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, function (aaaa, bbbb) {
+                    return jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\""); //("\"me\"", "\"and me\"");
+                });
 
                 if (jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
                     jQuery.validator.unobtrusive.adapters.add("backtofront", [], function (options) {
                         options.rules["backtofront"] = options.params;
-                        options.messages["backtofront"] = options.message;
                     });
                 }
             }
 
             //TODO: unit test
             static Validate(value: any, element: any, ...params: any[]) {
-                debugger;
                 var results = linq(JQueryValidator.Registered).Select((a: JQueryValidator) => a.Validate($(element).attr("name"), false)).Aggregate();
                 return results.Result.length === 0
             }

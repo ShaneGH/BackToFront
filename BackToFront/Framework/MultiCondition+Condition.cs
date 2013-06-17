@@ -32,11 +32,6 @@ namespace BackToFront.Framework
                 Do(() => { });
             }
 
-            public override bool PropertyRequirement
-            {
-                get { return false; }
-            }
-
             public override IEnumerable<PathElement<TEntity>> AllPossiblePaths
             {
                 get { yield return Action; }
@@ -50,6 +45,16 @@ namespace BackToFront.Framework
             protected override Expression _Compile(SwapPropVisitor visitor)
             {
                 return Expression.Empty();
+            }
+
+            //TODO: cache???
+            //TODO: Test
+            public override IEnumerable<MemberChainItem> RequiredForValidation
+            {
+                get
+                {
+                    return base.RequiredForValidation.Union(Descriptor.GetMembersForParameter(EntityParameter));
+                }
             }
         }
     }

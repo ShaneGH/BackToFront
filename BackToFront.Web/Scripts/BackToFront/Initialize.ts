@@ -19,6 +19,14 @@ module BackToFront {
         }
 
         private static _InitializeMethods() {
+            //TODO: this
+            ex.registeredMethods["System.Collections.Generic.ICollection`1[[BackToFront.IViolation, BackToFront, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]].Add"] =
+                function (item) {
+                    if (!this || !this.push || this.push.constructor !== Function)
+                        throw "This method must be called on an array" + "##";
+
+                    this.push(item);
+                };
         }
     }
 }

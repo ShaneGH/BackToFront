@@ -51,7 +51,11 @@ var BackToFront;
                 if(jQuery.validator.methods[JQueryValidator.ValidatorName]) {
                     return;
                 }
-                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
+                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, function (aaaa, bbbb) {
+                    debugger;
+
+                    return "Hello";
+                });
                 if(jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
                     jQuery.validator.unobtrusive.adapters.add("backtofront", [], function (options) {
                         options.rules["backtofront"] = options.params;
@@ -64,8 +68,6 @@ var BackToFront;
                 for (var _i = 0; _i < (arguments.length - 2); _i++) {
                     params[_i] = arguments[_i + 2];
                 }
-                debugger;
-
                 var results = linq(JQueryValidator.Registered).Select(function (a) {
                     return a.Validate($(element).attr("name"), false);
                 }).Aggregate();

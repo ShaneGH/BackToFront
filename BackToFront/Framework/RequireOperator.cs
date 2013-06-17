@@ -61,25 +61,10 @@ namespace BackToFront.Framework
             return ParentRule;
         }
 
-        public override bool PropertyRequirement
-        {
-            get { return true; }
-        }
-
         protected override Expression _Compile(SwapPropVisitor visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
             return next != null ? next.Compile(visitor) : Expression.Empty();
-        }
-
-        public override IEnumerable<MemberChainItem> ValidationSubjects
-        {
-            get { yield break; }
-        }
-
-        public override IEnumerable<MemberChainItem> RequiredForValidation
-        {
-            get { yield break; }
         }
     }
 }

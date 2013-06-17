@@ -30,25 +30,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         }
 
         [Test]
-        public void ValidatableMembers_Test()
-        {
-            // arrange
-            var subject = new MultiCondition<object>(null);
-
-            subject.Add(a => a.GetHashCode() == 6);
-            subject.Add(a => a.ToString() == "asdasd");
-            subject.Add(a => a.GetHashCode() == 6);
-
-            // act
-            var actual = subject.ValidationSubjects;
-
-            // assert
-            Assert.AreEqual(2, actual.Count());
-            Assert.AreEqual(typeof(object).GetMethod("GetHashCode"), actual.First().UltimateMember);
-            Assert.AreEqual(typeof(object).GetMethod("ToString"), actual.Last().UltimateMember);
-        }
-
-        [Test]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Add_Test_No_Input()
         {

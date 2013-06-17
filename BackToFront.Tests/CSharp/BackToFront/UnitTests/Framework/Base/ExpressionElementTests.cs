@@ -36,55 +36,5 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
         //    // assert
         //    Assert.AreEqual(hello, actual.Invoke(new object(), null, null));
         //}
-
-        [Test]
-        public void ValidatableMembers_Test()
-        {
-            // arrange
-            Expression<Func<object, string>> desc = a => a.ToString();
-            var subject = new M.Mock<ExpressionElement<object, string>>(desc, null) { CallBase = true };
-            var expected = subject.Object.Descriptor.GetMembersForParameter(desc.Parameters.First());
-
-            // act
-            subject.Setup(a => a.PropertyRequirement).Returns(false);
-            var actual1 = subject.Object.ValidationSubjects;
-
-            // assert
-            Assert.AreEqual(0, actual1.Count());
-
-
-            // act
-            subject.Setup(a => a.PropertyRequirement).Returns(true);
-            var actual2 = subject.Object.ValidationSubjects;
-
-            // assert
-            Assert.AreEqual(1, actual2.Count());
-            Assert.AreEqual(expected, actual2);
-        }
-
-        [Test]
-        public void RequiredForValidationMembers_Test()
-        {
-            // arrange
-            Expression<Func<object, string>> desc = a => a.ToString();
-            var subject = new M.Mock<ExpressionElement<object, string>>(desc, null) { CallBase = true };
-            var expected = subject.Object.Descriptor.GetMembersForParameter(desc.Parameters.First());
-
-            // act
-            subject.Setup(a => a.PropertyRequirement).Returns(true);
-            var actual1 = subject.Object.RequiredForValidation;
-
-            // assert
-            Assert.AreEqual(0, actual1.Count());
-
-
-            // act
-            subject.Setup(a => a.PropertyRequirement).Returns(false);
-            var actual2 = subject.Object.RequiredForValidation;
-
-            // assert
-            Assert.AreEqual(1, actual2.Count());
-            Assert.AreEqual(expected, actual2);
-        }
     }
 }

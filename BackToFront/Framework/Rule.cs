@@ -163,11 +163,6 @@ namespace BackToFront.Framework
             get { return _Dependencies; }
         }
 
-        public override bool PropertyRequirement
-        {
-            get { return false; }
-        }
-
         public Type RuleType
         {
             get { return _Type; }

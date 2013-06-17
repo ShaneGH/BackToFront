@@ -47,21 +47,6 @@ namespace BackToFront.Framework
             }
         }
 
-        public override IEnumerable<MemberChainItem> ValidationSubjects
-        {
-            get { yield break; }
-        }
-
-        public override IEnumerable<MemberChainItem> RequiredForValidation
-        {
-            get { yield break; }
-        }
-
-        public override bool PropertyRequirement
-        {
-            get { return false; }
-        }
-
         protected override Expression _Compile(SwapPropVisitor visitor)
         {
             Expression createViolationMethod = null;

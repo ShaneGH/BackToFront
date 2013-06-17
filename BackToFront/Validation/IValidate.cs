@@ -16,11 +16,6 @@ namespace BackToFront.Validation
 
         IEnumerable<MemberChainItem> RequiredForValidation { get; }
 
-        /// <summary>
-        /// Gets the function of this element
-        /// </summary>
-        bool PropertyRequirement { get; }
-
         Expression Compile(SwapPropVisitor visitor);
     }
 }

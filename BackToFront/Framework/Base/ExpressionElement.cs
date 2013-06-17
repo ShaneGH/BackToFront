@@ -19,6 +19,7 @@ namespace BackToFront.Framework.Base
         protected readonly ReadOnlyCollection<ParameterExpression> Parameters;
         public readonly ParameterExpression EntityParameter;
 
+        //TODO: Test
         protected ExpressionElement(Expression<Func<TEntity, TMember>> descriptor, Rule<TEntity> rule)
             : base(rule)
         {
@@ -30,26 +31,6 @@ namespace BackToFront.Framework.Base
                 throw new InvalidOperationException("##");
 
             EntityParameter = Parameters.First();
-        }
-
-        public override IEnumerable<MemberChainItem> ValidationSubjects
-        {
-            get
-            {
-                return PropertyRequirement ?
-                    Descriptor.GetMembersForParameter(EntityParameter) :
-                    Enumerable.Empty<MemberChainItem>();
-            }
-        }
-
-        public override IEnumerable<MemberChainItem> RequiredForValidation
-        {
-            get
-            {
-                return PropertyRequirement ?
-                    Enumerable.Empty<MemberChainItem>() :
-                    Descriptor.GetMembersForParameter(EntityParameter);
-            }
         }
     }
 }

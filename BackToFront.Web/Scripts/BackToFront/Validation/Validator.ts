@@ -60,10 +60,15 @@ module BackToFront {
 
                 var entity = this.GetEntity();
 
-                return linq(this.Rules)
-                    .Where((rule: IValidate) => rule.ValidationSubjects.indexOf(propertyName) !== -1)
-                    .Select((rule: IValidate) => rule.Validate(entity, breakOnFirstError))
-                    .Aggregate().Result;
+                //TODO: try catch here is temporary
+                try {
+                    return linq(this.Rules)
+                        .Where((rule: IValidate) => rule.ValidationSubjects.indexOf(propertyName) !== -1)
+                        .Select((rule: IValidate) => rule.Validate(entity, breakOnFirstError))
+                        .Aggregate().Result;
+                } catch (e) {
+                    debugger;
+                }
             };
 
                 // abstract
