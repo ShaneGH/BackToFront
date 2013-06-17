@@ -9,13 +9,18 @@ module BackToFront {
 			Expression: WebExpressions.Meta.ExpressionMeta;
 			EntityParameter: string;
 			ContextParameter: string;
-			ValidationSubjects: any[];
-			RequiredForValidation: any[];
+			ValidationSubjects: BackToFront.Meta.MemberChainItem[];
+			RequiredForValidation: BackToFront.Meta.MemberChainItem[];
 		}
 
 		export interface RuleCollectionMeta {
 			Entity: string;
 			Rules: RuleMeta[];
+		}
+
+		export interface MemberChainItem {
+			NextItem: MemberChainItem;
+			MemberName: string;
 		}
 
 		export interface IValidationContext {
@@ -28,7 +33,7 @@ module BackToFront {
 		export interface IViolation {
 			UserMessage: string;
 			ViolatedEntity: any;
-			Violated: any[];
+			Violated: BackToFront.Meta.MemberChainItem[];
 		}
 
 	}

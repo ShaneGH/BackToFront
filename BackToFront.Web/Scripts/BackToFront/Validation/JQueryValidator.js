@@ -17,7 +17,7 @@ var BackToFront;
                 var entity = {
                 };
                 var allNames = linq(this.Rules).Select(function (r) {
-                    return linq(r.RequiredForValidationNames || []).Union(r.ValidationSubjectNames || []).Result;
+                    return linq(r.RequiredForValidation || []).Union(r.ValidationSubjects || []).Result;
                 }).Aggregate().Result;
                 for(var j = 0, jj = allNames.length; j < jj; j++) {
                     var item = jQuery("[name=\"" + allNames[j] + "\"]", this.Context);
@@ -52,6 +52,12 @@ var BackToFront;
                     return;
                 }
                 jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
+                if(jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
+                    jQuery.validator.unobtrusive.adapters.add("backtofront", [], function (options) {
+                        options.rules["backtofront"] = options.params;
+                        options.messages["backtofront"] = options.message;
+                    });
+                }
             };
             JQueryValidator.Validate = function Validate(value, element) {
                 var params = [];

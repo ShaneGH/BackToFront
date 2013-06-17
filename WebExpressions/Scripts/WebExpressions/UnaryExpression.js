@@ -38,7 +38,7 @@ var WebExpressions;
         UnaryExpression.prototype.EvalExpression = function () {
             var operand = this.Operand.EvalExpression();
             return {
-                Expression: UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression),
+                Expression: "(" + UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression) + ")",
                 Constants: operand.Constants
             };
         };

@@ -1,7 +1,5 @@
 var BackToFront;
 (function (BackToFront) {
-    BackToFront.Initialize = function (data) {
-    };
     var Sanitizer = (function () {
         function Sanitizer() { }
         Sanitizer.Require = function Require(item) {

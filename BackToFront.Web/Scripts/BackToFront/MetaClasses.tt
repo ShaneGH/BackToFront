@@ -21,7 +21,8 @@
 	{ 
 		typeof(BackToFront.Meta.RuleMeta), 
 		typeof(BackToFront.Meta.RuleCollectionMeta), 
-		typeof(BackToFront.Framework.IValidationContext) , 
+		typeof(BackToFront.Utilities.MemberChainItem), 
+		typeof(BackToFront.Framework.IValidationContext), 
 		typeof(BackToFront.IViolation) 
 	};
 
@@ -45,9 +46,8 @@
 	registeredTypes.Add(typeof(System.Collections.Generic.IList<BackToFront.IViolation>), typeof(BackToFront.IViolation).Name);
 	registeredTypes.Add(typeof(System.Collections.Generic.IDictionary<string, object>), "any");
 	
-	registeredTypes.Add(typeof(BackToFront.Utilities.MemberChainItem), "any");
-	registeredTypes.Add(typeof(BackToFront.Utilities.MemberChainItem[]), "any[]");
-	registeredTypes.Add(typeof(System.Collections.Generic.IEnumerable<BackToFront.Utilities.MemberChainItem>), "any[]");
+	registeredTypes.Add(typeof(BackToFront.Utilities.MemberChainItem[]), "BackToFront.Meta.MemberChainItem[]");
+	registeredTypes.Add(typeof(System.Collections.Generic.IEnumerable<BackToFront.Utilities.MemberChainItem>), "BackToFront.Meta.MemberChainItem[]");
 #>
 /// <reference path="../../../WebExpressions/Scripts/ref/Exports.ts" />
 

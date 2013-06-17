@@ -1,11 +1,9 @@
-﻿using BackToFront.Enum;
-using BackToFront.Extensions.IEnumerable;
-using BackToFront.Extensions.Reflection;
-using BackToFront.Meta;
-using BackToFront.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using BackToFront.Extensions.IEnumerable;
+using BackToFront.Extensions.Reflection;
+using BackToFront.Utilities;
 using E = System.Linq.Expressions;
 
 namespace BackToFront.Expressions

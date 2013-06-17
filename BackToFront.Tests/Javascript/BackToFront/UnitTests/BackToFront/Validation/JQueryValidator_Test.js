@@ -36,7 +36,7 @@ test("GetEntity, string", function () {
     var name2 = "saohdisa0d9fu";
 
     var subject = {
-        Rules: [{ RequiredForValidationNames: [name1], ValidationSubjectNames: [name2] }],
+        Rules: [{ RequiredForValidation: [name1], ValidationSubjects: [name2] }],
         Context: $(
 "<div>" +
     "<input type='text' name='" + name1 + "' value='" + val1 + "'></input>" +
@@ -61,7 +61,7 @@ test("GetEntity, data-val-number", function () {
     var name2 = "saohdisa0d9fu";
 
     var subject = {
-        Rules: [{ RequiredForValidationNames: [name1], ValidationSubjectNames: [name2] }],
+        Rules: [{ RequiredForValidation: [name1], ValidationSubjects: [name2] }],
         Context: $(
 "<div>" +
     "<input type='text' data-val-number='true' name='" + name1 + "' value='" + val1 + "'></input>" +
@@ -88,7 +88,7 @@ test("GetEntity, checkbox", function () {
     var checked = function (chk) { return chk ? "checked='checked'" : ""; };
 
     var subject = {
-        Rules: [{ RequiredForValidationNames: [name1], ValidationSubjectNames: [name2] }],
+        Rules: [{ RequiredForValidation: [name1], ValidationSubjects: [name2] }],
         Context: $(
 "<div>" +
     "<input type='checkbox' name='" + name1 + "' " + checked(val1) + "></input>" +

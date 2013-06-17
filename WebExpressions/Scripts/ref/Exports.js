@@ -1,7 +1,7 @@
 var ex = (function () {
     function ex() { }
-    ex.createExpression = function createExpression(meta) {
-        return WebExpressions.Expression.CreateExpression(meta);
-    };
+    ex.createExpression = WebExpressions.Expression.CreateExpression;
+    ex.registeredConstructors = WebExpressions.NewExpression.RegisteredTypes;
+    ex.registeredMethods = WebExpressions.MethodCallExpression.RegisteredMethods;
     return ex;
 })();

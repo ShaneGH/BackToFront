@@ -47,6 +47,7 @@ interface Validator {
     addClassRules(rules: any): void;
     addClassRules(name: string, rules: any): void;
     methods: any;
+    unobtrusive: any;
 }
 
 interface JQuery {

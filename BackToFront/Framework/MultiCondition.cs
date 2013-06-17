@@ -62,7 +62,7 @@ namespace BackToFront.Framework
 
         public override bool PropertyRequirement
         {
-            get { return false; }
+            get { return true; }
         }
 
         protected override Expression _Compile(SwapPropVisitor visitor)

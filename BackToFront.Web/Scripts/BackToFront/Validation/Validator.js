@@ -9,8 +9,12 @@ var BackToFront;
             Validator.CreateRule = function CreateRule(rule) {
                 var r = ex.createExpression(rule.Expression).Compile();
                 return {
-                    RequiredForValidation: rule.RequiredForValidation,
-                    ValidationSubjects: rule.ValidationSubjects,
+                    RequiredForValidation: linq(rule.RequiredForValidation).Select(function (a) {
+                        return Validator.MemberChainItemString(a, true);
+                    }).Result,
+                    ValidationSubjects: linq(rule.ValidationSubjects).Select(function (a) {
+                        return Validator.MemberChainItemString(a, true);
+                    }).Result,
                     Validate: function (entity, breakOnFirstError) {
                         if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
                         var context = {
@@ -27,6 +31,17 @@ var BackToFront;
                         return context[rule.ContextParameter].Violations;
                     }
                 };
+            };
+            Validator.MemberChainItemString = function MemberChainItemString(memberChainItem, skipFirst) {
+                if(skipFirst) {
+                    memberChainItem = memberChainItem.NextItem;
+                }
+                var output = [];
+                while(memberChainItem) {
+                    output.push(memberChainItem.MemberName);
+                    memberChainItem = memberChainItem.NextItem;
+                }
+                return output.join(".");
             };
             Validator.prototype.Validate = function (propertyName, breakOnFirstError) {
                 if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }

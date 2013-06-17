@@ -73,8 +73,6 @@
     <Compile Include="Framework\MultiCondition+Condition.cs" />
     <Compile Include="Framework\DeadEnd.cs" />
     <Compile Include="Framework\ValidationContext.cs" />
-    <Compile Include="Meta\RuleCollectionMeta.cs" />
-    <Compile Include="Meta\RuleMeta.cs" />
     <Compile Include="Framework\MultiCondition.cs" />
     <Compile Include="Framework\RequirementFailed.cs" />
     <Compile Include="Framework\RequireOperator.cs" />
@@ -88,6 +86,8 @@
     </Compile>
     <Compile Include="Logic\Compilations\IConditionSatisfied.cs" />
     <Compile Include="Logic\ValidateResult.cs" />
+    <Compile Include="Meta\RuleCollectionMeta.cs" />
+    <Compile Include="Meta\RuleMeta.cs" />
     <Compile Include="Utilities\Dependencies.cs" />
     <Compile Include="Utilities\GenericIEqualityComparer.cs" />
     <Compile Include="Utilities\MemberIndex.cs" />

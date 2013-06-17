@@ -1,10 +1,9 @@
-/// <reference path="../ref/linq.d.ts" />
+
 /// <reference path="../ref/jquery.d.ts" />
 /// <reference path="../ref/jquery.validation.d.ts" />
 /// <reference path="MetaClasses.ts" />
 
 module BackToFront {
-    export var Initialize = function (data) { };
 
     export interface RequiredProperty {
         inputName: string;

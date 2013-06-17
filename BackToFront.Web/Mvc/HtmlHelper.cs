@@ -10,16 +10,18 @@ using System.Web.Mvc;
 using BackToFront.Extensions.IEnumerable;
 using BackToFront.Meta;
 using System.Runtime.Serialization;
+using WebExpressions.Meta;
+using BackToFront.Utilities;
 
 namespace BackToFront.Web.Mvc
 {
     public static class HtmlHelper
     {
-        private static readonly DataContractJsonSerializer Serializer = null;/*new DataContractJsonSerializer(typeof(RuleCollectionMeta), new DataContractJsonSerializerSettings 
+        private static readonly DataContractJsonSerializer Serializer = new DataContractJsonSerializer(typeof(RuleCollectionMeta), new DataContractJsonSerializerSettings
         {
-            KnownTypes = ExpressionMeta.MetaTypes,
-            EmitTypeInformation =  EmitTypeInformation.Always
-        });*/
+            KnownTypes = ExpressionMeta.MetaTypes.Union(new[] { typeof(MemberChainItem[]) }),
+            EmitTypeInformation = EmitTypeInformation.Always
+        });
 
         public static void RulesForModel<TModel>(this HtmlHelper<TModel> helper, Repository repository, bool includeScriptTags = true)
         {

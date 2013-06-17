@@ -24,8 +24,8 @@ module BackToFront {
             static CreateRule(rule: Meta.RuleMeta): IValidate {
                 var r = ex.createExpression(rule.Expression).Compile();
                 return {
-                    RequiredForValidation: rule.RequiredForValidation,
-                    ValidationSubjects: rule.ValidationSubjects,
+                    RequiredForValidation: linq(rule.RequiredForValidation).Select(a => Validator.MemberChainItemString(a, true)).Result,
+                    ValidationSubjects: linq(rule.ValidationSubjects).Select(a => Validator.MemberChainItemString(a, true)).Result,
                     Validate: (entity: any, breakOnFirstError: bool = false) => {
 
                         var context = {};
@@ -40,10 +40,21 @@ module BackToFront {
                         };
 
                         r(context);
-                        return context[rule.ContextParameter].Violations;
+                        return <any>context[rule.ContextParameter].Violations;
                     }
                 };
             };
+
+            static MemberChainItemString(memberChainItem, skipFirst) : string {
+                if (skipFirst) { memberChainItem = memberChainItem.NextItem; }
+                var output = [];
+                while (memberChainItem) {
+                    output.push(memberChainItem.MemberName);
+                    memberChainItem = memberChainItem.NextItem;
+                }
+
+                return output.join(".");                
+            }
 
             Validate(propertyName: string, breakOnFirstError: bool = false): Meta.IViolation[] {
 

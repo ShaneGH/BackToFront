@@ -941,7 +941,7 @@ var WebExpressions;
             var ifFalse = this.IfFalse.EvalExpression();
             return {
                 Constants: test.Constants.Merge(ifTrue.Constants).Merge(ifFalse.Constants),
-                Expression: test.Expression + " ? " + ifTrue.Expression + " : " + ifFalse.Expression
+                Expression: "(" + test.Expression + " ? " + ifTrue.Expression + " : " + ifFalse.Expression + ")"
             };
         };
         ConditionalExpression.prototype._ToBlockString = function () {
@@ -1266,7 +1266,7 @@ var WebExpressions;
             if(this.IsAnonymous) {
                 return {
                     Constants: constants,
-                    Expression: "{" + argsString + "}"
+                    Expression: "{ " + argsString + " }"
                 };
             } else if(NewExpression.RegisteredTypes[this.Type]) {
                 return {
@@ -1434,7 +1434,7 @@ var WebExpressions;
         UnaryExpression.prototype.EvalExpression = function () {
             var operand = this.Operand.EvalExpression();
             return {
-                Expression: UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression),
+                Expression: "(" + UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression) + ")",
                 Constants: operand.Constants
             };
         };
@@ -1453,9 +1453,9 @@ var WebExpressions;
 
 var ex = (function () {
     function ex() { }
-    ex.createExpression = function createExpression(meta) {
-        return WebExpressions.Expression.CreateExpression(meta);
-    };
+    ex.createExpression = WebExpressions.Expression.CreateExpression;
+    ex.registeredConstructors = WebExpressions.NewExpression.RegisteredTypes;
+    ex.registeredMethods = WebExpressions.MethodCallExpression.RegisteredMethods;
     return ex;
 })();
 

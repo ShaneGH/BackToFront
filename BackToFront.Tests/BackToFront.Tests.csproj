@@ -266,6 +266,9 @@
     <Content Include="Javascript\WebExpressions\UnitTests\NewExpression_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\ref\Exports_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Javascript\WebExpressions\UnitTests\Sanitizer_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

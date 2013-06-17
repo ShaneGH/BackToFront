@@ -109,7 +109,7 @@ test("EvalExpression test", function () {
     var expect = new tUtil.Expect("callFromDictionary");
 
     // arrange
-    var expression = {};
+    var expression = "sad[oih[spdfu98ihsdf";
     var operand = { Constants: {}, Expression: {} };
     var subject = {
         NodeType: "nt",
@@ -130,7 +130,7 @@ test("EvalExpression test", function () {
 
     // assert
     expect.VerifyOrderedExpectations();
-    assert.strictEqual(result.Expression, expression);
+    assert.strictEqual(result.Expression, "(" + expression + ")");
     assert.strictEqual(result.Constants, operand.Constants);
 });
 

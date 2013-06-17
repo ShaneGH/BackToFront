@@ -941,7 +941,7 @@ var WebExpressions;
             var ifFalse = this.IfFalse.EvalExpression();
             return {
                 Constants: test.Constants.Merge(ifTrue.Constants).Merge(ifFalse.Constants),
-                Expression: test.Expression + " ? " + ifTrue.Expression + " : " + ifFalse.Expression
+                Expression: "(" + test.Expression + " ? " + ifTrue.Expression + " : " + ifFalse.Expression + ")"
             };
         };
         ConditionalExpression.prototype._ToBlockString = function () {
@@ -1266,7 +1266,7 @@ var WebExpressions;
             if(this.IsAnonymous) {
                 return {
                     Constants: constants,
-                    Expression: "{" + argsString + "}"
+                    Expression: "{ " + argsString + " }"
                 };
             } else if(NewExpression.RegisteredTypes[this.Type]) {
                 return {
@@ -1434,7 +1434,7 @@ var WebExpressions;
         UnaryExpression.prototype.EvalExpression = function () {
             var operand = this.Operand.EvalExpression();
             return {
-                Expression: UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression),
+                Expression: "(" + UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression) + ")",
                 Constants: operand.Constants
             };
         };
@@ -1453,9 +1453,9 @@ var WebExpressions;
 
 var ex = (function () {
     function ex() { }
-    ex.createExpression = function createExpression(meta) {
-        return WebExpressions.Expression.CreateExpression(meta);
-    };
+    ex.createExpression = WebExpressions.Expression.CreateExpression;
+    ex.registeredConstructors = WebExpressions.NewExpression.RegisteredTypes;
+    ex.registeredMethods = WebExpressions.MethodCallExpression.RegisteredMethods;
     return ex;
 })();
 
@@ -1897,8 +1897,12 @@ var BackToFront;
             Validator.CreateRule = function CreateRule(rule) {
                 var r = ex.createExpression(rule.Expression).Compile();
                 return {
-                    RequiredForValidation: rule.RequiredForValidation,
-                    ValidationSubjects: rule.ValidationSubjects,
+                    RequiredForValidation: linq(rule.RequiredForValidation).Select(function (a) {
+                        return Validator.MemberChainItemString(a, true);
+                    }).Result,
+                    ValidationSubjects: linq(rule.ValidationSubjects).Select(function (a) {
+                        return Validator.MemberChainItemString(a, true);
+                    }).Result,
                     Validate: function (entity, breakOnFirstError) {
                         if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
                         var context = {
@@ -1915,6 +1919,17 @@ var BackToFront;
                         return context[rule.ContextParameter].Violations;
                     }
                 };
+            };
+            Validator.MemberChainItemString = function MemberChainItemString(memberChainItem, skipFirst) {
+                if(skipFirst) {
+                    memberChainItem = memberChainItem.NextItem;
+                }
+                var output = [];
+                while(memberChainItem) {
+                    output.push(memberChainItem.MemberName);
+                    memberChainItem = memberChainItem.NextItem;
+                }
+                return output.join(".");
             };
             Validator.prototype.Validate = function (propertyName, breakOnFirstError) {
                 if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
@@ -1938,8 +1953,30 @@ var BackToFront;
 
 var BackToFront;
 (function (BackToFront) {
-    BackToFront.Initialize = function (data) {
-    };
+    var Initialize = (function () {
+        function Initialize() { }
+        Initialize._Initialized = false;
+        Initialize.Bootstrap = function Bootstrap() {
+            if(Initialize._Initialized) {
+                return;
+            }
+            Initialize._Initialized = true;
+            Initialize._InitializeConstructors();
+            Initialize._InitializeMethods();
+        };
+        Initialize._InitializeConstructors = function _InitializeConstructors() {
+        };
+        Initialize._InitializeMethods = function _InitializeMethods() {
+        };
+        return Initialize;
+    })();
+    BackToFront.Initialize = Initialize;    
+})(BackToFront || (BackToFront = {}));
+BackToFront.Initialize.Bootstrap();
+
+
+var BackToFront;
+(function (BackToFront) {
     var Sanitizer = (function () {
         function Sanitizer() { }
         Sanitizer.Require = function Require(item) {
@@ -1994,7 +2031,7 @@ var BackToFront;
                 var entity = {
                 };
                 var allNames = linq(this.Rules).Select(function (r) {
-                    return linq(r.RequiredForValidationNames || []).Union(r.ValidationSubjectNames || []).Result;
+                    return linq(r.RequiredForValidation || []).Union(r.ValidationSubjects || []).Result;
                 }).Aggregate().Result;
                 for(var j = 0, jj = allNames.length; j < jj; j++) {
                     var item = jQuery("[name=\"" + allNames[j] + "\"]", this.Context);
@@ -2029,6 +2066,12 @@ var BackToFront;
                     return;
                 }
                 jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
+                if(jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
+                    jQuery.validator.unobtrusive.adapters.add("backtofront", [], function (options) {
+                        options.rules["backtofront"] = options.params;
+                        options.messages["backtofront"] = options.message;
+                    });
+                }
             };
             JQueryValidator.Validate = function Validate(value, element) {
                 var params = [];

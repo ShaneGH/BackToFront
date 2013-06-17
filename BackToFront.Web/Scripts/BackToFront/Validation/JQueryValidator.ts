@@ -17,8 +17,8 @@ module BackToFront {
             GetEntity(): any {
                 var entity = {};
 
-                var allNames = linq(this.Rules).Select(r => linq(r.RequiredForValidationNames || [])
-                        .Union(r.ValidationSubjectNames || []).Result).Aggregate().Result;
+                var allNames = linq(this.Rules).Select(r => linq(r.RequiredForValidation || [])
+                        .Union(r.ValidationSubjects || []).Result).Aggregate().Result;
 
                 for (var j = 0, jj = allNames.length; j < jj; j++) {
 
@@ -72,6 +72,13 @@ module BackToFront {
                     return;
 
                 jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, "XXX");
+
+                if (jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
+                    jQuery.validator.unobtrusive.adapters.add("backtofront", [], function (options) {
+                        options.rules["backtofront"] = options.params;
+                        options.messages["backtofront"] = options.message;
+                    });
+                }
             }
 
             //TODO: unit test
