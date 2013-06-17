@@ -48,7 +48,7 @@ module WebExpressions {
             if (this.IsAnonymous) {
                 return {
                     Constants: constants,
-                    Expression: "{" + argsString + "}"
+                    Expression: "{ " + argsString + " }"
                 };
             } else if (NewExpression.RegisteredTypes[this.Type]) {
                 return {

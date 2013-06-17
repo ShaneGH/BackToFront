@@ -45,7 +45,7 @@ module WebExpressions {
 
                 return {
                     Constants: test.Constants.Merge(ifTrue.Constants).Merge(ifFalse.Constants),
-                    Expression: test.Expression + " ? " + ifTrue.Expression + " : " + ifFalse.Expression
+                    Expression: "(" + test.Expression + " ? " + ifTrue.Expression + " : " + ifFalse.Expression + ")"
                 };
             }
 
