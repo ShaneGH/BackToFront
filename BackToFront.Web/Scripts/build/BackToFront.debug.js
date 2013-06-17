@@ -2076,15 +2076,12 @@ var BackToFront;
                 if(jQuery.validator.methods[JQueryValidator.ValidatorName]) {
                     return;
                 }
-                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, function (aaaa, bbbb, cccc, dddd, eeee) {
-                    debugger;
-
-                    return "Hello";
+                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, function (aaaa, bbbb) {
+                    return jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\"");
                 });
                 if(jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
                     jQuery.validator.unobtrusive.adapters.add("backtofront", [], function (options) {
                         options.rules["backtofront"] = options.params;
-                        options.messages["backtofront"] = options.message;
                     });
                 }
             };

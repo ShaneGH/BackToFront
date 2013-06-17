@@ -84,5 +84,25 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             // assert
             Assert.IsInstanceOf<DefaultExpression>(result);
         }
+
+        [Test]
+        public void ValidationSubjects_Test()
+        {
+            // arrange
+            var violation = new M.Mock<IViolation>();
+            Expression<Func<TestClass, bool>> prop = a => a.Success;
+            var subject = new RequirementFailed<TestClass>(prop, null);
+            var expected = new MemberChainItem(typeof(TestClass))
+            {
+                NextItem = new MemberChainItem(typeof(TestClass).GetProperty("Success"))
+            };
+
+            // act
+            var actual = subject.ValidationSubjects;
+
+            // assert
+            Assert.AreEqual(1, actual.Count());
+            Assert.AreEqual(expected, actual.ElementAt(0));
+        }
     }
 }

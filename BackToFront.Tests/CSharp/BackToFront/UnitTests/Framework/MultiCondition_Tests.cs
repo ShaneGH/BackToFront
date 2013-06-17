@@ -18,9 +18,9 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
     [TestFixture]
     public class MultiCondition_Tests : TestBase
     {
-        class TestClass<TEntity> : MultiCondition<TEntity>
+        class Accessor<TEntity> : MultiCondition<TEntity>
         {
-            public TestClass()
+            public Accessor()
                 : base(null) { }
 
             public Expression __NewCompile(SwapPropVisitor visitor)
@@ -64,7 +64,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         public void _NewCompile_Test()
         {
             // arrange
-            var subject = new TestClass<object>();
+            var subject = new Accessor<object>();
             Expression<Func<object, bool>> e1 = a => true;
             Expression<Func<object, bool>> e2 = a => true;
             Expression<Func<object, bool>> e3 = a => true;
@@ -102,6 +102,34 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             
             for (var i = 0; i < 3; i++)
                 actual = assert(actual, asArray[i].Item1, i + 1 >= asArray.Length, asArray[i].Item2);
+        }
+
+        [TestFixture]
+        public class Condition_Tests
+        {
+            public class TestClass
+            {
+                public bool Success { get; set; }
+            }
+
+            [Test]
+            public void RequiredForValidation_Test()
+            {
+                // arrange
+                Expression<Func<TestClass, bool>> prop = a => a.Success;
+                var subject = new MultiCondition<TestClass>.Condition(prop, null);
+                var expected = new MemberChainItem(typeof(TestClass))
+                {
+                    NextItem = new MemberChainItem(typeof(TestClass).GetProperty("Success"))
+                };
+
+                // act
+                var actual = subject.RequiredForValidation;
+
+                // assert
+                Assert.AreEqual(1, actual.Count());
+                Assert.AreEqual(expected, actual.ElementAt(0));
+            }
         }
     }
 }
