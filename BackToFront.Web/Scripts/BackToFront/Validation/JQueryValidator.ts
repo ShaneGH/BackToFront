@@ -6,6 +6,11 @@
 
 module BackToFront {
     export module Validation {
+
+        export class JqueryBTFContext {
+            constructor(public Errors: Meta.IViolation[] = []) { }
+        }
+
         export class JQueryValidator extends BackToFront.Validation.Validator {
 
             constructor(rules: Meta.RuleMeta[], entity: string, public Context?: HTMLElement) {
@@ -72,7 +77,13 @@ module BackToFront {
                     return;
 
                 jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, function (aaaa, bbbb) {
-                    return jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\""); //("\"me\"", "\"and me\"");
+                    if (this.__BTFContext && this.__BTFContext.Errors && this.__BTFContext.Errors.length) {
+                        return linq(this.__BTFContext.Errors).Select(a => a.UserMessage).Result.join("\n");
+                        //TODO: this
+                        return jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\"");
+                    } else {
+                        return undefined;
+                    }
                 });
 
                 if (jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
@@ -84,7 +95,11 @@ module BackToFront {
 
             //TODO: unit test
             static Validate(value: any, element: any, ...params: any[]) {
-                var results = linq(JQueryValidator.Registered).Select((a: JQueryValidator) => a.Validate($(element).attr("name"), false)).Aggregate();
+
+                var results = linq(JQueryValidator.Registered).Select((a: JQueryValidator) => a.Validate($(element).attr("name"), false))
+                    .Aggregate();
+
+                this.__BTFContext = new JqueryBTFContext(results.Result);
                 return results.Result.length === 0
             }
         }

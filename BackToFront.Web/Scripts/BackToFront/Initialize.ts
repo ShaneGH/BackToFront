@@ -2,6 +2,7 @@
 /// <reference path="../../../WebExpressions/Scripts/ref/Exports.ts" />
 
 module BackToFront {
+    //TODO: test
     export class Initialize {
         private static _Initialized = false;
 
@@ -14,8 +15,10 @@ module BackToFront {
             Initialize._InitializeMethods();
         }
 
-        private static _InitializeConstructors() {
-            
+        private static _InitializeConstructors() {            
+            ex.registeredConstructors["BackToFront.Utilities.SimpleViolation"] = function (userMessage) {
+                this.UserMessage = userMessage;
+            };
         }
 
         private static _InitializeMethods() {
@@ -27,6 +30,7 @@ module BackToFront {
 
                     this.push(item);
                 };
+
         }
     }
 }

@@ -12,6 +12,9 @@ var BackToFront;
             Initialize._InitializeMethods();
         };
         Initialize._InitializeConstructors = function _InitializeConstructors() {
+            ex.registeredConstructors["BackToFront.Utilities.SimpleViolation"] = function (userMessage) {
+                this.UserMessage = userMessage;
+            };
         };
         Initialize._InitializeMethods = function _InitializeMethods() {
             ex.registeredMethods["System.Collections.Generic.ICollection`1[[BackToFront.IViolation, BackToFront, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]].Add"] = function (item) {

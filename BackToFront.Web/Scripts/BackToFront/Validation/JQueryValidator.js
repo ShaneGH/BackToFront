@@ -6,6 +6,14 @@ var __extends = this.__extends || function (d, b) {
 var BackToFront;
 (function (BackToFront) {
     (function (Validation) {
+        var JqueryBTFContext = (function () {
+            function JqueryBTFContext(Errors) {
+                if (typeof Errors === "undefined") { Errors = []; }
+                this.Errors = Errors;
+            }
+            return JqueryBTFContext;
+        })();
+        Validation.JqueryBTFContext = JqueryBTFContext;        
         var JQueryValidator = (function (_super) {
             __extends(JQueryValidator, _super);
             function JQueryValidator(rules, entity, Context) {
@@ -52,7 +60,14 @@ var BackToFront;
                     return;
                 }
                 jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, function (aaaa, bbbb) {
-                    return jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\"");
+                    if(this.__BTFContext && this.__BTFContext.Errors && this.__BTFContext.Errors.length) {
+                        return linq(this.__BTFContext.Errors).Select(function (a) {
+                            return a.UserMessage;
+                        }).Result.join("\n");
+                        return jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\"");
+                    } else {
+                        return undefined;
+                    }
                 });
                 if(jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
                     jQuery.validator.unobtrusive.adapters.add("backtofront", [], function (options) {
@@ -68,6 +83,7 @@ var BackToFront;
                 var results = linq(JQueryValidator.Registered).Select(function (a) {
                     return a.Validate($(element).attr("name"), false);
                 }).Aggregate();
+                this.__BTFContext = new JqueryBTFContext(results.Result);
                 return results.Result.length === 0;
             };
             return JQueryValidator;
