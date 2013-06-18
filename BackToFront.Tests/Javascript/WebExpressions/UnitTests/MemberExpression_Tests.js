@@ -39,11 +39,12 @@ test("Constructor test OK", function () {
 
         assert.strictEqual(input1, meta);
 
-        assert.deepEqual(input2.inputName, "Expression");
-        assert.deepEqual(input2.inputType, "object");
+        assert.strictEqual(input2.inputName, "Expression");
+        assert.strictEqual(input2.inputType, "object");
+        assert.strictEqual(input2.allowNull, true);
 
-        assert.deepEqual(input3.inputName, "MemberName");
-        assert.deepEqual(input3.inputConstructor, String);
+        assert.strictEqual(input3.inputName, "MemberName");
+        assert.strictEqual(input3.inputConstructor, String);
     };
 
     WebExpressions.Expression.CreateExpression = function (input) {

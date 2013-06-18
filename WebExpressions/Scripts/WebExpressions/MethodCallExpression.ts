@@ -14,7 +14,9 @@ module WebExpressions {
 
             WebExpressions.Sanitizer.Require(meta, {
                 inputName: "Object",
-                inputType: "object"
+                inputType: "object",
+                // static member
+                allowNull: true
             }, {
                 inputName: "Arguments",
                 inputConstructor: Array
@@ -26,13 +28,16 @@ module WebExpressions {
                 inputConstructor: String
             });
 
-            this.Object = Expression.CreateExpression(meta.Object);
+            this.Object = meta.Object ? Expression.CreateExpression(meta.Object) : null;
             this.Arguments = linq(meta.Arguments).Select(a => Expression.CreateExpression(a)).Result;
             this.MethodName = meta.MethodName;
             this.MethodFullName = meta.MethodFullName;
         }
 
         EvalExpression(): CreateEvalExpression {
+
+            throw "Not implemented, need to split into static and non static method calls";
+
             if (!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
@@ -55,7 +60,8 @@ module WebExpressions {
                 throw "Invalid method name: " + this.MethodName;
             }
 
-            var object = this.Object.Compile();
+            //TODO: unit test (ctxt) => window
+            var object = this.Object ? this.Object.Compile() : (ctxt) => window;
             var args = linq(this.Arguments).Select(a => a.Compile()).Result;
             return (ambientContext) => {
                 var o = object(ambientContext);

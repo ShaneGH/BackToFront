@@ -52,6 +52,9 @@ var WebExpressions;
             output[WebExpressions.Meta.ExpressionType.Multiply] = function (left, right) {
                 return left * right;
             };
+            output[WebExpressions.Meta.ExpressionType.NotEqual] = function (left, right) {
+                return left !== right;
+            };
             output[WebExpressions.Meta.ExpressionType.OrElse] = function (left, right) {
                 return left || right;
             };
@@ -69,8 +72,9 @@ var WebExpressions;
             output[WebExpressions.Meta.ExpressionType.GreaterThan] = " > ";
             output[WebExpressions.Meta.ExpressionType.GreaterThanOrEqual] = " >= ";
             output[WebExpressions.Meta.ExpressionType.LessThan] = " < ";
-            output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = " left <= ";
+            output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = " <= ";
             output[WebExpressions.Meta.ExpressionType.Multiply] = " * ";
+            output[WebExpressions.Meta.ExpressionType.NotEqual] = " !== ";
             output[WebExpressions.Meta.ExpressionType.OrElse] = " || ";
             output[WebExpressions.Meta.ExpressionType.Subtract] = " - ";
             return output;

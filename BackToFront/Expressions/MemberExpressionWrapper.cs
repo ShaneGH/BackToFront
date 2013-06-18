@@ -15,7 +15,17 @@ namespace BackToFront.Expressions
         {
             get            
             {
-                return _InnerExpression ?? (_InnerExpression = CreateChildWrapper(Expression.Expression));
+                return _InnerExpression ?? (_InnerExpression =
+                    (Expression.Expression == null ? new DefaultExpressionWrapper() : CreateChildWrapper(Expression.Expression)));
+            }
+        }
+
+        //TODO: test
+        public bool IsStatic
+        {
+            get
+            {
+                return InnerExpression is DefaultExpressionWrapper;
             }
         }
 

@@ -9,20 +9,33 @@
 
 @using (Html.BeginForm())
 {     
-    @Html.LabelFor(m => m.ValidateFlag)<br />
-    @Html.CheckBoxFor(m => m.ValidateFlag)<br />
+    @Html.LabelFor(m => m.ValidateName)<br />
+    @Html.CheckBoxFor(m => m.ValidateName)<br />
     
     @Html.LabelFor(m => m.Name)<br />
     @Html.EditorFor(m => m.Name)
     @Html.ValidationMessageFor(m => m.Name)<br />
     
-    @Html.LabelFor(m => m.RequireThat)<br />
-    @Html.EditorFor(m => m.RequireThat)
-    @Html.ValidationMessageFor(m => m.RequireThat)<br />
+    @Html.LabelFor(m => m.ConfirmName)<br />
+    @Html.EditorFor(m => m.ConfirmName)
+    @Html.ValidationMessageFor(m => m.ConfirmName)<br />
+    <br /><br /><br />
+    @Html.LabelFor(m => m.ValidateNumber)<br />
+    @Html.CheckBoxFor(m => m.ValidateNumber)<br />
+    
+    @Html.LabelFor(m => m.Number)<br />
+    @Html.EditorFor(m => m.Number)
+    @Html.ValidationMessageFor(m => m.Number)<br />
+    
+    @Html.LabelFor(m => m.ConfirmNumber)<br />
+    @Html.EditorFor(m => m.ConfirmNumber)
+    @Html.ValidationMessageFor(m => m.ConfirmNumber)<br />
+    <br /><br /><br />
     
     @Html.LabelFor(m => m.TestAllOk)
     @Html.EditorFor(m => m.TestAllOk)
     @Html.ValidationMessageFor(m => m.TestAllOk)
+    <br /><br /><br />
 
     <input type="submit" value="Go" />
 }

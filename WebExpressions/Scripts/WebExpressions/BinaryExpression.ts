@@ -22,6 +22,7 @@ module WebExpressions {
             output[WebExpressions.Meta.ExpressionType.LessThan] = (left, right) => left < right;
             output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = (left, right) => left <= right;
             output[WebExpressions.Meta.ExpressionType.Multiply] = (left, right) => left * right;
+            output[WebExpressions.Meta.ExpressionType.NotEqual] = (left, right) => left !== right;
             output[WebExpressions.Meta.ExpressionType.OrElse] = (left, right) => left || right;
             output[WebExpressions.Meta.ExpressionType.Subtract] = (left, right) => left - right;
 
@@ -40,8 +41,9 @@ module WebExpressions {
             output[WebExpressions.Meta.ExpressionType.GreaterThan] = " > ";
             output[WebExpressions.Meta.ExpressionType.GreaterThanOrEqual] = " >= ";
             output[WebExpressions.Meta.ExpressionType.LessThan] = " < ";
-            output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = " left <= ";
+            output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = " <= ";
             output[WebExpressions.Meta.ExpressionType.Multiply] = " * ";
+            output[WebExpressions.Meta.ExpressionType.NotEqual] = " !== ";
             output[WebExpressions.Meta.ExpressionType.OrElse] = " || ";
             output[WebExpressions.Meta.ExpressionType.Subtract] = " - ";
 

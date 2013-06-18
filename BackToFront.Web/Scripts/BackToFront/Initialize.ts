@@ -31,6 +31,9 @@ module BackToFront {
                     this.push(item);
                 };
 
+            // TODO: move to WebExpressions library
+            ex.registeredMethods["System.String.IsNullOrEmpty"] = function (input) { return !input; };
+            ex.registeredMethods["System.String.IsNullOrWhiteSpace"] = function (input) { return !input || !input.trim(); };
         }
     }
 }

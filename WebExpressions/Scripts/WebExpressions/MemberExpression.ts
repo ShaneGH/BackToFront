@@ -20,18 +20,22 @@ module WebExpressions {
 
                 WebExpressions.Sanitizer.Require(meta, {
                     inputName: "Expression",
-                    inputType: "object"
+                    inputType: "object",
+                    // static member
+                    allowNull: true
                 }, {
                     inputName: "MemberName",
                     inputConstructor: String
                 });
 
-                this.Expression = Expression.CreateExpression(meta.Expression);
+                this.Expression = meta.Expression ? Expression.CreateExpression(meta.Expression) : null;
                 this.MemberName = meta.MemberName;
             }
 
             // TODO: replace . with [] and watch for injection
             EvalExpression(): CreateEvalExpression {
+                throw "Not implemented, need to split into static and non static member references";
+
                 if (!MemberExpression.PropertyRegex.test(this.MemberName)) {
                     throw "Invalid property name: " + this.MemberName;
                 }
@@ -50,9 +54,13 @@ module WebExpressions {
                     throw "Invalid property name: " + this.MemberName;
                 }
 
-                var name = this.MemberName;
-                var expression = this.Expression.Compile();
-                return (ambientContext) => expression(ambientContext)[name];
+                if (this.Expression) {
+                    var name = this.MemberName;
+                    var expression = this.Expression.Compile();
+                    return (ambientContext) => expression(ambientContext)[name];
+                } else {
+                    throw "Not implemented exception";
+                }
             }
         }
     

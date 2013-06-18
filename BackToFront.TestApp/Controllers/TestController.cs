@@ -11,21 +11,44 @@ namespace BackToFront.TestApp.Controllers
     {
         public static readonly Repository Repository = new Repository();
 
-        static TestModel() 
+        static TestModel()
         {
-            Repository.AddRule<TestModel>(x => x.If(a => a.ValidateFlag)
-                .RequireThat(a => a.Name == a.RequireThat)
-                // TODO: custom error message
-                .WithModelViolation("Name must be \"Shane\""));
+            Repository.AddRule<TestModel>(x => x.If(a => a.ValidateName).Then(r =>
+            {
+                r.RequireThat(a => !string.IsNullOrEmpty(a.Name)).WithModelViolation("Name cannot be null");
+                r.RequireThat(a => a.Name == a.ConfirmName).WithModelViolation("Names must be the same");
+            }));
+
+            Repository.AddRule<TestModel>(x => x.If(a => a.ValidateNumber).
+                RequireThat(a => a.ConfirmNumber > a.Number).WithModelViolation("Second must be greater than the first"));
+
+            Repository.AddRule<TestModel>(x => x.If(a => a.ValidateNumber).
+                RequireThat(a => a.Number != null).WithModelViolation("Number must have value"));
         }
+
+        #region name
 
         [custom]
         public string Name { get; set; }
 
-        public bool ValidateFlag { get; set; }
+        public bool ValidateName { get; set; }
 
         [custom]
-        public string RequireThat { get; set; }
+        public string ConfirmName { get; set; }
+
+        #endregion
+
+        #region number
+
+        [custom]
+        public int? Number { get; set; }
+
+        public bool ValidateNumber { get; set; }
+
+        [custom]
+        public int? ConfirmNumber { get; set; }
+
+        #endregion
 
         [Required]
         public string TestAllOk { get; set; }
@@ -44,7 +67,13 @@ namespace BackToFront.TestApp.Controllers
         [HttpGet]
         public ActionResult TestForm()
         {
-            return View(new TestModel { RequireThat = "Shane" });
+            return View(new TestModel());
+        }
+
+        [HttpPost]
+        public ActionResult TestForm(TestModel model)
+        {
+            return RedirectToAction("TestForm");
         }
     }
 }

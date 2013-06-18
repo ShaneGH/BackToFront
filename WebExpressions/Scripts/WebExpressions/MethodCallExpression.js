@@ -11,7 +11,8 @@ var WebExpressions;
                 _super.call(this, meta);
             WebExpressions.Sanitizer.Require(meta, {
                 inputName: "Object",
-                inputType: "object"
+                inputType: "object",
+                allowNull: true
             }, {
                 inputName: "Arguments",
                 inputConstructor: Array
@@ -22,7 +23,7 @@ var WebExpressions;
                 inputName: "MethodFullName",
                 inputConstructor: String
             });
-            this.Object = WebExpressions.Expression.CreateExpression(meta.Object);
+            this.Object = meta.Object ? WebExpressions.Expression.CreateExpression(meta.Object) : null;
             this.Arguments = linq(meta.Arguments).Select(function (a) {
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
@@ -30,6 +31,7 @@ var WebExpressions;
             this.MethodFullName = meta.MethodFullName;
         }
         MethodCallExpression.prototype.EvalExpression = function () {
+            throw "Not implemented, need to split into static and non static method calls";
             if(!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
@@ -51,7 +53,9 @@ var WebExpressions;
             if(!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
-            var object = this.Object.Compile();
+            var object = this.Object ? this.Object.Compile() : function (ctxt) {
+                return window;
+            };
             var args = linq(this.Arguments).Select(function (a) {
                 return a.Compile();
             }).Result;

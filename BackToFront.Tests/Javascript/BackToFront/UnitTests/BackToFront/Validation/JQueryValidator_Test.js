@@ -59,13 +59,17 @@ test("GetEntity, data-val-number", function () {
     var name1 = "dsfohy98";
     var val2 = 345.432;
     var name2 = "saohdisa0d9fu";
+    var name3 = "dsfj09";
+    var name4 = "asdkfg98";
 
     var subject = {
-        Rules: [{ RequiredForValidation: [name1], ValidationSubjects: [name2] }],
+        Rules: [{ RequiredForValidation: [name1, name2], ValidationSubjects: [name3, name4] }],
         Context: $(
 "<div>" +
     "<input type='text' data-val-number='true' name='" + name1 + "' value='" + val1 + "'></input>" +
     "<input type='text' data-val-number='true' name='" + name2 + "' value='" + val2 + "'></input>" +
+    "<input type='text' data-val-number='true' name='" + name3 + "' value=''></input>" +
+    "<input type='text' data-val-number='true' name='" + name4 + "'></input>" +
 "</div>")[0]
     };
 
@@ -75,6 +79,8 @@ test("GetEntity, data-val-number", function () {
     // assert
     assert.strictEqual(entity[name1], val1);
     assert.strictEqual(entity[name2], val2);
+    assert.strictEqual(entity[name3], null);
+    assert.strictEqual(entity[name4], null);
 });
 
 test("GetEntity, checkbox", function () {
@@ -97,6 +103,7 @@ test("GetEntity, checkbox", function () {
     };
 
     // act
+    debugger;
     var entity = BackToFront.Validation.JQueryValidator.prototype.GetEntity.call(subject);
 
     // assert

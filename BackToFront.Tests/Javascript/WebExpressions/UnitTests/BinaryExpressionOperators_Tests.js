@@ -64,6 +64,13 @@ module("WebExpressions.BinaryExpression.OperatorDictionary", {
         assert.strictEqual(dic[WebExpressions.Meta.ExpressionType.Multiply](6, 2), 12);
     });
 
+    test("NotEqual", function () {
+        assert.strictEqual(dic[WebExpressions.Meta.ExpressionType.NotEqual](2, 2), false);
+        assert.strictEqual(dic[WebExpressions.Meta.ExpressionType.NotEqual]("2", "2"), false);
+        assert.strictEqual(dic[WebExpressions.Meta.ExpressionType.NotEqual](2, "2"), true);
+        assert.strictEqual(dic[WebExpressions.Meta.ExpressionType.NotEqual](2, 3), true);
+    });
+
     test("OrElse", function () {
         assert.strictEqual(dic[WebExpressions.Meta.ExpressionType.OrElse](true, true), true);
         assert.strictEqual(dic[WebExpressions.Meta.ExpressionType.OrElse](true, false), true);

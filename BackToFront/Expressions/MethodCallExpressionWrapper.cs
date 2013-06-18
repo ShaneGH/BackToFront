@@ -23,7 +23,17 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _Object ?? (_Object = CreateChildWrapper(Expression.Object));
+                return _Object ?? (_Object =
+                    (Expression.Object == null ? new DefaultExpressionWrapper() : CreateChildWrapper(Expression.Object)));
+            }
+        }
+
+        //TODO: test
+        public bool IsStatic
+        {
+            get
+            {
+                return Object is DefaultExpressionWrapper;
             }
         }
 

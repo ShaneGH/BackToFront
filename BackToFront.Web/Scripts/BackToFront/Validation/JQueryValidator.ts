@@ -37,9 +37,14 @@ module BackToFront {
                         entity[allNames[j]] = item.val();
 
                         if (item.attr("data-val-number")) {
-                            entity[allNames[j]] = entity[allNames[j]].indexOf(".") !== -1 ?
-                                 parseFloat(entity[allNames[j]]) :
-                                 parseInt(entity[allNames[j]]);
+
+                            if (!entity[allNames[j]]) {
+                                entity[allNames[j]] = null;
+                            } else {
+                                entity[allNames[j]] = entity[allNames[j]].indexOf(".") !== -1 ?
+                                     parseFloat(entity[allNames[j]]) :
+                                     parseInt(entity[allNames[j]]);
+                            }
                         }
                     }
                 }

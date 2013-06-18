@@ -798,6 +798,9 @@ var WebExpressions;
             output[WebExpressions.Meta.ExpressionType.Multiply] = function (left, right) {
                 return left * right;
             };
+            output[WebExpressions.Meta.ExpressionType.NotEqual] = function (left, right) {
+                return left !== right;
+            };
             output[WebExpressions.Meta.ExpressionType.OrElse] = function (left, right) {
                 return left || right;
             };
@@ -815,8 +818,9 @@ var WebExpressions;
             output[WebExpressions.Meta.ExpressionType.GreaterThan] = " > ";
             output[WebExpressions.Meta.ExpressionType.GreaterThanOrEqual] = " >= ";
             output[WebExpressions.Meta.ExpressionType.LessThan] = " < ";
-            output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = " left <= ";
+            output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = " <= ";
             output[WebExpressions.Meta.ExpressionType.Multiply] = " * ";
+            output[WebExpressions.Meta.ExpressionType.NotEqual] = " !== ";
             output[WebExpressions.Meta.ExpressionType.OrElse] = " || ";
             output[WebExpressions.Meta.ExpressionType.Subtract] = " - ";
             return output;
@@ -1107,16 +1111,18 @@ var WebExpressions;
                 _super.call(this, meta);
             WebExpressions.Sanitizer.Require(meta, {
                 inputName: "Expression",
-                inputType: "object"
+                inputType: "object",
+                allowNull: true
             }, {
                 inputName: "MemberName",
                 inputConstructor: String
             });
-            this.Expression = WebExpressions.Expression.CreateExpression(meta.Expression);
+            this.Expression = meta.Expression ? WebExpressions.Expression.CreateExpression(meta.Expression) : null;
             this.MemberName = meta.MemberName;
         }
         MemberExpression.PropertyRegex = new RegExp("^[a-zA-Z][a-zA-Z0-9]*$");
         MemberExpression.prototype.EvalExpression = function () {
+            throw "Not implemented, need to split into static and non static member references";
             if(!MemberExpression.PropertyRegex.test(this.MemberName)) {
                 throw "Invalid property name: " + this.MemberName;
             }
@@ -1130,11 +1136,15 @@ var WebExpressions;
             if(!MemberExpression.PropertyRegex.test(this.MemberName)) {
                 throw "Invalid property name: " + this.MemberName;
             }
-            var name = this.MemberName;
-            var expression = this.Expression.Compile();
-            return function (ambientContext) {
-                return expression(ambientContext)[name];
-            };
+            if(this.Expression) {
+                var name = this.MemberName;
+                var expression = this.Expression.Compile();
+                return function (ambientContext) {
+                    return expression(ambientContext)[name];
+                };
+            } else {
+                throw "Not implemented exception";
+            }
         };
         return MemberExpression;
     })(WebExpressions.Expression);
@@ -1155,7 +1165,8 @@ var WebExpressions;
                 _super.call(this, meta);
             WebExpressions.Sanitizer.Require(meta, {
                 inputName: "Object",
-                inputType: "object"
+                inputType: "object",
+                allowNull: true
             }, {
                 inputName: "Arguments",
                 inputConstructor: Array
@@ -1166,7 +1177,7 @@ var WebExpressions;
                 inputName: "MethodFullName",
                 inputConstructor: String
             });
-            this.Object = WebExpressions.Expression.CreateExpression(meta.Object);
+            this.Object = meta.Object ? WebExpressions.Expression.CreateExpression(meta.Object) : null;
             this.Arguments = linq(meta.Arguments).Select(function (a) {
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
@@ -1174,6 +1185,7 @@ var WebExpressions;
             this.MethodFullName = meta.MethodFullName;
         }
         MethodCallExpression.prototype.EvalExpression = function () {
+            throw "Not implemented, need to split into static and non static method calls";
             if(!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
@@ -1195,7 +1207,9 @@ var WebExpressions;
             if(!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
-            var object = this.Object.Compile();
+            var object = this.Object ? this.Object.Compile() : function (ctxt) {
+                return window;
+            };
             var args = linq(this.Arguments).Select(function (a) {
                 return a.Compile();
             }).Result;

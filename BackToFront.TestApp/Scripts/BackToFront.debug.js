@@ -799,6 +799,9 @@
                     output[WebExpressions.Meta.ExpressionType.Multiply] = function (left, right) {
                         return left * right;
                     };
+                    output[WebExpressions.Meta.ExpressionType.NotEqual] = function (left, right) {
+                        return left !== right;
+                    };
                     output[WebExpressions.Meta.ExpressionType.OrElse] = function (left, right) {
                         return left || right;
                     };
@@ -816,8 +819,9 @@
                     output[WebExpressions.Meta.ExpressionType.GreaterThan] = " > ";
                     output[WebExpressions.Meta.ExpressionType.GreaterThanOrEqual] = " >= ";
                     output[WebExpressions.Meta.ExpressionType.LessThan] = " < ";
-                    output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = " left <= ";
+                    output[WebExpressions.Meta.ExpressionType.LessThanOrEqual] = " <= ";
                     output[WebExpressions.Meta.ExpressionType.Multiply] = " * ";
+                    output[WebExpressions.Meta.ExpressionType.NotEqual] = " !== ";
                     output[WebExpressions.Meta.ExpressionType.OrElse] = " || ";
                     output[WebExpressions.Meta.ExpressionType.Subtract] = " - ";
                     return output;
@@ -1108,16 +1112,18 @@
                     _super.call(this, meta);
                     WebExpressions.Sanitizer.Require(meta, {
                         inputName: "Expression",
-                        inputType: "object"
+                        inputType: "object",
+                        allowNull: true
                     }, {
                         inputName: "MemberName",
                         inputConstructor: String
                     });
-                    this.Expression = WebExpressions.Expression.CreateExpression(meta.Expression);
+                    this.Expression = meta.Expression ? WebExpressions.Expression.CreateExpression(meta.Expression) : null;
                     this.MemberName = meta.MemberName;
                 }
                 MemberExpression.PropertyRegex = new RegExp("^[a-zA-Z][a-zA-Z0-9]*$");
                 MemberExpression.prototype.EvalExpression = function () {
+                    throw "Not implemented, need to split into static and non static member references";
                     if (!MemberExpression.PropertyRegex.test(this.MemberName)) {
                         throw "Invalid property name: " + this.MemberName;
                     }
@@ -1131,11 +1137,15 @@
                     if (!MemberExpression.PropertyRegex.test(this.MemberName)) {
                         throw "Invalid property name: " + this.MemberName;
                     }
-                    var name = this.MemberName;
-                    var expression = this.Expression.Compile();
-                    return function (ambientContext) {
-                        return expression(ambientContext)[name];
-                    };
+                    if (this.Expression) {
+                        var name = this.MemberName;
+                        var expression = this.Expression.Compile();
+                        return function (ambientContext) {
+                            return expression(ambientContext)[name];
+                        };
+                    } else {
+                        throw "Not implemented exception";
+                    }
                 };
                 return MemberExpression;
             })(WebExpressions.Expression);
@@ -1156,7 +1166,8 @@
                     _super.call(this, meta);
                     WebExpressions.Sanitizer.Require(meta, {
                         inputName: "Object",
-                        inputType: "object"
+                        inputType: "object",
+                        allowNull: true
                     }, {
                         inputName: "Arguments",
                         inputConstructor: Array
@@ -1167,7 +1178,7 @@
                         inputName: "MethodFullName",
                         inputConstructor: String
                     });
-                    this.Object = WebExpressions.Expression.CreateExpression(meta.Object);
+                    this.Object = meta.Object ? WebExpressions.Expression.CreateExpression(meta.Object) : null;
                     this.Arguments = linq(meta.Arguments).Select(function (a) {
                         return WebExpressions.Expression.CreateExpression(a);
                     }).Result;
@@ -1175,6 +1186,7 @@
                     this.MethodFullName = meta.MethodFullName;
                 }
                 MethodCallExpression.prototype.EvalExpression = function () {
+                    throw "Not implemented, need to split into static and non static method calls";
                     if (!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
                         throw "Invalid method name: " + this.MethodName;
                     }
@@ -1196,7 +1208,9 @@
                     if (!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
                         throw "Invalid method name: " + this.MethodName;
                     }
-                    var object = this.Object.Compile();
+                    var object = this.Object ? this.Object.Compile() : function (ctxt) {
+                        return window;
+                    };
                     var args = linq(this.Arguments).Select(function (a) {
                         return a.Compile();
                     }).Result;
@@ -1971,6 +1985,9 @@
                 Initialize._InitializeMethods();
             };
             Initialize._InitializeConstructors = function _InitializeConstructors() {
+                ex.registeredConstructors["BackToFront.Utilities.SimpleViolation"] = function (userMessage) {
+                    this.UserMessage = userMessage;
+                };
             };
             Initialize._InitializeMethods = function _InitializeMethods() {
                 ex.registeredMethods["System.Collections.Generic.ICollection`1[[BackToFront.IViolation, BackToFront, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]].Add"] = function (item) {
@@ -1979,8 +1996,11 @@
                     }
                     this.push(item);
                 };
-                ex.registeredConstructors["BackToFront.Utilities.SimpleViolation"] = function (userMessage) {
-                    this.UserMessage = userMessage;
+                ex.registeredMethods["System.String.IsNullOrEmpty"] = function (input) {
+                    return !input;
+                };
+                ex.registeredMethods["System.String.IsNullOrWhiteSpace"] = function (input) {
+                    return !input || !input.trim();
                 };
             };
             return Initialize;
@@ -2063,7 +2083,11 @@
                         } else {
                             entity[allNames[j]] = item.val();
                             if (item.attr("data-val-number")) {
-                                entity[allNames[j]] = entity[allNames[j]].indexOf(".") !== -1 ? parseFloat(entity[allNames[j]]) : parseInt(entity[allNames[j]]);
+                                if (!entity[allNames[j]]) {
+                                    entity[allNames[j]] = null;
+                                } else {
+                                    entity[allNames[j]] = entity[allNames[j]].indexOf(".") !== -1 ? parseFloat(entity[allNames[j]]) : parseInt(entity[allNames[j]]);
+                                }
                             }
                         }
                     }

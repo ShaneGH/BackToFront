@@ -23,6 +23,12 @@ var BackToFront;
                 }
                 this.push(item);
             };
+            ex.registeredMethods["System.String.IsNullOrEmpty"] = function (input) {
+                return !input;
+            };
+            ex.registeredMethods["System.String.IsNullOrWhiteSpace"] = function (input) {
+                return !input || !input.trim();
+            };
         };
         return Initialize;
     })();
