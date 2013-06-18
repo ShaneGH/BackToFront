@@ -7,19 +7,8 @@ namespace WebExpressions.Meta
     [DataContract]
     public class MemberExpressionMeta : ExpressionMeta
     {
-        ExpressionMeta ttt;
         [DataMember]
-        public ExpressionMeta Expression 
-        {
-            get 
-            {
-                return ttt;
-            }
-            private set
-            {
-                ttt = value;
-            }
-        }
+        public ExpressionMeta Expression { get; private set; }
 
         [DataMember]
         public string MemberName { get; private set; }
