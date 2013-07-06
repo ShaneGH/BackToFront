@@ -45,7 +45,7 @@ module BackToFront {
                 };
             };
 
-            static MemberChainItemString(memberChainItem, skipFirst) : string {
+            static MemberChainItemString(memberChainItem, skipFirst): string {
                 if (skipFirst) { memberChainItem = memberChainItem.NextItem; }
                 var output = [];
                 while (memberChainItem) {
@@ -53,28 +53,40 @@ module BackToFront {
                     memberChainItem = memberChainItem.NextItem;
                 }
 
-                return output.join(".");                
+                return output.join(".");
             }
 
             Validate(propertyName: string, breakOnFirstError: bool = false): Meta.IViolation[] {
 
+                var unwrap = Validator.UnwrapMemberChainItem;
                 var entity = this.GetEntity();
 
-                //TODO: try catch here is temporary
-                try {
-                    return linq(this.Rules)
-                        .Where((rule: IValidate) => rule.ValidationSubjects.indexOf(propertyName) !== -1)
-                        .Select((rule: IValidate) => rule.Validate(entity, breakOnFirstError))
-                        .Aggregate().Result;
-                } catch (e) {
-                    debugger;
-                }
+                return linq(this.Rules)
+                    // find all relevent rules
+                    .Where((rule: IValidate) => rule.ValidationSubjects.indexOf(propertyName) !== -1)
+                    // validate all
+                    .Select((rule: IValidate) => rule.Validate(entity, breakOnFirstError))
+                    .Aggregate()
+                    // filter violations which do not apply to this property. Note: skipping first item in the MemberChainItem
+                    .Where((violation: Meta.IViolation) => linq(violation.Violated).Any((member: Meta.MemberChainItem) => unwrap(member.NextItem) === propertyName))
+                    .Result;
             };
 
                 // abstract
             GetEntity(): any {
                 throw "Invalid operation, this method is abstract";
             };
+
+            static UnwrapMemberChainItem(item: Meta.MemberChainItem): string {
+                var output = [];
+
+                while (item) {
+                    output.push(item.MemberName);
+                    item = item.NextItem;
+                }
+
+                return output.join(".");
+            }
         }
     }
 }

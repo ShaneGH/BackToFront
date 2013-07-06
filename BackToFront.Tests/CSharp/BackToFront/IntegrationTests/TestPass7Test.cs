@@ -58,7 +58,7 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
 
         [Test]
         [TestCaseSource("GetData")]
-        public void If_Or_Then_if_allVio9lations(Tuple<bool, bool, bool, bool> input)
+        public void If_Or_Then_if_allViolations(Tuple<bool, bool, bool, bool> input)
         {
             bool throw1 = input.Item1,
                 throw2 = input.Item2,

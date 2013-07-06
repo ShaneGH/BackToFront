@@ -85,6 +85,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CSharp\BackToFront\IntegrationTests\Children.cs" />
+    <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass7Test_3.cs" />
     <Compile Include="CSharp\BackToFront\IntegrationTests\TestPass1_Simplified_Test.cs" />
     <Compile Include="CSharp\BackToFront\IntegrationTests\Inheritance.cs" />
     <Compile Include="CSharp\BackToFront\UnitTests\Attributes\AffectsMembersAttribute_Tests.cs" />

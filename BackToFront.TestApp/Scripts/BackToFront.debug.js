@@ -1948,20 +1948,28 @@
                 };
                 Validator.prototype.Validate = function (propertyName, breakOnFirstError) {
                     if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
+                    var unwrap = Validator.UnwrapMemberChainItem;
                     var entity = this.GetEntity();
-                    try {
-                        return linq(this.Rules).Where(function (rule) {
-                            return rule.ValidationSubjects.indexOf(propertyName) !== -1;
-                        }).Select(function (rule) {
-                            return rule.Validate(entity, breakOnFirstError);
-                        }).Aggregate().Result;
-                    } catch (e) {
-                        debugger;
-
-                    }
+                    return linq(this.Rules).Where(function (rule) {
+                        return rule.ValidationSubjects.indexOf(propertyName) !== -1;
+                    }).Select(function (rule) {
+                        return rule.Validate(entity, breakOnFirstError);
+                    }).Aggregate().Where(function (violation) {
+                        return linq(violation.Violated).Any(function (member) {
+                            return unwrap(member.NextItem) === propertyName;
+                        });
+                    }).Result;
                 };
                 Validator.prototype.GetEntity = function () {
                     throw "Invalid operation, this method is abstract";
+                };
+                Validator.UnwrapMemberChainItem = function UnwrapMemberChainItem(item) {
+                    var output = [];
+                    while (item) {
+                        output.push(item.MemberName);
+                        item = item.NextItem;
+                    }
+                    return output.join(".");
                 };
                 return Validator;
             })();
