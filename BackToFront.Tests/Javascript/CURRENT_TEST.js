@@ -7,107 +7,164 @@
 
 var BackToFront = __BTF;
 
-var jq = jQuery;
-module("BackToFront.Validation.JQueryValidator", {
+var exp = ex.createExpression;
+var mcis = BackToFront.Validation.Validator.MemberChainItemString;
+
+module("BackToFront.Validation.Validator", {
     setup: function () {
     },
     teardown: function () {
-        jQuery = jq;
+        ex.createExpression = exp;
+        BackToFront.Validation.Validator.MemberChainItemString = mcis;
     }
 });
 
-test("Constructor, no jQuery", function () {
+test("Validate test", function () {
 
     // arrange
-    jQuery = null;
+    var error = "LKJBKLJB";
+    var propertyName = "JKBKJB";
+    var entity = {};
+    var subject = {
+        GetEntity: function () { return entity; },
+        Rules: [{
+            ValidationSubjects: propertyName,
+            Validate: function (ent, br) {
+                assert.strictEqual(ent, entity);
+                assert.ok(!br);
+                return [error];
+            }
+        }]
+    };
+
+    stub(BackToFront.Validation.Validator, "FilterViolation", true);
 
     // act
+    var result = BackToFront.Validation.Validator.prototype.Validate.call(subject, propertyName);
+
     // assert
-    assert.throws(function () {
-        new BackToFront.Validation.JQueryValidator();
-    });
+    assert.deepEqual(result, [error]);
 });
 
-test("GetEntity, string", function () {
+var FilterViolationTest = function (areEqual) {
+    var expect = new tUtil.Expect("here");
 
     // arrange
-    var val1 = "JBKJBKJB";
-    var name1 = "dsfohy98";
-    var val2 = "saiouyg98yad";
-    var name2 = "saohdisa0d9fu";
+    var propertyName = "KJB:(YUB";
+    var input = {
+        Violated: [{}]
+    };
 
+    BackToFront.Validation.Validator.MemberChainItemString = function (mci) {
+        expect.At("here");
+        assert.strictEqual(mci, input.Violated[0]);
+        return propertyName + (areEqual ? "" : "JKB");
+    }
+    
+    // act
+    var actual = BackToFront.Validation.Validator.FilterViolation(input, propertyName);
+
+    // assert
+    assert.strictEqual(areEqual, actual);
+
+    expect.VerifyOrderedExpectations();
+}
+
+test("FilterViolation test, not filtered", function () {
+    FilterViolationTest(true);
+});
+
+test("FilterViolation test, filtered", function () {
+    FilterViolationTest(false);
+});
+
+var MemberChainItemStringTest = function (skipFirst) {
+
+    // arrange
     var subject = {
-        Rules: [{ RequiredForValidation: [name1], ValidationSubjects: [name2] }],
-        Context: $(
-"<div>" +
-    "<input type='text' name='" + name1 + "' value='" + val1 + "'></input>" +
-    "<input type='text' name='" + name2 + "' value='" + val2 + "'></input>" +
-"</div>")[0]
+        MemberName: "XX1",
+        NextItem: {
+            MemberName: "XX2",
+            NextItem: {
+                MemberName: "XX3"
+            }
+        }
     };
 
     // act
-    var entity = BackToFront.Validation.JQueryValidator.prototype.GetEntity.call(subject);
+    var result = BackToFront.Validation.Validator.MemberChainItemString(subject, skipFirst);
 
     // assert
-    assert.strictEqual(entity[name1], val1);
-    assert.strictEqual(entity[name2], val2);
+    if (skipFirst)
+        assert.strictEqual(result, subject.NextItem.MemberName + "." + subject.NextItem.NextItem.MemberName)
+    else
+        assert.strictEqual(result, subject.MemberName + "." + subject.NextItem.MemberName + "." + subject.NextItem.NextItem.MemberName)
+}
+
+test("MemberChainItemString useFirst", function () {
+    MemberChainItemStringTest(false);
 });
 
-test("GetEntity, data-val-number", function () {
+test("MemberChainItemString skipFirst", function () {
+    MemberChainItemStringTest(true);
+});
+
+test("Create rule test", function () {
+    var expectations = new tUtil.Expect("exp", "compile", "RequiredForValidation", "ValidationSubject");
 
     // arrange
-    var val1 = 223;
-    var name1 = "dsfohy98";
-    var val2 = 345.432;
-    var name2 = "saohdisa0d9fu";
-    var name3 = "dsfj09";
-    var name4 = "asdkfg98";
+    var rule = {
+        RequiredForValidation: [{}],
+        ValidationSubjects: [{}],
+        EntityParameter: "LKJBLKJB",
+        ContextParameter: "P(HBOH"
+    };
+    var placeholder = {};
+    var r = function (ctxt) { return placeholder.r(ctxt); }; // placeholder.r() is defined later
+    ex.createExpression = function () { expectations.At("exp"); return { Compile: function () { expectations.At("compile"); return r; } } };
+    BackToFront.Validation.Validator.MemberChainItemString = function (input1, input2) {
+        if (input1 === rule.RequiredForValidation[0]) { expectations.At("RequiredForValidation"); }
+        if (input1 === rule.ValidationSubjects[0]) { expectations.At("ValidationSubject"); }
 
-    var subject = {
-        Rules: [{ RequiredForValidation: [name1, name2], ValidationSubjects: [name3, name4] }],
-        Context: $(
-"<div>" +
-    "<input type='text' data-val-number='true' name='" + name1 + "' value='" + val1 + "'></input>" +
-    "<input type='text' data-val-number='true' name='" + name2 + "' value='" + val2 + "'></input>" +
-    "<input type='text' data-val-number='true' name='" + name3 + "' value=''></input>" +
-    "<input type='text' data-val-number='true' name='" + name4 + "'></input>" +
-"</div>")[0]
+        assert.ok(input2);
+
+        return input1;
     };
 
     // act
-    var entity = BackToFront.Validation.JQueryValidator.prototype.GetEntity.call(subject);
+    var result = BackToFront.Validation.Validator.CreateRule(rule);
 
     // assert
-    assert.strictEqual(entity[name1], val1);
-    assert.strictEqual(entity[name2], val2);
-    assert.strictEqual(entity[name3], null);
-    assert.strictEqual(entity[name4], null);
-});
-
-test("GetEntity, checkbox", function () {
-
-    // arrange
-    var val1 = true;
-    var name1 = "dsfohy98";
-    var val2 = false;
-    var name2 = "saohdisa0d9fu";
-
-    var checked = function (chk) { return chk ? "checked='checked'" : ""; };
-
-    var subject = {
-        Rules: [{ RequiredForValidation: [name1], ValidationSubjects: [name2] }],
-        Context: $(
-"<div>" +
-    "<input type='checkbox' name='" + name1 + "' " + checked(val1) + "></input>" +
-    "<input type='checkbox' name='" + name2 + "' " + checked(val2) + "></input>" +
-"</div>")[0]
-    };
-
-    // act
+    assert.deepEqual(result.RequiredForValidation, rule.RequiredForValidation);
+    assert.deepEqual(result.ValidationSubjects, rule.ValidationSubjects);
+    assert.strictEqual(result.Validate.constructor, Function);
     debugger;
-    var entity = BackToFront.Validation.JQueryValidator.prototype.GetEntity.call(subject);
+    expectations.VerifyOrderedExpectations();
+
+
+    // arrange
+    expectations.Expect("run");
+    var entity = {};
+    var violations = {};
+    placeholder.r = function (ctxt) {
+        expectations.At("run");
+
+        assert.strictEqual(ctxt[rule.EntityParameter], entity);
+        assert.deepEqual(ctxt[rule.ContextParameter], {
+            Violations: [],
+            BreakOnFirstError: true,
+            Mocks: [],
+            Dependencies: {}
+        });
+
+        ctxt[rule.ContextParameter].Violations = violations;
+    }
+
+    // act
+    var validated = result.Validate(entity, true);
 
     // assert
-    assert.strictEqual(entity[name1], val1);
-    assert.strictEqual(entity[name2], val2);
+    assert.strictEqual(validated, violations);
+
+    expectations.VerifyOrderedExpectations();
 });

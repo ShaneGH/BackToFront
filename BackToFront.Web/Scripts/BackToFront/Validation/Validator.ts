@@ -58,7 +58,6 @@ module BackToFront {
 
             Validate(propertyName: string, breakOnFirstError: bool = false): Meta.IViolation[] {
 
-                var unwrap = Validator.UnwrapMemberChainItem;
                 var entity = this.GetEntity();
 
                 return linq(this.Rules)
@@ -67,8 +66,8 @@ module BackToFront {
                     // validate all
                     .Select((rule: IValidate) => rule.Validate(entity, breakOnFirstError))
                     .Aggregate()
-                    // filter violations which do not apply to this property. Note: skipping first item in the MemberChainItem
-                    .Where((violation: Meta.IViolation) => linq(violation.Violated).Any((member: Meta.MemberChainItem) => unwrap(member.NextItem) === propertyName))
+                    // filter violations which do not apply to this property.
+                    .Where((violation: Meta.IViolation) => Validator.FilterViolation(violation, propertyName))
                     .Result;
             };
 
@@ -77,15 +76,8 @@ module BackToFront {
                 throw "Invalid operation, this method is abstract";
             };
 
-            static UnwrapMemberChainItem(item: Meta.MemberChainItem): string {
-                var output = [];
-
-                while (item) {
-                    output.push(item.MemberName);
-                    item = item.NextItem;
-                }
-
-                return output.join(".");
+            static FilterViolation(violation: Meta.IViolation, propertyName: string): bool {
+                return linq(violation.Violated).Any((member: Meta.MemberChainItem) => Validator.MemberChainItemString(member, true) === propertyName);
             }
         }
     }
