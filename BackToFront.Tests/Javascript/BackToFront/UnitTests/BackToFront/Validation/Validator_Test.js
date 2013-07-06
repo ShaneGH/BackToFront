@@ -36,6 +36,8 @@ test("Validate test", function () {
         }]
     };
 
+    stub(BackToFront.Validation.Validator, "FilterViolation", true);
+
     // act
     var result = BackToFront.Validation.Validator.prototype.Validate.call(subject, propertyName);
 
@@ -43,15 +45,47 @@ test("Validate test", function () {
     assert.deepEqual(result, [error]);
 });
 
+var FilterViolationTest = function (areEqual) {
+    var expect = new tUtil.Expect("here");
+
+    // arrange
+    var propertyName = "KJB:(YUB";
+    var input = {
+        Violated: [{}]
+    };
+
+    BackToFront.Validation.Validator.MemberChainItemString = function (mci) {
+        expect.At("here");
+        assert.strictEqual(mci, input.Violated[0]);
+        return propertyName + (areEqual ? "" : "JKB");
+    }
+
+    // act
+    var actual = BackToFront.Validation.Validator.FilterViolation(input, propertyName);
+
+    // assert
+    assert.strictEqual(areEqual, actual);
+
+    expect.VerifyOrderedExpectations();
+}
+
+test("FilterViolation test, not filtered", function () {
+    FilterViolationTest(true);
+});
+
+test("FilterViolation test, filtered", function () {
+    FilterViolationTest(false);
+});
+
 var MemberChainItemStringTest = function (skipFirst) {
 
     // arrange
     var subject = {
-        MemberName: "LKJHGBLKJHGB",
+        MemberName: "XX1",
         NextItem: {
-            MemberName: "IHUJBP(*Y(PGUBOH",
+            MemberName: "XX2",
             NextItem: {
-                MemberName: "IPUGP(*Y(*&GB"
+                MemberName: "XX3"
             }
         }
     };
