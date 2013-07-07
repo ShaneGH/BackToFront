@@ -38,7 +38,10 @@ var WebExpressions;
             var args = linq(this.Arguments).Select(function (a) {
                 return a.EvalExpression();
             }).Result;
-            var object = this.Object.EvalExpression();
+            var object = this.Object ? this.Object.EvalExpression() : {
+                Expression: "window",
+                Constants: new WebExpressions.Utils.Dictionary()
+            };
             linq(args).Each(function (a) {
                 return object.Constants.Merge(a.Constants);
             });

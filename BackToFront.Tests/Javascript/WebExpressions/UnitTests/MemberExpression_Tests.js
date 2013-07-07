@@ -21,6 +21,25 @@ module("WebExpressions.MemberExpression", {
 });
 
 // Constructor test OK
+test("PropertyRegex tests", function () {
+
+    // arrange
+    var rx = WebExpressions.MemberExpression.PropertyRegex;
+
+    // act
+    // assert
+    assert.ok(rx.test("LBLGPG"));
+    assert.ok(rx.test("LBL_GPG"));
+    assert.ok(rx.test("_LBLGPG"));
+    assert.ok(rx.test("LB9LGPG"));
+    assert.ok(rx.test("_0LBLGPG"));
+
+    assert.ok(!rx.test("9LBLGPG"));
+    assert.ok(!rx.test("LBLG(PG"));
+    assert.ok(!rx.test("LBLG=PG"));
+});
+
+// Constructor test OK
 test("Constructor test OK", function () {
     var ex = new tUtil.Expect("require", "expression");
 

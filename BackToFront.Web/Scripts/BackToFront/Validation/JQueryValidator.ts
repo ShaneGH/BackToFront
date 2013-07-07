@@ -59,7 +59,6 @@ module BackToFront {
             static Registered: JQueryValidator[] = [];
             private static ValidatorName = "backtofront";
 
-            //TODO: unit test
             static RegisterRule(rule: Meta.RuleCollectionMeta) {
                 BackToFront.Sanitizer.Require(rule, {
                     inputName: "Rules",
@@ -72,7 +71,6 @@ module BackToFront {
                 JQueryValidator.Registered.push(new JQueryValidator(rule.Rules, rule.Entity));
             }
 
-            //TODO: unit test
             static Setup() {
                 if (!jQuery || !jQuery.validator) {
                     throw "This item requires jQuery and jQuery validation";
@@ -81,31 +79,43 @@ module BackToFront {
                 if (jQuery.validator.methods[JQueryValidator.ValidatorName])
                     return;
 
-                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, function (aaaa, bbbb) {
-                    if (this.__BTFContext && this.__BTFContext.Errors && this.__BTFContext.Errors.length) {
-                        return linq(this.__BTFContext.Errors).Select(a => a.UserMessage).Result.join("\n");
-                        //TODO: this
-                        return jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\"");
-                    } else {
-                        return undefined;
-                    }
-                });
+                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, JQueryValidator.HandlerErrors);
 
+                // asp mvc unobtrusive validation
                 if (jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
-                    jQuery.validator.unobtrusive.adapters.add("backtofront", [], function (options) {
-                        options.rules["backtofront"] = options.params;
-                    });
+                    jQuery.validator.unobtrusive.adapters.add(JQueryValidator.ValidatorName, [], JQueryValidator.AddOptions);
                 }
             }
 
-            //TODO: unit test
+            // assume will be run onther the context of a jQuery validation
+            static HandlerErrors() {
+                if (this.__BTFContext && this.__BTFContext.Errors && this.__BTFContext.Errors.length) {
+                    return JQueryValidator.JoinErrors(linq(this.__BTFContext.Errors).Select(a => a.UserMessage).Result);
+
+                    // if string.format is needed for custom errors you can use this:
+                    // jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\"");
+                } else {
+                    return undefined;
+                }
+            }
+
+            static AddOptions(options) {
+                options.rules[JQueryValidator.ValidatorName] = options.params;
+            }
+
             static Validate(value: any, element: any, ...params: any[]) {
 
-                var results = linq(JQueryValidator.Registered).Select((a: JQueryValidator) => a.Validate($(element).attr("name"), false))
+                var results = linq(JQueryValidator.Registered)
+                    .Select((a: JQueryValidator) => a.Validate($(element).attr("name"), false))
                     .Aggregate();
 
                 this.__BTFContext = new JqueryBTFContext(results.Result);
                 return results.Result.length === 0
+            }
+
+            // default error message aggregation
+            static JoinErrors(errors: string[]): string {
+                return errors.join("<br />");
             }
         }
     }

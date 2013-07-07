@@ -15,7 +15,7 @@ module WebExpressions {
             WebExpressions.Sanitizer.Require(meta, {
                 inputName: "Object",
                 inputType: "object",
-                // static member
+                // if static member
                 allowNull: true
             }, {
                 inputName: "Arguments",
@@ -43,7 +43,7 @@ module WebExpressions {
             }
 
             var args = <string[]>linq(this.Arguments).Select(a => a.EvalExpression()).Result;
-            var object = this.Object.EvalExpression();
+            var object = this.Object ? this.Object.EvalExpression() : { Expression: "window", Constants: new WebExpressions.Utils.Dictionary() };
             linq(args).Each(a => object.Constants.Merge(a.Constants));
 
             var mthd = "__o[\"" + this.MethodName + "\"]";

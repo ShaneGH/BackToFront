@@ -1120,7 +1120,7 @@ var WebExpressions;
             this.Expression = meta.Expression ? WebExpressions.Expression.CreateExpression(meta.Expression) : null;
             this.MemberName = meta.MemberName;
         }
-        MemberExpression.PropertyRegex = new RegExp("^[a-zA-Z][a-zA-Z0-9]*$");
+        MemberExpression.PropertyRegex = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
         MemberExpression.prototype.EvalExpression = function () {
             throw "Not implemented, need to split into static and non static member references";
             if(!MemberExpression.PropertyRegex.test(this.MemberName)) {
@@ -1192,7 +1192,10 @@ var WebExpressions;
             var args = linq(this.Arguments).Select(function (a) {
                 return a.EvalExpression();
             }).Result;
-            var object = this.Object.EvalExpression();
+            var object = this.Object ? this.Object.EvalExpression() : {
+                Expression: "window",
+                Constants: new WebExpressions.Utils.Dictionary()
+            };
             linq(args).Each(function (a) {
                 return object.Constants.Merge(a.Constants);
             });
@@ -2113,21 +2116,22 @@ var BackToFront;
                 if(jQuery.validator.methods[JQueryValidator.ValidatorName]) {
                     return;
                 }
-                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, function (aaaa, bbbb) {
-                    if(this.__BTFContext && this.__BTFContext.Errors && this.__BTFContext.Errors.length) {
-                        return linq(this.__BTFContext.Errors).Select(function (a) {
-                            return a.UserMessage;
-                        }).Result.join("\n");
-                        return jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\"");
-                    } else {
-                        return undefined;
-                    }
-                });
+                jQuery.validator.addMethod(JQueryValidator.ValidatorName, JQueryValidator.Validate, JQueryValidator.HandlerErrors);
                 if(jQuery.validator.unobtrusive && jQuery.validator.unobtrusive.adapters) {
-                    jQuery.validator.unobtrusive.adapters.add("backtofront", [], function (options) {
-                        options.rules["backtofront"] = options.params;
-                    });
+                    jQuery.validator.unobtrusive.adapters.add(JQueryValidator.ValidatorName, [], JQueryValidator.AddOptions);
                 }
+            };
+            JQueryValidator.HandlerErrors = function HandlerErrors() {
+                if(this.__BTFContext && this.__BTFContext.Errors && this.__BTFContext.Errors.length) {
+                    return JQueryValidator.JoinErrors(linq(this.__BTFContext.Errors).Select(function (a) {
+                        return a.UserMessage;
+                    }).Result);
+                } else {
+                    return undefined;
+                }
+            };
+            JQueryValidator.AddOptions = function AddOptions(options) {
+                options.rules[JQueryValidator.ValidatorName] = options.params;
             };
             JQueryValidator.Validate = function Validate(value, element) {
                 var params = [];
@@ -2139,6 +2143,9 @@ var BackToFront;
                 }).Aggregate();
                 this.__BTFContext = new JqueryBTFContext(results.Result);
                 return results.Result.length === 0;
+            };
+            JQueryValidator.JoinErrors = function JoinErrors(errors) {
+                return errors.join("<br />");
             };
             return JQueryValidator;
         })(BackToFront.Validation.Validator);

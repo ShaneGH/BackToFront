@@ -111,6 +111,10 @@ test("MemberChainItemString skipFirst", function () {
 test("Create rule test", function () {
     var expectations = new tUtil.Expect("exp", "compile", "RequiredForValidation", "ValidationSubject");
 
+    // #################
+    // Test create rule
+    // #################
+
     // arrange
     var rule = {
         RequiredForValidation: [{}],
@@ -137,10 +141,13 @@ test("Create rule test", function () {
     assert.deepEqual(result.RequiredForValidation, rule.RequiredForValidation);
     assert.deepEqual(result.ValidationSubjects, rule.ValidationSubjects);
     assert.strictEqual(result.Validate.constructor, Function);
-    debugger;
+
     expectations.VerifyOrderedExpectations();
 
-
+    // #################
+    // Test execute rule
+    // #################
+    
     // arrange
     expectations.Expect("run");
     var entity = {};

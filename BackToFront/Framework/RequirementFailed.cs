@@ -47,8 +47,6 @@ namespace BackToFront.Framework
             return WithModelViolation(Expression.Lambda<Func<TEntity, IViolation>>(ctor, Expression.Parameter(typeof(TEntity))));
         }
 
-        //TODO: cache???
-        //TODO: Test
         public override IEnumerable<MemberChainItem> ValidationSubjects
         {
             get
@@ -57,7 +55,6 @@ namespace BackToFront.Framework
             }
         }
 
-        //TODO: does this helper work if serialized into JSON via a meta class, other helpers had to be converted to using pure Expressions (not lambdas)
         public IAdditionalRuleCondition<TEntity> WithModelViolation(Expression<Func<TEntity, IViolation>> violation)
         {
             Do(() => { Violation = new ThrowViolation<TEntity>(violation, ParentRule, ValidationSubjects); });

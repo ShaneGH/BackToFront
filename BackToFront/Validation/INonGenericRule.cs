@@ -19,12 +19,9 @@ namespace BackToFront.Validation
         ParameterExpression Context { get; }
     }
 
-    public interface INonGenericRule
+    public interface INonGenericRule : IValidationItems
     {
         Type RuleType { get; }
-
-        IEnumerable<MemberChainItem> ValidationSubjects { get; }
-        IEnumerable<MemberChainItem> RequiredForValidation { get; }
 
         List<DependencyWrapper> Dependencies { get; }
         

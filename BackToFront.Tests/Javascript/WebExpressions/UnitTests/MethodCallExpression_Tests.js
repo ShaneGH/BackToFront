@@ -72,7 +72,7 @@ test("Constructor test OK", function () {
 });
 
 test("_Compile test: exception", function () {
-    debugger;
+
     var ex = new tUtil.Expect("test");
 
     var subject = {
@@ -94,7 +94,7 @@ test("_Compile test: exception", function () {
     ex.VerifyOrderedExpectations();
 });
 
-test("_Compile test", function () {
+test("_Compile test, non static", function () {
     var context = {};
     var methodName = "IGBGBBJKB";
 
@@ -121,6 +121,53 @@ test("_Compile test", function () {
                 };
             }
         },
+        Arguments: [
+        {
+            Compile: function () {
+                return function (ctxt) {
+                    assert.strictEqual(ctxt, context);
+                    return arg1;
+                }
+            }
+        }, {
+            Compile: function () {
+                return function (ctxt) {
+                    assert.strictEqual(ctxt, context);
+                    return arg2;
+                }
+            }
+        }]
+    };
+
+    // act
+    var result = WebExpressions.MethodCallExpression.prototype._Compile.call(_this);
+    var actual = result(context);
+
+    // assert
+    assert.strictEqual(expected, actual);
+});
+
+test("_Compile test, static", function () {
+    debugger;
+    var context = {};
+    var methodName = "IGBGBBJKB";
+
+    var arg1 = {};
+    var arg2 = {};
+    var expected = {};
+
+    // arrange
+    WebExpressions.MethodCallExpression.RegisteredMethods[methodName] = function (a1, a2) {
+        assert.strictEqual(a1, arg1);
+        assert.strictEqual(a2, arg2);
+
+        assert.strictEqual(this, window);
+
+        return expected;
+    }
+
+    var _this = {
+        MethodFullName: methodName,
         Arguments: [
         {
             Compile: function () {

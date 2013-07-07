@@ -20,7 +20,7 @@ var WebExpressions;
             this.Expression = meta.Expression ? WebExpressions.Expression.CreateExpression(meta.Expression) : null;
             this.MemberName = meta.MemberName;
         }
-        MemberExpression.PropertyRegex = new RegExp("^[a-zA-Z][a-zA-Z0-9]*$");
+        MemberExpression.PropertyRegex = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
         MemberExpression.prototype.EvalExpression = function () {
             throw "Not implemented, need to split into static and non static member references";
             if(!MemberExpression.PropertyRegex.test(this.MemberName)) {
