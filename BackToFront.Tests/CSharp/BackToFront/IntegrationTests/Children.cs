@@ -102,5 +102,22 @@ namespace BackToFront.Tests.CSharp.IntegrationTests
             if (switch1 || switch2)
                 Assert.AreEqual(subject.Child, violation2.ViolatedEntity);
         }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Require_MockAndValidateChild()
+        {
+            // arrange
+            var subject = new ParentClass
+            {
+                Child = new TestPass4Child()
+            };
+
+            // act
+            // assert
+            var violation2 = subject.Validate(Repository)
+                .WithMockedParameter(a => a.Child, new TestPass4Child())
+                .ValidateMember(a => a.Child).FirstViolation;
+        }
     }
 }

@@ -15,13 +15,25 @@ using BackToFront.Expressions.Visitors;
 
 namespace BackToFront.Logic
 {
+    public class ChildMemberValidator
+    {
+        public readonly Expression ChildMember;
+        public readonly Func<IValidateResult> Validate;
+
+        public ChildMemberValidator(Expression childMember, Func<IValidateResult> validate)
+        {
+            ChildMember = childMember;
+            Validate = validate;
+        }
+    }
+
     public class ValidateResult<TEntity> : IValidateResult<TEntity>
     {
         private readonly Repository _Repository;
         private readonly TEntity Entity;
         private readonly IDictionary<string, object> Dependencies;
         private readonly List<Mock> Mocks = new List<Mock>();
-        private readonly List<Func<IValidateResult>> ValidateChildMembers = new List<Func<IValidateResult>>();
+        private readonly List<ChildMemberValidator> ValidateChildMembers = new List<ChildMemberValidator>();
         private readonly ValidateOptions Options;
 
         public ValidateResult(TEntity entity, Repository repository)
@@ -54,13 +66,15 @@ namespace BackToFront.Logic
             Mocks.AddRange(mocks);
         }
 
-        public IViolation _FirstViolation;
+        private bool _CachedFirstViolation = false;
+        private IViolation _FirstViolation;
         public IViolation FirstViolation
         {
             get
             {
-                if (_FirstViolation == null)
+                if (!_CachedFirstViolation)
                 {
+                    _CachedFirstViolation = true;
                     if (_AllViolations != null)
                     {
                         _FirstViolation = _AllViolations.FirstOrDefault();
@@ -73,10 +87,9 @@ namespace BackToFront.Logic
                         {
                             foreach (var child in ValidateChildMembers)
                             {
+                                _FirstViolation = child.Validate().FirstViolation;
                                 if (_FirstViolation != null)
                                     break;
-
-                                _FirstViolation = child().FirstViolation;
                             }
                         }
                     }
@@ -86,7 +99,7 @@ namespace BackToFront.Logic
             }
         }
 
-        public IEnumerable<IViolation> _AllViolations;
+        private IEnumerable<IViolation> _AllViolations;
         public IEnumerable<IViolation> AllViolations
         {
             get
@@ -94,7 +107,7 @@ namespace BackToFront.Logic
                 if (_AllViolations == null)
                 {
                     var violations = RunValidation(false);
-                    ValidateChildMembers.Each(child => violations.AddRange(child().AllViolations));
+                    ValidateChildMembers.Each(child => violations.AddRange(child.Validate().AllViolations));
                     _AllViolations = violations.ToArray();
                 }
 
@@ -116,11 +129,16 @@ namespace BackToFront.Logic
         }
 
         /// <summary>
-        /// Orders rules, mocks and dependencies and delivers them to a function (for vaslidation)
+        /// Orders rules, mocks and dependencies and delivers them to a function (for validation)
         /// </summary>
         /// <param name="action">Validation function. Returns </param>
         private IList<IViolation> RunValidation(bool breakOnFirstError)
         {
+            // TODO: this may be a slow process, each mock must be compared to each child with ExpressionWrapperBase.IsSameExpression()
+            // there may be a better place to put it if pre-compiling
+            if (ValidatableChildMemberMockedOut.Any())
+                throw new InvalidOperationException("##");
+
             // segregate from global object
             var mocks = Mocks.ToArray();
 
@@ -158,6 +176,20 @@ namespace BackToFront.Logic
             return violations;
         }
 
+        /// <summary>
+        /// Returns all members which have been elected to: 1. be validated, 2. Mocked out. Validation will only run it this property is empty.
+        /// </summary>
+        private IEnumerable<Expression> ValidatableChildMemberMockedOut
+        {
+            get
+            {
+                foreach (var child in ValidateChildMembers)
+                    foreach (var mock in Mocks)
+                        if (mock.Expression.IsSameExpression(child.ChildMember))
+                            yield return child.ChildMember;
+            }
+        }
+
         internal static void ValidateDependencies(IEnumerable<DependencyWrapper> required, ref IEnumerable<KeyValuePair<string, object>> delivered)
         {
             List<KeyValuePair<string, object>> requiredByRule = new List<KeyValuePair<string, object>>();
@@ -184,6 +216,7 @@ namespace BackToFront.Logic
 
         public void ResetResult()
         {
+            _CachedFirstViolation = false;
             _FirstViolation = null;
             _AllViolations = null;
         }
@@ -206,14 +239,8 @@ namespace BackToFront.Logic
                 if (tester.Expression is ParameterExpression)
                 {
                     var compiled = member.Compile();
-                    ValidateChildMembers.Add(() => new ValidateResult<TParameter>(compiled(Entity), _Repository, Options, dependencies ?? Dependencies, Mocks.Select(m => 
-                        {
-                            Mock output;
-                            if (m.TryForChild(member, Expression.Parameter(typeof(TParameter)), out output) && !(output.Expression is ParameterExpressionWrapper))
-                                return output;
-
-                            return null;
-                        }).Where(m => m!= null).ToList()));
+                    Func<IValidateResult> validate = () => new ValidateResult<TParameter>(compiled(Entity), _Repository, Options, dependencies ?? Dependencies, ConvertAndFilterMocks(member, Mocks));
+                    ValidateChildMembers.Add(new ChildMemberValidator(member.Body, validate));
 
                     return this;
                 }
@@ -223,6 +250,25 @@ namespace BackToFront.Logic
             }
 
             throw new InvalidOperationException("##");
+        }
+
+        /// <summary>
+        /// Only return mocks which are in some way related to the member. Returned mocks have the member as their root
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TParameter"></typeparam>
+        /// <param name="member"></param>
+        /// <param name="mocks"></param>
+        /// <returns></returns>
+        public static IEnumerable<Mock> ConvertAndFilterMocks<TEntity, TParameter>(Expression<Func<TEntity, TParameter>> member, IEnumerable<Mock> mocks)
+        {
+            var parameterType = typeof(TParameter);
+            foreach (var m in mocks)
+            {
+                Mock output;
+                if (m.TryForChild(member, Expression.Parameter(parameterType), out output) && !(output.Expression is ParameterExpressionWrapper))
+                    yield return output;
+            }
         }
     }
 }
