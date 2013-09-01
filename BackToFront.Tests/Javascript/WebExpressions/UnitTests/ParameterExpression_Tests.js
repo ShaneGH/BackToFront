@@ -7,7 +7,7 @@ var property = WebExpressions.MemberExpression.PropertyRegex;
 var createExpression = WebExpressions.Expression.CreateExpression;
 var require = WebExpressions.Sanitizer.Require;
 
-module("WebExpressions.InvocationExpression", {
+module("WebExpressions.ParameterExpression", {
     setup: function () {
         WebExpressions.MemberExpression.PropertyRegex = property;
         WebExpressions.Expression.CreateExpression = createExpression;
@@ -74,19 +74,21 @@ test("_Compile test", function () {
     assert.strictEqual(context.something, actual);
 });
 
-// Constructor test OK
-test("EvalExpression test", function () {
+// ##########################################
+// # Replace if EvalExpression is put back in
+// ##########################################
+//test("EvalExpression test", function () {
 
-    // arrange
-    var subject = {
-        Name: "LKJLKJHLKH"
-    };
+//    // arrange
+//    var subject = {
+//        Name: "LKJLKJHLKH"
+//    };
 
-    // act
-    var result = WebExpressions.ParameterExpression.prototype.EvalExpression.call(subject);
+//    // act
+//    var result = WebExpressions.ParameterExpression.prototype.EvalExpression.call(subject);
 
-    // assert
-    assert.strictEqual(result.Expression, subject.Name);
-    assert.strictEqual(result.Constants.constructor, WebExpressions.Utils.Dictionary);
-    assert.strictEqual(0, result.Constants._InnerDictionary.length);
-});
+//    // assert
+//    assert.strictEqual(result.Expression, subject.Name);
+//    assert.strictEqual(result.Constants.constructor, WebExpressions.Utils.Dictionary);
+//    assert.strictEqual(0, result.Constants._InnerDictionary.length);
+//});

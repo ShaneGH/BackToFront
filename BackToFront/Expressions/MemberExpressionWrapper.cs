@@ -20,15 +20,6 @@ namespace BackToFront.Expressions
             }
         }
 
-        //TODO: test
-        public bool IsStatic
-        {
-            get
-            {
-                return InnerExpression is DefaultExpressionWrapper;
-            }
-        }
-
         public MemberExpressionWrapper(MemberExpression expression)
             : base(expression)
         {

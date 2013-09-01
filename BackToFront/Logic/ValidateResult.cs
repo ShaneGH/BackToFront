@@ -66,28 +66,28 @@ namespace BackToFront.Logic
             Mocks.AddRange(mocks);
         }
 
-        private bool _CachedFirstViolation = false;
-        private IViolation _FirstViolation;
+        private Tuple<IViolation> _FirstViolation;
         public IViolation FirstViolation
         {
             get
             {
-                if (!_CachedFirstViolation)
+                if (_FirstViolation == null)
                 {
-                    _CachedFirstViolation = true;
+                    // ensure validation will not occur again (unless Reset)
+                    _FirstViolation = new Tuple<IViolation>(null);
                     if (_AllViolations != null)
                     {
-                        _FirstViolation = _AllViolations.FirstOrDefault();
+                        _FirstViolation = new Tuple<IViolation>(_AllViolations.FirstOrDefault());
                     }
                     else
                     {
-                        _FirstViolation = RunValidation(true).FirstOrDefault();
+                        _FirstViolation = new Tuple<IViolation>(RunValidation(true).FirstOrDefault());
 
-                        if (_FirstViolation == null)
+                        if (_FirstViolation.Item1 == null)
                         {
                             foreach (var child in ValidateChildMembers)
                             {
-                                _FirstViolation = child.Validate().FirstViolation;
+                                _FirstViolation = new Tuple<IViolation>(child.Validate().FirstViolation);
                                 if (_FirstViolation != null)
                                     break;
                             }
@@ -95,7 +95,7 @@ namespace BackToFront.Logic
                     }
                 }
 
-                return _FirstViolation;
+                return _FirstViolation.Item1;
             }
         }
 
@@ -216,7 +216,6 @@ namespace BackToFront.Logic
 
         public void ResetResult()
         {
-            _CachedFirstViolation = false;
             _FirstViolation = null;
             _AllViolations = null;
         }
@@ -260,7 +259,7 @@ namespace BackToFront.Logic
         /// <param name="member"></param>
         /// <param name="mocks"></param>
         /// <returns></returns>
-        public static IEnumerable<Mock> ConvertAndFilterMocks<TEntity, TParameter>(Expression<Func<TEntity, TParameter>> member, IEnumerable<Mock> mocks)
+        public static IEnumerable<Mock> ConvertAndFilterMocks<TParameter>(Expression<Func<TEntity, TParameter>> member, IEnumerable<Mock> mocks)
         {
             var parameterType = typeof(TParameter);
             foreach (var m in mocks)

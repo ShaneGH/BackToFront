@@ -21,17 +21,6 @@ var WebExpressions;
             this.MemberName = meta.MemberName;
         }
         MemberExpression.PropertyRegex = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
-        MemberExpression.prototype.EvalExpression = function () {
-            throw "Not implemented, need to split into static and non static member references";
-            if(!MemberExpression.PropertyRegex.test(this.MemberName)) {
-                throw "Invalid property name: " + this.MemberName;
-            }
-            var expression = this.Expression.EvalExpression();
-            return {
-                Expression: expression.Expression + "." + this.MemberName,
-                Constants: expression.Constants
-            };
-        };
         MemberExpression.prototype._Compile = function () {
             if(!MemberExpression.PropertyRegex.test(this.MemberName)) {
                 throw "Invalid property name: " + this.MemberName;

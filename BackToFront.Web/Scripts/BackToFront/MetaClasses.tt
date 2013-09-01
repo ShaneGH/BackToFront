@@ -62,7 +62,6 @@ var implements = types.Contains(type.BaseType) ? " extends " + type.BaseType.Nam
 			<#=member.Name + ": " + registeredTypes.TypeNameFor(member) #>;
 <#}#>
 		}
-
 <#}#>
 	}
 }

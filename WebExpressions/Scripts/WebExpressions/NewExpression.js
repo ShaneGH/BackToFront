@@ -35,34 +35,6 @@ var WebExpressions;
             this.Type = meta.Type;
             this.IsAnonymous = meta.IsAnonymous;
         }
-        NewExpression.prototype.EvalExpression = function () {
-            var args = linq(this.Arguments).Select(function (a) {
-                return a.EvalExpression();
-            }).Result;
-            var constants = new WebExpressions.Utils.Dictionary();
-            linq(args).Each(function (a) {
-                return constants.Merge(a.Constants);
-            });
-            var argsString = linq(args).Select(function (a) {
-                return a.Expression;
-            }).Result.join(", ");
-            if(this.IsAnonymous) {
-                return {
-                    Constants: constants,
-                    Expression: "{ " + argsString + " }"
-                };
-            } else if(NewExpression.RegisteredTypes[this.Type]) {
-                return {
-                    Constants: constants,
-                    Expression: "new ex.ns.NewExpression.RegisteredTypes[\"" + this.Type + "\"](" + argsString + ")"
-                };
-            } else {
-                return {
-                    Constants: constants,
-                    Expression: "{}"
-                };
-            }
-        };
         NewExpression.prototype._Compile = function () {
             var _this = this;
             var args = linq(this.Arguments).Select(function (a) {

@@ -15,12 +15,6 @@ var WebExpressions;
             });
             this.Name = meta.Name;
         }
-        ParameterExpression.prototype.EvalExpression = function () {
-            return {
-                Expression: this.Name,
-                Constants: new WebExpressions.Utils.Dictionary()
-            };
-        };
         ParameterExpression.prototype._Compile = function () {
             var _this = this;
             return function (ambientContext) {

@@ -33,20 +33,20 @@ module WebExpressions {
         };
 
             // TODO: replace . with [] and watch for injection
-        EvalExpression(): CreateEvalExpression {
-            throw "Not implemented, need to split into static and non static member references";
+        //EvalExpression(): CreateEvalExpression {
+        //    throw "Not implemented, need to split into static and non static member references";
 
-            if (!MemberExpression.PropertyRegex.test(this.MemberName)) {
-                throw "Invalid property name: " + this.MemberName;
-            }
+        //    if (!MemberExpression.PropertyRegex.test(this.MemberName)) {
+        //        throw "Invalid property name: " + this.MemberName;
+        //    }
 
-            var expression = this.Expression.EvalExpression();
+        //    var expression = this.Expression.EvalExpression();
 
-            return {
-                Expression: expression.Expression + "." + this.MemberName,
-                Constants: expression.Constants
-            };
-        };
+        //    return {
+        //        Expression: expression.Expression + "." + this.MemberName,
+        //        Constants: expression.Constants
+        //    };
+        //};
 
         _Compile(): ExpressionInvokerAction {
             if (!MemberExpression.PropertyRegex.test(this.MemberName)) {

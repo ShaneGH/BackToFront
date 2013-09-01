@@ -18,15 +18,6 @@ var WebExpressions;
                 return "constant-" + (++id);
             };
         })();
-        ConstantExpression.prototype.EvalExpression = function () {
-            var accessor = ConstantExpression.GenerateConstantId();
-            var constant = new WebExpressions.Utils.Dictionary();
-            constant.Add(accessor, this.Value);
-            return {
-                Constants: constant,
-                Expression: ConstantExpression.ConstantParameter + "[" + accessor + "]"
-            };
-        };
         ConstantExpression.prototype._Compile = function () {
             var _this = this;
             return function (ambientContext) {

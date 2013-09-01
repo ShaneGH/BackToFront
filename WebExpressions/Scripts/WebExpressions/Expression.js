@@ -18,20 +18,7 @@ var WebExpressions;
             }
             return this._Compiled;
         };
-        Expression.prototype.EvalCompile = function () {
-            if(!this._EvalCompiled) {
-                var result = this.EvalExpression();
-                var logic = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
-                this._EvalCompiled = function () {
-                    return logic(result.Constants);
-                };
-            }
-            return this._EvalCompiled;
-        };
         Expression.prototype._Compile = function () {
-            throw "Invalid operation";
-        };
-        Expression.prototype.EvalExpression = function () {
             throw "Invalid operation";
         };
         Expression.prototype.GetAffectedProperties = function () {

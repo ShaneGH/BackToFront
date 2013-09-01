@@ -30,27 +30,6 @@ var WebExpressions;
             this.MethodName = meta.MethodName;
             this.MethodFullName = meta.MethodFullName;
         }
-        MethodCallExpression.prototype.EvalExpression = function () {
-            throw "Not implemented, need to split into static and non static method calls";
-            if(!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
-                throw "Invalid method name: " + this.MethodName;
-            }
-            var args = linq(this.Arguments).Select(function (a) {
-                return a.EvalExpression();
-            }).Result;
-            var object = this.Object ? this.Object.EvalExpression() : {
-                Expression: "window",
-                Constants: new WebExpressions.Utils.Dictionary()
-            };
-            linq(args).Each(function (a) {
-                return object.Constants.Merge(a.Constants);
-            });
-            var mthd = "__o[\"" + this.MethodName + "\"]";
-            return {
-                Expression: "(function (__o) { return (" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"]).call(__o, " + args.join(", ") + "); })(" + object.Expression + ")",
-                Constants: object.Constants
-            };
-        };
         MethodCallExpression.prototype._Compile = function () {
             var _this = this;
             if(!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {

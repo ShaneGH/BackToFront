@@ -137,38 +137,45 @@ test("ExpressionConstructorDictionary", function () {
     }
 });
 
-test("EvalCompile test, no cache", function () {
-    // arrange
-    var val = { v: "LIJBLKJBLKJG*GBV" };
-    var subject = {
-        EvalExpression: function () {
-            return {
-                Expression: "return " + WebExpressions.ConstantExpression.ConstantParameter + ".v",
-                Constants: val
-            };
-        }
-    };
+// #######################################
+// # Replace if EvalCompile is put back in
+// #######################################
+//test("EvalCompile test, no cache", function () {
+//    // arrange
+//    var val = { v: "LIJBLKJBLKJG*GBV" };
+//    var subject = {
+//        EvalExpression: function () {
+//            return {
+//                Expression: "return " + WebExpressions.ConstantExpression.ConstantParameter + ".v",
+//                Constants: val
+//            };
+//        }
+//    };
 
-    // act
-    var result = WebExpressions.Expression.prototype.EvalCompile.call(subject);
-    var endValue = result();
+//    // act
+//    var result = WebExpressions.Expression.prototype.EvalCompile.call(subject);
+//    var endValue = result();
 
-    // assert
-    assert.strictEqual(subject._EvalCompiled, result);
-    assert.strictEqual(endValue, val.v);
-});
+//    // assert
+//    assert.strictEqual(subject._EvalCompiled, result);
+//    assert.strictEqual(endValue, val.v);
+//});
 
-test("EvalCompile test, with cache", function () {
-    // arrange
-    var ec = {};
-    var subject = {
-        _EvalCompiled: ec
-    };
 
-    // act
-    var result = WebExpressions.Expression.prototype.EvalCompile.call(subject);
+// #######################################
+// # Replace if EvalCompile is put back in
+// #######################################
+//test("EvalCompile test, with cache", function () {
+//    // arrange
+//    var ec = {};
+//    var subject = {
+//        _EvalCompiled: ec
+//    };
 
-    // assert
-    assert.strictEqual(result, subject._EvalCompiled);
-    assert.strictEqual(ec, subject._EvalCompiled);
-});
+//    // act
+//    var result = WebExpressions.Expression.prototype.EvalCompile.call(subject);
+
+//    // assert
+//    assert.strictEqual(result, subject._EvalCompiled);
+//    assert.strictEqual(ec, subject._EvalCompiled);
+//});

@@ -22,16 +22,16 @@ module WebExpressions {
                 this.Arguments = linq(meta.Arguments).Select(a => Expression.CreateExpression(a)).Result;
             }
 
-            EvalExpression(): CreateEvalExpression {
-                var expression = this.Expression.EvalExpression();
-                var args = linq(this.Arguments).Select(a => a.EvalExpression());
-                linq(args).Each(a => expression.Constants.Merge(a.Constants));
+            //EvalExpression(): CreateEvalExpression {
+            //    var expression = this.Expression.EvalExpression();
+            //    var args = linq(this.Arguments).Select(a => a.EvalExpression());
+            //    linq(args).Each(a => expression.Constants.Merge(a.Constants));
 
-                return {
-                    Constants: expression.Constants,
-                    Expression: expression.Expression + "(" + linq(args).Select(a => a.Expression).Result.join(", ") + ")"
-                };
-            }
+            //    return {
+            //        Constants: expression.Constants,
+            //        Expression: expression.Expression + "(" + linq(args).Select(a => a.Expression).Result.join(", ") + ")"
+            //    };
+            //}
 
             _Compile(): ExpressionInvokerAction {
 

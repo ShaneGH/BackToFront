@@ -38,13 +38,13 @@ module WebExpressions {
             this.Operand = Expression.CreateExpression(meta.Operand);
         }
 
-        EvalExpression(): CreateEvalExpression {
-            var operand = this.Operand.EvalExpression();
-            return {
-                Expression: "(" + UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression) + ")",
-                Constants: operand.Constants
-            };
-        }
+        //EvalExpression(): CreateEvalExpression {
+        //    var operand = this.Operand.EvalExpression();
+        //    return {
+        //        Expression: "(" + UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression) + ")",
+        //        Constants: operand.Constants
+        //    };
+        //}
 
         _Compile(): ExpressionInvokerAction {
             var operand = this.Operand.Compile();

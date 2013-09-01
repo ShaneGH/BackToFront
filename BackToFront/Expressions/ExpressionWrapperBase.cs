@@ -100,7 +100,7 @@ namespace BackToFront.Expressions
 
         /// <summary>
         /// Mocks part of the current expression with the given parameter with a specific set of rules:
-        ///     Both the InnerExpression and input expressions must have one argument and it has the same type
+        ///     Both the InnerExpression and input expressions must have one argument and it has to be the same type
         ///     The input expression must be fully linear (ILinearExpression)
         ///     There is no room for error. If there is no mock, an exception will be thrown
         ///     All instances of the original parameters of InnerExpression must be mocked out
@@ -132,7 +132,7 @@ namespace BackToFront.Expressions
                 var last = previous.Peek();
                 if (last.IsSameExpression(wrapper.WrappedExpression))
                 {
-                    // rempve last expression, this will be the expression we are mocking out
+                    // remove last expression, this will be the expression we are mocking out
                     previous.Pop();
                     Expression current = root;
                     while (previous.Count > 0)

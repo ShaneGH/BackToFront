@@ -104,35 +104,37 @@ test("_Compile test", function () {
     ex.VerifyOrderedExpectations();
 });
 
-// Constructor test OK
-test("EvalExpression test", function () {
-    var expect = new tUtil.Expect("callFromDictionary");
+// ##########################################
+// # Replace if EvalExpression is put back in
+// ##########################################
+//test("EvalExpression test", function () {
+//    var expect = new tUtil.Expect("callFromDictionary");
 
-    // arrange
-    var expression = "sad[oih[spdfu98ihsdf";
-    var operand = { Constants: {}, Expression: {} };
-    var subject = {
-        NodeType: "nt",
-        Operand: {
-            EvalExpression: function () { return operand; }
-        }
-    };
-    WebExpressions.UnaryExpression.OperatorStringDictionary = {
-        nt: function (input) {
-            expect.At("callFromDictionary");
-            assert.strictEqual(input, operand.Expression);
-            return expression;
-        }
-    };
+//    // arrange
+//    var expression = "sad[oih[spdfu98ihsdf";
+//    var operand = { Constants: {}, Expression: {} };
+//    var subject = {
+//        NodeType: "nt",
+//        Operand: {
+//            EvalExpression: function () { return operand; }
+//        }
+//    };
+//    WebExpressions.UnaryExpression.OperatorStringDictionary = {
+//        nt: function (input) {
+//            expect.At("callFromDictionary");
+//            assert.strictEqual(input, operand.Expression);
+//            return expression;
+//        }
+//    };
 
-    // act
-    var result = WebExpressions.UnaryExpression.prototype.EvalExpression.call(subject);
+//    // act
+//    var result = WebExpressions.UnaryExpression.prototype.EvalExpression.call(subject);
 
-    // assert
-    expect.VerifyOrderedExpectations();
-    assert.strictEqual(result.Expression, "(" + expression + ")");
-    assert.strictEqual(result.Constants, operand.Constants);
-});
+//    // assert
+//    expect.VerifyOrderedExpectations();
+//    assert.strictEqual(result.Expression, "(" + expression + ")");
+//    assert.strictEqual(result.Constants, operand.Constants);
+//});
 
 // 
 test("OperatorDictionary test", function () {
