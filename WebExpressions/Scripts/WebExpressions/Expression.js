@@ -1,3 +1,18 @@
+/// <reference path="../ref/linq.d.ts" />
+/// <reference path="MetaClasses.ts" />
+/// <reference path="Sanitizer.ts" />
+/// <reference path="AssignmentExpression.ts" />
+/// <reference path="BinaryExpression.ts" />
+/// <reference path="BlockExpression.ts" />
+/// <reference path="ConditionalExpression.ts" />
+/// <reference path="ConstantExpression.ts" />
+/// <reference path="DefaultExpression.ts" />
+/// <reference path="InvocationExpression.ts" />
+/// <reference path="MemberExpression.ts" />
+/// <reference path="MethodCallExpression.ts" />
+/// <reference path="NewExpression.ts" />
+/// <reference path="ParameterExpression.ts" />
+/// <reference path="UnaryExpression.ts" />
 var WebExpressions;
 (function (WebExpressions) {
     var Expression = (function () {
@@ -9,24 +24,52 @@ var WebExpressions;
                 inputName: "ExpressionType",
                 inputConstructor: Number
             });
+
             this.NodeType = meta.NodeType;
             this.ExpressionType = meta.ExpressionType;
         }
         Expression.prototype.Compile = function () {
-            if(!this._Compiled) {
+            if (!this._Compiled) {
                 this._Compiled = this._Compile();
             }
+
             return this._Compiled;
         };
+
+        //private _EvalCompiled: Function;
+        //EvalCompile(): Function {
+        //    if (!this._EvalCompiled) {
+        //        var result = this.EvalExpression();
+        //        var logic = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
+        //        this._EvalCompiled = function () { return logic(result.Constants); };
+        //    }
+        //    return this._EvalCompiled;
+        //}
+        // abstract
         Expression.prototype._Compile = function () {
             throw "Invalid operation";
         };
+
+        // abstract
+        //EvalExpression(): CreateEvalExpression {
+        //    throw "Invalid operation";
+        //}
         Expression.prototype.GetAffectedProperties = function () {
             return [];
         };
+
+        Expression.CreateExpression = function (meta) {
+            if (meta.NodeType === WebExpressions.Meta.ExpressionType.Assign && meta.ExpressionType === WebExpressions.Meta.ExpressionWrapperType.Binary) {
+                return new WebExpressions.AssignmentExpression(meta);
+            }
+
+            if (Expression.ExpressionConstructorDictionary[meta.ExpressionType])
+                return Expression.ExpressionConstructorDictionary[meta.ExpressionType](meta);
+
+            throw "Invalid expression type";
+        };
         Expression.ExpressionConstructorDictionary = (function () {
-            var dictionary = {
-            };
+            var dictionary = {};
             dictionary[WebExpressions.Meta.ExpressionWrapperType.Binary] = function (meta) {
                 return new WebExpressions.BinaryExpression(meta);
             };
@@ -60,18 +103,10 @@ var WebExpressions;
             dictionary[WebExpressions.Meta.ExpressionWrapperType.New] = function (meta) {
                 return new WebExpressions.NewExpression(meta);
             };
+
             return dictionary;
         })();
-        Expression.CreateExpression = function CreateExpression(meta) {
-            if(meta.NodeType === WebExpressions.Meta.ExpressionType.Assign && meta.ExpressionType === WebExpressions.Meta.ExpressionWrapperType.Binary) {
-                return new WebExpressions.AssignmentExpression(meta);
-            }
-            if(Expression.ExpressionConstructorDictionary[meta.ExpressionType]) {
-                return Expression.ExpressionConstructorDictionary[meta.ExpressionType](meta);
-            }
-            throw "Invalid expression type";
-        };
         return Expression;
     })();
-    WebExpressions.Expression = Expression;    
+    WebExpressions.Expression = Expression;
 })(WebExpressions || (WebExpressions = {}));

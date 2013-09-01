@@ -7,7 +7,7 @@ module WebExpressions {
         Arguments: Expression[];
         Members: string[];
         Type: string;
-        IsAnonymous: bool;
+        IsAnonymous: boolean;
 
         constructor(meta: Meta.NewExpressionMeta) {
             super(meta);

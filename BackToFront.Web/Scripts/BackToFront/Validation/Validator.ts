@@ -8,7 +8,7 @@ module BackToFront {
         RequiredForValidation: String[];
         ValidationSubjects: String[];
 
-        Validate(entity: any, breakOnFirstError: bool): Meta.IViolation[];
+        Validate(entity: any, breakOnFirstError: boolean): Meta.IViolation[];
     }
 
     export module Validation {
@@ -19,14 +19,14 @@ module BackToFront {
             constructor(rules: Meta.RuleMeta[], public Entity: string) {
 
                 this.Rules = linq(rules || []).Select(Validator.CreateRule).Result;
-            };
+            }
 
             static CreateRule(rule: Meta.RuleMeta): IValidate {
                 var r = ex.createExpression(rule.Expression).Compile();
                 return {
                     RequiredForValidation: linq(rule.RequiredForValidation).Select(a => Validator.MemberChainItemString(a, true)).Result,
                     ValidationSubjects: linq(rule.ValidationSubjects).Select(a => Validator.MemberChainItemString(a, true)).Result,
-                    Validate: (entity: any, breakOnFirstError: bool = false) => {
+                    Validate: (entity: any, breakOnFirstError: boolean = false) => {
 
                         var context = {};
                         context[rule.EntityParameter] = entity;
@@ -43,7 +43,7 @@ module BackToFront {
                         return <any>context[rule.ContextParameter].Violations;
                     }
                 };
-            };
+            }
 
             static MemberChainItemString(memberChainItem, skipFirst): string {
                 if (skipFirst) { memberChainItem = memberChainItem.NextItem; }
@@ -56,7 +56,7 @@ module BackToFront {
                 return output.join(".");
             }
 
-            Validate(propertyName: string, breakOnFirstError: bool = false): Meta.IViolation[] {
+            Validate(propertyName: string, breakOnFirstError: boolean = false): Meta.IViolation[] {
 
                 var entity = this.GetEntity();
 
@@ -69,14 +69,14 @@ module BackToFront {
                     // filter violations which do not apply to this property.
                     .Where((violation: Meta.IViolation) => Validator.FilterViolation(violation, propertyName))
                     .Result;
-            };
+            }
 
                 // abstract
             GetEntity(): any {
                 throw "Invalid operation, this method is abstract";
-            };
+            }
 
-            static FilterViolation(violation: Meta.IViolation, propertyName: string): bool {
+            static FilterViolation(violation: Meta.IViolation, propertyName: string): boolean {
                 return linq(violation.Violated).Any((member: Meta.MemberChainItem) => Validator.MemberChainItemString(member, true) === propertyName);
             }
         }

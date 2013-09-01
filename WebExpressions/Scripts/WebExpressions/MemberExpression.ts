@@ -30,7 +30,7 @@ module WebExpressions {
 
             this.Expression = meta.Expression ? Expression.CreateExpression(meta.Expression) : null;
             this.MemberName = meta.MemberName;
-        };
+        }
 
             // TODO: replace . with [] and watch for injection
         //EvalExpression(): CreateEvalExpression {
@@ -61,6 +61,6 @@ module WebExpressions {
                 //TODO: this
                 throw "Not implemented exception";
             }
-        };
+        }
     }
 }

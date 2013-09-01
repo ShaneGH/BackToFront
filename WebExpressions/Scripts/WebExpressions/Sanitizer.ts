@@ -6,7 +6,7 @@ module WebExpressions {
         inputName: string;
         inputType?: string;
         inputConstructor?: any;
-        allowNull?: bool;
+        allowNull?: boolean;
     }
 
     export class Sanitizer {

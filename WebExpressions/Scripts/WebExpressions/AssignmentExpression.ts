@@ -35,7 +35,7 @@ module WebExpressions {
             }
 
             this.Right = WebExpressions.Expression.CreateExpression(meta.Right);
-        };
+        }
 
         //EvalExpression(): CreateEvalExpression {
         //    // TODO: replace . with [] and watch for injection
@@ -55,6 +55,6 @@ module WebExpressions {
             var left = this.Left ? this.Left.Compile() : (context) => context;
             var right = this.Right.Compile();
             return (ambientContext) => left(ambientContext)[this.LeftProperty] = right(ambientContext);
-        };
+        }
     }
 }

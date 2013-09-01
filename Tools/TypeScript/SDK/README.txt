@@ -1,0 +1,1 @@
+Copied from C:\Program Files (x86)\Microsoft SDKs\TypeScript

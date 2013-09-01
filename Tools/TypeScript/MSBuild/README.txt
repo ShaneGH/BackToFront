@@ -1,0 +1,1 @@
+Copied from C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v11.0\TypeScript

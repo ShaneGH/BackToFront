@@ -1,4 +1,6 @@
+/// <reference path="Expression.ts" />
 var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
@@ -8,7 +10,8 @@ var WebExpressions;
     var NewExpression = (function (_super) {
         __extends(NewExpression, _super);
         function NewExpression(meta) {
-                _super.call(this, meta);
+            _super.call(this, meta);
+
             WebExpressions.Sanitizer.Require(meta, {
                 inputName: "Arguments",
                 inputConstructor: Array
@@ -19,15 +22,17 @@ var WebExpressions;
                 inputName: "Type",
                 inputConstructor: String
             });
-            if(meta.IsAnonymous) {
+
+            if (meta.IsAnonymous) {
                 WebExpressions.Sanitizer.Require(meta, {
                     inputName: "Members",
                     inputConstructor: Array
                 });
-                if(meta.Members.length !== meta.Arguments.length) {
+
+                if (meta.Members.length !== meta.Arguments.length)
                     throw "If members are defined, each must have a corresponding argument";
-                }
             }
+
             this.Arguments = linq(meta.Arguments).Select(function (a) {
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
@@ -35,6 +40,29 @@ var WebExpressions;
             this.Type = meta.Type;
             this.IsAnonymous = meta.IsAnonymous;
         }
+        //EvalExpression(): CreateEvalExpression {
+        //    var args = <CreateEvalExpression[]>linq(this.Arguments).Select(a => a.EvalExpression()).Result;
+        //    var constants = new WebExpressions.Utils.Dictionary();
+        //    linq(args).Each(a => constants.Merge(a.Constants));
+        //    var argsString = linq(args).Select(a => a.Expression).Result.join(", ");
+        //    if (this.IsAnonymous) {
+        //        return {
+        //            Constants: constants,
+        //            Expression: "{ " + argsString + " }"
+        //        };
+        //    } else if (NewExpression.RegisteredTypes[this.Type]) {
+        //        return {
+        //            Constants: constants,
+        //            Expression: "new ex.ns.NewExpression.RegisteredTypes[\"" + this.Type + "\"](" + argsString + ")"
+        //        }
+        //    } else {
+        //        return {
+        //            Constants: constants,
+        //            Expression: "{}"
+        //        };
+        //    }
+        //}
+        // TODO: register types
         NewExpression.prototype._Compile = function () {
             var _this = this;
             var args = linq(this.Arguments).Select(function (a) {
@@ -44,32 +72,33 @@ var WebExpressions;
                 var params = linq(args).Select(function (a) {
                     return a(ambientContext);
                 }).Result;
-                if(_this.IsAnonymous) {
+                if (_this.IsAnonymous)
                     return _this.ConstructAnonymous(params);
-                } else if(NewExpression.RegisteredTypes[_this.Type]) {
+else if (NewExpression.RegisteredTypes[_this.Type])
                     return NewExpression.Construct(NewExpression.RegisteredTypes[_this.Type], params);
-                } else {
-                    return {
-                    };
-                }
+else
+                    return {};
             };
         };
+
         NewExpression.prototype.ConstructAnonymous = function (params) {
-            var obj = {
-            };
-            for(var i = 0, ii = this.Members.length; i < ii; i++) {
+            var obj = {};
+            for (var i = 0, ii = this.Members.length; i < ii; i++)
                 obj[this.Members[i]] = params[i];
-            }
+
             return obj;
         };
-        NewExpression.Construct = function Construct(constr, args) {
+
+        NewExpression.Construct = function (constr, args) {
             var obj = Object.create(constr.prototype);
             var result = constr.apply(obj, args);
+
+            //TODO: this
             return typeof result === 'object' ? result : obj;
         };
-        NewExpression.RegisteredTypes = {
-        };
+
+        NewExpression.RegisteredTypes = {};
         return NewExpression;
     })(WebExpressions.Expression);
-    WebExpressions.NewExpression = NewExpression;    
+    WebExpressions.NewExpression = NewExpression;
 })(WebExpressions || (WebExpressions = {}));

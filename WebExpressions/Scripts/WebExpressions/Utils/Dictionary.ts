@@ -11,7 +11,7 @@ module WebExpressions.Utils {
 
         private _InnerDictionary: KeyValuePair[] = [];
 
-        public ContainsKey(key): bool {
+        public ContainsKey(key): boolean {
             return linq(this._InnerDictionary).Any(a => a.Key === key);
         }
 

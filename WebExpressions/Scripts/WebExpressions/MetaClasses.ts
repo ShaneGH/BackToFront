@@ -50,7 +50,7 @@ module WebExpressions {
 
 		export interface NewExpressionMeta extends ExpressionMeta {
 			Arguments: ExpressionMeta[];
-			IsAnonymous: bool;
+			IsAnonymous: boolean;
 			Members: string[];
 			Type: string;
 		}

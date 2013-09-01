@@ -66,7 +66,7 @@ module WebExpressions {
 
             this.Left = Expression.CreateExpression(meta.Left);
             this.Right = Expression.CreateExpression(meta.Right);
-        };
+        }
 
         //EvalExpression(): CreateEvalExpression {
         //    if (!BinaryExpression.OperatorStringDictionary[this.NodeType]) {
@@ -89,6 +89,6 @@ module WebExpressions {
             var left = this.Left.Compile();
             var right = this.Right.Compile();
             return (ambientContext) => BinaryExpression.OperatorDictionary[this.NodeType](left(ambientContext), right(ambientContext))
-        };
+        }
     }
 }

@@ -1,4 +1,6 @@
+/// <reference path="Expression.ts" />
 var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
@@ -8,7 +10,8 @@ var WebExpressions;
     var InvocationExpression = (function (_super) {
         __extends(InvocationExpression, _super);
         function InvocationExpression(meta) {
-                _super.call(this, meta);
+            _super.call(this, meta);
+
             WebExpressions.Sanitizer.Require(meta, {
                 inputName: "Expression",
                 inputType: "object"
@@ -16,11 +19,21 @@ var WebExpressions;
                 inputName: "Arguments",
                 inputConstructor: Array
             });
+
             this.Expression = WebExpressions.Expression.CreateExpression(meta.Expression);
             this.Arguments = linq(meta.Arguments).Select(function (a) {
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
         }
+        //EvalExpression(): CreateEvalExpression {
+        //    var expression = this.Expression.EvalExpression();
+        //    var args = linq(this.Arguments).Select(a => a.EvalExpression());
+        //    linq(args).Each(a => expression.Constants.Merge(a.Constants));
+        //    return {
+        //        Constants: expression.Constants,
+        //        Expression: expression.Expression + "(" + linq(args).Select(a => a.Expression).Result.join(", ") + ")"
+        //    };
+        //}
         InvocationExpression.prototype._Compile = function () {
             var expresion = this.Expression.Compile();
             var args = linq(this.Arguments).Select(function (a) {
@@ -31,10 +44,11 @@ var WebExpressions;
                 var params = linq(args).Select(function (a) {
                     return a(ambientContext);
                 }).Result;
+
                 return e.apply(ambientContext, params);
             };
         };
         return InvocationExpression;
     })(WebExpressions.Expression);
-    WebExpressions.InvocationExpression = InvocationExpression;    
+    WebExpressions.InvocationExpression = InvocationExpression;
 })(WebExpressions || (WebExpressions = {}));

@@ -21,7 +21,7 @@ module BackToFront {
 			MemberName: string;
 		}
 		export interface IValidationContext {
-			BreakOnFirstError: bool;
+			BreakOnFirstError: boolean;
 			Violations: IViolation;
 			Mocks: any[];
 			Dependencies: any;

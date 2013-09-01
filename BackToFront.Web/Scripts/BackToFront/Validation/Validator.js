@@ -1,3 +1,5 @@
+/// <reference path="../Sanitizer.ts" />
+/// <reference path="../../../../WebExpressions/Scripts/ref/Exports.ts" />
 var BackToFront;
 (function (BackToFront) {
     (function (Validation) {
@@ -6,7 +8,7 @@ var BackToFront;
                 this.Entity = Entity;
                 this.Rules = linq(rules || []).Select(Validator.CreateRule).Result;
             }
-            Validator.CreateRule = function CreateRule(rule) {
+            Validator.CreateRule = function (rule) {
                 var r = ex.createExpression(rule.Expression).Compile();
                 return {
                     RequiredForValidation: linq(rule.RequiredForValidation).Select(function (a) {
@@ -17,35 +19,40 @@ var BackToFront;
                     }).Result,
                     Validate: function (entity, breakOnFirstError) {
                         if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
-                        var context = {
-                        };
+                        var context = {};
                         context[rule.EntityParameter] = entity;
                         context[rule.ContextParameter] = {
+                            // TODO: hardcoded names (BreakOnFirstError, Violations, Mocks, Dependencies)
+                            // TODO: Mocks and Dependencies
                             Violations: [],
                             BreakOnFirstError: breakOnFirstError,
                             Mocks: [],
-                            Dependencies: {
-                            }
+                            Dependencies: {}
                         };
+
                         r(context);
                         return context[rule.ContextParameter].Violations;
                     }
                 };
             };
-            Validator.MemberChainItemString = function MemberChainItemString(memberChainItem, skipFirst) {
-                if(skipFirst) {
+
+            Validator.MemberChainItemString = function (memberChainItem, skipFirst) {
+                if (skipFirst) {
                     memberChainItem = memberChainItem.NextItem;
                 }
                 var output = [];
-                while(memberChainItem) {
+                while (memberChainItem) {
                     output.push(memberChainItem.MemberName);
                     memberChainItem = memberChainItem.NextItem;
                 }
+
                 return output.join(".");
             };
+
             Validator.prototype.Validate = function (propertyName, breakOnFirstError) {
                 if (typeof breakOnFirstError === "undefined") { breakOnFirstError = false; }
                 var entity = this.GetEntity();
+
                 return linq(this.Rules).Where(function (rule) {
                     return rule.ValidationSubjects.indexOf(propertyName) !== -1;
                 }).Select(function (rule) {
@@ -54,17 +61,20 @@ var BackToFront;
                     return Validator.FilterViolation(violation, propertyName);
                 }).Result;
             };
+
+            // abstract
             Validator.prototype.GetEntity = function () {
                 throw "Invalid operation, this method is abstract";
             };
-            Validator.FilterViolation = function FilterViolation(violation, propertyName) {
+
+            Validator.FilterViolation = function (violation, propertyName) {
                 return linq(violation.Violated).Any(function (member) {
                     return Validator.MemberChainItemString(member, true) === propertyName;
                 });
             };
             return Validator;
         })();
-        Validation.Validator = Validator;        
+        Validation.Validator = Validator;
     })(BackToFront.Validation || (BackToFront.Validation = {}));
     var Validation = BackToFront.Validation;
 })(BackToFront || (BackToFront = {}));

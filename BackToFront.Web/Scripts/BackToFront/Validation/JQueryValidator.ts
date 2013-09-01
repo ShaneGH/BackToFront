@@ -17,7 +17,7 @@ module BackToFront {
                 super(rules, entity);
 
                 JQueryValidator.Setup();
-            };
+            }
 
             GetEntity(): any {
                 var entity = {};
@@ -50,7 +50,7 @@ module BackToFront {
                 }
 
                 return entity;
-            };
+            }
 
             //#######################################################
             //###### Static
@@ -89,8 +89,8 @@ module BackToFront {
 
             // assume will be run onther the context of a jQuery validation
             static HandlerErrors() {
-                if (this.__BTFContext && this.__BTFContext.Errors && this.__BTFContext.Errors.length) {
-                    return JQueryValidator.JoinErrors(linq(this.__BTFContext.Errors).Select(a => a.UserMessage).Result);
+                if (this["__BTFContext"] && this["__BTFContext"].Errors && this["__BTFContext"].Errors.length) {
+                    return JQueryValidator.JoinErrors(linq(this["__BTFContext"].Errors).Select(a => a.UserMessage).Result);
 
                     // if string.format is needed for custom errors you can use this:
                     // jQuery.validator.format("These have been injected: {0}, {1}", "\"me\"", "\"and me\"");
@@ -102,14 +102,15 @@ module BackToFront {
             static AddOptions(options) {
                 options.rules[JQueryValidator.ValidatorName] = options.params;
             }
-
+            
+            // assume will be run onther the context of a jQuery validation
             static Validate(value: any, element: any, ...params: any[]) {
 
                 var results = linq(JQueryValidator.Registered)
                     .Select((a: JQueryValidator) => a.Validate($(element).attr("name"), false))
                     .Aggregate();
 
-                this.__BTFContext = new JqueryBTFContext(results.Result);
+                this["__BTFContext"] = new JqueryBTFContext(results.Result);
                 return results.Result.length === 0
             }
 

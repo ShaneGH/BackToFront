@@ -1,35 +1,35 @@
+/// <reference path="../ref/jquery.d.ts" />
+/// <reference path="../ref/jquery.validation.d.ts" />
+/// <reference path="MetaClasses.ts" />
 var BackToFront;
 (function (BackToFront) {
     var Sanitizer = (function () {
-        function Sanitizer() { }
-        Sanitizer.Require = function Require(item) {
+        function Sanitizer() {
+        }
+        Sanitizer.Require = ///<summary>Class which deals with interactions with non ts code</summary>
+        function (item) {
             var properties = [];
             for (var _i = 0; _i < (arguments.length - 1); _i++) {
                 properties[_i] = arguments[_i + 1];
             }
-            if(item == null) {
+            if (item == null) {
                 throw "Item must have a value";
             }
-            for(var i = 0, ii = properties.length; i < ii; i++) {
+
+            for (var i = 0, ii = properties.length; i < ii; i++) {
                 var prop = properties[i];
-                if(prop.allowNull && item[prop.inputName] == null) {
+
+                if (prop.allowNull && item[prop.inputName] == null)
                     return;
-                }
-                if(!prop.allowNull && item[prop.inputName] == null) {
+                if (!prop.allowNull && item[prop.inputName] == null)
                     throw "Property " + prop.inputName + " cannot be null";
-                }
-                if(prop.inputType && typeof item[prop.inputName] !== prop.inputType) {
+                if (prop.inputType && typeof item[prop.inputName] !== prop.inputType)
                     throw "Property " + prop.inputName + " must be of type " + prop.inputType;
-                }
-                if(prop.inputConstructor && item[prop.inputName].constructor !== prop.inputConstructor) {
-                    throw {
-                        message: "Property " + prop.inputName + " must be of a give type",
-                        type: prop.inputConstructor
-                    };
-                }
+                if (prop.inputConstructor && item[prop.inputName].constructor !== prop.inputConstructor)
+                    throw { message: "Property " + prop.inputName + " must be of a give type", type: prop.inputConstructor };
             }
         };
         return Sanitizer;
     })();
-    BackToFront.Sanitizer = Sanitizer;    
+    BackToFront.Sanitizer = Sanitizer;
 })(BackToFront || (BackToFront = {}));
