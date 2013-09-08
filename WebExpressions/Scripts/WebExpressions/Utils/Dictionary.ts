@@ -8,13 +8,15 @@ module WebExpressions.Utils {
 
         static PropertyRegex: RegExp = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
 
-        static GetClass(className: string[]): Function {
+        static GetClass(fullyQualifiedClassName: string): Function {
+
+            var className = CustomClassHandler.SplitNamespace(fullyQualifiedClassName);
 
             var item = <any>window;
             for (var i = 0, ii = className.length; i < ii; i++) {
                 item = item[className[i]];
                 if (item == undefined)
-                    throw "Cannot evaluate member " + className.join(".");
+                    throw "Cannot evaluate member " + className;
             }
 
             return item;
@@ -29,6 +31,24 @@ module WebExpressions.Utils {
             });
 
             return output;
+        }
+
+        static AddStaticItem(fullyQualifiedName: string, item: any) {
+            var ns = CustomClassHandler.SplitNamespace(fullyQualifiedName);
+            if (ns.length < 2)
+                throw "Invalid namespace";
+
+            var item = window;
+            var i = 0;
+            for (var ii = ns.length - 2; i < ii; i++) {
+                if (!item[ns[i]])
+                    item = (item[ns[i]] = {});
+                else
+                    item = item[ns[i]];
+            }
+
+            if (!item[ns[i]])
+                item = (item[ns[i]] = function () { });
         }
     }
 

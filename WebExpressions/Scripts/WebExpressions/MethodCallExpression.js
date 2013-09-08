@@ -84,12 +84,12 @@ var WebExpressions;
                 inputType: "string"
             });
 
-            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
+            this.Class = meta.Class;
         }
         StaticMethodCallExpression.prototype._CompileMethodCallContext = function () {
-            var _this = this;
-            return function (item) {
-                return WebExpressions.Utils.CustomClassHandler.GetClass(_this.Class);
+            var item = WebExpressions.Utils.CustomClassHandler.GetClass(this.Class);
+            return function (context) {
+                return item;
             };
         };
         return StaticMethodCallExpression;

@@ -4,25 +4,22 @@
 /// <reference path="../../Base/testUtils.js" />
 
 var require = WebExpressions.Sanitizer.Require;
-var splitNamespace = WebExpressions.Utils.CustomClassHandler.SplitNamespace;
 var getClass = WebExpressions.Utils.CustomClassHandler.GetClass;
 
 module("WebExpressions.StaticMethodCallExpression", {
     setup: function () {
         WebExpressions.Sanitizer.Require = require;
-        WebExpressions.Utils.CustomClassHandler.SplitNamespace = splitNamespace;
         WebExpressions.Utils.CustomClassHandler.GetClass = getClass;
     },
     teardown: function () {
         WebExpressions.Sanitizer.Require = require;
-        WebExpressions.StaticMemberExpression.SplitNamespace = splitNamespace;
         WebExpressions.Utils.CustomClassHandler.GetClass = getClass;
     }
 });
 
 // Constructor test OK
 test("Constructor test OK", function () {
-    var ex = new tUtil.Expect("require", "class");
+    var ex = new tUtil.Expect("require");
 
     // arrange
     var meta = { Arguments: [], MethodName: "mn", Class: "mfn", NodeType: WebExpressions.Meta.ExpressionType.Add };
@@ -49,18 +46,12 @@ test("Constructor test OK", function () {
         assert.strictEqual(input2.inputType, "string");
     };
 
-    WebExpressions.Utils.CustomClassHandler.SplitNamespace = function (input) {
-        ex.ExpectationReached.push("class");
-        strictEqual(input, meta.Class);
-        return expected;
-    };
-
     // act
     var actual = new WebExpressions.StaticMethodCallExpression(meta);
 
     // assert
     ex.VerifyOrderedExpectations();
-    assert.deepEqual(expected, actual.Class);
+    assert.deepEqual(meta.Class, actual.Class);
 });
 
 test("_CompileMethodCallContext test", function () {

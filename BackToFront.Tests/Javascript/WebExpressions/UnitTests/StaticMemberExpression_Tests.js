@@ -3,20 +3,17 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var splitNamespace = WebExpressions.Utils.CustomClassHandler.SplitNamespace;
 var createExpression = WebExpressions.Expression.CreateExpression;
 var require = WebExpressions.Sanitizer.Require;
 var getClass = WebExpressions.Utils.CustomClassHandler.GetClass;
 
 module("WebExpressions.StaticMemberExpression", {
     setup: function () {
-        WebExpressions.Utils.CustomClassHandler.SplitNamespace = splitNamespace;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
         WebExpressions.Utils.CustomClassHandler.GetClass = getClass;
     },
     teardown: function () {
-        WebExpressions.Utils.CustomClassHandler.SplitNamespace = splitNamespace;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
         WebExpressions.Utils.CustomClassHandler.GetClass = getClass;
@@ -51,18 +48,12 @@ test("Constructor test OK", function () {
         assert.strictEqual(input2.inputType, "string");
     };
 
-    var split = {};
-    WebExpressions.Utils.CustomClassHandler.SplitNamespace = function (input) {
-        strictEqual(input, meta.Class);
-        return split;
-    };
-
     // act
     var actual = new WebExpressions.StaticMemberExpression(meta);
 
     // assert
     ex.VerifyOrderedExpectations();
-    assert.deepEqual(split, actual.Class);
+    assert.deepEqual(meta.Class, actual.Class);
 });
 
 // Constructor test OK

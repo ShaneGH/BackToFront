@@ -448,12 +448,14 @@ var WebExpressions;
         var CustomClassHandler = (function () {
             function CustomClassHandler() {
             }
-            CustomClassHandler.GetClass = function (className) {
+            CustomClassHandler.GetClass = function (fullyQualifiedClassName) {
+                var className = CustomClassHandler.SplitNamespace(fullyQualifiedClassName);
+
                 var item = window;
                 for (var i = 0, ii = className.length; i < ii; i++) {
                     item = item[className[i]];
                     if (item == undefined)
-                        throw "Cannot evaluate member " + className.join(".");
+                        throw "Cannot evaluate member " + className;
                 }
 
                 return item;
@@ -467,6 +469,25 @@ var WebExpressions;
                 });
 
                 return output;
+            };
+
+            CustomClassHandler.AddStaticItem = function (fullyQualifiedName, item) {
+                var ns = CustomClassHandler.SplitNamespace(fullyQualifiedName);
+                if (ns.length < 2)
+                    throw "Invalid namespace";
+
+                var item = window;
+                var i = 0;
+                for (var ii = ns.length - 2; i < ii; i++) {
+                    if (!item[ns[i]])
+                        item = (item[ns[i]] = {});
+else
+                        item = item[ns[i]];
+                }
+
+                if (!item[ns[i]])
+                    item = (item[ns[i]] = function () {
+                    });
             };
             CustomClassHandler.PropertyRegex = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
             return CustomClassHandler;
@@ -1199,7 +1220,7 @@ var WebExpressions;
                 inputType: "string"
             });
 
-            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
+            this.Class = meta.Class;
         }
         StaticMemberExpression.prototype._CompileMemberContext = function () {
             var item = WebExpressions.Utils.CustomClassHandler.GetClass(this.Class);
@@ -1299,12 +1320,12 @@ var WebExpressions;
                 inputType: "string"
             });
 
-            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
+            this.Class = meta.Class;
         }
         StaticMethodCallExpression.prototype._CompileMethodCallContext = function () {
-            var _this = this;
-            return function (item) {
-                return WebExpressions.Utils.CustomClassHandler.GetClass(_this.Class);
+            var item = WebExpressions.Utils.CustomClassHandler.GetClass(this.Class);
+            return function (context) {
+                return item;
             };
         };
         return StaticMethodCallExpression;

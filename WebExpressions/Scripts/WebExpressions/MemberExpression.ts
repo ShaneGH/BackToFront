@@ -60,7 +60,7 @@ module WebExpressions {
 
     export class StaticMemberExpression extends MemberExpressionBase {
 
-        Class: string[];
+        Class: string;
 
         constructor(meta: Meta.StaticMemberExpressionMeta) {
             super(meta);
@@ -70,7 +70,7 @@ module WebExpressions {
                 inputType: "string"
             });
 
-            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
+            this.Class = meta.Class;
         }
 
         _CompileMemberContext(): ExpressionInvokerAction {

@@ -67,7 +67,7 @@ var WebExpressions;
                 inputType: "string"
             });
 
-            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
+            this.Class = meta.Class;
         }
         StaticMemberExpression.prototype._CompileMemberContext = function () {
             var item = WebExpressions.Utils.CustomClassHandler.GetClass(this.Class);

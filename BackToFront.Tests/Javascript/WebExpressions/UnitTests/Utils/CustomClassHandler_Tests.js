@@ -38,10 +38,9 @@ test("GetClass, ok", function () {
             cc: {}
         }
     };
-    var input = ["aa", "bb", "cc"];
 
     // act
-    var actual = WebExpressions.Utils.CustomClassHandler.GetClass(input);
+    var actual = WebExpressions.Utils.CustomClassHandler.GetClass("aa.bb.cc");
 
     // assert
     strictEqual(actual, window.aa.bb.cc);

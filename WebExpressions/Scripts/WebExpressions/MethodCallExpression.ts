@@ -65,7 +65,7 @@ module WebExpressions {
     }
 
     export class StaticMethodCallExpression extends MethodCallExpressionBase {
-        Class: string[];
+        Class: string;
 
         constructor(meta: Meta.StaticMethodCallExpressionMeta) {
             super(meta);
@@ -75,12 +75,13 @@ module WebExpressions {
                 inputType: "string"
             });
 
-            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
+            this.Class = meta.Class;
         }
 
         _CompileMethodCallContext(): ExpressionInvokerAction {
 
-            return (item) => WebExpressions.Utils.CustomClassHandler.GetClass(this.Class);
+            var item = WebExpressions.Utils.CustomClassHandler.GetClass(this.Class);
+            return (context) => item;
         }
     }
 }
