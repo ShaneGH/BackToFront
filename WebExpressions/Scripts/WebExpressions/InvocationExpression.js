@@ -25,15 +25,6 @@ var WebExpressions;
                 return WebExpressions.Expression.CreateExpression(a);
             }).Result;
         }
-        //EvalExpression(): CreateEvalExpression {
-        //    var expression = this.Expression.EvalExpression();
-        //    var args = linq(this.Arguments).Select(a => a.EvalExpression());
-        //    linq(args).Each(a => expression.Constants.Merge(a.Constants));
-        //    return {
-        //        Constants: expression.Constants,
-        //        Expression: expression.Expression + "(" + linq(args).Select(a => a.Expression).Result.join(", ") + ")"
-        //    };
-        //}
         InvocationExpression.prototype._Compile = function () {
             var expresion = this.Expression.Compile();
             var args = linq(this.Arguments).Select(function (a) {

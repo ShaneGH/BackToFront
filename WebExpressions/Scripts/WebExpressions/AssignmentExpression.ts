@@ -27,7 +27,7 @@ module WebExpressions {
                     this.LeftProperty = (<Meta.ParameterExpressionMeta>meta.Left).Name;
                     break;
                 case WebExpressions.Meta.ExpressionWrapperType.StaticMember:
-                case WebExpressions.Meta.ExpressionWrapperType.MemberX:
+                case WebExpressions.Meta.ExpressionWrapperType.Member:
                     this.Left = WebExpressions.Expression.CreateExpression((<Meta.MemberExpressionMeta>meta.Left).Expression);
                     this.LeftProperty = (<Meta.MemberExpressionMeta>meta.Left).MemberName;
                     break;

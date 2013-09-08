@@ -10,15 +10,16 @@ namespace WebExpressions.Enum
     {
         Binary = 1,
         Constant = 2,
-        MemberX = 3,
+        Member = 3,
         StaticMember = 4,
         MethodCall = 5,
-        Parameter = 6,
-        Unary = 7,
-        Default = 8,
-        Block = 9,
-        Conditional = 10,
-        Invocation = 11,
-        New = 12
+        StaticMethodCall = 6,
+        Parameter = 7,
+        Unary = 8,
+        Default = 9,
+        Block = 10,
+        Conditional = 11,
+        Invocation = 12,
+        New = 13
     }
 }

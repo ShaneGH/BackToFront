@@ -3,54 +3,84 @@
 
 module WebExpressions {
 
-    export class MethodCallExpression extends Expression {
-        Object: Expression;
+    export class MethodCallExpressionBase extends Expression {
         Arguments: Expression[];
         MethodName: string;
-        MethodFullName: string;
+
+        constructor(meta: Meta.MethodCallExpressionMetaBase) {
+            super(meta);
+
+            WebExpressions.Sanitizer.Require(meta, {
+                    inputName: "Arguments",
+                    inputConstructor: Array
+                }, {
+                    inputName: "MethodName",
+                    inputConstructor: String
+                });
+
+            this.Arguments = linq(meta.Arguments).Select(a => Expression.CreateExpression(a)).Result;
+            this.MethodName = meta.MethodName;
+        }
+
+        _Compile(): ExpressionInvokerAction {
+            if (!WebExpressions.MemberExpressionBase.PropertyRegex.test(this.MethodName)) {
+                throw "Invalid method name: " + this.MethodName;
+            }
+
+            var name = this.MethodName;
+            var object = this._CompileMethodCallContext();
+            var args = linq(this.Arguments).Select(a => a.Compile()).Result;
+
+            return (ambientContext) => {
+                var params = linq(args).Select(a => a(ambientContext)).Result;
+                var o = object(ambientContext);
+                return o[this.MethodName].apply(o, params);
+            };
+        }
+
+        _CompileMethodCallContext(): ExpressionInvokerAction {
+            throw "This method is abstract";
+        }
+    }
+
+    export class MethodCallExpression extends MethodCallExpressionBase {
+        Object: Expression;
 
         constructor(meta: Meta.MethodCallExpressionMeta) {
             super(meta);
 
             WebExpressions.Sanitizer.Require(meta, {
                 inputName: "Object",
-                inputType: "object",
-                // if static member
-                allowNull: true
-            }, {
-                inputName: "Arguments",
-                inputConstructor: Array
-            }, {
-                inputName: "MethodName",
-                inputConstructor: String
-            }, {
-                inputName: "MethodFullName",
-                inputConstructor: String
+                inputType: "object"
             });
 
-            this.Object = meta.Object ? Expression.CreateExpression(meta.Object) : null;
-            this.Arguments = linq(meta.Arguments).Select(a => Expression.CreateExpression(a)).Result;
-            this.MethodName = meta.MethodName;
-            this.MethodFullName = meta.MethodFullName;
+            this.Object = Expression.CreateExpression(meta.Object);
         }
 
-        // TODO: register methods
-        _Compile(): ExpressionInvokerAction {
-            if (!WebExpressions.MemberExpressionBase.PropertyRegex.test(this.MethodName)) {
-                throw "Invalid method name: " + this.MethodName;
-            }
-
-            //TODO: unit test (ctxt) => window
-            var object = this.Object ? this.Object.Compile() : (ctxt) => window;
-            var args = linq(this.Arguments).Select(a => a.Compile()).Result;
-            return (ambientContext) => {
-                var o = object(ambientContext);
-                var params = linq(args).Select(a => a(ambientContext)).Result;
-
-                return (o[this.MethodName] ? o[this.MethodName] : MethodCallExpression.RegisteredMethods[this.MethodFullName]).apply(o, params);
-            };
+        _CompileMethodCallContext(): ExpressionInvokerAction {
+            return this.Object.Compile();
         }
 
-        static RegisteredMethods: Object = {};
+        static RegisteredMethods = {};
+    }
+
+    export class StaticMethodCallExpression extends MethodCallExpressionBase {
+        Class: string[];
+
+        constructor(meta: Meta.StaticMethodCallExpressionMeta) {
+            super(meta);
+
+            WebExpressions.Sanitizer.Require(meta, {
+                inputName: "Class",
+                inputType: "string"
+            });
+
+            this.Class = StaticMemberExpression.SplitNamespace(meta.Class);
+        }
+
+        _CompileMethodCallContext(): ExpressionInvokerAction {
+
+            return WebExpressions.StaticMemberExpression.GetClass(this.Class);
+        }
     }
 }

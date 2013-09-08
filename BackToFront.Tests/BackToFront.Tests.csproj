@@ -184,7 +184,7 @@
     <Compile Include="CSharp\BackToFront\UnitTests\Utilities\Utilities_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\BackToFront\UnitTests\_\Repository_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\_\Domain_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CSharp\BackToFront\UnitTests\_\Rules_Tests.cs">
@@ -264,6 +264,12 @@
     <Content Include="Javascript\WebExpressions\UnitTests\AssignmentExpression_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\StaticMethodCallExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\MethodCallExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Javascript\WebExpressions\UnitTests\StaticMemberExpression_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -291,7 +297,7 @@
     <Content Include="Javascript\WebExpressions\UnitTests\InvocationExpression_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Javascript\WebExpressions\UnitTests\MethodCallExpression_Tests.js">
+    <Content Include="Javascript\WebExpressions\UnitTests\MethodCallExpressionBase_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Javascript\WebExpressions\UnitTests\MemberExpressionBase_Tests.js">

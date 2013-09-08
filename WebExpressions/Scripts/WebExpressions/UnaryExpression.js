@@ -19,13 +19,6 @@ var WebExpressions;
 
             this.Operand = WebExpressions.Expression.CreateExpression(meta.Operand);
         }
-        //EvalExpression(): CreateEvalExpression {
-        //    var operand = this.Operand.EvalExpression();
-        //    return {
-        //        Expression: "(" + UnaryExpression.OperatorStringDictionary[this.NodeType](operand.Expression) + ")",
-        //        Constants: operand.Constants
-        //    };
-        //}
         UnaryExpression.prototype._Compile = function () {
             var _this = this;
             var operand = this.Operand.Compile();

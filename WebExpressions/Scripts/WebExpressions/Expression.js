@@ -36,24 +36,11 @@ var WebExpressions;
             return this._Compiled;
         };
 
-        //private _EvalCompiled: Function;
-        //EvalCompile(): Function {
-        //    if (!this._EvalCompiled) {
-        //        var result = this.EvalExpression();
-        //        var logic = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
-        //        this._EvalCompiled = function () { return logic(result.Constants); };
-        //    }
-        //    return this._EvalCompiled;
-        //}
         // abstract
         Expression.prototype._Compile = function () {
             throw "Invalid operation";
         };
 
-        // abstract
-        //EvalExpression(): CreateEvalExpression {
-        //    throw "Invalid operation";
-        //}
         Expression.prototype.GetAffectedProperties = function () {
             return [];
         };
@@ -85,7 +72,7 @@ var WebExpressions;
             dictionary[WebExpressions.Meta.ExpressionWrapperType.Default] = function (meta) {
                 return new WebExpressions.DefaultExpression(meta);
             };
-            dictionary[WebExpressions.Meta.ExpressionWrapperType.MemberX] = function (meta) {
+            dictionary[WebExpressions.Meta.ExpressionWrapperType.Member] = function (meta) {
                 return new WebExpressions.MemberExpression(meta);
             };
             dictionary[WebExpressions.Meta.ExpressionWrapperType.StaticMember] = function (meta) {
@@ -93,6 +80,9 @@ var WebExpressions;
             };
             dictionary[WebExpressions.Meta.ExpressionWrapperType.MethodCall] = function (meta) {
                 return new WebExpressions.MethodCallExpression(meta);
+            };
+            dictionary[WebExpressions.Meta.ExpressionWrapperType.StaticMethodCall] = function (meta) {
+                return new WebExpressions.StaticMethodCallExpression(meta);
             };
             dictionary[WebExpressions.Meta.ExpressionWrapperType.Parameter] = function (meta) {
                 return new WebExpressions.ParameterExpression(meta);

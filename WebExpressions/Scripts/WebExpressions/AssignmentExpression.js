@@ -27,7 +27,7 @@ var WebExpressions;
                     this.LeftProperty = (meta.Left).Name;
                     break;
                 case WebExpressions.Meta.ExpressionWrapperType.StaticMember:
-                case WebExpressions.Meta.ExpressionWrapperType.MemberX:
+                case WebExpressions.Meta.ExpressionWrapperType.Member:
                     this.Left = WebExpressions.Expression.CreateExpression((meta.Left).Expression);
                     this.LeftProperty = (meta.Left).MemberName;
                     break;
@@ -37,18 +37,6 @@ var WebExpressions;
 
             this.Right = WebExpressions.Expression.CreateExpression(meta.Right);
         }
-        //EvalExpression(): CreateEvalExpression {
-        //    // TODO: replace . with [] and watch for injection
-        //    var right = this.Right.EvalExpression();
-        //    var left = this.Left ? this.Left.EvalExpression() : null;
-        //    if (left) {
-        //        right.Constants.Merge(left.Constants);
-        //    }
-        //    return {
-        //        Expression: "(" + (left ? left.Expression + "." : "") + this.LeftProperty + " = " + right.Expression + ")",
-        //        Constants: right.Constants
-        //    };
-        //}
         AssignmentExpression.prototype._Compile = function () {
             var _this = this;
             var left = this.Left ? this.Left.Compile() : function (context) {

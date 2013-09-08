@@ -4,16 +4,17 @@
         (function (ExpressionWrapperType) {
             ExpressionWrapperType[ExpressionWrapperType["Binary"] = 1] = "Binary";
             ExpressionWrapperType[ExpressionWrapperType["Constant"] = 2] = "Constant";
-            ExpressionWrapperType[ExpressionWrapperType["MemberX"] = 3] = "MemberX";
+            ExpressionWrapperType[ExpressionWrapperType["Member"] = 3] = "Member";
             ExpressionWrapperType[ExpressionWrapperType["StaticMember"] = 4] = "StaticMember";
             ExpressionWrapperType[ExpressionWrapperType["MethodCall"] = 5] = "MethodCall";
-            ExpressionWrapperType[ExpressionWrapperType["Parameter"] = 6] = "Parameter";
-            ExpressionWrapperType[ExpressionWrapperType["Unary"] = 7] = "Unary";
-            ExpressionWrapperType[ExpressionWrapperType["Default"] = 8] = "Default";
-            ExpressionWrapperType[ExpressionWrapperType["Block"] = 9] = "Block";
-            ExpressionWrapperType[ExpressionWrapperType["Conditional"] = 10] = "Conditional";
-            ExpressionWrapperType[ExpressionWrapperType["Invocation"] = 11] = "Invocation";
-            ExpressionWrapperType[ExpressionWrapperType["New"] = 12] = "New";
+            ExpressionWrapperType[ExpressionWrapperType["StaticMethodCall"] = 6] = "StaticMethodCall";
+            ExpressionWrapperType[ExpressionWrapperType["Parameter"] = 7] = "Parameter";
+            ExpressionWrapperType[ExpressionWrapperType["Unary"] = 8] = "Unary";
+            ExpressionWrapperType[ExpressionWrapperType["Default"] = 9] = "Default";
+            ExpressionWrapperType[ExpressionWrapperType["Block"] = 10] = "Block";
+            ExpressionWrapperType[ExpressionWrapperType["Conditional"] = 11] = "Conditional";
+            ExpressionWrapperType[ExpressionWrapperType["Invocation"] = 12] = "Invocation";
+            ExpressionWrapperType[ExpressionWrapperType["New"] = 13] = "New";
         })(Meta.ExpressionWrapperType || (Meta.ExpressionWrapperType = {}));
         var ExpressionWrapperType = Meta.ExpressionWrapperType;
 

@@ -6,17 +6,20 @@
 var splitNamespace = WebExpressions.StaticMemberExpression.SplitNamespace;
 var createExpression = WebExpressions.Expression.CreateExpression;
 var require = WebExpressions.Sanitizer.Require;
+var getClass = WebExpressions.StaticMemberExpression.GetClass;
 
 module("WebExpressions.StaticMemberExpression", {
     setup: function () {
         WebExpressions.StaticMemberExpression.SplitNamespace = splitNamespace;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
+        WebExpressions.StaticMemberExpression.GetClass = getClass;
     },
     teardown: function () {
         WebExpressions.StaticMemberExpression.SplitNamespace = splitNamespace;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
+        WebExpressions.StaticMemberExpression.GetClass = getClass;
     }
 });
 
@@ -74,7 +77,7 @@ test("SplitNamespace test, ok", function () {
 });
 
 // Constructor test OK
-test("_CompileMemberContext, ok", function () {
+test("GetClass, ok", function () {
 
     // arrange
     window.aa = {
@@ -82,13 +85,43 @@ test("_CompileMemberContext, ok", function () {
             cc: {}
         }
     };
-    var subject = {
-        Class: ["aa", "bb", "cc"]
+    var input = ["aa", "bb", "cc"];
+
+    // act
+    var actual = WebExpressions.StaticMemberExpression.GetClass(input);
+
+    // assert
+    strictEqual(actual(), window.aa.bb.cc);
+});
+
+// Constructor test OK
+test("GetClass, invalid namespace part", function () {
+
+    // arrange
+    window.aa = undefined;
+    var input = ["aa", "bb", "cc"];
+
+    // act
+    // assert
+    throws(function () {
+        WebExpressions.StaticMemberExpression.GetClass(input);
+    });
+});
+
+// Constructor test OK
+test("_CompileMemberContext, ok", function () {
+
+    // arrange
+    var expected = {};
+    var subject = { Class: "HELLO" };
+    WebExpressions.StaticMemberExpression.GetClass = function (input) {
+        strictEqual(input, subject.Class);
+        return expected;
     };
 
     // act
     var actual = WebExpressions.StaticMemberExpression.prototype._CompileMemberContext.call(subject);
 
     // assert
-    strictEqual(actual(), window.aa.bb.cc);
+    strictEqual(actual, expected);
 });

@@ -12,12 +12,6 @@ var WebExpressions;
         function DefaultExpression(meta) {
             _super.call(this, meta);
         }
-        //EvalExpression(): CreateEvalExpression {
-        //    return {
-        //        Expression: "",
-        //        Constants: new WebExpressions.Utils.Dictionary()
-        //    };
-        //}
         //TODO
         DefaultExpression.prototype._Compile = function () {
             return function (ambientContext) {

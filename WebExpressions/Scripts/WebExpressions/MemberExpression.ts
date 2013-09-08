@@ -87,12 +87,18 @@ module WebExpressions {
         }
 
         _CompileMemberContext(): ExpressionInvokerAction {
+            
+            return StaticMemberExpression.GetClass(this.Class);
+        }
+
+        // TODO: move to tools class
+        static GetClass(className: string[]): ExpressionInvokerAction {
 
             var item = window;
-            for (var i = 0, ii = this.Class.length; i < ii; i++) {
-                item = item[this.Class[i]];
+            for (var i = 0, ii = className.length; i < ii; i++) {
+                item = item[className[i]];
                 if (item == undefined)
-                    throw "Cannot evaluate member " + this.Class.join(".");
+                    throw "Cannot evaluate member " + className.join(".");
             }
 
             return (ambientContext) => item;

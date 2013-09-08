@@ -27,7 +27,7 @@ namespace WebExpressions.Meta
 
             constructors[typeof(BinaryExpression)] = expression => new BinaryExpressionMeta(expression as BinaryExpression);
             constructors[typeof(ConstantExpression)] = expression => new ConstantExpressionMeta(expression as ConstantExpression);
-            constructors[typeof(MethodCallExpression)] = expression => new MethodCallExpressionMeta(expression as MethodCallExpression);
+            constructors[typeof(MethodCallExpression)] = expression => MethodCallExpressionMetaBase.CreateMethodCallExpressionMeta(expression as MethodCallExpression);
             constructors[typeof(UnaryExpression)] = expression => new UnaryExpressionMeta(expression as UnaryExpression);
             constructors[typeof(ParameterExpression)] = expression => new ParameterExpressionMeta(expression as ParameterExpression);
             constructors[typeof(MemberExpression)] = expression => MemberExpressionMetaBase.CreateMemberExpressionMeta(expression as MemberExpression);

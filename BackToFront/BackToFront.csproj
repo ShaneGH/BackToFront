@@ -113,7 +113,7 @@
     <Compile Include="Validation\INonGenericRule.cs" />
     <Compile Include="Validation\IRuleValidation.cs" />
     <Compile Include="_\IRule.cs" />
-    <Compile Include="_\Repository.cs" />
+    <Compile Include="_\Domain.cs" />
     <Compile Include="_\Rules.cs" />
     <Compile Include="Logic\IBeginSubRule.cs" />
     <Compile Include="Logic\IRequirementFailed.cs" />

@@ -51,18 +51,6 @@ var WebExpressions;
 
             this.Expression = WebExpressions.Expression.CreateExpression(meta.Expression);
         }
-        // TODO: replace . with [] and watch for injection
-        //EvalExpression(): CreateEvalExpression {
-        //    throw "Not implemented, need to split into static and non static member references";
-        //    if (!MemberExpression.PropertyRegex.test(this.MemberName)) {
-        //        throw "Invalid property name: " + this.MemberName;
-        //    }
-        //    var expression = this.Expression.EvalExpression();
-        //    return {
-        //        Expression: expression.Expression + "." + this.MemberName,
-        //        Constants: expression.Constants
-        //    };
-        //};
         MemberExpression.prototype._CompileMemberContext = function () {
             return this.Expression.Compile();
         };
@@ -93,11 +81,16 @@ var WebExpressions;
         };
 
         StaticMemberExpression.prototype._CompileMemberContext = function () {
+            return StaticMemberExpression.GetClass(this.Class);
+        };
+
+        StaticMemberExpression.GetClass = // TODO: move to tools class
+        function (className) {
             var item = window;
-            for (var i = 0, ii = this.Class.length; i < ii; i++) {
-                item = item[this.Class[i]];
+            for (var i = 0, ii = className.length; i < ii; i++) {
+                item = item[className[i]];
                 if (item == undefined)
-                    throw "Cannot evaluate member " + this.Class.join(".");
+                    throw "Cannot evaluate member " + className.join(".");
             }
 
             return function (ambientContext) {

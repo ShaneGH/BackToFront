@@ -48,11 +48,17 @@ module WebExpressions {
 			Class: string;
 		}
 
-		export interface MethodCallExpressionMeta extends ExpressionMeta {
-			Object: ExpressionMeta;
+		export interface MethodCallExpressionMetaBase extends ExpressionMeta {
 			Arguments: ExpressionMeta[];
 			MethodName: string;
-			MethodFullName: string;
+		}
+
+		export interface MethodCallExpressionMeta extends MethodCallExpressionMetaBase {
+			Object: ExpressionMeta;
+		}
+
+		export interface StaticMethodCallExpressionMeta extends MethodCallExpressionMetaBase {
+			Class: string;
 		}
 
 		export interface NewExpressionMeta extends ExpressionMeta {
@@ -73,16 +79,17 @@ module WebExpressions {
 		export enum ExpressionWrapperType {
 			Binary = 1,
 			Constant = 2,
-			MemberX = 3,
+			Member = 3,
 			StaticMember = 4,
 			MethodCall = 5,
-			Parameter = 6,
-			Unary = 7,
-			Default = 8,
-			Block = 9,
-			Conditional = 10,
-			Invocation = 11,
-			New = 12,
+			StaticMethodCall = 6,
+			Parameter = 7,
+			Unary = 8,
+			Default = 9,
+			Block = 10,
+			Conditional = 11,
+			Invocation = 12,
+			New = 13,
 		}
 
 		export enum ExpressionType {

@@ -54,7 +54,7 @@ namespace WebExpressions.Meta
 
         public override ExpressionWrapperType ExpressionType
         {
-            get { return ExpressionWrapperType.MemberX; }
+            get { return ExpressionWrapperType.Member; }
             protected set { /* do nothing */ }
         }
     }
