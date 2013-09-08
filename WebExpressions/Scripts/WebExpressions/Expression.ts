@@ -54,26 +54,10 @@ module WebExpressions {
             return this._Compiled;
         }
 
-        //private _EvalCompiled: Function;
-        //EvalCompile(): Function {
-        //    if (!this._EvalCompiled) {
-        //        var result = this.EvalExpression();
-        //        var logic = new Function(WebExpressions.ConstantExpression.ConstantParameter, result.Expression);
-        //        this._EvalCompiled = function () { return logic(result.Constants); };
-        //    }
-
-        //    return this._EvalCompiled;
-        //}
-
         // abstract
         _Compile(): ExpressionInvokerAction {
             throw "Invalid operation";
         }
-
-        // abstract
-        //EvalExpression(): CreateEvalExpression {
-        //    throw "Invalid operation";
-        //}
 
         GetAffectedProperties(): string[] { return []; }
 

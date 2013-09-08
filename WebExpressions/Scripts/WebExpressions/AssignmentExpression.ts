@@ -38,20 +38,6 @@ module WebExpressions {
             this.Right = WebExpressions.Expression.CreateExpression(meta.Right);
         }
 
-        //EvalExpression(): CreateEvalExpression {
-        //    // TODO: replace . with [] and watch for injection
-        //    var right = this.Right.EvalExpression();
-        //    var left = this.Left ? this.Left.EvalExpression() : null;
-        //    if (left) {
-        //        right.Constants.Merge(left.Constants);
-        //    }
-
-        //    return {
-        //        Expression: "(" + (left ? left.Expression + "." : "") + this.LeftProperty + " = " + right.Expression + ")",
-        //        Constants: right.Constants
-        //    };
-        //}
-
         _Compile(): ExpressionInvokerAction {
             var left = this.Left ? this.Left.Compile() : (context) => context;
             var right = this.Right.Compile();

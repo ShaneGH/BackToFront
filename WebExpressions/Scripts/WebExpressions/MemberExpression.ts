@@ -55,22 +55,6 @@ module WebExpressions {
             this.Expression = Expression.CreateExpression(meta.Expression);
         }
 
-        // TODO: replace . with [] and watch for injection
-        //EvalExpression(): CreateEvalExpression {
-        //    throw "Not implemented, need to split into static and non static member references";
-
-        //    if (!MemberExpression.PropertyRegex.test(this.MemberName)) {
-        //        throw "Invalid property name: " + this.MemberName;
-        //    }
-
-        //    var expression = this.Expression.EvalExpression();
-
-        //    return {
-        //        Expression: expression.Expression + "." + this.MemberName,
-        //        Constants: expression.Constants
-        //    };
-        //};
-
         _CompileMemberContext(): ExpressionInvokerAction {
             return this.Expression.Compile();
         }

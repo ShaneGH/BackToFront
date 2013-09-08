@@ -34,26 +34,6 @@ module WebExpressions {
             this.MethodFullName = meta.MethodFullName;
         }
 
-        //EvalExpression(): CreateEvalExpression {
-
-        //    throw "Not implemented, need to split into static and non static method calls";
-
-        //    if (!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
-        //        throw "Invalid method name: " + this.MethodName;
-        //    }
-
-        //    var args = <string[]>linq(this.Arguments).Select(a => a.EvalExpression()).Result;
-        //    var object = this.Object ? this.Object.EvalExpression() : { Expression: "window", Constants: new WebExpressions.Utils.Dictionary() };
-        //    linq(args).Each(a => object.Constants.Merge(a.Constants));
-
-        //    var mthd = "__o[\"" + this.MethodName + "\"]";
-
-        //    return {
-        //        Expression: "(function (__o) { return (" + mthd + " ? " + mthd + " : ex.ns.MethodCallExpression.RegisteredMethods[\"" + this.MethodFullName + "\"]).call(__o, " + args.join(", ") + "); })(" + object.Expression + ")",
-        //        Constants: object.Constants
-        //    };
-        //}
-
         // TODO: register methods
         _Compile(): ExpressionInvokerAction {
             if (!WebExpressions.MemberExpressionBase.PropertyRegex.test(this.MethodName)) {

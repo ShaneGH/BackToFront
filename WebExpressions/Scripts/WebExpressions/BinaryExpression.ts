@@ -68,19 +68,6 @@ module WebExpressions {
             this.Right = Expression.CreateExpression(meta.Right);
         }
 
-        //EvalExpression(): CreateEvalExpression {
-        //    if (!BinaryExpression.OperatorStringDictionary[this.NodeType]) {
-        //        throw "Invalid expression type";
-        //    }
-
-        //    var left = this.Left.EvalExpression();
-        //    var right = this.Right.EvalExpression();
-        //    return {
-        //        Expression: "(" + left.Expression + BinaryExpression.OperatorStringDictionary[this.NodeType] + right.Expression + ")",
-        //        Constants: left.Constants.Merge(right.Constants)
-        //    };
-        //}
-
         _Compile(): ExpressionInvokerAction {
             if (!BinaryExpression.OperatorStringDictionary[this.NodeType]) {
                 throw "Invalid expression type";

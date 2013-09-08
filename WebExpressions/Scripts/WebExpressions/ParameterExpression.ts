@@ -17,13 +17,6 @@ module WebExpressions {
             this.Name = meta.Name;
         }
 
-        //EvalExpression(): CreateEvalExpression {
-        //    return {
-        //        Expression: this.Name,
-        //        Constants: new WebExpressions.Utils.Dictionary()
-        //    }
-        //}
-
         _Compile(): ExpressionInvokerAction {
             return ambientContext => ambientContext[this.Name];
         }

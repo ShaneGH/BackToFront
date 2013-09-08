@@ -8,13 +8,6 @@ module WebExpressions {
                 super(meta);
             }
 
-            //EvalExpression(): CreateEvalExpression {
-            //    return {
-            //        Expression: "",
-            //        Constants: new WebExpressions.Utils.Dictionary()
-            //    };
-            //}
-
             //TODO
             _Compile(): ExpressionInvokerAction {
                 return (ambientContext) => null;

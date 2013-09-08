@@ -39,30 +39,6 @@ module WebExpressions {
             this.IsAnonymous = meta.IsAnonymous;
         }
 
-        //EvalExpression(): CreateEvalExpression {
-        //    var args = <CreateEvalExpression[]>linq(this.Arguments).Select(a => a.EvalExpression()).Result;
-        //    var constants = new WebExpressions.Utils.Dictionary();
-        //    linq(args).Each(a => constants.Merge(a.Constants));
-        //    var argsString = linq(args).Select(a => a.Expression).Result.join(", ");
-
-        //    if (this.IsAnonymous) {
-        //        return {
-        //            Constants: constants,
-        //            Expression: "{ " + argsString + " }"
-        //        };
-        //    } else if (NewExpression.RegisteredTypes[this.Type]) {
-        //        return {
-        //            Constants: constants,
-        //            Expression: "new ex.ns.NewExpression.RegisteredTypes[\"" + this.Type + "\"](" + argsString + ")"
-        //        }
-        //    } else {
-        //        return {
-        //            Constants: constants,
-        //            Expression: "{}"
-        //        };
-        //    }
-        //}
-
         // TODO: register types
         _Compile(): ExpressionInvokerAction {
 

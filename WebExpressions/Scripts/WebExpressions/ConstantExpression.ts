@@ -23,17 +23,6 @@ module WebExpressions {
             this.Value = meta.Value;
         }
 
-        //EvalExpression(): CreateEvalExpression {
-
-        //    var accessor = ConstantExpression.GenerateConstantId();
-        //    var constant = new WebExpressions.Utils.Dictionary();
-        //    constant.Add(accessor, this.Value);
-        //    return {
-        //        Constants: constant,
-        //        Expression: ConstantExpression.ConstantParameter + "[" + accessor + "]"
-        //    };
-        //}
-
         _Compile(): ExpressionInvokerAction {
             return (ambientContext) => this.Value;
         }
