@@ -27,7 +27,7 @@ var WebExpressions;
         }
         MethodCallExpressionBase.prototype._Compile = function () {
             var _this = this;
-            if (!WebExpressions.MemberExpressionBase.PropertyRegex.test(this.MethodName)) {
+            if (!WebExpressions.Utils.CustomClassHandler.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
 
@@ -84,10 +84,13 @@ var WebExpressions;
                 inputType: "string"
             });
 
-            this.Class = WebExpressions.StaticMemberExpression.SplitNamespace(meta.Class);
+            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
         }
         StaticMethodCallExpression.prototype._CompileMethodCallContext = function () {
-            return WebExpressions.StaticMemberExpression.GetClass(this.Class);
+            var _this = this;
+            return function (item) {
+                return WebExpressions.Utils.CustomClassHandler.GetClass(_this.Class);
+            };
         };
         return StaticMethodCallExpression;
     })(MethodCallExpressionBase);

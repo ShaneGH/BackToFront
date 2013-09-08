@@ -2,6 +2,35 @@ var WebExpressions;
 (function (WebExpressions) {
     /// <reference path="../../ref/linq.d.ts" />
     (function (Utils) {
+        //Temporary location, typescript build is being a bit problematic
+        var CustomClassHandler = (function () {
+            function CustomClassHandler() {
+            }
+            CustomClassHandler.GetClass = function (className) {
+                var item = window;
+                for (var i = 0, ii = className.length; i < ii; i++) {
+                    item = item[className[i]];
+                    if (item == undefined)
+                        throw "Cannot evaluate member " + className.join(".");
+                }
+
+                return item;
+            };
+
+            CustomClassHandler.SplitNamespace = function (input) {
+                var output = input.split(".");
+                linq(output).Each(function (a) {
+                    if (!CustomClassHandler.PropertyRegex.test(a))
+                        throw "Invalid namespace part " + a;
+                });
+
+                return output;
+            };
+            CustomClassHandler.PropertyRegex = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
+            return CustomClassHandler;
+        })();
+        Utils.CustomClassHandler = CustomClassHandler;
+
         var KeyValuePair = (function () {
             function KeyValuePair(Key, Value) {
                 this.Key = Key;

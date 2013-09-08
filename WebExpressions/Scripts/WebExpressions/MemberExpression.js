@@ -20,7 +20,7 @@ var WebExpressions;
             this.MemberName = meta.MemberName;
         }
         MemberExpressionBase.prototype._Compile = function () {
-            if (!MemberExpressionBase.PropertyRegex.test(this.MemberName)) {
+            if (!WebExpressions.Utils.CustomClassHandler.PropertyRegex.test(this.MemberName)) {
                 throw "Invalid property name: " + this.MemberName;
             }
 
@@ -34,7 +34,6 @@ var WebExpressions;
         MemberExpressionBase.prototype._CompileMemberContext = function () {
             throw "This method is abstract";
         };
-        MemberExpressionBase.PropertyRegex = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
         return MemberExpressionBase;
     })(WebExpressions.Expression);
     WebExpressions.MemberExpressionBase = MemberExpressionBase;
@@ -68,31 +67,10 @@ var WebExpressions;
                 inputType: "string"
             });
 
-            this.Class = StaticMemberExpression.SplitNamespace(meta.Class);
+            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
         }
-        StaticMemberExpression.SplitNamespace = function (input) {
-            var output = input.split(".");
-            linq(output).Each(function (a) {
-                if (!MemberExpressionBase.PropertyRegex.test(a))
-                    throw "Invalid namespace part " + a;
-            });
-
-            return output;
-        };
-
         StaticMemberExpression.prototype._CompileMemberContext = function () {
-            return StaticMemberExpression.GetClass(this.Class);
-        };
-
-        StaticMemberExpression.GetClass = // TODO: move to tools class
-        function (className) {
-            var item = window;
-            for (var i = 0, ii = className.length; i < ii; i++) {
-                item = item[className[i]];
-                if (item == undefined)
-                    throw "Cannot evaluate member " + className.join(".");
-            }
-
+            var item = WebExpressions.Utils.CustomClassHandler.GetClass(this.Class);
             return function (ambientContext) {
                 return item;
             };

@@ -4,19 +4,19 @@
 /// <reference path="../../Base/testUtils.js" />
 
 var require = WebExpressions.Sanitizer.Require;
-var splitNamespace = WebExpressions.StaticMemberExpression.SplitNamespace;
-var getClass = WebExpressions.StaticMemberExpression.GetClass;
+var splitNamespace = WebExpressions.Utils.CustomClassHandler.SplitNamespace;
+var getClass = WebExpressions.Utils.CustomClassHandler.GetClass;
 
 module("WebExpressions.StaticMethodCallExpression", {
     setup: function () {
         WebExpressions.Sanitizer.Require = require;
-        WebExpressions.StaticMemberExpression.SplitNamespace = splitNamespace;
-        WebExpressions.StaticMemberExpression.GetClass = getClass;
+        WebExpressions.Utils.CustomClassHandler.SplitNamespace = splitNamespace;
+        WebExpressions.Utils.CustomClassHandler.GetClass = getClass;
     },
     teardown: function () {
         WebExpressions.Sanitizer.Require = require;
         WebExpressions.StaticMemberExpression.SplitNamespace = splitNamespace;
-        WebExpressions.StaticMemberExpression.GetClass = getClass;
+        WebExpressions.Utils.CustomClassHandler.GetClass = getClass;
     }
 });
 
@@ -49,7 +49,7 @@ test("Constructor test OK", function () {
         assert.strictEqual(input2.inputType, "string");
     };
 
-    WebExpressions.StaticMemberExpression.SplitNamespace = function (input) {
+    WebExpressions.Utils.CustomClassHandler.SplitNamespace = function (input) {
         ex.ExpectationReached.push("class");
         strictEqual(input, meta.Class);
         return expected;
@@ -70,13 +70,13 @@ test("_CompileMethodCallContext test", function () {
     var subject = {
         Class: {}
     };
-    WebExpressions.StaticMemberExpression.GetClass = function (input) {
+    WebExpressions.Utils.CustomClassHandler.GetClass = function (input) {
         strictEqual(input, subject.Class);
         return expected;
     };
 
     // act
-    var actual = WebExpressions.StaticMethodCallExpression.prototype._CompileMethodCallContext.call(subject);
+    var actual = WebExpressions.StaticMethodCallExpression.prototype._CompileMethodCallContext.call(subject)();
 
     // assert
     strictEqual(actual, expected);

@@ -23,7 +23,7 @@ module WebExpressions {
         }
 
         _Compile(): ExpressionInvokerAction {
-            if (!WebExpressions.MemberExpressionBase.PropertyRegex.test(this.MethodName)) {
+            if (!WebExpressions.Utils.CustomClassHandler.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
 
@@ -75,12 +75,12 @@ module WebExpressions {
                 inputType: "string"
             });
 
-            this.Class = StaticMemberExpression.SplitNamespace(meta.Class);
+            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
         }
 
         _CompileMethodCallContext(): ExpressionInvokerAction {
 
-            return WebExpressions.StaticMemberExpression.GetClass(this.Class);
+            return (item) => WebExpressions.Utils.CustomClassHandler.GetClass(this.Class);
         }
     }
 }

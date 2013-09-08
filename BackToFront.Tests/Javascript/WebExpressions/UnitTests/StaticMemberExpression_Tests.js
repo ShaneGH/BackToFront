@@ -3,23 +3,23 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var splitNamespace = WebExpressions.StaticMemberExpression.SplitNamespace;
+var splitNamespace = WebExpressions.Utils.CustomClassHandler.SplitNamespace;
 var createExpression = WebExpressions.Expression.CreateExpression;
 var require = WebExpressions.Sanitizer.Require;
-var getClass = WebExpressions.StaticMemberExpression.GetClass;
+var getClass = WebExpressions.Utils.CustomClassHandler.GetClass;
 
 module("WebExpressions.StaticMemberExpression", {
     setup: function () {
-        WebExpressions.StaticMemberExpression.SplitNamespace = splitNamespace;
+        WebExpressions.Utils.CustomClassHandler.SplitNamespace = splitNamespace;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
-        WebExpressions.StaticMemberExpression.GetClass = getClass;
+        WebExpressions.Utils.CustomClassHandler.GetClass = getClass;
     },
     teardown: function () {
-        WebExpressions.StaticMemberExpression.SplitNamespace = splitNamespace;
+        WebExpressions.Utils.CustomClassHandler.SplitNamespace = splitNamespace;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
-        WebExpressions.StaticMemberExpression.GetClass = getClass;
+        WebExpressions.Utils.CustomClassHandler.GetClass = getClass;
     }
 });
 
@@ -52,7 +52,7 @@ test("Constructor test OK", function () {
     };
 
     var split = {};
-    WebExpressions.StaticMemberExpression.SplitNamespace = function (input) {
+    WebExpressions.Utils.CustomClassHandler.SplitNamespace = function (input) {
         strictEqual(input, meta.Class);
         return split;
     };
@@ -65,63 +65,20 @@ test("Constructor test OK", function () {
     assert.deepEqual(split, actual.Class);
 });
 
-test("SplitNamespace test, ok", function () {
-    var ex = new tUtil.Expect("require");
-
-    // arrange
-    // act
-    var actual = new WebExpressions.StaticMemberExpression.SplitNamespace("aaa.bbb.ccc");
-
-    // assert
-    deepEqual(["aaa", "bbb", "ccc"], actual);
-});
-
-// Constructor test OK
-test("GetClass, ok", function () {
-
-    // arrange
-    window.aa = {
-        bb: {
-            cc: {}
-        }
-    };
-    var input = ["aa", "bb", "cc"];
-
-    // act
-    var actual = WebExpressions.StaticMemberExpression.GetClass(input);
-
-    // assert
-    strictEqual(actual(), window.aa.bb.cc);
-});
-
-// Constructor test OK
-test("GetClass, invalid namespace part", function () {
-
-    // arrange
-    window.aa = undefined;
-    var input = ["aa", "bb", "cc"];
-
-    // act
-    // assert
-    throws(function () {
-        WebExpressions.StaticMemberExpression.GetClass(input);
-    });
-});
-
 // Constructor test OK
 test("_CompileMemberContext, ok", function () {
 
     // arrange
     var expected = {};
     var subject = { Class: "HELLO" };
-    WebExpressions.StaticMemberExpression.GetClass = function (input) {
+    WebExpressions.Utils.CustomClassHandler.GetClass = function (input) {
         strictEqual(input, subject.Class);
         return expected;
     };
 
     // act
-    var actual = WebExpressions.StaticMemberExpression.prototype._CompileMemberContext.call(subject);
+    var actual = WebExpressions.StaticMemberExpression.prototype._CompileMemberContext.call(subject)();
 
     // assert
-    strictEqual(actual, expected);
+    strictEqual(expected, actual);
 });

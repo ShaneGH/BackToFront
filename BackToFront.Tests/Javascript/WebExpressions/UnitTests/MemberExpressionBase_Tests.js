@@ -3,40 +3,21 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var property = WebExpressions.MemberExpressionBase.PropertyRegex;
+var property = WebExpressions.Utils.CustomClassHandler.PropertyRegex;
 var createExpression = WebExpressions.Expression.CreateExpression;
 var require = WebExpressions.Sanitizer.Require;
 
 module("WebExpressions.MemberExpressionBase", {
     setup: function () {
-        WebExpressions.MemberExpressionBase.PropertyRegex = property;
+        WebExpressions.Utils.CustomClassHandler.PropertyRegex = property;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
     },
     teardown: function () {
-        WebExpressions.MemberExpressionBase.PropertyRegex = property;
+        WebExpressions.Utils.CustomClassHandler.PropertyRegex = property;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
     }
-});
-
-// Constructor test OK
-test("PropertyRegex tests", function () {
-
-    // arrange
-    var rx = WebExpressions.MemberExpressionBase.PropertyRegex;
-
-    // act
-    // assert
-    assert.ok(rx.test("LBLGPG"));
-    assert.ok(rx.test("LBL_GPG"));
-    assert.ok(rx.test("_LBLGPG"));
-    assert.ok(rx.test("LB9LGPG"));
-    assert.ok(rx.test("_0LBLGPG"));
-
-    assert.ok(!rx.test("9LBLGPG"));
-    assert.ok(!rx.test("LBLG(PG"));
-    assert.ok(!rx.test("LBLG=PG"));
 });
 
 // Constructor test OK
@@ -77,7 +58,7 @@ test("_Compile test: exception", function () {
         MemberName: "LJBHKLJBLKJB"
     };
 
-    WebExpressions.MemberExpressionBase.PropertyRegex = {
+    WebExpressions.Utils.CustomClassHandler.PropertyRegex = {
         test: function (member) {
             ex.At("test");
             assert.strictEqual(member, subject.MemberName);
@@ -116,7 +97,7 @@ test("_Compile test: ok", function () {
         }
     };
 
-    WebExpressions.MemberExpressionBase.PropertyRegex = {
+    WebExpressions.Utils.CustomClassHandler.PropertyRegex = {
         test: function (member) {
             ex.At("test");
             assert.strictEqual(member, subject.MemberName);

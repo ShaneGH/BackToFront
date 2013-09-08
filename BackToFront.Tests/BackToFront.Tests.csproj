@@ -318,6 +318,7 @@
     <Content Include="Javascript\CURRENT_TEST.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\Utils\CustomClassHandler_Tests.js" />
     <Content Include="Javascript\WebExpressions\UnitTests\Utils\Dictionary_Tests.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,18 +3,18 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var property = WebExpressions.MemberExpression.PropertyRegex;
+var property = WebExpressions.Utils.CustomClassHandler.PropertyRegex;
 var createExpression = WebExpressions.Expression.CreateExpression;
 var require = WebExpressions.Sanitizer.Require;
 
 module("WebExpressions.InvocationExpression", {
     setup: function () {
-        WebExpressions.MemberExpression.PropertyRegex = property;
+        WebExpressions.Utils.CustomClassHandler.PropertyRegex = property;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
     },
     teardown: function () {
-        WebExpressions.MemberExpression.PropertyRegex = property;
+        WebExpressions.Utils.CustomClassHandler.PropertyRegex = property;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
     }

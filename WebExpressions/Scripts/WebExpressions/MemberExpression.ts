@@ -9,9 +9,7 @@ module WebExpressions {
     }
 
     export class MemberExpressionBase extends Expression {
-
-        static PropertyRegex: RegExp = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
-
+        
         MemberName: string;
 
         constructor(meta: Meta.MemberExpressionMetaBase) {
@@ -26,7 +24,7 @@ module WebExpressions {
         }
 
         _Compile(): ExpressionInvokerAction {
-            if (!MemberExpressionBase.PropertyRegex.test(this.MemberName)) {
+            if (!WebExpressions.Utils.CustomClassHandler.PropertyRegex.test(this.MemberName)) {
                 throw "Invalid property name: " + this.MemberName;
             }
 
@@ -72,35 +70,12 @@ module WebExpressions {
                 inputType: "string"
             });
 
-            this.Class = StaticMemberExpression.SplitNamespace(meta.Class);
-        }
-
-        static SplitNamespace(input: string): string[] {
-
-            var output = input.split(".");
-            linq(output).Each(a => {
-                if (!MemberExpressionBase.PropertyRegex.test(a))
-                    throw "Invalid namespace part " + a;
-            });
-
-            return output;
+            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
         }
 
         _CompileMemberContext(): ExpressionInvokerAction {
-            
-            return StaticMemberExpression.GetClass(this.Class);
-        }
 
-        // TODO: move to tools class
-        static GetClass(className: string[]): ExpressionInvokerAction {
-
-            var item = window;
-            for (var i = 0, ii = className.length; i < ii; i++) {
-                item = item[className[i]];
-                if (item == undefined)
-                    throw "Cannot evaluate member " + className.join(".");
-            }
-
+            var item = WebExpressions.Utils.CustomClassHandler.GetClass(this.Class);
             return (ambientContext) => item;
         }
     }

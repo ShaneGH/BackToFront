@@ -414,10 +414,65 @@
     };
 })(window);
 
+// Module
+var Shapes;
+(function (Shapes) {
+    // Class
+    var Point = (function () {
+        // Constructor
+        function Point(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        // Instance member
+        Point.prototype.getDist = function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+        };
+
+        Point.origin = new Point(0, 0);
+        return Point;
+    })();
+    Shapes.Point = Point;
+})(Shapes || (Shapes = {}));
+
+// Local variables
+var p = new Shapes.Point(3, 4);
+var dist = p.getDist();
+
+
 var WebExpressions;
 (function (WebExpressions) {
     /// <reference path="../../ref/linq.d.ts" />
     (function (Utils) {
+        //Temporary location, typescript build is being a bit problematic
+        var CustomClassHandler = (function () {
+            function CustomClassHandler() {
+            }
+            CustomClassHandler.GetClass = function (className) {
+                var item = window;
+                for (var i = 0, ii = className.length; i < ii; i++) {
+                    item = item[className[i]];
+                    if (item == undefined)
+                        throw "Cannot evaluate member " + className.join(".");
+                }
+
+                return item;
+            };
+
+            CustomClassHandler.SplitNamespace = function (input) {
+                var output = input.split(".");
+                linq(output).Each(function (a) {
+                    if (!CustomClassHandler.PropertyRegex.test(a))
+                        throw "Invalid namespace part " + a;
+                });
+
+                return output;
+            };
+            CustomClassHandler.PropertyRegex = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
+            return CustomClassHandler;
+        })();
+        Utils.CustomClassHandler = CustomClassHandler;
+
         var KeyValuePair = (function () {
             function KeyValuePair(Key, Value) {
                 this.Key = Key;
@@ -1097,7 +1152,7 @@ var WebExpressions;
             this.MemberName = meta.MemberName;
         }
         MemberExpressionBase.prototype._Compile = function () {
-            if (!MemberExpressionBase.PropertyRegex.test(this.MemberName)) {
+            if (!WebExpressions.Utils.CustomClassHandler.PropertyRegex.test(this.MemberName)) {
                 throw "Invalid property name: " + this.MemberName;
             }
 
@@ -1111,7 +1166,6 @@ var WebExpressions;
         MemberExpressionBase.prototype._CompileMemberContext = function () {
             throw "This method is abstract";
         };
-        MemberExpressionBase.PropertyRegex = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
         return MemberExpressionBase;
     })(WebExpressions.Expression);
     WebExpressions.MemberExpressionBase = MemberExpressionBase;
@@ -1145,31 +1199,10 @@ var WebExpressions;
                 inputType: "string"
             });
 
-            this.Class = StaticMemberExpression.SplitNamespace(meta.Class);
+            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
         }
-        StaticMemberExpression.SplitNamespace = function (input) {
-            var output = input.split(".");
-            linq(output).Each(function (a) {
-                if (!MemberExpressionBase.PropertyRegex.test(a))
-                    throw "Invalid namespace part " + a;
-            });
-
-            return output;
-        };
-
         StaticMemberExpression.prototype._CompileMemberContext = function () {
-            return StaticMemberExpression.GetClass(this.Class);
-        };
-
-        StaticMemberExpression.GetClass = // TODO: move to tools class
-        function (className) {
-            var item = window;
-            for (var i = 0, ii = className.length; i < ii; i++) {
-                item = item[className[i]];
-                if (item == undefined)
-                    throw "Cannot evaluate member " + className.join(".");
-            }
-
+            var item = WebExpressions.Utils.CustomClassHandler.GetClass(this.Class);
             return function (ambientContext) {
                 return item;
             };
@@ -1209,7 +1242,7 @@ var WebExpressions;
         }
         MethodCallExpressionBase.prototype._Compile = function () {
             var _this = this;
-            if (!WebExpressions.MemberExpressionBase.PropertyRegex.test(this.MethodName)) {
+            if (!WebExpressions.Utils.CustomClassHandler.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
 
@@ -1266,10 +1299,13 @@ var WebExpressions;
                 inputType: "string"
             });
 
-            this.Class = WebExpressions.StaticMemberExpression.SplitNamespace(meta.Class);
+            this.Class = WebExpressions.Utils.CustomClassHandler.SplitNamespace(meta.Class);
         }
         StaticMethodCallExpression.prototype._CompileMethodCallContext = function () {
-            return WebExpressions.StaticMemberExpression.GetClass(this.Class);
+            var _this = this;
+            return function (item) {
+                return WebExpressions.Utils.CustomClassHandler.GetClass(_this.Class);
+            };
         };
         return StaticMethodCallExpression;
     })(MethodCallExpressionBase);

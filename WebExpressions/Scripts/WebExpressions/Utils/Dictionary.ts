@@ -3,6 +3,35 @@
 
 module WebExpressions.Utils {
 
+    //Temporary location, typescript build is being a bit problematic
+    export class CustomClassHandler {
+
+        static PropertyRegex: RegExp = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
+
+        static GetClass(className: string[]): Function {
+
+            var item = <any>window;
+            for (var i = 0, ii = className.length; i < ii; i++) {
+                item = item[className[i]];
+                if (item == undefined)
+                    throw "Cannot evaluate member " + className.join(".");
+            }
+
+            return item;
+        }
+
+        static SplitNamespace(input: string): string[] {
+
+            var output = input.split(".");
+            linq(output).Each(a => {
+                if (!CustomClassHandler.PropertyRegex.test(a))
+                    throw "Invalid namespace part " + a;
+            });
+
+            return output;
+        }
+    }
+
     class KeyValuePair {
         constructor(public Key, public Value) { }
     }
