@@ -5,16 +5,16 @@ using System.Linq;
 
 namespace BackToFront
 {
-    public class Repository
+    public class Domain
     {
         private readonly Dictionary<Type, Guid> _Identifiers = new Dictionary<Type, Guid>();
         private readonly Dictionary<Type, IRules> _Rules = new Dictionary<Type, IRules>();
         private readonly IDependencyResolver _Di;
 
-        public Repository()
+        public Domain()
             : this(null) { }
 
-        public Repository(IDependencyResolver di)
+        public Domain(IDependencyResolver di)
         {
             _Di = di ?? new DummyDependencyResolver();
         }

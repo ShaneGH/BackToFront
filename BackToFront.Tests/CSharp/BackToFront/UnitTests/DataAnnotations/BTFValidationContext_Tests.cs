@@ -21,7 +21,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
             // arrange
             var di = new M.Mock<IRuleDependencies>();
             var objectInstance = new TestClass2();
-            var repository = new Repository();
+            var repository = new Domain();
             repository.AddRule<TestClass1, ITestAction>((a, something) => { });
             repository.AddRule<TestClass2>(a => { });
             repository.AddRule<TestClass2>(a => { });

@@ -39,7 +39,7 @@ namespace BackToFront.Expressions
         {
         }
 
-        protected override bool IsSameExpression(BinaryExpression ex)
+        protected override bool _IsSameExpression(BinaryExpression ex)
         {
             return Expression.NodeType == ex.NodeType &&
                 Expression.Method == ex.Method &&

@@ -24,22 +24,22 @@ namespace BackToFront.Validate
         /// <typeparam name="T">The object type</typeparam>
         /// <param name="test">The object</param>
         /// <returns>The first business rule violation encountered</returns>
-        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Repository repository)
+        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Domain repository)
         {
             return Validate(test, repository, new ValidateOptions(), null);
         }
 
-        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Repository repository, object dependencyClasses)
+        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Domain repository, object dependencyClasses)
         {
             return Validate(test, repository, new ValidateOptions(), dependencyClasses);
         }
 
-        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Repository repository, ValidateOptions options)
+        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Domain repository, ValidateOptions options)
         {
             return Validate(test, repository, options, null);
         }
 
-        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Repository repository, ValidateOptions options, object dependencyClasses)
+        public static IValidateResult<TEntity> Validate<TEntity>(this TEntity test, Domain repository, ValidateOptions options, object dependencyClasses)
         {
             return new ValidateResult<TEntity>(test, repository, options, dependencyClasses);
         }

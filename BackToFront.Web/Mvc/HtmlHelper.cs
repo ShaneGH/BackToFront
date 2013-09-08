@@ -23,12 +23,12 @@ namespace BackToFront.Web.Mvc
             EmitTypeInformation = EmitTypeInformation.Always
         });
 
-        public static void RulesForModel<TModel>(this HtmlHelper<TModel> helper, Repository repository, bool includeScriptTags = true)
+        public static void RulesForModel<TModel>(this HtmlHelper<TModel> helper, Domain repository, bool includeScriptTags = true)
         {
             WriteRulesToStream<TModel>(repository, helper.ViewContext.HttpContext.Response.OutputStream, includeScriptTags).Dispose();
         }
 
-        public static MvcHtmlString RenderRulesForModel<TModel>(this HtmlHelper<TModel> helper, Repository repository, bool includeScriptTags = true)
+        public static MvcHtmlString RenderRulesForModel<TModel>(this HtmlHelper<TModel> helper, Domain repository, bool includeScriptTags = true)
         {
             using (var stream = new MemoryStream())
             {
@@ -48,12 +48,12 @@ namespace BackToFront.Web.Mvc
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="stream"></param>
-        private static IDisposable WriteRulesToStream<TEntity>(Repository repository, Stream stream, bool includeScriptTags)
+        private static IDisposable WriteRulesToStream<TEntity>(Domain repository, Stream stream, bool includeScriptTags)
         {
             return WriteRulesToStream<TEntity>(new[] { repository }, stream, includeScriptTags);
         }
 
-        private static IDisposable WriteRulesToStream<TEntity>(IEnumerable<Repository> repositories, Stream stream, bool includeScriptTags)
+        private static IDisposable WriteRulesToStream<TEntity>(IEnumerable<Domain> repositories, Stream stream, bool includeScriptTags)
         {
             var type = typeof(TEntity);
             var rules = new RuleCollectionMeta

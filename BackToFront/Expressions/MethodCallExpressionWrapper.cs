@@ -51,7 +51,7 @@ namespace BackToFront.Expressions
         {
         }
 
-        protected override bool IsSameExpression(MethodCallExpression expression)
+        protected override bool _IsSameExpression(MethodCallExpression expression)
         {
             return Expression.Method.GetBaseDefinition() == expression.Method.GetBaseDefinition() &&
                 Object.IsSameExpression(expression.Object) &&                

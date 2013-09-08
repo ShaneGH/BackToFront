@@ -43,7 +43,7 @@ namespace BackToFront.Expressions
             }
         }
 
-        protected override bool IsSameExpression(BlockExpression expression)
+        protected override bool _IsSameExpression(BlockExpression expression)
         {
             return expression.Expressions.Count == ChildExpressions.Count() && 
                 ChildExpressions.All((e, i) => e.IsSameExpression(expression.Expressions[i]));;

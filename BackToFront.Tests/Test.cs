@@ -47,7 +47,7 @@ namespace BackToFront.Tests
             }
         }
 
-        public static Repository Repository;
+        public static Domain Repository;
 
         public static void SetupTestpad()
         {

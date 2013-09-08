@@ -40,6 +40,8 @@ namespace BackToFront.Dependency
         {
             get 
             {
+                // this property will be mocked out if an explicit value is set
+
                 var dependency = (TDependency)_Resolver.GetService(typeof(TDependency));
                 if (dependency != null)
                     return dependency;

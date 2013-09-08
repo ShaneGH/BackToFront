@@ -34,7 +34,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
         {
             // arrange
             var ctxt = new DA.ValidationContext(new object());
-            ctxt.ServiceContainer.AddService(typeof(Repository), new Repository());
+            ctxt.ServiceContainer.AddService(typeof(Domain), new Domain());
 
             // act
             var actual = new ValidateMemberAttribute().ProcessValidationContext(ctxt);
@@ -50,7 +50,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.DataAnnotations
         {
             // arrange
             var ctxt = new DA.ValidationContext(new object());
-            var expected = new BTFValidationContext(ctxt, new Repository());
+            var expected = new BTFValidationContext(ctxt, new Domain());
             ctxt.Items.Add(ValidateMemberAttribute.BackToFrontValidationContext, expected);
 
             // act

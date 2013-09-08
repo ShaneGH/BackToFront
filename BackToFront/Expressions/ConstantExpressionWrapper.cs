@@ -13,7 +13,7 @@ namespace BackToFront.Expressions
         {
         }
 
-        protected override bool IsSameExpression(ConstantExpression expression)
+        protected override bool _IsSameExpression(ConstantExpression expression)
         {
             return Expression.Value.Equals(expression.Value);                
         }

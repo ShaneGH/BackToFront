@@ -29,19 +29,19 @@ namespace BackToFront.Logic
 
     public class ValidateResult<TEntity> : IValidateResult<TEntity>
     {
-        private readonly Repository _Repository;
+        private readonly Domain _Repository;
         private readonly TEntity Entity;
         private readonly IDictionary<string, object> Dependencies;
         private readonly List<Mock> Mocks = new List<Mock>();
         private readonly List<ChildMemberValidator> ValidateChildMembers = new List<ChildMemberValidator>();
         private readonly ValidateOptions Options;
 
-        public ValidateResult(TEntity entity, Repository repository)
+        public ValidateResult(TEntity entity, Domain repository)
             : this(entity, repository, new ValidateOptions(), null)
         {
         }
 
-        public ValidateResult(TEntity entity, Repository repository, ValidateOptions options, object dependencyClasses)
+        public ValidateResult(TEntity entity, Domain repository, ValidateOptions options, object dependencyClasses)
             : this(entity, repository, options, dependencyClasses == null ? Enumerable.Empty<KeyValuePair<string, object>>() : ToDependencies(dependencyClasses), Enumerable.Empty<Mock>())
         {
         }
@@ -53,7 +53,7 @@ namespace BackToFront.Logic
         /// <param name="options"></param>
         /// <param name="dependencyClasses"></param>
         /// <param name="mocks"></param>
-        private ValidateResult(TEntity entity, Repository repository, ValidateOptions options, IEnumerable<KeyValuePair<string, object>> dependencyClasses, IEnumerable<Mock> mocks)
+        private ValidateResult(TEntity entity, Domain repository, ValidateOptions options, IEnumerable<KeyValuePair<string, object>> dependencyClasses, IEnumerable<Mock> mocks)
         {
             if (entity == null || repository == null)
                 throw new InvalidOperationException("##");

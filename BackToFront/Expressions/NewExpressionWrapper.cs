@@ -32,7 +32,7 @@ namespace BackToFront.Expressions
         {
         }
 
-        protected override bool IsSameExpression(NewExpression expression)
+        protected override bool _IsSameExpression(NewExpression expression)
         {
             return this.Expression.Equals(expression) ||
                 (Expression.Constructor == expression.Constructor &&

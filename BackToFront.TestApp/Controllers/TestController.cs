@@ -9,7 +9,7 @@ namespace BackToFront.TestApp.Controllers
 {
     public class TestModel
     {
-        public static readonly Repository Repository = new Repository();
+        public static readonly Domain Repository = new Domain();
 
         static TestModel()
         {
@@ -56,7 +56,7 @@ namespace BackToFront.TestApp.Controllers
 
     public class customAttribute : BackToFront.Web.WebValidateAttribute
     {
-        protected override Repository GetRepository(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
+        protected override Domain GetRepository(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {
             return TestModel.Repository;
         }

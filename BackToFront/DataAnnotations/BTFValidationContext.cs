@@ -15,7 +15,7 @@ namespace BackToFront.DataAnnotations
         public readonly IRuleDependencies DI;
         public readonly object ObjectInstance;
 
-        public BTFValidationContext(DA.ValidationContext validationContext, Repository repository)
+        public BTFValidationContext(DA.ValidationContext validationContext, Domain repository)
         {
             var rules = new List<INonGenericRule>();
 

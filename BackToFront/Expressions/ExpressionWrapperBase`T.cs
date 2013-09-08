@@ -30,7 +30,7 @@ namespace BackToFront.Expressions
             }
         }
 
-        protected abstract bool IsSameExpression(TExpression expression);
+        protected abstract bool _IsSameExpression(TExpression expression);
 
         public override bool IsSameExpression(Expression expression)
         {
@@ -38,7 +38,7 @@ namespace BackToFront.Expressions
                 return false;
 
             if (expression is TExpression)
-                return IsSameExpression(expression as TExpression);
+                return _IsSameExpression(expression as TExpression);
 
             return false;
         }

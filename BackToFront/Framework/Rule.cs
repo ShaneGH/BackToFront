@@ -58,7 +58,6 @@ namespace BackToFront.Framework
                 if (!(entity is TEntity))
                     throw new InvalidOperationException("##");
 
-                // TODO: as
                 rule((TEntity)entity, validationContext);
             };
         }

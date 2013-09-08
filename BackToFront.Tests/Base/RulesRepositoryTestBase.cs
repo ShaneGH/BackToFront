@@ -9,12 +9,12 @@ namespace BackToFront.Tests.Base
 {
     public class RulesRepositoryTestBase : TestBase
     {
-        public Repository Repository;
+        public Domain Repository;
 
         public override void TestFixtureSetUp()
         {
             base.TestFixtureSetUp();
-            Repository = new Repository();
+            Repository = new Domain();
         }
 
         public void AddRule<TEntity>(Action<IRule<TEntity>> rule)

@@ -106,9 +106,9 @@ namespace BackToFront.DataAnnotations
                 violations.Select(v => v.Violated.Select(m => m.UltimateMember.Name)).Aggregate());
         }
 
-        protected virtual Repository GetRepository(DA.ValidationContext validationContext)
+        protected virtual Domain GetRepository(DA.ValidationContext validationContext)
         {
-            return validationContext.ServiceContainer.GetService(typeof(Repository)) as Repository;
+            return validationContext.ServiceContainer.GetService(typeof(Domain)) as Domain;
         }
 
         internal BTFValidationContext ProcessValidationContext(DA.ValidationContext validationContext)

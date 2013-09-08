@@ -31,7 +31,7 @@ namespace BackToFront.Expressions
             }
         }
 
-        protected override bool IsSameExpression(DefaultExpression expression)
+        protected override bool _IsSameExpression(DefaultExpression expression)
         {
             return true;
         }

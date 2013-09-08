@@ -14,7 +14,7 @@ namespace BackToFront.Tests.CSharp.UnitTests
         public void Rules_Test_Generic_NonGeneric_and_Caching()
         {
             // arrange
-            Repository subject = new Repository();
+            Domain subject = new Domain();
 
             // act
             var r1 = subject.Rules(typeof(object));
@@ -29,7 +29,7 @@ namespace BackToFront.Tests.CSharp.UnitTests
         public void Add_Test()
         {
             // arrange
-            Repository subject = new Repository();
+            Domain subject = new Domain();
             Rule<object> rule = null;
 
             // act
@@ -45,7 +45,7 @@ namespace BackToFront.Tests.CSharp.UnitTests
         {
             // arrange
             var di = new M.Mock<IDependencyResolver>();
-            Repository subject = new Repository();
+            Domain subject = new Domain();
             Rule<object> rule = null;
             DependencyWrapper<object> dep = null;
 
@@ -62,7 +62,7 @@ namespace BackToFront.Tests.CSharp.UnitTests
         public void HasRulesTest()
         {
             // arrange
-            Repository r = new Repository();
+            Domain r = new Domain();
 
             Assert.IsFalse(r.HasRules(typeof(object)));
             Assert.IsFalse(r.HasRules<object>());
@@ -77,7 +77,7 @@ namespace BackToFront.Tests.CSharp.UnitTests
         public void IdentifierFor_Generic_NonGeneric_Cache()
         {
             // arrange
-            Repository r = new Repository();
+            Domain r = new Domain();
 
             // act
             var id1 = r.IdentifierFor(typeof(int));
