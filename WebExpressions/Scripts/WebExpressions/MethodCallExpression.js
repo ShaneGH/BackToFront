@@ -52,7 +52,7 @@ var WebExpressions;
         // TODO: register methods
         MethodCallExpression.prototype._Compile = function () {
             var _this = this;
-            if (!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
+            if (!WebExpressions.MemberExpressionBase.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
 

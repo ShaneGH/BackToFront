@@ -85,8 +85,11 @@ var WebExpressions;
             dictionary[WebExpressions.Meta.ExpressionWrapperType.Default] = function (meta) {
                 return new WebExpressions.DefaultExpression(meta);
             };
-            dictionary[WebExpressions.Meta.ExpressionWrapperType.Member] = function (meta) {
+            dictionary[WebExpressions.Meta.ExpressionWrapperType.MemberX] = function (meta) {
                 return new WebExpressions.MemberExpression(meta);
+            };
+            dictionary[WebExpressions.Meta.ExpressionWrapperType.StaticMember] = function (meta) {
+                return new WebExpressions.StaticMemberExpression(meta);
             };
             dictionary[WebExpressions.Meta.ExpressionWrapperType.MethodCall] = function (meta) {
                 return new WebExpressions.MethodCallExpression(meta);

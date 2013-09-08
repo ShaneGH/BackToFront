@@ -61,7 +61,7 @@ test("Constructor test OK, member", function () {
     var ex = new tUtil.Expect("require", "left", "right");
 
     // arrange
-    var meta = { Left: { ExpressionType: WebExpressions.Meta.ExpressionWrapperType.Member, Expression: "left", MemberName: "HVLKJHVKJHV" }, Right: "right", NodeType: WebExpressions.Meta.ExpressionType.Add };
+    var meta = { Left: { ExpressionType: WebExpressions.Meta.ExpressionWrapperType.StaticMember, Expression: "left", MemberName: "HVLKJHVKJHV" }, Right: "right", NodeType: WebExpressions.Meta.ExpressionType.Add };
 
     // first Sanitizer is in parent class
     var skip = true;

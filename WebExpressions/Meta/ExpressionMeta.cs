@@ -30,7 +30,7 @@ namespace WebExpressions.Meta
             constructors[typeof(MethodCallExpression)] = expression => new MethodCallExpressionMeta(expression as MethodCallExpression);
             constructors[typeof(UnaryExpression)] = expression => new UnaryExpressionMeta(expression as UnaryExpression);
             constructors[typeof(ParameterExpression)] = expression => new ParameterExpressionMeta(expression as ParameterExpression);
-            constructors[typeof(MemberExpression)] = expression => new MemberExpressionMeta(expression as MemberExpression);
+            constructors[typeof(MemberExpression)] = expression => MemberExpressionMetaBase.CreateMemberExpressionMeta(expression as MemberExpression);
             constructors[typeof(BlockExpression)] = expression => new BlockExpressionMeta(expression as BlockExpression);
             constructors[typeof(ConditionalExpression)] = expression => new ConditionalExpressionMeta(expression as ConditionalExpression);
             constructors[typeof(DefaultExpression)] = expression => new DefaultExpressionMeta(expression as DefaultExpression);

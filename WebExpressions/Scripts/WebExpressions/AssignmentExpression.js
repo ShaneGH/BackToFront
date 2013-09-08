@@ -26,7 +26,8 @@ var WebExpressions;
                     this.Left = null;
                     this.LeftProperty = (meta.Left).Name;
                     break;
-                case WebExpressions.Meta.ExpressionWrapperType.Member:
+                case WebExpressions.Meta.ExpressionWrapperType.StaticMember:
+                case WebExpressions.Meta.ExpressionWrapperType.MemberX:
                     this.Left = WebExpressions.Expression.CreateExpression((meta.Left).Expression);
                     this.LeftProperty = (meta.Left).MemberName;
                     break;

@@ -4,15 +4,16 @@
         (function (ExpressionWrapperType) {
             ExpressionWrapperType[ExpressionWrapperType["Binary"] = 1] = "Binary";
             ExpressionWrapperType[ExpressionWrapperType["Constant"] = 2] = "Constant";
-            ExpressionWrapperType[ExpressionWrapperType["Member"] = 3] = "Member";
-            ExpressionWrapperType[ExpressionWrapperType["MethodCall"] = 4] = "MethodCall";
-            ExpressionWrapperType[ExpressionWrapperType["Parameter"] = 5] = "Parameter";
-            ExpressionWrapperType[ExpressionWrapperType["Unary"] = 6] = "Unary";
-            ExpressionWrapperType[ExpressionWrapperType["Default"] = 7] = "Default";
-            ExpressionWrapperType[ExpressionWrapperType["Block"] = 8] = "Block";
-            ExpressionWrapperType[ExpressionWrapperType["Conditional"] = 9] = "Conditional";
-            ExpressionWrapperType[ExpressionWrapperType["Invocation"] = 10] = "Invocation";
-            ExpressionWrapperType[ExpressionWrapperType["New"] = 11] = "New";
+            ExpressionWrapperType[ExpressionWrapperType["MemberX"] = 3] = "MemberX";
+            ExpressionWrapperType[ExpressionWrapperType["StaticMember"] = 4] = "StaticMember";
+            ExpressionWrapperType[ExpressionWrapperType["MethodCall"] = 5] = "MethodCall";
+            ExpressionWrapperType[ExpressionWrapperType["Parameter"] = 6] = "Parameter";
+            ExpressionWrapperType[ExpressionWrapperType["Unary"] = 7] = "Unary";
+            ExpressionWrapperType[ExpressionWrapperType["Default"] = 8] = "Default";
+            ExpressionWrapperType[ExpressionWrapperType["Block"] = 9] = "Block";
+            ExpressionWrapperType[ExpressionWrapperType["Conditional"] = 10] = "Conditional";
+            ExpressionWrapperType[ExpressionWrapperType["Invocation"] = 11] = "Invocation";
+            ExpressionWrapperType[ExpressionWrapperType["New"] = 12] = "New";
         })(Meta.ExpressionWrapperType || (Meta.ExpressionWrapperType = {}));
         var ExpressionWrapperType = Meta.ExpressionWrapperType;
 

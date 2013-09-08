@@ -3,18 +3,18 @@
 /// <reference path="../../../Scripts/build/BackToFront.debug.js" />
 /// <reference path="../../Base/testUtils.js" />
 
-var property = WebExpressions.MemberExpression.PropertyRegex;
+var property = WebExpressions.MemberExpressionBase.PropertyRegex;
 var createExpression = WebExpressions.Expression.CreateExpression;
 var require = WebExpressions.Sanitizer.Require;
 
 module("WebExpressions.MethodCallExpression", {
     setup: function () {
-        WebExpressions.MemberExpression.PropertyRegex = property;
+        WebExpressions.MemberExpressionBase.PropertyRegex = property;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
     },
     teardown: function () {
-        WebExpressions.MemberExpression.PropertyRegex = property;
+        WebExpressions.MemberExpressionBase.PropertyRegex = property;
         WebExpressions.Expression.CreateExpression = createExpression;
         WebExpressions.Sanitizer.Require = require;
     }
@@ -79,7 +79,7 @@ test("_Compile test: exception", function () {
         MethodName: "LJBHKLJBLKJB"
     };
 
-    WebExpressions.MemberExpression.PropertyRegex = {
+    WebExpressions.MemberExpressionBase.PropertyRegex = {
         test: function (member) {
             ex.At("test");
             assert.strictEqual(member, subject.MethodName);

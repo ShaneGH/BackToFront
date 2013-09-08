@@ -56,7 +56,7 @@ module WebExpressions {
 
         // TODO: register methods
         _Compile(): ExpressionInvokerAction {
-            if (!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
+            if (!WebExpressions.MemberExpressionBase.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
 

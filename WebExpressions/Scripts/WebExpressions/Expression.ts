@@ -84,7 +84,8 @@ module WebExpressions {
             dictionary[WebExpressions.Meta.ExpressionWrapperType.Conditional] = meta => new WebExpressions.ConditionalExpression(meta);
             dictionary[WebExpressions.Meta.ExpressionWrapperType.Constant] = meta => new WebExpressions.ConstantExpression(meta);
             dictionary[WebExpressions.Meta.ExpressionWrapperType.Default] = meta => new WebExpressions.DefaultExpression(meta);
-            dictionary[WebExpressions.Meta.ExpressionWrapperType.Member] = meta => new WebExpressions.MemberExpression(meta);
+            dictionary[WebExpressions.Meta.ExpressionWrapperType.MemberX] = meta => new WebExpressions.MemberExpression(meta);
+            dictionary[WebExpressions.Meta.ExpressionWrapperType.StaticMember] = meta => new WebExpressions.StaticMemberExpression(meta);
             dictionary[WebExpressions.Meta.ExpressionWrapperType.MethodCall] = meta => new WebExpressions.MethodCallExpression(meta);
             dictionary[WebExpressions.Meta.ExpressionWrapperType.Parameter] = meta => new WebExpressions.ParameterExpression(meta);
             dictionary[WebExpressions.Meta.ExpressionWrapperType.Unary] = meta => new WebExpressions.UnaryExpression(meta);

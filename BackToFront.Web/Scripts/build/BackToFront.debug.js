@@ -496,15 +496,16 @@ var WebExpressions;
         (function (ExpressionWrapperType) {
             ExpressionWrapperType[ExpressionWrapperType["Binary"] = 1] = "Binary";
             ExpressionWrapperType[ExpressionWrapperType["Constant"] = 2] = "Constant";
-            ExpressionWrapperType[ExpressionWrapperType["Member"] = 3] = "Member";
-            ExpressionWrapperType[ExpressionWrapperType["MethodCall"] = 4] = "MethodCall";
-            ExpressionWrapperType[ExpressionWrapperType["Parameter"] = 5] = "Parameter";
-            ExpressionWrapperType[ExpressionWrapperType["Unary"] = 6] = "Unary";
-            ExpressionWrapperType[ExpressionWrapperType["Default"] = 7] = "Default";
-            ExpressionWrapperType[ExpressionWrapperType["Block"] = 8] = "Block";
-            ExpressionWrapperType[ExpressionWrapperType["Conditional"] = 9] = "Conditional";
-            ExpressionWrapperType[ExpressionWrapperType["Invocation"] = 10] = "Invocation";
-            ExpressionWrapperType[ExpressionWrapperType["New"] = 11] = "New";
+            ExpressionWrapperType[ExpressionWrapperType["MemberX"] = 3] = "MemberX";
+            ExpressionWrapperType[ExpressionWrapperType["StaticMember"] = 4] = "StaticMember";
+            ExpressionWrapperType[ExpressionWrapperType["MethodCall"] = 5] = "MethodCall";
+            ExpressionWrapperType[ExpressionWrapperType["Parameter"] = 6] = "Parameter";
+            ExpressionWrapperType[ExpressionWrapperType["Unary"] = 7] = "Unary";
+            ExpressionWrapperType[ExpressionWrapperType["Default"] = 8] = "Default";
+            ExpressionWrapperType[ExpressionWrapperType["Block"] = 9] = "Block";
+            ExpressionWrapperType[ExpressionWrapperType["Conditional"] = 10] = "Conditional";
+            ExpressionWrapperType[ExpressionWrapperType["Invocation"] = 11] = "Invocation";
+            ExpressionWrapperType[ExpressionWrapperType["New"] = 12] = "New";
         })(Meta.ExpressionWrapperType || (Meta.ExpressionWrapperType = {}));
         var ExpressionWrapperType = Meta.ExpressionWrapperType;
 
@@ -688,8 +689,11 @@ var WebExpressions;
             dictionary[WebExpressions.Meta.ExpressionWrapperType.Default] = function (meta) {
                 return new WebExpressions.DefaultExpression(meta);
             };
-            dictionary[WebExpressions.Meta.ExpressionWrapperType.Member] = function (meta) {
+            dictionary[WebExpressions.Meta.ExpressionWrapperType.MemberX] = function (meta) {
                 return new WebExpressions.MemberExpression(meta);
+            };
+            dictionary[WebExpressions.Meta.ExpressionWrapperType.StaticMember] = function (meta) {
+                return new WebExpressions.StaticMemberExpression(meta);
             };
             dictionary[WebExpressions.Meta.ExpressionWrapperType.MethodCall] = function (meta) {
                 return new WebExpressions.MethodCallExpression(meta);
@@ -743,7 +747,8 @@ var WebExpressions;
                     this.Left = null;
                     this.LeftProperty = (meta.Left).Name;
                     break;
-                case WebExpressions.Meta.ExpressionWrapperType.Member:
+                case WebExpressions.Meta.ExpressionWrapperType.StaticMember:
+                case WebExpressions.Meta.ExpressionWrapperType.MemberX:
                     this.Left = WebExpressions.Expression.CreateExpression((meta.Left).Expression);
                     this.LeftProperty = (meta.Left).MemberName;
                     break;
@@ -1182,6 +1187,38 @@ var __extends = this.__extends || function (d, b) {
 };
 var WebExpressions;
 (function (WebExpressions) {
+    var MemberExpressionBase = (function (_super) {
+        __extends(MemberExpressionBase, _super);
+        function MemberExpressionBase(meta) {
+            _super.call(this, meta);
+
+            WebExpressions.Sanitizer.Require(meta, {
+                inputName: "MemberName",
+                inputConstructor: String
+            });
+
+            this.MemberName = meta.MemberName;
+        }
+        MemberExpressionBase.prototype._Compile = function () {
+            if (!MemberExpressionBase.PropertyRegex.test(this.MemberName)) {
+                throw "Invalid property name: " + this.MemberName;
+            }
+
+            var name = this.MemberName;
+            var expression = this._CompileMemberContext();
+            return function (ambientContext) {
+                return expression(ambientContext)[name];
+            };
+        };
+
+        MemberExpressionBase.prototype._CompileMemberContext = function () {
+            throw "This method is abstract";
+        };
+        MemberExpressionBase.PropertyRegex = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
+        return MemberExpressionBase;
+    })(WebExpressions.Expression);
+    WebExpressions.MemberExpressionBase = MemberExpressionBase;
+
     var MemberExpression = (function (_super) {
         __extends(MemberExpression, _super);
         function MemberExpression(meta) {
@@ -1189,16 +1226,10 @@ var WebExpressions;
 
             WebExpressions.Sanitizer.Require(meta, {
                 inputName: "Expression",
-                inputType: "object",
-                // if static member
-                allowNull: true
-            }, {
-                inputName: "MemberName",
-                inputConstructor: String
+                inputType: "object"
             });
 
-            this.Expression = meta.Expression ? WebExpressions.Expression.CreateExpression(meta.Expression) : null;
-            this.MemberName = meta.MemberName;
+            this.Expression = WebExpressions.Expression.CreateExpression(meta.Expression);
         }
         // TODO: replace . with [] and watch for injection
         //EvalExpression(): CreateEvalExpression {
@@ -1212,25 +1243,50 @@ var WebExpressions;
         //        Constants: expression.Constants
         //    };
         //};
-        MemberExpression.prototype._Compile = function () {
-            if (!MemberExpression.PropertyRegex.test(this.MemberName)) {
-                throw "Invalid property name: " + this.MemberName;
+        MemberExpression.prototype._CompileMemberContext = function () {
+            return this.Expression.Compile();
+        };
+        return MemberExpression;
+    })(MemberExpressionBase);
+    WebExpressions.MemberExpression = MemberExpression;
+
+    var StaticMemberExpression = (function (_super) {
+        __extends(StaticMemberExpression, _super);
+        function StaticMemberExpression(meta) {
+            _super.call(this, meta);
+
+            WebExpressions.Sanitizer.Require(meta, {
+                inputName: "Class",
+                inputType: "string"
+            });
+
+            this.Class = StaticMemberExpression.SplitNamespace(meta.Class);
+        }
+        StaticMemberExpression.SplitNamespace = function (input) {
+            var output = input.split(".");
+            linq(output).Each(function (a) {
+                if (!MemberExpressionBase.PropertyRegex.test(a))
+                    throw "Invalid namespace part " + a;
+            });
+
+            return output;
+        };
+
+        StaticMemberExpression.prototype._CompileMemberContext = function () {
+            var item = window;
+            for (var i = 0, ii = this.Class.length; i < ii; i++) {
+                item = item[this.Class[i]];
+                if (item == undefined)
+                    throw "Cannot evaluate member " + this.Class.join(".");
             }
 
-            if (this.Expression) {
-                var name = this.MemberName;
-                var expression = this.Expression.Compile();
-                return function (ambientContext) {
-                    return expression(ambientContext)[name];
-                };
-            } else {
-                throw "Not implemented exception";
-            }
+            return function (ambientContext) {
+                return item;
+            };
         };
-        MemberExpression.PropertyRegex = new RegExp("^[_a-zA-Z][_a-zA-Z0-9]*$");
-        return MemberExpression;
-    })(WebExpressions.Expression);
-    WebExpressions.MemberExpression = MemberExpression;
+        return StaticMemberExpression;
+    })(MemberExpressionBase);
+    WebExpressions.StaticMemberExpression = StaticMemberExpression;
 })(WebExpressions || (WebExpressions = {}));
 
 
@@ -1288,7 +1344,7 @@ var WebExpressions;
         // TODO: register methods
         MethodCallExpression.prototype._Compile = function () {
             var _this = this;
-            if (!WebExpressions.MemberExpression.PropertyRegex.test(this.MethodName)) {
+            if (!WebExpressions.MemberExpressionBase.PropertyRegex.test(this.MethodName)) {
                 throw "Invalid method name: " + this.MethodName;
             }
 

@@ -264,6 +264,12 @@
     <Content Include="Javascript\WebExpressions\UnitTests\AssignmentExpression_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\StaticMemberExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\WebExpressions\UnitTests\MemberExpression_Tests.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Javascript\WebExpressions\UnitTests\NewExpression_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -288,7 +294,7 @@
     <Content Include="Javascript\WebExpressions\UnitTests\MethodCallExpression_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Javascript\WebExpressions\UnitTests\MemberExpression_Tests.js">
+    <Content Include="Javascript\WebExpressions\UnitTests\MemberExpressionBase_Tests.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Javascript\BackToFront\UnitTests\BackToFront\Sanitizer_Tests.js">

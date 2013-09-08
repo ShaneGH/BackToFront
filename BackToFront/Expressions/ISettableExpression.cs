@@ -16,7 +16,6 @@ namespace BackToFront.Expressions
 
     public interface IPropertyChainGetter : ILinearExpression
     {
-        // TODO: generics here
         object Get(object root);
     }
 
@@ -24,7 +23,6 @@ namespace BackToFront.Expressions
     {
         bool CanSet { get; }
 
-        // TODO: generics here
         void Set(object root, object value);
     }
 }
