@@ -84,7 +84,7 @@ namespace BackToFront.Utilities
             (Expression as IPropertyChain).Set(root, Value);
         }
 
-        public bool TryForChild<TEntity, TChild>(Expression<Func<TEntity, TChild>> child, Expression root, out Mock forChild)
+        public bool TryForChildExpression<TEntity, TChild>(Expression<Func<TEntity, TChild>> child, Expression root, out Mock forChild)
         {
             try
             {

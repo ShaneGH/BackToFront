@@ -96,7 +96,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Utilities
 
             // act
             Mock result;
-            var success = subject.TryForChild<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)), out result);
+            var success = subject.TryForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)), out result);
 
             // assert
             Assert.IsTrue(success);
@@ -111,7 +111,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Utilities
 
             // act
             Mock dummy;
-            var success = subject.TryForChild<TestClass1, bool>(a => a.Prop, Expression.Parameter(typeof(bool)), out dummy);
+            var success = subject.TryForChildExpression<TestClass1, bool>(a => a.Prop, Expression.Parameter(typeof(bool)), out dummy);
 
             // assert
             Assert.IsFalse(success);

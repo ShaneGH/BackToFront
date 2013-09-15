@@ -39,8 +39,14 @@ namespace BackToFront.Expressions
 
             Constructors = new ReadOnlyDictionary<Type, Func<Expression, ExpressionWrapperBase>>(constructors);
         }
-        
+
         public abstract Expression WrappedExpression { get; }
+
+        /// <summary>
+        /// Return all of the members in the Expression which have the input parameter as their root
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         protected abstract IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter);
 
         private IEnumerable<ParameterExpression> CachedUnorderedParameters;
@@ -89,11 +95,17 @@ namespace BackToFront.Expressions
             return Constructors[type](expression);
         }
 
+        /// <summary>
+        /// Gets all of the members in the Expression which have the input parameter as their root
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         public IEnumerable<MemberChainItem> GetMembersForParameter(ParameterExpression parameter)
         {
             if (!_MembersCache.ContainsKey(parameter))
             {
-                // only cache members from UnorderedParameters
+                // only cache members from UnorderedParameters, caching everything could
+                // conceivably create a giant cache in what is probably a static object
                 if (!UnorderedParameters.Contains(parameter))
                 {
                     return _GetMembersForParameter(parameter);
@@ -106,7 +118,7 @@ namespace BackToFront.Expressions
         }
 
         /// <summary>
-        /// Mocks part of the current expression with the given parameter with a specific set of rules:
+        /// Is this expression contains the expression part "child", this will be replaced with the expression part "root"
         ///     Both the InnerExpression and input expressions must have one argument and it has to be the same type
         ///     The input expression must be fully linear (ILinearExpression)
         ///     There is no room for error. If there is no mock, an exception will be thrown
@@ -131,21 +143,20 @@ namespace BackToFront.Expressions
                 throw new InvalidOperationException("##");
 
             // ensure only ILinearExpressions get into this stack
-            Stack<ExpressionWrapperBase> previous = new Stack<ExpressionWrapperBase>();
-            previous.Push(this);
+            Stack<ExpressionWrapperBase> linearExpressionBuilder = new Stack<ExpressionWrapperBase>();
+            linearExpressionBuilder.Push(this);
 
             while (true)
             {
-                var last = previous.Peek();
+                var last = linearExpressionBuilder.Peek();
                 if (last.IsSameExpression(wrapper.WrappedExpression))
                 {
                     // remove last expression, this will be the expression we are mocking out
-                    previous.Pop();
+                    linearExpressionBuilder.Pop();
                     Expression current = root;
-                    while (previous.Count > 0)
+                    while (linearExpressionBuilder.Count > 0)
                     {
-                        var next = previous.Pop();
-                        current = (next as ILinearExpression).WithAlternateRoot(current, child).WrappedExpression;
+                        current = (linearExpressionBuilder.Pop() as ILinearExpression).WithAlternateRoot(current, child).WrappedExpression;
                     }
 
                     return current;
@@ -155,12 +166,13 @@ namespace BackToFront.Expressions
                 {
                     break;
                 }
+                else if (!((last as ILinearExpression).Root is ILinearExpression))
+                {
+                    break;
+                }
                 else
                 {
-                    if (!((last as ILinearExpression).Root is ILinearExpression))
-                        break;
-
-                    previous.Push((last as ILinearExpression).Root);
+                    linearExpressionBuilder.Push((last as ILinearExpression).Root);
                 }
             }
 

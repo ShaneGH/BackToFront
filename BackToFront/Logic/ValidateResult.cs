@@ -265,7 +265,7 @@ namespace BackToFront.Logic
             foreach (var m in mocks)
             {
                 Mock output;
-                if (m.TryForChild(member, Expression.Parameter(parameterType), out output) && !(output.Expression is ParameterExpressionWrapper))
+                if (m.TryForChildExpression(member, Expression.Parameter(parameterType), out output) && !(output.Expression is ParameterExpressionWrapper))
                     yield return output;
             }
         }

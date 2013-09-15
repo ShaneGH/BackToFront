@@ -53,6 +53,7 @@ namespace BackToFront.Framework
             {
                 get
                 {
+                    // Do not cache this, if caching is to be done it will 
                     return base.RequiredForValidation.Union(Descriptor.GetMembersForParameter(EntityParameter));
                 }
             }
