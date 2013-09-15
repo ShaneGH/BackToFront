@@ -15,13 +15,11 @@ namespace BackToFront.DataAnnotations
         public readonly IRuleDependencies DI;
         public readonly object ObjectInstance;
 
-        public BTFValidationContext(DA.ValidationContext validationContext, Domain repository)
+        public BTFValidationContext(DA.ValidationContext validationContext, Domain domain)
         {
             var rules = new List<INonGenericRule>();
-
-            //TODO: where should the repository come from?
-            if (repository == null)
-                throw new InvalidOperationException("##" + "need a repository");
+            if (domain == null)
+                throw new InvalidOperationException("##" + "need a domain");
 
             DI = (IRuleDependencies)validationContext.ServiceContainer.GetService(typeof(IRuleDependencies));
             ObjectInstance = validationContext.ObjectInstance;
@@ -29,7 +27,7 @@ namespace BackToFront.DataAnnotations
             Type current = validationContext.ObjectType;
             while (current != null)
             {
-                rules.AddRange(repository.Rules(current));
+                rules.AddRange(domain.Rules(current));
                 current = current.BaseType;
             }
 

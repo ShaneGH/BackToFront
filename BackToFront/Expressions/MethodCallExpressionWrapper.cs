@@ -23,8 +23,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _Object ?? (_Object =
-                    (Expression.Object == null ? new DefaultExpressionWrapper() : CreateChildWrapper(Expression.Object)));
+                return Expression.Object == null ? null : CreateOrReference(Expression.Object, ref _Object);
             }
         }
 
@@ -33,7 +32,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return Object is DefaultExpressionWrapper;
+                return Object == null;
             }
         }
 
@@ -54,14 +53,22 @@ namespace BackToFront.Expressions
         protected override bool _IsSameExpression(MethodCallExpression expression)
         {
             return Expression.Method.GetBaseDefinition() == expression.Method.GetBaseDefinition() &&
-                Object.IsSameExpression(expression.Object) &&                
+                _ObjectIsSameExpression(expression.Object) &&                
                 Arguments.Count() == expression.Arguments.Count() &&
                 Arguments.All((a, b) => a.IsSameExpression(expression.Arguments.ElementAt(b)));
         }
 
+        private bool _ObjectIsSameExpression(Expression expression)
+        {
+            return (Object == null && expression == null) ||
+                (Object != null && Object.IsSameExpression(expression));
+        }
+
         protected override IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter)
         {
-            return new[] { Object.GetMembersForParameter(parameter).Each(i => i.NextItem = new MemberChainItem(Expression.Method)) }
+            var obj = IsStatic ? Enumerable.Empty<IEnumerable<MemberChainItem>>() : new[] { Object.GetMembersForParameter(parameter).Each(i => i.NextItem = new MemberChainItem(Expression.Method)) };
+
+            return obj
                 .Concat(Arguments.Select(a => a.GetMembersForParameter(parameter)))
                 .Aggregate();
         }
@@ -70,7 +77,8 @@ namespace BackToFront.Expressions
         {
             get 
             {
-                return Object.UnorderedParameters.Union(Arguments.Select(a => a.UnorderedParameters).Aggregate());
+                var obj = IsStatic ? Enumerable.Empty<ParameterExpression>() : Object.UnorderedParameters;
+                return obj.Union(Arguments.Select(a => a.UnorderedParameters).Aggregate());
             }
         }
 

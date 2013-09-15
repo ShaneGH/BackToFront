@@ -37,6 +37,8 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             {
                 return true;
             }
+
+            public static bool HelloO() { return true; }
         }
 
         [Test]
@@ -51,9 +53,6 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 
             // act
             // assert
-            //Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func1) as MethodCallExpressionWrapper));
-            //Assert.IsTrue(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func2) as MethodCallExpressionWrapper));
-            //Assert.IsFalse(subject.IsSameExpression(ExpressionWrapperBase.ToWrapper(func3) as MethodCallExpressionWrapper));
             Assert.IsTrue(subject.IsSameExpression(func1.Body));
             Assert.IsTrue(subject.IsSameExpression(func2.Body));
             Assert.IsFalse(subject.IsSameExpression(func3.Body));
@@ -141,7 +140,34 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 
             // act
             // assert
-            var result = subject.WithAlternateRoot<TestClass, int>(constant, a => a.ChildProp);
+            subject.WithAlternateRoot<TestClass, int>(constant, a => a.ChildProp);
+        }
+
+        [Test]
+        public void IsStatic_Test_NotStatic()
+        {
+            // arrnage
+            var constant = Expression.Constant(new TestClass());
+            var subject = (MethodCallExpressionWrapper)ExpressionWrapperBase.ToWrapper<TestClass, bool>(a => a.HelloMethod(a.GetHashCode()));
+
+            // act
+            var actual = subject.IsStatic;
+
+            // assert
+            Assert.IsFalse(actual);
+        }
+
+        [Test]
+        public void IsStatic_Test_Static()
+        {
+            // arrnage
+            var subject = (MethodCallExpressionWrapper)ExpressionWrapperBase.ToWrapper<TestClass, bool>(a => TestClass.HelloO());
+
+            // act
+            var actual = subject.IsStatic;
+
+            // assert
+            Assert.IsTrue(actual);
         }
     }
 }
