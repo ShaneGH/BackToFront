@@ -24,7 +24,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             public TestClass()
                 : base(null) { }
 
-            public Expression __Compile(SwapPropVisitor v)
+            public Expression __Compile(ExpressionMocker v)
             {
                 return _Compile(v);
             }
@@ -61,7 +61,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             subject.AddRule(new Rule<object>());
             subject.AddRule(new Rule<object>());
 
-            var v = new SwapPropVisitor(typeof(object));
+            var v = new ExpressionMocker(typeof(object));
 
             // act
             var actual = ExpressionWrapperBase.CreateExpressionWrapper(subject.Compile(v)) as BlockExpressionWrapper;

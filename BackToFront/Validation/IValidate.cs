@@ -21,6 +21,6 @@ namespace BackToFront.Validation
     /// <typeparam name="TEntity">Type of the entity to validate</typeparam>
     public interface IValidate<TEntity> : IValidationItems
     {
-        Expression Compile(SwapPropVisitor visitor);
+        Expression Compile(ExpressionMocker visitor);
     }
 }

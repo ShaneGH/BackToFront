@@ -44,13 +44,13 @@ namespace BackToFront.Framework
             return _if.Action;
         }
 
-        protected override Expression _Compile(SwapPropVisitor visitor)
+        protected override Expression _Compile(ExpressionMocker visitor)
         {
             Expression final = null;
             var possibilities = _If.Select(a => 
             {
                 using (visitor.WithEntityParameter(a.EntityParameter))
-                    return new Tuple<Expression, Expression>(visitor.Visit(a.Descriptor.WrappedExpression), a.Action.Compile(visitor));
+                    return new Tuple<Expression, Expression>(visitor.Mock(a.Descriptor.WrappedExpression), a.Action.Compile(visitor));
             }).ToArray();
 
             if (possibilities.Any())

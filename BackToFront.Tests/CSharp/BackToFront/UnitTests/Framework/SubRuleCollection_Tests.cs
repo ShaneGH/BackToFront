@@ -20,7 +20,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             public Accessor()
                 : base(null) { }
 
-            public Expression __Compile(SwapPropVisitor v)
+            public Expression __Compile(ExpressionMocker v)
             {
                 return _Compile(v);
             }
@@ -55,7 +55,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             // arrange
             var subject = new Accessor();
             subject.If(a => true);
-            var v = new SwapPropVisitor(typeof(object));
+            var v = new ExpressionMocker(typeof(object));
             
             // act
             var actual = ExpressionWrapperBase.CreateExpressionWrapper(subject.__Compile(v));

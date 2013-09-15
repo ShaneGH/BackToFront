@@ -10,14 +10,14 @@ using System.Linq.Expressions;
 namespace BackToFront.Tests.CSharp.UnitTests.Expressions.Visitors
 {
     [TestFixture]
-    public class SwapPropVisitor_Tests
+    public class ExpressionMocker_Tests
     {
         public class TestClass
         {
             public int Prop { get; set; }
         }
 
-        public class Accessor : SwapPropVisitor
+        public class Accessor : ExpressionMocker
         {
             public Accessor(IDictionary<string, object> dependences, Type type)
                 : base(null, dependences, type) { }
@@ -44,7 +44,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions.Visitors
 
             // arrange
             Expression<Func<TestClass, int>> exp = a => a.Prop;
-            var subject = new SwapPropVisitor(new Mocks(new[] { new Mock(exp.Body, val1, typeof(bool)), new Mock(exp.Body, val2, typeof(bool)) }, Expression.Constant(new object[0])), null, typeof(TestClass));
+            var subject = new ExpressionMocker(new Mocks(new[] { new Mock(exp.Body, val1, typeof(bool)), new Mock(exp.Body, val2, typeof(bool)) }, Expression.Constant(new object[0])), null, typeof(TestClass));
 
             // act
             var values = subject.MockValues;
@@ -63,7 +63,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions.Visitors
 
             // arrange
             Expression<Func<TestClass, int>> exp = a => a.Prop;
-            var subject = new SwapPropVisitor(null, new Dictionary<string, object> { {val1, new object()}, {val2, new object()} }, typeof(TestClass));
+            var subject = new ExpressionMocker(null, new Dictionary<string, object> { {val1, new object()}, {val2, new object()} }, typeof(TestClass));
 
             // act
             var values = subject.Dependences;
@@ -78,9 +78,9 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions.Visitors
         public void ContainsNothing_Tests()
         {
             // arrange
-            var t1 = new SwapPropVisitor(typeof(TestClass));
-            var t2 = new SwapPropVisitor(new Mocks(new[] { new Mock(wrapperExpression: null, value: null, valueType: null, behavior: Enum.MockBehavior.MockAndSet) }, Expression.Constant(new object[0])), new Dependencies().ToDictionary(), typeof(TestClass));
-            var t3 = new SwapPropVisitor(new Mocks(), new Dictionary<string, object> { { "PIUOHBOIUHG", new object() } }, typeof(TestClass));
+            var t1 = new ExpressionMocker(typeof(TestClass));
+            var t2 = new ExpressionMocker(new Mocks(new[] { new Mock(wrapperExpression: null, value: null, valueType: null, behavior: Enum.MockBehavior.MockAndSet) }, Expression.Constant(new object[0])), new Dependencies().ToDictionary(), typeof(TestClass));
+            var t3 = new ExpressionMocker(new Mocks(), new Dictionary<string, object> { { "PIUOHBOIUHG", new object() } }, typeof(TestClass));
 
             // act
             // assert
@@ -89,6 +89,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions.Visitors
             Assert.IsFalse(t3.ContainsNothing);
         }
 
+        [Test]
         public void VisitParameter_Test_NoParam()
         {
             // arrange
@@ -99,6 +100,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions.Visitors
             Assert.AreEqual(new Accessor(typeof(object))._VisitParameter(param), param);
         }
 
+        [Test]
         public void VisitParameter_And_WithEntityParameter_Test_WithParam()
         {
             // arrange
@@ -121,10 +123,10 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions.Visitors
         {
             // arrange
             var mockedExp = Expression.Property(Expression.Parameter(typeof(TestClass)), "Prop");
-            var t1 = new SwapPropVisitor(new[] { new Mock(mockedExp, 4, typeof(int)) }, new Dictionary<string, object>(), typeof(TestClass));
+            var t1 = new ExpressionMocker(new[] { new Mock(mockedExp, 4, typeof(int)) }, new Dictionary<string, object>(), typeof(TestClass));
 
             // act
-            var result = t1.Visit(mockedExp);
+            var result = t1.Mock(mockedExp);
 
             // assert
             Assert.AreNotEqual(mockedExp, result);
@@ -136,10 +138,10 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions.Visitors
         {
             // arrange
             var expected = Expression.Property(Expression.Parameter(typeof(TestClass)), "Prop");
-            var t1 = new SwapPropVisitor(typeof(TestClass));
+            var t1 = new ExpressionMocker(typeof(TestClass));
 
             // act
-            var actual = t1.Visit(expected);
+            var actual = t1.Mock(expected);
 
             // assert
             Assert.AreEqual(expected, actual);
@@ -167,10 +169,10 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions.Visitors
         {
             // arrange
             var expected = Expression.Property(Expression.Parameter(typeof(TestClass)), "Prop");
-            var t1 = new SwapPropVisitor(typeof(TestClass));
+            var t1 = new ExpressionMocker(typeof(TestClass));
 
             // act
-            var actual = t1.Visit(expected);
+            var actual = t1.Mock(expected);
 
             // assert
             Assert.AreEqual(expected, actual);

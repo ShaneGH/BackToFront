@@ -89,8 +89,8 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
             // arrange
             Expression<Action> pass = () => Assert.Pass();
             var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
-            SwapPropVisitor visitor = new SwapPropVisitor(typeof(object));
-            subject.Protected().Setup<Expression>("_Compile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns(pass.Body);
+            ExpressionMocker visitor = new ExpressionMocker(typeof(object));
+            subject.Protected().Setup<Expression>("_Compile", ItExpr.Is<ExpressionMocker>(a => a == visitor)).Returns(pass.Body);
 
             // act
             var compiled = subject.Object.Compile(visitor);
@@ -106,8 +106,8 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
             // arrange
             Expression<Action> fail = () => Assert.Fail();
             var subject = new M.Mock<PathElement<object>>(null) { CallBase = true };
-            SwapPropVisitor visitor = new SwapPropVisitor(typeof(object));
-            subject.Protected().Setup<Expression>("_Compile", ItExpr.Is<SwapPropVisitor>(a => a == visitor)).Returns(fail);
+            ExpressionMocker visitor = new ExpressionMocker(typeof(object));
+            subject.Protected().Setup<Expression>("_Compile", ItExpr.Is<ExpressionMocker>(a => a == visitor)).Returns(fail);
             var ctxt = new ValidationContext(true, null, null);
             ctxt.Violations.Add(null);
 

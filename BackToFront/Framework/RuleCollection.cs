@@ -36,7 +36,7 @@ namespace BackToFront.Framework
             _Rules.Add(rule);
         }
 
-        public Expression Compile(SwapPropVisitor visitor)
+        public Expression Compile(ExpressionMocker visitor)
         {
             var compiled = Rules.Select(r => r.Compile(visitor));
 

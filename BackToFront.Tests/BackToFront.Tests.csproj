@@ -127,7 +127,7 @@
     <Compile Include="CSharp\BackToFront\UnitTests\Expressions\UnaryExpressionWrapper_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\Visitors\SwapPropVisitor_Tests.cs">
+    <Compile Include="CSharp\BackToFront\UnitTests\Expressions\Visitors\ExpressionMocker_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CSharp\BackToFront\UnitTests\Extensions\IEnumerable.cs">

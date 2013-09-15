@@ -8,13 +8,13 @@ using System.Linq.Expressions;
 
 namespace BackToFront.Expressions.Visitors
 {
-    public interface ISwapPropVisitor
-    {
-        Expression Visit(Expression node);
-        bool ContainsNothing { get; }
-    }
+    //public interface IExpressionMocker
+    //{
+    //    Expression Mock(Expression node);
+    //    bool ContainsNothing { get; }
+    //}
 
-    public class SwapPropVisitor : ExpressionVisitor, ISwapPropVisitor
+    public class ExpressionMocker : ExpressionVisitor//, IExpressionMocker
     {
         public const string EntityParameterName = "entity";
         public const string ValidationContextParameterName = "validationContext";
@@ -26,12 +26,12 @@ namespace BackToFront.Expressions.Visitors
 
         private readonly Dictionary<MemberExpression, string> DependencyNameCache = new Dictionary<MemberExpression, string>();
 
-        public SwapPropVisitor(Type entityType)
+        public ExpressionMocker(Type entityType)
             : this(null, null, entityType)
         {
         }
 
-        public SwapPropVisitor(IEnumerable<Mock> mocks, IDictionary<string, object> dependences, Type entityType)
+        public ExpressionMocker(IEnumerable<Mock> mocks, IDictionary<string, object> dependences, Type entityType)
         {
             if (entityType == null)
                 throw new InvalidOperationException("##");
@@ -43,8 +43,9 @@ namespace BackToFront.Expressions.Visitors
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
-            if (_EntityParameters.Any(a => a.Parameter == node))
-                return EntityParameter;
+            lock (_EntityParameters)
+                if (_EntityParameters.Any(a => a.Parameter == node))
+                    return EntityParameter;
 
             return base.VisitParameter(node);
         }
@@ -68,6 +69,11 @@ namespace BackToFront.Expressions.Visitors
             return base.VisitMember(node);
         }
 
+        public Expression Mock(Expression node)
+        {
+            return Visit(node);
+        }
+
         public override Expression Visit(Expression node)
         {
             if (!ContainsNothing)
@@ -84,6 +90,9 @@ namespace BackToFront.Expressions.Visitors
             return base.Visit(node);
         }
 
+        /// <summary>
+        /// Returns whether there are any mocks or dependencies to insert
+        /// </summary>
         public bool ContainsNothing
         {
             get
@@ -113,23 +122,29 @@ namespace BackToFront.Expressions.Visitors
             return new AddEntityParameter(parameter, this);
         }
 
+        /// <summary>
+        /// A temp list of ParameterExpressions with represent the EntityParameter. Be sure to lock this property before using it
+        /// </summary>
         private readonly IList<AddEntityParameter> _EntityParameters = new List<AddEntityParameter>();
+
         private class AddEntityParameter : IDisposable
         {
-            private readonly SwapPropVisitor _Parent;
+            private readonly ExpressionMocker _Parent;
             public readonly ParameterExpression Parameter;
 
-            public AddEntityParameter(ParameterExpression entityParameter, SwapPropVisitor parent)
+            public AddEntityParameter(ParameterExpression entityParameter, ExpressionMocker parent)
             {
                 _Parent = parent;
                 Parameter = entityParameter;
 
-                _Parent._EntityParameters.Add(this);
+                lock (_Parent._EntityParameters)
+                    _Parent._EntityParameters.Add(this);
             }
 
             public void Dispose()
             {
-                _Parent._EntityParameters.Remove(this);
+                lock (_Parent._EntityParameters)
+                    _Parent._EntityParameters.Remove(this);
             }
         }
     }

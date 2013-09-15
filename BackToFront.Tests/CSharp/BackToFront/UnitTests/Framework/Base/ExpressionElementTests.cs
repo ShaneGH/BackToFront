@@ -34,7 +34,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
                 get { throw new NotImplementedException(); }
             }
 
-            protected override Expression _Compile(BackToFront.Expressions.Visitors.SwapPropVisitor visitor)
+            protected override Expression _Compile(BackToFront.Expressions.Visitors.ExpressionMocker visitor)
             {
                 throw new NotImplementedException();
             }

@@ -23,7 +23,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             public Accessor()
                 : base(null) { }
 
-            public Expression __NewCompile(SwapPropVisitor visitor)
+            public Expression __NewCompile(ExpressionMocker visitor)
             {
                 return _Compile(visitor);
             }
@@ -79,7 +79,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             };
 
             // act
-            ConditionalExpression actual = subject.__NewCompile(new SwapPropVisitor(typeof(object))) as ConditionalExpression;
+            ConditionalExpression actual = subject.__NewCompile(new ExpressionMocker(typeof(object))) as ConditionalExpression;
 
             // assert
             Func<ConditionalExpression, Expression, bool, RequireOperator<object>, ConditionalExpression> assert = (ex, currentIf, isLast, result) =>

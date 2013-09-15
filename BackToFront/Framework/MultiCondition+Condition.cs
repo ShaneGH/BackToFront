@@ -42,7 +42,7 @@ namespace BackToFront.Framework
             /// </summary>
             /// <param name="visitor"></param>
             /// <returns>Expression.Empty()</returns>
-            protected override Expression _Compile(SwapPropVisitor visitor)
+            protected override Expression _Compile(ExpressionMocker visitor)
             {
                 return Expression.Empty();
             }

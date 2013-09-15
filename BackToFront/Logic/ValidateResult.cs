@@ -155,7 +155,7 @@ namespace BackToFront.Logic
             var current = typeof(TEntity);
             while (current != null)
             {
-                var visitor = new SwapPropVisitor(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet), Dependencies, current);
+                var visitor = new ExpressionMocker(mocks.Where(a => a.Behavior == MockBehavior.MockOnly || a.Behavior == MockBehavior.MockAndSet), Dependencies, current);
                 var context = new ValidationContext(breakOnFirstError, visitor.MockValues, visitor.DependencyValues);
 
                 // compile and run

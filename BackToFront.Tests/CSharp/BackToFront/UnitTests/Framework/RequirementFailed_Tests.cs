@@ -21,7 +21,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             {
             }
 
-            public Expression __Compile(SwapPropVisitor visitor)
+            public Expression __Compile(ExpressionMocker visitor)
             {
                 return _Compile(visitor);
             }
@@ -59,7 +59,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             subject.WithModelViolation(a => violation.Object);
 
             // act
-            var actual = subject.__Compile(new SwapPropVisitor(typeof(object)));
+            var actual = subject.__Compile(new ExpressionMocker(typeof(object)));
 
             // assert
             Assert.IsInstanceOf<ConditionalExpression>(actual);
@@ -79,7 +79,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             var subject = new Accessor(a => true);
 
             // act
-            var result = subject.__Compile(new SwapPropVisitor(typeof(object)));
+            var result = subject.__Compile(new ExpressionMocker(typeof(object)));
 
             // assert
             Assert.IsInstanceOf<DefaultExpression>(result);

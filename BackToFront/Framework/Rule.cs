@@ -35,7 +35,7 @@ namespace BackToFront.Framework
                 ParentRule.SubRules.Add(this);
         }
 
-        protected override Expression _Compile(SwapPropVisitor visitor)
+        protected override Expression _Compile(ExpressionMocker visitor)
         {
             PathElement<TEntity> next;
             if ((next = AllPossiblePaths.SingleOrDefault(a => a != null)) != null)
@@ -44,12 +44,12 @@ namespace BackToFront.Framework
                 return Expression.Empty();
         }
 
-        Action<object, ValidationContext> INonGenericRule.Compile(SwapPropVisitor visitor)
+        Action<object, ValidationContext> INonGenericRule.Compile(ExpressionMocker visitor)
         {
             return Compile(visitor, Compile(visitor));
         }
 
-        private Action<object, ValidationContext> Compile(SwapPropVisitor visitor, Expression logic)
+        private Action<object, ValidationContext> Compile(ExpressionMocker visitor, Expression logic)
         {
             var rule = Expression.Lambda<Action<TEntity, ValidationContext>>(logic, visitor.EntityParameter, visitor.ContextParameter).Compile();
 
@@ -128,7 +128,7 @@ namespace BackToFront.Framework
         {
             get
             {
-                return _PreCompiled ?? (_PreCompiled = _Compile(new SwapPropVisitor(typeof(TEntity))));
+                return _PreCompiled ?? (_PreCompiled = _Compile(new ExpressionMocker(typeof(TEntity))));
             }
         }
 
@@ -179,7 +179,7 @@ namespace BackToFront.Framework
 
             public PreCompiledRule(Rule<TEntity> rule)
             {
-                var visitor = new SwapPropVisitor(typeof(TEntity));
+                var visitor = new ExpressionMocker(typeof(TEntity));
 
                 _Descriptor = rule.Compile(visitor);
                 _Worker = rule.Compile(visitor, _Descriptor);
@@ -214,6 +214,5 @@ namespace BackToFront.Framework
                 get { return _Context; }
             }
         }
-
     }
 }

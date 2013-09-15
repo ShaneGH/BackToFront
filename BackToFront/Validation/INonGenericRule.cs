@@ -25,7 +25,7 @@ namespace BackToFront.Validation
 
         List<DependencyWrapper> Dependencies { get; }
         
-        Action<object, ValidationContext> Compile(SwapPropVisitor visitor);
+        Action<object, ValidationContext> Compile(ExpressionMocker visitor);
 
         IPreCompiledRule Meta { get; }
     }

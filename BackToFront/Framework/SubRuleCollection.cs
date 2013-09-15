@@ -46,7 +46,7 @@ namespace BackToFront.Framework
             return subRule.If(property);
         }
 
-        protected override Expression _Compile(SwapPropVisitor visitor)
+        protected override Expression _Compile(ExpressionMocker visitor)
         {
             return _subRules.Compile(visitor);
         }

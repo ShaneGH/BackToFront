@@ -54,7 +54,7 @@
     <Compile Include="Expressions\NewExpressionWrapper.cs" />
     <Compile Include="Expressions\DefaultExpressionWrapper.cs" />
     <Compile Include="Expressions\ElementAtExpressionWrapper.cs" />
-    <Compile Include="Expressions\Visitors\SwapPropVisitor.cs" />
+    <Compile Include="Expressions\Visitors\ExpressionMocker.cs" />
     <Compile Include="Extensions\BusinessLogic.cs">
       <SubType>Code</SubType>
     </Compile>

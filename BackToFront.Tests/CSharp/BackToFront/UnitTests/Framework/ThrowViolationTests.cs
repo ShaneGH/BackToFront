@@ -34,7 +34,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             public Accessor(Expression<Func<object, IViolation>> violation, IEnumerable<MemberChainItem> items)
                 : base(violation, null, items) { }
 
-            public Expression __Compile(SwapPropVisitor visitor)
+            public Expression __Compile(ExpressionMocker visitor)
             {
                 return _Compile(visitor);
             }
@@ -58,7 +58,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
 
             MemberChainItem mci = new MemberChainItem(typeof(int));
             var subject = new Accessor(a => violation, new[] { mci });
-            SwapPropVisitor visitor = new SwapPropVisitor(typeof(object));
+            ExpressionMocker visitor = new ExpressionMocker(typeof(object));
             var ctxt = new ValidationContext(true, null, null);
 
             // act

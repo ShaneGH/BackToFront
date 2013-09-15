@@ -20,7 +20,7 @@ namespace BackToFront.Tests.Utilities
             }
         }
 
-        protected override System.Linq.Expressions.Expression _Compile(Expressions.Visitors.SwapPropVisitor visitor)
+        protected override System.Linq.Expressions.Expression _Compile(Expressions.Visitors.ExpressionMocker visitor)
         {
             throw new NotImplementedException();
         }

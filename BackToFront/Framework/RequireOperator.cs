@@ -61,7 +61,7 @@ namespace BackToFront.Framework
             return ParentRule;
         }
 
-        protected override Expression _Compile(SwapPropVisitor visitor)
+        protected override Expression _Compile(ExpressionMocker visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);
             return next != null ? next.Compile(visitor) : Expression.Empty();

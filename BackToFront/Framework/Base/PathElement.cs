@@ -54,7 +54,7 @@ namespace BackToFront.Framework.Base
                 _locked = true;
         }
 
-        public Expression Compile(SwapPropVisitor visitor)
+        public Expression Compile(ExpressionMocker visitor)
         {
             var nc = _Compile(visitor);
             var _break = typeof(ValidationContext).GetProperty("Break");
@@ -62,6 +62,6 @@ namespace BackToFront.Framework.Base
             return Expression.IfThen(Expression.Not(Expression.Property(visitor.ContextParameter, _break)), nc ?? Expression.Empty());
         }
 
-        protected abstract Expression _Compile(SwapPropVisitor visitor); 
+        protected abstract Expression _Compile(ExpressionMocker visitor); 
     }
 }

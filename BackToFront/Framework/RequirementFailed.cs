@@ -61,14 +61,14 @@ namespace BackToFront.Framework
             return ParentRule;
         }
 
-        protected override Expression _Compile(SwapPropVisitor visitor)
+        protected override Expression _Compile(ExpressionMocker visitor)
         {
             var next = AllPossiblePaths.SingleOrDefault(a => a != null);            
             if (next != null)
             {
                 using (visitor.WithEntityParameter(EntityParameter))
                 {
-                    var des = visitor.Visit(Descriptor.WrappedExpression);
+                    var des = visitor.Mock(Descriptor.WrappedExpression);
                     var nxt = next.Compile(visitor);
                     return Expression.IfThen(Expression.Not(des), nxt);
                 }

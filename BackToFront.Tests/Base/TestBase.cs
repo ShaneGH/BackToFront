@@ -103,7 +103,7 @@ namespace BackToFront.Tests.Base
             return AreKindOfEqual(item1, item2, (a, b) => a.Equals(b));
         }
 
-        public static void CompileAndCall<TEntity>(Expression logic, SwapPropVisitor visitor, TEntity entity, ValidationContext ctxt)
+        public static void CompileAndCall<TEntity>(Expression logic, ExpressionMocker visitor, TEntity entity, ValidationContext ctxt)
         {
             Expression.Lambda<Action<TEntity, ValidationContext>>(logic, visitor.EntityParameter, visitor.ContextParameter).Compile()(entity, ctxt);
         }

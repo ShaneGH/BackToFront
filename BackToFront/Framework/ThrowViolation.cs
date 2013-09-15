@@ -47,12 +47,12 @@ namespace BackToFront.Framework
             }
         }
 
-        protected override Expression _Compile(SwapPropVisitor visitor)
+        protected override Expression _Compile(ExpressionMocker visitor)
         {
             Expression createViolationMethod = null;
             using (visitor.WithEntityParameter(_violation.Parameters.First()))
             {
-                createViolationMethod = visitor.Visit(_violation.Body);
+                createViolationMethod = visitor.Mock(_violation.Body);
             }
 
             // IViolation violation;

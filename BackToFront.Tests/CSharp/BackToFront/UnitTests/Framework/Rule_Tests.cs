@@ -22,7 +22,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             public Accessor()
                 : base(null) { }
 
-            public Expression __NewCompile(SwapPropVisitor visitor)
+            public Expression __NewCompile(ExpressionMocker visitor)
             {
                 return _Compile(visitor);
             }
@@ -86,7 +86,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
         {
             // arrange
             var subject = new Rule<object>();
-            var spv = new SwapPropVisitor(typeof(object));
+            var spv = new ExpressionMocker(typeof(object));
 
             // act
             var result = subject.Else;
