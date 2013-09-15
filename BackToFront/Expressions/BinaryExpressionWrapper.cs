@@ -21,7 +21,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _Left ?? (_Left = CreateChildWrapper(Expression.Left));
+                return _Left ?? (_Left = CreateExpressionWrapper(Expression.Left));
             }
         }
 
@@ -30,7 +30,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _Right ?? (_Right = CreateChildWrapper(Expression.Right));
+                return _Right ?? (_Right = CreateExpressionWrapper(Expression.Right));
             }
         }
 

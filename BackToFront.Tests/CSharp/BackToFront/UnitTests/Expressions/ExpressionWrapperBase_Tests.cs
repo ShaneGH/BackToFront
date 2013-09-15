@@ -105,30 +105,30 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void CreateChildWrapper_Test_InvalidExpressionType()
+        public void CreateExpressionWrapper_Test_InvalidExpressionType()
         {
             // arrange
             var exp = Expression.Break(Expression.Label());
 
             // act
             // assert
-            ExpressionWrapperBase.CreateChildWrapper(exp);
+            ExpressionWrapperBase.CreateExpressionWrapper(exp);
         }
 
         [Test]
-        public void CreateChildWrapper_Test_TypeTraversal_CANNOT_TEST_THIS()
+        public void CreateExpressionWrapper_Test_TypeTraversal_CANNOT_TEST_THIS()
         {
             Assert.Pass();
         }
 
         [Test]
-        public void CreateChildWrapper_Test_Found_Constructor()
+        public void CreateExpressionWrapper_Test_Found_Constructor()
         {
             // arrange
             var exp = Expression.Constant(4);
 
             // act
-            var result = ExpressionWrapperBase.CreateChildWrapper(exp);
+            var result = ExpressionWrapperBase.CreateExpressionWrapper(exp);
 
             // assert
             Assert.NotNull(result);
@@ -202,7 +202,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             var result = subject.ForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)));
 
             // assert
-            Assert.IsTrue(ExpressionWrapperBase.CreateChildWrapper(result).IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, int>(a => a.Prop).WrappedExpression));
+            Assert.IsTrue(ExpressionWrapperBase.CreateExpressionWrapper(result).IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, int>(a => a.Prop).WrappedExpression));
         }
 
         [Test]
@@ -215,7 +215,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             var result = subject.ForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)));
 
             // assert
-            var ex1 = ExpressionWrapperBase.CreateChildWrapper(result);
+            var ex1 = ExpressionWrapperBase.CreateExpressionWrapper(result);
             var ex2 = ExpressionWrapperBase.ToWrapper<TestClass2, bool>(a => a.Func(a.GetHashCode()));
             Assert.IsTrue(ex1.IsSameExpression(ex2.WrappedExpression));
         }
@@ -230,7 +230,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             var result = subject.ForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)));
 
             // assert
-            var ex1 = ExpressionWrapperBase.CreateChildWrapper(result);
+            var ex1 = ExpressionWrapperBase.CreateExpressionWrapper(result);
             var ex2 = ExpressionWrapperBase.ToWrapper<TestClass2, bool>(a => a.Func(5));
             Assert.IsTrue(ex1.IsSameExpression(ex2.WrappedExpression));
         }
@@ -245,7 +245,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
             var result = subject.ForChildExpression<TestClass1, TestClass2>(a => a.Prop2, Expression.Parameter(typeof(TestClass2)));
 
             // assert
-            Assert.IsTrue(ExpressionWrapperBase.CreateChildWrapper(result).IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, TestClass2>(a => a).WrappedExpression));
+            Assert.IsTrue(ExpressionWrapperBase.CreateExpressionWrapper(result).IsSameExpression(ExpressionWrapperBase.ToWrapper<TestClass2, TestClass2>(a => a).WrappedExpression));
         }
 
         [Test]

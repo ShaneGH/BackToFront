@@ -78,7 +78,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             var v = new SwapPropVisitor(typeof(object));
 
             // act
-            var actual = ExpressionWrapperBase.CreateChildWrapper(subject.__NewCompile(v));
+            var actual = ExpressionWrapperBase.CreateExpressionWrapper(subject.__NewCompile(v));
             var expected = ((RequirementFailed<object>)GetPrivateProperty(subject, typeof(RequireOperator<object>), "_RequireThat")).Compile(v);
 
             // assert

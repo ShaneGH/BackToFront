@@ -45,12 +45,12 @@ namespace BackToFront.Expressions
 
         protected static ExpressionWrapperBase CreateOrReference(Expression expression, ref ExpressionWrapperBase wrapper)
         {
-            return wrapper ?? (wrapper = ExpressionWrapperBase.CreateChildWrapper(expression));
+            return wrapper ?? (wrapper = ExpressionWrapperBase.CreateExpressionWrapper(expression));
         }
 
         protected static ExpressionWrapperBase[] CreateOrReference(IEnumerable<Expression> expression, ref ExpressionWrapperBase[] wrapper)
         {
-            return wrapper ?? (wrapper = expression.Select(a => ExpressionWrapperBase.CreateChildWrapper(a)).ToArray());
+            return wrapper ?? (wrapper = expression.Select(a => ExpressionWrapperBase.CreateExpressionWrapper(a)).ToArray());
         }
     }
 }

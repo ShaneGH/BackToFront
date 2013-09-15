@@ -16,7 +16,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _InnerExpression ?? (_InnerExpression = CreateChildWrapper(Expression.Expression));
+                return _InnerExpression ?? (_InnerExpression = CreateExpressionWrapper(Expression.Expression));
             }
         }
 
@@ -25,7 +25,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _Arguments ?? (_Arguments = Expression.Arguments.Select(a => CreateChildWrapper(a)).ToArray());
+                return _Arguments ?? (_Arguments = Expression.Arguments.Select(a => CreateExpressionWrapper(a)).ToArray());
             }
         }
 

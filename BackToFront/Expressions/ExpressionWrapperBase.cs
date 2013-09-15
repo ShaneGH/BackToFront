@@ -44,6 +44,10 @@ namespace BackToFront.Expressions
         protected abstract IEnumerable<MemberChainItem> _GetMembersForParameter(ParameterExpression parameter);
 
         private IEnumerable<ParameterExpression> CachedUnorderedParameters;
+
+        /// <summary>
+        /// Gets all of the ParameterExpressions used in this expression
+        /// </summary>
         public IEnumerable<ParameterExpression> UnorderedParameters
         {
             get
@@ -57,6 +61,9 @@ namespace BackToFront.Expressions
             }
         }
 
+        /// <summary>
+        /// Return all of the Parameters used in this Expression and its inner expressions
+        /// </summary>
         protected abstract IEnumerable<ParameterExpression> _UnorderedParameters { get; }
 
         public virtual bool IsSameExpression(Expression expression)
@@ -64,7 +71,7 @@ namespace BackToFront.Expressions
             return expression != null && expression.NodeType == WrappedExpression.NodeType;
         }
 
-        public static ExpressionWrapperBase CreateChildWrapper(Expression expression)
+        public static ExpressionWrapperBase CreateExpressionWrapper(Expression expression)
         {
             var type = expression.GetType();
 
@@ -165,82 +172,82 @@ namespace BackToFront.Expressions
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TReturn>(Expression<Func<TEntity, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TReturn>(Expression<Func<TEntity, TArg2, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TArg16, TReturn>(Expression<Func<TEntity, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TArg16, TReturn>> expression)
         {
-            return CreateChildWrapper(expression.Body);
+            return CreateExpressionWrapper(expression.Body);
         }
 
         public static ExpressionWrapperBase ToWrapper<TEntity, TReturn>(Expression<Func<TEntity, TReturn>> expression, out ReadOnlyCollection<ParameterExpression> parameters)

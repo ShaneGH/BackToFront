@@ -13,12 +13,12 @@ namespace BackToFront.Utilities
     public class Mock<TMockValue> : Mock
     {
         public Mock(E.Expression expression, TMockValue value, MockBehavior behavior)
-            : this(ExpressionWrapperBase.CreateChildWrapper(expression), value, behavior)
+            : this(ExpressionWrapperBase.CreateExpressionWrapper(expression), value, behavior)
         {
         }
 
         public Mock(E.Expression expression, TMockValue value)
-            : this(ExpressionWrapperBase.CreateChildWrapper(expression), value)
+            : this(ExpressionWrapperBase.CreateExpressionWrapper(expression), value)
         {
         }
 
@@ -41,12 +41,12 @@ namespace BackToFront.Utilities
         public readonly object Value;
 
         internal Mock(E.Expression expression, object value, Type valueType, MockBehavior behavior)
-            : this(ExpressionWrapperBase.CreateChildWrapper(expression), value, valueType, behavior)
+            : this(ExpressionWrapperBase.CreateExpressionWrapper(expression), value, valueType, behavior)
         {
         }
 
         internal Mock(E.Expression expression, object value, Type valueType)
-            : this(ExpressionWrapperBase.CreateChildWrapper(expression), value, valueType)
+            : this(ExpressionWrapperBase.CreateExpressionWrapper(expression), value, valueType)
         {
         }
 

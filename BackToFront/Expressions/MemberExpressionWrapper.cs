@@ -16,7 +16,7 @@ namespace BackToFront.Expressions
             get            
             {
                 return _InnerExpression ?? (_InnerExpression =
-                    (Expression.Expression == null ? new DefaultExpressionWrapper() : CreateChildWrapper(Expression.Expression)));
+                    (Expression.Expression == null ? new DefaultExpressionWrapper() : CreateExpressionWrapper(Expression.Expression)));
             }
         }
 

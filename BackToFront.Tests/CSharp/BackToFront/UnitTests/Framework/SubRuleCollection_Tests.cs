@@ -58,7 +58,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             var v = new SwapPropVisitor(typeof(object));
             
             // act
-            var actual = ExpressionWrapperBase.CreateChildWrapper(subject.__Compile(v));
+            var actual = ExpressionWrapperBase.CreateExpressionWrapper(subject.__Compile(v));
             var expected = ((RuleCollection<object>)GetPrivateProperty(subject, typeof(SubRuleCollection<object>), "_subRules")).Compile(v);
 
             // act

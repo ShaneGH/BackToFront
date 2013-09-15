@@ -64,7 +64,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Framework
             var v = new SwapPropVisitor(typeof(object));
 
             // act
-            var actual = ExpressionWrapperBase.CreateChildWrapper(subject.Compile(v)) as BlockExpressionWrapper;
+            var actual = ExpressionWrapperBase.CreateExpressionWrapper(subject.Compile(v)) as BlockExpressionWrapper;
             var expected = Expression.Block(subject.Rules.Select(r => r.Compile(v)));
 
             // act

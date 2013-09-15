@@ -18,7 +18,7 @@ namespace BackToFront.Expressions
         {
             get
             {
-                return _Operand ?? (_Operand = CreateChildWrapper(Expression.Operand));
+                return _Operand ?? (_Operand = CreateExpressionWrapper(Expression.Operand));
             }
         }
 
