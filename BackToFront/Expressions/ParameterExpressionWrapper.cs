@@ -21,7 +21,7 @@ namespace BackToFront.Expressions
 
         protected override bool _IsSameExpression(ParameterExpression expression)
         {
-            // TODO: is this correct?
+            // TODO: is this correct? Works for use case as there will only ever be one parameter in the comparing expression (the input)
             return expression.Type.Is(Expression.Type);
         }
 

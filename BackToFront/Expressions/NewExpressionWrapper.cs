@@ -16,14 +16,20 @@ namespace BackToFront.Expressions
 {
     public class NewExpressionWrapper : ExpressionWrapperBase<NewExpression>
     {
-        // TODO: Anonymous types (Members property)
+        public bool IsAnonymous
+        {
+            get
+            {
+                return Expression.Members != null;
+            }
+        }
 
         private ExpressionWrapperBase[] _Arguments;
         public ExpressionWrapperBase[] Arguments
         {
             get
             {
-                return _Arguments ?? (_Arguments = Expression.Arguments.Select(a => CreateChildWrapper(a)).ToArray());
+                return CreateOrReference(Expression.Arguments, ref _Arguments);
             }
         }
 
@@ -53,12 +59,15 @@ namespace BackToFront.Expressions
 
         private bool CheckMembers(NewExpression expression)
         {
+            // non anonymous
             if (Expression.Members == null && expression.Members == null)
                 return true;
 
+            // one is anonymous
             if (Expression.Members == null || expression.Members == null)
                 return false;
 
+            // 
             return
                 Expression.Members.Count == expression.Members.Count &&
                 Expression.Members.All((a, i) => a.Equals(expression.Members[i]));

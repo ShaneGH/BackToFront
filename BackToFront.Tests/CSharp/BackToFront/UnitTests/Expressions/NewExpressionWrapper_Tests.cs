@@ -47,6 +47,34 @@ namespace BackToFront.Tests.CSharp.UnitTests.Expressions
         }
 
         [Test]
+        public void IsAnonymous_Test_No()
+        {
+            // arrange
+            var ex = Expression.New(TestClass.Constructor1);
+            var subject = new NewExpressionWrapper(ex);
+
+            // act
+            var actual = subject.IsAnonymous;
+
+            // assert
+            Assert.IsFalse(actual);
+        }
+
+        [Test]
+        public void IsAnonymous_Test_Yes()
+        {
+            // arrange
+            Expression<Func<object>> ex = () => new { aaa = "AAA" };
+            var subject = new NewExpressionWrapper((NewExpression)ex.Body);
+
+            // act
+            var actual = subject.IsAnonymous;
+
+            // assert
+            Assert.IsTrue(actual);
+        }
+
+        [Test]
         public void IsSameExpression_Test()
         {
             // arrange

@@ -16,25 +16,52 @@ using M = Moq;
 
 using BackToFront.Tests.Utilities;
 using BackToFront.Expressions;
+using BackToFront.Framework;
 
 namespace BackToFront.Tests.CSharp.UnitTests.Framework.Base
 {
     [TestFixture]
-    public class ExpressionElementTests :BackToFront.Tests.Base.TestBase
+    public class ExpressionElementTests : BackToFront.Tests.Base.TestBase
     {
-        //[Test]
-        //public void CompileTest()
-        //{
-        //    // arrange
-        //    var hello = "hello";
-        //    Expression<Func<object, string>> desc = a => hello;
-        //    var subject = new M.Mock<ExpressionElement<object, string>>(desc, null) { CallBase = true };
+        class TestClass : ExpressionElement<object, object>
+        {
+            public TestClass(Expression<Func<object, object>> descriptor, Rule<object> rule)
+                : base(descriptor, rule)
+            { }
 
-        //    // act
-        //    var actual = subject.Object.Compile();
+            public override IEnumerable<PathElement<object>> AllPossiblePaths
+            {
+                get { throw new NotImplementedException(); }
+            }
 
-        //    // assert
-        //    Assert.AreEqual(hello, actual.Invoke(new object(), null, null));
-        //}
+            protected override Expression _Compile(BackToFront.Expressions.Visitors.SwapPropVisitor visitor)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ConstructorTest_NoDescriptor()
+        {
+            // arrange
+            // act
+            // assert
+            new TestClass(null, null);
+        }
+
+        [Test]
+        public void ConstructorTest_OK()
+        {
+            // arrange
+            Expression<Func<object, object>> expected = a => a;
+
+            // act
+            var actual = new TestClass(expected, null);
+
+
+            // assert
+            Assert.AreEqual(expected.Parameters[0], actual.EntityParameter);
+        }
     }
 }

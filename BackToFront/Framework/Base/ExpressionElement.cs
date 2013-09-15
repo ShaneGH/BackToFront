@@ -19,7 +19,6 @@ namespace BackToFront.Framework.Base
         protected readonly ReadOnlyCollection<ParameterExpression> Parameters;
         public readonly ParameterExpression EntityParameter;
 
-        //TODO: Test
         protected ExpressionElement(Expression<Func<TEntity, TMember>> descriptor, Rule<TEntity> rule)
             : base(rule)
         {
