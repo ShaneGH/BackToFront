@@ -184,6 +184,7 @@
     <Compile Include="CSharp\BackToFront\UnitTests\Utilities\Utilities_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CSharp\BackToFront\UnitTests\Web\OneWayJsonSerializer_Tests.cs" />
     <Compile Include="CSharp\BackToFront\UnitTests\_\Domain_Tests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -239,7 +240,6 @@
   <ItemGroup>
     <Folder Include="CSharp\BackToFront\UnitTests\Logic\" />
     <Folder Include="CSharp\BackToFront\UnitTests\Meta\" />
-    <Folder Include="CSharp\BackToFront\UnitTests\Web\" />
     <Folder Include="CSharp\WebExpressions\UnitTests\" />
   </ItemGroup>
   <ItemGroup>

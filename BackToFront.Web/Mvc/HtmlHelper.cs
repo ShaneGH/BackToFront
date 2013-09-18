@@ -1,27 +1,21 @@
-﻿using System;
+﻿using BackToFront.Extensions.IEnumerable;
+using BackToFront.Meta;
+using BackToFront.Web.Serialization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-
-using BackToFront.Extensions.IEnumerable;
-using BackToFront.Meta;
-using System.Runtime.Serialization;
-using WebExpressions.Meta;
-using BackToFront.Utilities;
 
 namespace BackToFront.Web.Mvc
 {
     public static class HtmlHelper
     {
-        private static readonly DataContractJsonSerializer Serializer = new DataContractJsonSerializer(typeof(RuleCollectionMeta), new DataContractJsonSerializerSettings
+        private static readonly OneWayJsonSerializer<RuleCollectionMeta> Serializer = new OneWayJsonSerializer<RuleCollectionMeta>();/* new DataContractJsonSerializer(typeof(RuleCollectionMeta), new DataContractJsonSerializerSettings
         {
             KnownTypes = ExpressionMeta.MetaTypes.Union(new[] { typeof(MemberChainItem[]) }),
             EmitTypeInformation = EmitTypeInformation.Always
-        });
+        });*/
 
         public static void RulesForModel<TModel>(this HtmlHelper<TModel> helper, Domain repository, bool includeScriptTags = true)
         {
@@ -75,7 +69,7 @@ namespace BackToFront.Web.Mvc
             writer.WriteLine("if(!__BTF || !__BTF.Validation || !__BTF.Validation.JQueryValidator || !__BTF.Validation.JQueryValidator.RegisterRule || __BTF.Validation.JQueryValidator.RegisterRule.constructor !== Function) throw 'BackToFront has not been initialised';");
             writer.Write("__BTF.Validation.JQueryValidator.RegisterRule(");
             writer.Flush();
-            Serializer.WriteObject(stream, rules);
+            Serializer.WriteObject(writer, rules);
             writer.WriteLine(");");
 
             if (includeScriptTags)
