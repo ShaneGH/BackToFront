@@ -1,18 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Linq.Expressions;
-using System.Collections.ObjectModel;
 
 namespace BackToFront.Web.Serialization
 {
+
+    public class MC<TMC>
+    {
+        public TMC Val { get; set; }
+    }
+
     public class OneWayJsonSerializer<T>
     {
+        public static class Constants
+        {
+            public static readonly ConstantExpression DoubleQuote = Expression.Constant(@"""");
+            public static readonly ConstantExpression EscapedDoubleQuote = Expression.Constant(@"\""");
+            public static readonly ConstantExpression Null = Expression.Constant(null);
+            public static readonly ConstantExpression NullString = Expression.Constant("null");
+            public static readonly ConstantExpression Comma = Expression.Constant(",");
+            public static readonly ConstantExpression OpenParenthesis = Expression.Constant("{");
+            public static readonly ConstantExpression CloseParenthesis = Expression.Constant("}");
+        }
+
         public static class Primatives
         {
             private static readonly MethodInfo _Write = typeof(StreamWriter).GetMethod("Write", new[] { typeof(string) });
@@ -21,15 +36,16 @@ namespace BackToFront.Web.Serialization
             public static Expression StreamWriterCall(Expression streamWriter, Expression inputString, bool escapeDoubleQuotes)
             {
                 if (escapeDoubleQuotes)
-                    inputString = Expression.Call(inputString, _Replace, Expression.Constant(@""""), Expression.Constant(@"\"""));
+                    inputString = Expression.Call(inputString, _Replace, Constants.DoubleQuote, Constants.EscapedDoubleQuote);
 
                 return Expression.Call(streamWriter, _Write, inputString);
             }
 
-            public static readonly ReadOnlyDictionary<Type, Func<Expression, Expression, Expression>> Converters =
+            public static readonly ReadOnlyDictionary<Type, Func<Expression, Expression, Expression>> CommonSerializationExpressionGenerators =
                 new ReadOnlyDictionary<Type, Func<Expression, Expression, Expression>>(new Dictionary<Type, Func<Expression, Expression, Expression>>
             {
-                {typeof(string), (streamWriter, input) => Expression.Block(StreamWriterCall(streamWriter, Expression.Constant("\""), false), StreamWriterCall(streamWriter, input, true), StreamWriterCall(streamWriter, Expression.Constant("\""), false))},
+                {typeof(string), (streamWriter, input) => WrapInNullReferenceCheck(Expression.Block(StreamWriterCall(streamWriter, Constants.DoubleQuote, false), StreamWriterCall(streamWriter, input, true), StreamWriterCall(streamWriter, Constants.DoubleQuote, false)), 
+                    input, streamWriter)},
                 {typeof(Int16), (streamWriter, input) => StreamWriterCall(streamWriter, Expression.Call(input, _ToString<Int16>()), false)},
                 {typeof(Int32), (streamWriter, input) => StreamWriterCall(streamWriter, Expression.Call(input, _ToString<Int32>()), false)},
                 {typeof(Int64), (streamWriter, input) => StreamWriterCall(streamWriter, Expression.Call(input, _ToString<Int64>()), false)},
@@ -40,44 +56,68 @@ namespace BackToFront.Web.Serialization
             {
                 return typeof(U).GetMethod("ToString", new Type[0]);
             }
+
+            public static Expression WrapInNullReferenceCheck(Expression toWrap, Expression property, Expression streamWriter)
+            {
+                //TODO: chek if type is nullable a little better
+                return property.Type.IsValueType ?
+                    toWrap :
+                    Expression.IfThenElse(Expression.Equal(property, Constants.Null),
+                            Primatives.StreamWriterCall(streamWriter, Constants.NullString, false),
+                            toWrap);
+            }
         }
 
         private Action<StreamWriter, T> _Worker;
-        public readonly Dictionary<Type, Func<Expression, Expression, Expression>> AllTypes;
+        public readonly Dictionary<Type, Func<Expression, Expression, Expression>> SerializationExpressionGenerators;
 
         public OneWayJsonSerializer(params Type[] knownTypes)
         {
-            AllTypes = Primatives.Converters.ToDictionary(a => a.Key, a => a.Value);
-            AddKnownTypes((knownTypes ?? Enumerable.Empty<Type>()).Union(new[] { typeof(T) }), true);
+            SerializationExpressionGenerators = Primatives.CommonSerializationExpressionGenerators.ToDictionary(a => a.Key, a => a.Value);
+            AddKnownTypes(new[] { typeof(T) }.Union(knownTypes ?? Enumerable.Empty<Type>()), true);
+        }
+
+        //TODO
+        //public OneWayJsonSerializer(bool autoAddKnownTypes)
+        //{
+        //}
+
+        public void AddKnownType(Type type, bool recompile = false)
+        {
+            AddKnownTypes(new[] { type }, recompile);
         }
 
         public void AddKnownTypes(IEnumerable<Type> types, bool recompile = false)
         {
             //TODO: need a backup in case something goes wrong in re-compile
             if (recompile)
-                foreach (var key in AllTypes.Keys.Where(k => !Primatives.Converters.ContainsKey(k)))
-                    AllTypes[key] = null;
+                foreach (var key in SerializationExpressionGenerators.Keys.Where(k => !Primatives.CommonSerializationExpressionGenerators.ContainsKey(k)).ToArray())
+                    SerializationExpressionGenerators[key] = null;
 
-            foreach (var t in types.Where(k => !AllTypes.ContainsKey(k)))
-                AllTypes.Add(t, null);
+            foreach (var t in types.Where(k => !SerializationExpressionGenerators.ContainsKey(k)))
+                SerializationExpressionGenerators.Add(t, null);
 
             // faster serialization
-            while (AllTypes.Keys.Where(k => AllTypes[k] == null).Any(k => TryAddConverter(k))) ;
+            while (SerializationExpressionGenerators.Keys.Where(k => SerializationExpressionGenerators[k] == null).Any(k => TryAddExpressionGenerator(k))) ;
 
-            // slower serialization but can handler unknown types and circular Type references
-            foreach (var key in AllTypes.Keys.ToArray().Where(k => AllTypes[k] == null))
-                AddConverter(key);
+            // slower serialization but can handle unknown types and circular Type references
+            foreach (var key in SerializationExpressionGenerators.Keys.ToArray().Where(k => SerializationExpressionGenerators[k] == null))
+                AddExpressionGenerator(key);
 
             if (recompile)
             {
-                var streamWriter = Expression.Parameter(typeof(StreamWriter));
-                var obj = Expression.Parameter(typeof(T));
-                var ooo = AllTypes[typeof(T)](streamWriter, obj);
-                _Worker = Expression.Lambda<Action<StreamWriter, T>>(AllTypes[typeof(T)](streamWriter, obj), streamWriter, obj).Compile();
+                _Worker = CompileFor<T>();
             }
         }
 
-        public bool TryAddConverter(Type key)
+        public Action<StreamWriter, U> CompileFor<U>()
+        {
+            var streamWriter = Expression.Parameter(typeof(StreamWriter));
+            var obj = Expression.Parameter(typeof(U));
+            return Expression.Lambda<Action<StreamWriter, U>>(SerializationExpressionGenerators[typeof(U)](streamWriter, obj), streamWriter, obj).Compile();
+        }
+
+        public bool TryAddExpressionGenerator(Type key)
         {
             IEnumerable<PropertyInfo> properties;
             IEnumerable<FieldInfo> fields;
@@ -88,15 +128,15 @@ namespace BackToFront.Web.Serialization
 
             // if a converter for this field/property has not been populated yet
             if (properties.Select(p => p.PropertyType).Union(fields.Select(f => f.FieldType))
-                .Any(t => !AllTypes.ContainsKey(t) || AllTypes[t] == null))
+                .Any(t => !SerializationExpressionGenerators.ContainsKey(t) || SerializationExpressionGenerators[t] == null))
                 return false;
 
-            _AddConverter(key, properties, fields);
+            _AddExpressionGenerator(key, properties, fields);
 
             return true;
         }
 
-        public void AddConverter(Type key)
+        public void AddExpressionGenerator(Type key)
         {
             IEnumerable<PropertyInfo> properties;
             IEnumerable<FieldInfo> fields;
@@ -105,15 +145,7 @@ namespace BackToFront.Web.Serialization
             properties = properties.ToArray();
             fields = fields.ToArray();
 
-            Func<Func<Expression, Expression, Expression>> getConverter = () => 
-            {
-                if (!AllTypes.ContainsKey(key))
-                    throw new InvalidOperationException("##" + "Add type to known types");
-
-                return AllTypes[key]; 
-            };
-
-            _AddConverter(key, properties, fields);
+            _AddExpressionGenerator(key, properties, fields);
         }
 
         public void GetSerializableMembers(Type type, out IEnumerable<PropertyInfo> properties, out IEnumerable<FieldInfo> fields)
@@ -128,65 +160,60 @@ namespace BackToFront.Web.Serialization
             }
         }
 
-        public void _AddConverter(Type key, IEnumerable<PropertyInfo> properties, IEnumerable<FieldInfo> fields)
+
+        public void _AddExpressionGenerator(Type key, IEnumerable<PropertyInfo> properties, IEnumerable<FieldInfo> fields)
         {
+            // test all properties/fields are from the correct class
             if (properties.Cast<MemberInfo>().Union(fields).Any(p => p.DeclaringType != key))
                 throw new InvalidOperationException("##");
 
-            Func<Type, Expression, Expression, Expression> getSerializer = (t, streamWriter, propertyOrField) => 
+            // final serialzer
+            Func<Expression, Expression, Expression> expressionGenerator = (streamWriter, obj) =>
             {
-                if (AllTypes.ContainsKey(t) && AllTypes[t] != null)
-                    return AllTypes[t](streamWriter, propertyOrField);
-                else
+                var serializers = properties.Select(p => p.Name).Union(fields.Select(p => p.Name)).Select(i =>
                 {
-                    Func<Func<Expression, Expression, Expression>> getConverter = () =>
+                    var property = Expression.PropertyOrField(obj, i);
+                    Expression writer = null;
+                    if (SerializationExpressionGenerators.ContainsKey(property.Type))
+                        writer = SerializationExpressionGenerators[property.Type](streamWriter, property);
+                    else
                     {
-                        if (!AllTypes.ContainsKey(key))
-                            throw new InvalidOperationException("##" + "Add type to known types");
+                        var containsKey = typeof(Dictionary<Type, Func<Expression, Expression, Expression>>).GetMethod("ContainsKey");
+                        var compileFor = this.GetType().GetMethod("CompileFor").MakeGenericMethod(property.Type);
 
-                        return AllTypes[key];
-                    };
+                        var cache = Expression.Property(Expression.Constant(Activator.CreateInstance(typeof(MC<>).MakeGenericType(compileFor.ReturnType))), "Val");
+                        writer = Expression.Block(
+                            // if cache.Val == null
+                            Expression.IfThen(Expression.Equal(cache, Constants.Null),
+                            // if SerializationExpressionGenerators.ContainsKey(propertyType)
+                                Expression.IfThenElse(Expression.Call(Expression.Constant(SerializationExpressionGenerators), containsKey, Expression.Constant(property.Type)),
+                            // cache.Val = this.CompileFor<TPropertyType>()
+                                    Expression.Assign(cache, Expression.Call(Expression.Constant(this), compileFor)),
+                            // else throw exception
+                                    Expression.Throw(Expression.Constant(new InvalidOperationException("##" + "Add type to known types"))))),
+                            // cache.Val(streamWriter, property)
+                            Expression.Invoke(cache, streamWriter, property));
+                    }
 
-                    // TODO: make sure nothing is compiled at serialize time (especially anything coming out of the builders in the dictionary)
-                    return Expression.Invoke(
-                        Expression.Invoke(Expression.Constant(getConverter)),
-                        Expression.Constant(streamWriter),
-                        Expression.Constant(propertyOrField));
-                }
+                    return new KeyValuePair<string, Expression>(i,
+                      Expression.Block(Primatives.StreamWriterCall(streamWriter, Expression.Constant("\"" + i + "\":"), false), writer));
+                }).OrderBy(n => n.Key).Select(n => n.Value).ToList();
+
+                // add commas
+                for (var i = 1; i < serializers.Count; i += 2)
+                    serializers.Insert(i, Expression.Block(Primatives.StreamWriterCall(streamWriter, Constants.Comma, false)));
+
+                // add beginning and end parenthesis
+                serializers.Insert(0, Primatives.StreamWriterCall(streamWriter, Constants.OpenParenthesis, false));
+                serializers.Add(Primatives.StreamWriterCall(streamWriter, Constants.CloseParenthesis, false));
+
+                return Primatives.WrapInNullReferenceCheck(Expression.Block(serializers), obj, streamWriter);
             };
 
-            Func<Expression, Expression, Expression> val = (streamWriter, obj) =>
-            {
-                var propertySerializers = properties.Select(i =>
-                {
-                    return new KeyValuePair<string, BlockExpression>(i.Name,
-                        Expression.Block(
-                        Primatives.StreamWriterCall(streamWriter, Expression.Constant("\"" + i.Name + "\":"), false),
-                        getSerializer(i.PropertyType, streamWriter, Expression.Property(obj, i))));
-                });
-
-                var fieldSerializers = fields.Select(i =>
-                {
-                    return new KeyValuePair<string, BlockExpression>(i.Name,
-                        Expression.Block(
-                        Primatives.StreamWriterCall(streamWriter, Expression.Constant("\"" + i.Name + "\":"), false),
-                        getSerializer(i.FieldType, streamWriter, Expression.Field(obj, i))));
-                });
-
-                var all = propertySerializers.Union(fieldSerializers).OrderBy(n => n.Key).Select(n => n.Value).ToList();
-                for (var i = 1; i < all.Count; i += 2)
-                    all.Insert(1, Expression.Block(Primatives.StreamWriterCall(streamWriter, Expression.Constant(","), false)));
-
-                return Expression.Block(
-                    new[] { Primatives.StreamWriterCall(streamWriter, Expression.Constant("{"), false) }
-                    .Union(all)
-                    .Union(new[] { Primatives.StreamWriterCall(streamWriter, Expression.Constant("}"), false) }));
-            };
-
-            if (AllTypes.ContainsKey(key))
-                AllTypes[key] = val;
+            if (SerializationExpressionGenerators.ContainsKey(key))
+                SerializationExpressionGenerators[key] = expressionGenerator;
             else
-                AllTypes.Add(key, val);
+                SerializationExpressionGenerators.Add(key, expressionGenerator);
         }
 
         public void WriteObject(StreamWriter stream, T toWrite)

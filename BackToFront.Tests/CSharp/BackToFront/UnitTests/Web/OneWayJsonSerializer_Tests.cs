@@ -25,28 +25,30 @@ namespace BackToFront.Tests.CSharp.UnitTests.Web
 
         public class TestClass2
         {
-            public TestClass1 TestClass1 { get; set; }
+            public TestClass1 AnotherProperty { get; set; }
         }
 
         [Test]
         public void Testt()
         {
             // Arrange
-            OneWayJsonSerializer<TestClass2> subject = new OneWayJsonSerializer<TestClass2>(typeof(TestClass1));
+            OneWayJsonSerializer<TestClass2> subject = new OneWayJsonSerializer<TestClass2>();
+            subject.AddKnownType(typeof(TestClass1), false);
 
             // Act
             using (var strm = new MemoryStream())
             {
                 using (var w = new StreamWriter(strm))
                 {
-                    subject.WriteObject(w, new TestClass2 { TestClass1 = new TestClass1 { Something = 3, SomethingElse = "asdsad" } });
+                    for(var i = 0; i < 100; i++)
+                    subject.WriteObject(w, new TestClass2 { AnotherProperty = new TestClass1 { SomethingElse = "KLJNBKLN", Something = 234 } });
                     w.Flush();
 
-                strm.Position = 0;
-                using (var r = new StreamReader(strm))
-                {
-                    var xxx = r.ReadToEnd();
-                }
+                    //strm.Position = 0;
+                    //using (var r = new StreamReader(strm))
+                    //{
+                    //    var xxx = r.ReadToEnd();
+                    //}
                 }
             }
 
