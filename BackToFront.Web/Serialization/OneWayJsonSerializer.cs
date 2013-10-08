@@ -160,6 +160,24 @@ namespace BackToFront.Web.Serialization
             }
         }
 
+        private BlockExpression GenerateLazyLoadedSerializationExpression(Type propertyType, Expression streamWriter, Expression property)
+        {
+            var containsKey = typeof(Dictionary<Type, Func<Expression, Expression, Expression>>).GetMethod("ContainsKey");
+            var compileFor = this.GetType().GetMethod("CompileFor").MakeGenericMethod(propertyType);
+
+            var cache = Expression.Property(Expression.Constant(Activator.CreateInstance(typeof(MC<>).MakeGenericType(compileFor.ReturnType))), "Val");
+            return Expression.Block(
+                // if cache.Val == null
+                Expression.IfThen(Expression.Equal(cache, Constants.Null),
+                // if SerializationExpressionGenerators.ContainsKey(propertyType)
+                    Expression.IfThenElse(Expression.Call(Expression.Constant(SerializationExpressionGenerators), containsKey, Expression.Constant(propertyType)),
+                // cache.Val = this.CompileFor<TPropertyType>()
+                        Expression.Assign(cache, Expression.Call(Expression.Constant(this), compileFor)),
+                // else throw exception
+                        Expression.Throw(Expression.Constant(new InvalidOperationException("##" + "Add type to known types"))))),
+                // cache.Val(streamWriter, property)
+                Expression.Invoke(cache, streamWriter, property));
+        }
 
         public void _AddExpressionGenerator(Type key, IEnumerable<PropertyInfo> properties, IEnumerable<FieldInfo> fields)
         {
@@ -177,23 +195,7 @@ namespace BackToFront.Web.Serialization
                     if (SerializationExpressionGenerators.ContainsKey(property.Type))
                         writer = SerializationExpressionGenerators[property.Type](streamWriter, property);
                     else
-                    {
-                        var containsKey = typeof(Dictionary<Type, Func<Expression, Expression, Expression>>).GetMethod("ContainsKey");
-                        var compileFor = this.GetType().GetMethod("CompileFor").MakeGenericMethod(property.Type);
-
-                        var cache = Expression.Property(Expression.Constant(Activator.CreateInstance(typeof(MC<>).MakeGenericType(compileFor.ReturnType))), "Val");
-                        writer = Expression.Block(
-                            // if cache.Val == null
-                            Expression.IfThen(Expression.Equal(cache, Constants.Null),
-                            // if SerializationExpressionGenerators.ContainsKey(propertyType)
-                                Expression.IfThenElse(Expression.Call(Expression.Constant(SerializationExpressionGenerators), containsKey, Expression.Constant(property.Type)),
-                            // cache.Val = this.CompileFor<TPropertyType>()
-                                    Expression.Assign(cache, Expression.Call(Expression.Constant(this), compileFor)),
-                            // else throw exception
-                                    Expression.Throw(Expression.Constant(new InvalidOperationException("##" + "Add type to known types"))))),
-                            // cache.Val(streamWriter, property)
-                            Expression.Invoke(cache, streamWriter, property));
-                    }
+                        writer = GenerateLazyLoadedSerializationExpression(property.Type, streamWriter, property);
 
                     return new KeyValuePair<string, Expression>(i,
                       Expression.Block(Primatives.StreamWriterCall(streamWriter, Expression.Constant("\"" + i + "\":"), false), writer));
