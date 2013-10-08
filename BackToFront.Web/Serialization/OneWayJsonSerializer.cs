@@ -19,6 +19,7 @@ namespace BackToFront.Web.Serialization
     {
         public static class Constants
         {
+            public static readonly ConstantExpression DoubleQuoteChar = Expression.Constant('"');
             public static readonly ConstantExpression DoubleQuote = Expression.Constant(@"""");
             public static readonly ConstantExpression EscapedDoubleQuote = Expression.Constant(@"\""");
             public static readonly ConstantExpression Null = Expression.Constant(null);
@@ -41,20 +42,52 @@ namespace BackToFront.Web.Serialization
                 return Expression.Call(streamWriter, _Write, inputString);
             }
 
-            public static readonly ReadOnlyDictionary<Type, Func<Expression, Expression, Expression>> CommonSerializationExpressionGenerators =
-                new ReadOnlyDictionary<Type, Func<Expression, Expression, Expression>>(new Dictionary<Type, Func<Expression, Expression, Expression>>
-            {
-                {typeof(string), (streamWriter, input) => WrapInNullReferenceCheck(Expression.Block(StreamWriterCall(streamWriter, Constants.DoubleQuote, false), StreamWriterCall(streamWriter, input, true), StreamWriterCall(streamWriter, Constants.DoubleQuote, false)), 
-                    input, streamWriter)},
-                {typeof(Int16), (streamWriter, input) => StreamWriterCall(streamWriter, Expression.Call(input, _ToString<Int16>()), false)},
-                {typeof(Int32), (streamWriter, input) => StreamWriterCall(streamWriter, Expression.Call(input, _ToString<Int32>()), false)},
-                {typeof(Int64), (streamWriter, input) => StreamWriterCall(streamWriter, Expression.Call(input, _ToString<Int64>()), false)},
-                {typeof(bool), (streamWriter, input) => StreamWriterCall(streamWriter, Expression.Call(input, _ToString<bool>()), false)}
-            });
+            public static readonly ReadOnlyDictionary<Type, Func<Expression, Expression, Expression>> CommonSerializationExpressionGenerators;
 
-            private static MethodInfo _ToString<U>()
+            private static void AddPrimitiveToDictionary<TPrimitive>(Dictionary<Type, Func<Expression, Expression, Expression>> dictionary)
             {
-                return typeof(U).GetMethod("ToString", new Type[0]);
+                // TODO, tostring ay not be needed for writing primitive type to stream writer
+                var toString = typeof(T).GetMethod("ToString", new Type[0]);
+                dictionary.Add(typeof(TPrimitive), (streamWriter, input) => StreamWriterCall(streamWriter, Expression.Call(input, toString), false));
+            }
+
+            static Primatives()
+            {
+                var commonSerializationExpressionGenerators = new Dictionary<Type, Func<Expression, Expression, Expression>>();
+                
+                // these will all be serialized the same way
+                AddPrimitiveToDictionary<Int16>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<Int32>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<Int64>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<UInt16>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<UInt32>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<UInt64>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<Byte>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<SByte>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<Single>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<Double>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<Boolean>(commonSerializationExpressionGenerators);
+                AddPrimitiveToDictionary<Decimal>(commonSerializationExpressionGenerators);
+
+                commonSerializationExpressionGenerators.Add(typeof(String),
+                    (streamWriter, input) => WrapInNullReferenceCheck(
+                        Expression.Block(
+                        StreamWriterCall(streamWriter, Constants.DoubleQuote, false),
+                        StreamWriterCall(streamWriter, input, true),
+                        StreamWriterCall(streamWriter, Constants.DoubleQuote, false)),
+                    input, streamWriter));
+
+                commonSerializationExpressionGenerators.Add(typeof(Char),
+                    (streamWriter, input) => WrapInNullReferenceCheck(
+                        Expression.Block(
+                        StreamWriterCall(streamWriter, Constants.DoubleQuote, false),
+                        Expression.IfThenElse(Expression.Equal(input, Constants.DoubleQuoteChar), 
+                            StreamWriterCall(streamWriter, Constants.EscapedDoubleQuote, false),
+                            StreamWriterCall(streamWriter, input, false)),
+                        StreamWriterCall(streamWriter, Constants.DoubleQuote, false)),
+                    input, streamWriter));
+
+                CommonSerializationExpressionGenerators = new ReadOnlyDictionary<Type, Func<Expression, Expression, Expression>>(commonSerializationExpressionGenerators);
             }
 
             public static Expression WrapInNullReferenceCheck(Expression toWrap, Expression property, Expression streamWriter)
@@ -219,47 +252,6 @@ namespace BackToFront.Web.Serialization
                 // cache.Val(streamWriter, property)
                 Expression.Invoke(cache, streamWriter, property));
         }
-
-        //private BlockExpression GenerateLazyLoadedSerializationExpressionXXX(Type propertyType, Expression streamWriter, Expression property)
-        //{
-        //    var iEnumerableOfType = IsIEnumerableType(propertyType);
-        //    var compileFor = _CompileFor.MakeGenericMethod(propertyType);
-
-        //    // if "typeof(object)" is used this method will never be called. Condition in Expression will make sure of this
-        //    var compileForIEnumerable = _CompileFor.MakeGenericMethod(propertyType ?? typeof(object));
-
-        //    // this cache will store the full serializer object when it is lazy created
-        //    var cache = Expression.Property(Expression.Constant(Activator.CreateInstance(typeof(MC<>).MakeGenericType(propertyType))), "Val");
-
-        //    var throwException = Expression.Throw(Expression.Constant(new InvalidOperationException("##" + "Add type to known types")));
-        //    //var noGenerator = iEnumerableOfType == null ?
-        //    //    (Expression)throwException :
-        //    //    // if SerializationExpressionGenerators.ContainsKey(iEnumerableOfType)
-        //    //    Expression.IfThenElse(Expression.Call(Expression.Constant(SerializationExpressionGenerators), _ContainsKey, Expression.Constant(propertyType)),
-        //    //    // cache.Val = this.CompileFor<TiEnumerableOfType>()
-        //    //        Expression.Assign(cache, Expression.Call(Expression.Constant(this), compileForIEnumerable)), 
-        //    //    // else throw
-        //    //        throwException);
-
-        //    return Expression.Block(
-        //        // if cache.Val == null
-        //        Expression.IfThen(Expression.Equal(cache, Constants.Null),
-        //        // if SerializationExpressionGenerators.ContainsKey(propertyType)
-        //            Expression.IfThenElse(Expression.Call(Expression.Constant(SerializationExpressionGenerators), _ContainsKey, Expression.Constant(propertyType)),
-        //        // cache.Val = this.CompileFor<TPropertyType>()
-        //                Expression.Assign(cache, Expression.Call(Expression.Constant(this), compileFor)),
-        //        // else check for IEnumerable generator and cache.Val = this.CompileFor<TPropertyType>() -OR- throw exception
-        //                throwException)),
-        //        // cache.Val(streamWriter, property)
-        //        Expression.Invoke(cache, streamWriter, property));
-        //}
-
-
-
-
-
-
-
 
         public void _AddExpressionGenerator(Type key, IEnumerable<PropertyInfo> properties, IEnumerable<FieldInfo> fields)
         {
