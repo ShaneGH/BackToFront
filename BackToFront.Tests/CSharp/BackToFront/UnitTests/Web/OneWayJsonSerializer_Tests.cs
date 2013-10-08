@@ -26,6 +26,7 @@ namespace BackToFront.Tests.CSharp.UnitTests.Web
         public class TestClass2
         {
             public TestClass1 AnotherProperty { get; set; }
+            public TestClass1[] ProperyArray { get; set; }
         }
 
         [Test]
@@ -40,15 +41,15 @@ namespace BackToFront.Tests.CSharp.UnitTests.Web
             {
                 using (var w = new StreamWriter(strm))
                 {
-                    for(var i = 0; i < 100; i++)
-                    subject.WriteObject(w, new TestClass2 { AnotherProperty = new TestClass1 { SomethingElse = "KLJNBKLN", Something = 234 } });
+                    for(var i = 0; i < 1; i++)
+                        subject.WriteObject(w, new TestClass2 { ProperyArray = new[] { new TestClass1 { SomethingElse = "sdfds", Something = 3423 }, new TestClass1 { SomethingElse = "&&&&&\"\"", Something = 567 } }, AnotherProperty = new TestClass1 { SomethingElse = "KLJNBKLN", Something = 234 } });
                     w.Flush();
 
-                    //strm.Position = 0;
-                    //using (var r = new StreamReader(strm))
-                    //{
-                    //    var xxx = r.ReadToEnd();
-                    //}
+                    strm.Position = 0;
+                    using (var r = new StreamReader(strm))
+                    {
+                        var xxx = r.ReadToEnd();
+                    }
                 }
             }
 

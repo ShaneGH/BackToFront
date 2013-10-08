@@ -117,6 +117,29 @@ namespace BackToFront.Web.Serialization
             return Expression.Lambda<Action<StreamWriter, U>>(SerializationExpressionGenerators[typeof(U)](streamWriter, obj), streamWriter, obj).Compile();
         }
 
+        public Action<StreamWriter, IEnumerable<U>> CompileIEnumerableFor<U>()
+        {
+            var singleSerializer = CompileFor<U>();
+            return (streamWriter, items) => 
+            {
+                var enumerator = items.GetEnumerator();
+
+                streamWriter.Write("[");
+                if (enumerator.MoveNext())
+                {
+                    singleSerializer(streamWriter, enumerator.Current);
+                }
+
+                while(enumerator.MoveNext())
+                {
+                    streamWriter.Write(",");
+                    singleSerializer(streamWriter, enumerator.Current);
+                }
+                
+                streamWriter.Write("]");
+            };
+        }
+
         public bool TryAddExpressionGenerator(Type key)
         {
             IEnumerable<PropertyInfo> properties;
@@ -160,24 +183,83 @@ namespace BackToFront.Web.Serialization
             }
         }
 
+        public static readonly MethodInfo _ContainsKey = typeof(Dictionary<Type, Func<Expression, Expression, Expression>>).GetMethod("ContainsKey");
+        public static readonly MethodInfo _CompileFor = typeof(OneWayJsonSerializer<T>).GetMethod("CompileFor");
+        public static readonly MethodInfo _CompileForIEnumerable = typeof(OneWayJsonSerializer<T>).GetMethod("CompileIEnumerableFor");
         private BlockExpression GenerateLazyLoadedSerializationExpression(Type propertyType, Expression streamWriter, Expression property)
         {
-            var containsKey = typeof(Dictionary<Type, Func<Expression, Expression, Expression>>).GetMethod("ContainsKey");
-            var compileFor = this.GetType().GetMethod("CompileFor").MakeGenericMethod(propertyType);
+            var iEnumerableOfType = IsIEnumerableType(propertyType);
+            var compileFor = _CompileFor.MakeGenericMethod(propertyType);
 
+            // if "typeof(object)" is used this method will never be called. Condition in Expression will make sure of this
+            var compileForIEnumerable = _CompileForIEnumerable.MakeGenericMethod(iEnumerableOfType ?? typeof(object));
+
+            // this cache will store the full serializer object when it is lazy created
             var cache = Expression.Property(Expression.Constant(Activator.CreateInstance(typeof(MC<>).MakeGenericType(compileFor.ReturnType))), "Val");
+
+            var throwException = Expression.Throw(Expression.Constant(new InvalidOperationException("##" + "Add type to known types")));
+            var noGenerator = iEnumerableOfType == null ?
+                (Expression)throwException :
+                // if SerializationExpressionGenerators.ContainsKey(iEnumerableOfType)
+                Expression.IfThenElse(Expression.Call(Expression.Constant(SerializationExpressionGenerators), _ContainsKey, Expression.Constant(iEnumerableOfType)),
+                // cache.Val = this.CompileFor<TiEnumerableOfType>()
+                    Expression.Assign(cache, Expression.Call(Expression.Constant(this), compileForIEnumerable)),
+                // else throw
+                    throwException);
+
             return Expression.Block(
                 // if cache.Val == null
                 Expression.IfThen(Expression.Equal(cache, Constants.Null),
                 // if SerializationExpressionGenerators.ContainsKey(propertyType)
-                    Expression.IfThenElse(Expression.Call(Expression.Constant(SerializationExpressionGenerators), containsKey, Expression.Constant(propertyType)),
+                    Expression.IfThenElse(Expression.Call(Expression.Constant(SerializationExpressionGenerators), _ContainsKey, Expression.Constant(propertyType)),
                 // cache.Val = this.CompileFor<TPropertyType>()
                         Expression.Assign(cache, Expression.Call(Expression.Constant(this), compileFor)),
                 // else throw exception
-                        Expression.Throw(Expression.Constant(new InvalidOperationException("##" + "Add type to known types"))))),
+                        noGenerator)),
                 // cache.Val(streamWriter, property)
                 Expression.Invoke(cache, streamWriter, property));
         }
+
+        //private BlockExpression GenerateLazyLoadedSerializationExpressionXXX(Type propertyType, Expression streamWriter, Expression property)
+        //{
+        //    var iEnumerableOfType = IsIEnumerableType(propertyType);
+        //    var compileFor = _CompileFor.MakeGenericMethod(propertyType);
+
+        //    // if "typeof(object)" is used this method will never be called. Condition in Expression will make sure of this
+        //    var compileForIEnumerable = _CompileFor.MakeGenericMethod(propertyType ?? typeof(object));
+
+        //    // this cache will store the full serializer object when it is lazy created
+        //    var cache = Expression.Property(Expression.Constant(Activator.CreateInstance(typeof(MC<>).MakeGenericType(propertyType))), "Val");
+
+        //    var throwException = Expression.Throw(Expression.Constant(new InvalidOperationException("##" + "Add type to known types")));
+        //    //var noGenerator = iEnumerableOfType == null ?
+        //    //    (Expression)throwException :
+        //    //    // if SerializationExpressionGenerators.ContainsKey(iEnumerableOfType)
+        //    //    Expression.IfThenElse(Expression.Call(Expression.Constant(SerializationExpressionGenerators), _ContainsKey, Expression.Constant(propertyType)),
+        //    //    // cache.Val = this.CompileFor<TiEnumerableOfType>()
+        //    //        Expression.Assign(cache, Expression.Call(Expression.Constant(this), compileForIEnumerable)), 
+        //    //    // else throw
+        //    //        throwException);
+
+        //    return Expression.Block(
+        //        // if cache.Val == null
+        //        Expression.IfThen(Expression.Equal(cache, Constants.Null),
+        //        // if SerializationExpressionGenerators.ContainsKey(propertyType)
+        //            Expression.IfThenElse(Expression.Call(Expression.Constant(SerializationExpressionGenerators), _ContainsKey, Expression.Constant(propertyType)),
+        //        // cache.Val = this.CompileFor<TPropertyType>()
+        //                Expression.Assign(cache, Expression.Call(Expression.Constant(this), compileFor)),
+        //        // else check for IEnumerable generator and cache.Val = this.CompileFor<TPropertyType>() -OR- throw exception
+        //                throwException)),
+        //        // cache.Val(streamWriter, property)
+        //        Expression.Invoke(cache, streamWriter, property));
+        //}
+
+
+
+
+
+
+
 
         public void _AddExpressionGenerator(Type key, IEnumerable<PropertyInfo> properties, IEnumerable<FieldInfo> fields)
         {
@@ -221,6 +303,16 @@ namespace BackToFront.Web.Serialization
         public void WriteObject(StreamWriter stream, T toWrite)
         {
             _Worker(stream, toWrite);
+        }
+
+        public static Type IsIEnumerableType(Type type)
+        {
+            var iEnumerable = typeof(IEnumerable<>);
+
+            return (type.IsInterface ?
+                new[] { type }.Union(type.GetInterfaces()) :
+                type.GetInterfaces())
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == iEnumerable).Select(i => i.GetGenericArguments()[0]).FirstOrDefault();
         }
     }
 }
