@@ -38,7 +38,7 @@ module WebExpressions.Utils {
             if (ns.length < 2)
                 throw "Invalid namespace";
 
-            var item = window;
+            var item = <any>window;
             var i = 0;
             for (var ii = ns.length - 2; i < ii; i++) {
                 if (!item[ns[i]])
